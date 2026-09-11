@@ -1,6 +1,6 @@
 # Platonik game design
 
-Living design proposal, revised 11 September 2026. The Platonik website and documentation are being built first. The Rust game engine, agent skills, and leaderboard described here are proposed. Example creatures, dialogue, and results are fictional.
+Living design proposal, revised 11 September 2026. The website and its bounded browser experiments are implemented. The Rust game engine, complete campaign, agent skills, and leaderboard described here are proposed. Campaign creatures, dialogue, and results are illustrative unless linked to a specific browser-model run.
 
 ## The premise
 
@@ -16,7 +16,7 @@ The central loop is **wish → build → watch → surprise → improve**. Each 
 
 The longer campaign is [The Long Trail](campaign.md): a hopeful space western in which a first companion becomes a herd, the herd helps build living arks, and their settlements grow into a civilization capable of reaching a distant beacon. The player is a frontier engineer of living systems, with a naturalist's curiosity and a trail guide's care. Its space-opera fiction gives these experiments a continuing destination.
 
-The [observatory](observatory.md) now offers three smaller browser experiments to review that promise. Its executable courier sketches, structural portraits, and truth maps are separate from this proposed Rust campaign. The [complexity and scale decision](complexity-and-scale.md) explains why work, structural footprint, memory, and demonstrated capability remain separate, and how useful results would have to earn their evidence.
+The [observatory](observatory.md) offers smaller browser experiments to review that promise. Its executable courier sketches, structural portraits, truth maps, and bounded computational demonstrations remain separate from this proposed Rust campaign. The [Autoverse contract](autoverse.md) defines how transport, signals, memory, and construction would share one medium. The [complexity and scale decision](complexity-and-scale.md) explains why work, structural footprint, memory, and demonstrated capability remain separate, and how useful results would have to earn their evidence.
 
 ## A laboratory of your own, a world of other researchers
 
@@ -73,20 +73,24 @@ Translate wishes into inspectable changes. “Make it brave” might become “t
 
 ## A universe that changes scale
 
-The campaign has one recurring problem: carry something precious, keep a home connected, and recover when a familiar route fails. Each transition in [The Long Trail](campaign.md) introduces a new way to solve it.
+The campaign has one recurring problem: carry something precious, keep a home connected, and recover when a familiar route fails. Each transition in [The Long Trail](campaign.md) introduces a new way to solve it using the player's existing creations.
 
 | Campaign stage | New player action | Capability that earns the next scale |
 | --- | --- | --- |
-| **A spark in the dust** | Improve a companion's local habits | Keep the first beacon connected through a route collapse |
-| **The long trail** | Prepare a complementary expedition herd | Complete a sequence of different habitats within shared reserves |
-| **A herd that carries home** | Connect colonies into working infrastructure | Sustain a mobile habitat through a checked autonomous voyage |
-| **The free ports** | Connect independent settlements | Maintain services and exchanges despite interrupted contact |
-| **The bloom** | Set goals and budgets for organisms that propose other organisms | Produce a checked useful candidate through a bounded search process |
-| **Across the Quiet** | Lead a civilization beyond its familiar network | Sustain the voyage and establish a two-way link to the Far Beacon |
+| **A spark in the dust** | Improve a companion's local habits | Preserve beacon charge and meet deliveries through a route collapse |
+| **The long trail** | Give the traveling herd a way to report and remember | Relay an identified report, retain it through interrupted contact, and acknowledge it while delivering supplies |
+| **A herd that carries home** | Connect that relay and memory to logic, arithmetic, and service control | Run different admitted plans and sustain the ark's services without external direction |
+| **The free ports** | Connect independently controlled homes | Fulfill distributed commitments under declared message delays, losses, and duplicates without losing resource custody |
+| **The bloom** | Turn supplied stock and descriptions into working descendants | Assemble a checked blueprint, then earn a bounded process that generates, tests, and selects a useful candidate |
+| **Across the Quiet** | Reuse those capabilities in one long expedition | Preserve services, construct the required continuation, and complete an acknowledged two-way exchange |
 
-These are future campaign gates, not implemented achievements. The first playable release tests the opening rescue only. Later habitats require precise rules, calibrated thresholds, baselines, and independent checks before their chapter can be claimed playable.
+These are future campaign gates, not implemented achievements. Each [chapter](campaign.md) specifies the player's wish, new lever, inspectable failure, success contract, resource allowance, and alternative approaches. The first Rust release tests the opening rescue only. Later chapters require calibrated limits, feasible reference builds, and independent checks before they can be called playable.
 
 A colony can become a component of a larger body without consuming the parent or erasing its identity. Its descendants might form the transport system of a living ark while the original remains at home. Composition preserves execution, memory, and communication costs. Changing scale never turns an expensive algorithm into a free primitive.
+
+The same verbs survive every transition: **inspect, change, connect, run, compare, keep, and reuse**. A relay accepts local observations from transport. Its memory feeds a controller that regulates those supply routes and later schedules a builder. Compatible ports carry the dependency. The [migration-to-ark validation gate](design-validation.md#the-bridge-we-must-build-first) requires actual unchanged components to contribute across tasks, with removal comparisons that expose what they do.
+
+The external agent provides working reference blueprints and explains their tradeoffs. The player chooses an ambition and architecture, notices failures, and decides what to keep. Templates are free to inspect; executing them expands into the same metered parts as an original design. No chapter requires hand-wiring a prescribed circuit or preserving a particular starter genome.
 
 The campaign culminates in a fictional first contact, with success determined by a bounded expedition. Research into checkable answers and complexity remains an optional open frontier. Finishing the story does not require or imply solving P versus NP.
 
@@ -100,6 +104,14 @@ An organism has four distinct parts:
 - **Lineage:** parent identities, mutations, experiments, and inherited components.
 
 A phenotype is the behavior observed when that organism runs in a particular habitat. Changing the body or environment can change behavior without changing the genome.
+
+The proposed [Autoverse protocol](autoverse.md#shared-laws) binds these parts to one manifest: module versions, typed local interfaces, activation order, finite storage, and complete cost accounting. Transport, signal, memory, and construction modules contribute specific permitted actions. Couriers, latches, controllers, and builders are roles created by policy and body composition, rather than unrelated creature classes with special hidden powers.
+
+A finite builder can eventually read a blueprint and place permitted parts one action at a time. Until that capability exists, the player or agent assembles the initial body through setup, with parts and loading accounted for. Every interface, delay, copied byte, and failed attempt belongs in the work record.
+
+Full computers and endogenous search require additional construction. A computer-builder achievement must expose instruction storage, fetch, decode, working memory, control flow, halt, and reset in the assembled system. A four-bit adder is a step toward that achievement. The campaign instead accepts multiple forms of programmable service control, including composed state machines and table-driven designs.
+
+A blueprint assembler follows supplied instructions. A bounded searcher must also generate candidates, execute their tests, record failures, and select an output under a total budget. These capabilities have different checks. Neither `search` nor “create another organism” is an instruction that silently performs unmetered work. The [capability matrix](autoverse.md#capability-status) keeps the small browser demonstrations separate from these proposed achievements.
 
 Breeding initially offers three understandable operations: mutate one rule, exchange compatible rule fragments, or mix cell types in one body. Genetic crossover and a chimeric body are different operations and should be shown differently. Every offspring has a readable difference from its parents. Invalid combinations are rejected before play.
 

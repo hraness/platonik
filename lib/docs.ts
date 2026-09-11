@@ -15,9 +15,21 @@ export const documents = [
     question: "Where could this whole journey lead?",
   },
   {
+    slug: "autoverse",
+    title: "The Autoverse path",
+    description: "How transport, signals, memory, and construction become one engineering medium and an earned campaign.",
+    question: "How does a companion become a civilization?",
+  },
+  {
+    slug: "design-validation",
+    title: "Will the whole game work?",
+    description: "Evidence today, the missing integration test, player-study thresholds, and decisions if the promise fails.",
+    question: "What would justify confidence in the complete arc?",
+  },
+  {
     slug: "observatory",
     title: "The observatory",
-    description: "Try three browser experiments: executable specimens, truth landscapes, and the cost of a larger world.",
+    description: "Try editable specimens, truth landscapes, world budgets, and a bounded Autoverse signal workbench.",
     question: "What can I explore right now?",
   },
   {

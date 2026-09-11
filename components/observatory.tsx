@@ -6,9 +6,10 @@ import { STARTERS, canonicalProgram, describeProgram, mutateProgram, parseProgra
 import { SpecimenPortrait } from "./specimen-portrait";
 import { TruthGarden } from "./truth-garden";
 import { BudgetLab } from "./observatory-budget";
+import { AutoverseLab } from "./autoverse-lab";
 
 const STORAGE_KEY = "platonik.lab.collection.v1";
-const tabs = [{ id: "specimens", label: "Specimens" }, { id: "truth-garden", label: "Truth garden" }, { id: "world-budget", label: "World budget" }] as const;
+const tabs = [{ id: "specimens", label: "Specimens" }, { id: "truth-garden", label: "Truth garden" }, { id: "world-budget", label: "World budget" }, { id: "autoverse", label: "Autoverse" }] as const;
 type Tab = typeof tabs[number]["id"];
 type SavedSpecimen = { name: string; program: Program; seed: number };
 
@@ -164,6 +165,7 @@ export function Observatory() {
     </section>
     <section role="tabpanel" id="panel-truth-garden" aria-labelledby="tab-truth-garden" hidden={tab !== "truth-garden"} tabIndex={0}>{tab === "truth-garden" && <TruthGarden />}</section>
     <section role="tabpanel" id="panel-world-budget" aria-labelledby="tab-world-budget" hidden={tab !== "world-budget"} tabIndex={0}>{tab === "world-budget" && <BudgetLab program={program} />}</section>
+    <section role="tabpanel" id="panel-autoverse" aria-labelledby="tab-autoverse" hidden={tab !== "autoverse"} tabIndex={0}>{tab === "autoverse" && <AutoverseLab />}</section>
     <div className="lab-reading"><p>What would make these experiments useful beyond the game?</p><Link href="/docs/complexity-and-scale">Read the engineering and research thesis <span aria-hidden="true">↗</span></Link></div>
   </>;
 }
