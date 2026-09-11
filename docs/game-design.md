@@ -125,6 +125,16 @@ A later expedition could ask: “What if I give it what the older one learned?�
 
 **What is granted must be counted.** A library brings executable routines and stored information, not just another item in an inventory. Its construction, loading, storage, use, and remaining work all matter. Separate what the outside agent knows from what actually enters the creature. Ordinary ranked habitats retain their existing information limits; assistance belongs to a separately declared challenge or division with equal access and explicit costs. These are later proposals, not additions required for the first beacon rescue.
 
+## A companion brings a history and a habitat
+
+In a later expedition, Moss has crossed a difficult valley before. A fresh descendant hesitates at the same fork; the experienced traveler takes a useful turn. The player can ask, “What did it keep?” The agent compares copies to find out whether the difference comes from stored experience, body arrangement, or a trace still present in the valley. This is an illustrative scene to earn through simulation, not a promised memory effect.
+
+Give the player four practical invitations: **show it something new, find it a partner, help it keep a home, and see what survives the journey.** A specialist that senses a local signal may help a courier navigate. A maintained corridor may let a fragile newcomer reach camp. Each benefit needs an implemented rule and a visible consequence; pairing two names does not grant a synergy bonus.
+
+A favorite's value can grow through the lives it helps make possible. It may keep traveling, remain at the homestead, or support a habitat while its descendants join an ark. Partnerships preserve the participants and their ancestry. Their connections, sensing, and upkeep cost resources, and a larger assembly must justify those costs in the same world.
+
+This extends the game's [research on sensing, symbiosis, and remembered trails](research.md#symbiosis-sensing-and-living-habitats). These are later habitat proposals. Current ranked trials retain their declared information limits; new senses and carried experience require explicit, equal rules. The agent explains the resulting behavior in ordinary language and keeps the evidence available underneath.
+
 ## What makes another session worthwhile
 
 **Attachment:** lineages have names, ancestry, characteristic failures, and visible inherited rules. A failed child can remain valuable in a different habitat. Keep a small active stable and a larger archive so choice matters without deleting discoveries.
