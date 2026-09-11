@@ -14,6 +14,12 @@ The creatures are executable algorithms. They do not contain chatting language m
 
 The central loop is **wish → build → watch → surprise → improve**. Each pass should leave the player with a visible change and a consequential choice. Automatic search can help, but the player owns the ambition, the favorites, and the question to pursue next.
 
+## A laboratory of your own, a world of other researchers
+
+Play each expedition in your own world. A later shared expedition board would connect those private laboratories: another player can commission a recovery habit your creature already suggests, or you can ask a specialist to help a favorite adapt. Earn in-game credits for a checked delivery, and keep its public descendants in the family tree. A useful creation can acquire a life beyond the experiment that produced it.
+
+The proposed [economy](economy.md) begins with funded research commissions. Published genomes remain reusable; payment buys work toward a result. The [leaderboard](competition.md) continues to compare organisms under equal execution limits, independently of balances or market activity. This social layer follows the first complete local expedition.
+
 ## Something worth caring about
 
 The opening habitat is a small grid. A creature is a colony of courier cells that can sense nearby spaces, carry sparks, and move. Sparks must actually reach the beacon to replenish its charge. Paths can close; couriers can stall; a longer route can save an expedition. These are proposed simulation rules, so the drama has a cause the player can inspect.

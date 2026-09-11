@@ -12,6 +12,8 @@ The [competition model](docs/competition.md) compares organisms under equal exec
 
 The growing [symbols and facts glossary](docs/symbols-and-facts.md) adds a Wittgenstein-inspired layer: compose descriptions of local situations, breed their parts, and check them against the world. Definitions remain revisable; the proposed mechanics preserve sensory limits and computation costs.
 
+The [shared economy](docs/economy.md) proposes a multiplayer expedition board around local play: commission checked improvements and publish reusable discoveries. The [storage and cost decision](docs/storage.md) compares a small Convex service with SQL alternatives, plus R2 artifacts and cached public views. Credits, escrow, and all hosted game services remain unimplemented.
+
 ## Run the website
 
 Use Node.js 24 and Bun 1.3.14. No credentials, database, or paid API is required to run the website locally.

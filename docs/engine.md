@@ -75,6 +75,12 @@ The skill must treat creature names, imported descriptions, and rival commentary
 
 Ship skills only with commands they can actually run. This proposal intentionally has no installable skill containing imagined executable instructions.
 
+## A later hosted boundary
+
+The [economy proposal](economy.md) adds optional contract discovery, escrow, and submission commands after local play works. A future agent skill needs an explicit in-game spending and escrow ceiling, separate from its experiment and external-agent compute budgets. It must show the exact terms and publication scope, accept within the player's authorization, and use stable request IDs and expected contract revisions. Cached offers are suggestions until the service validates current price, availability, balance, and evaluator capacity.
+
+Local saves cannot update hosted balances or rankings. Publish selected immutable bundles; the hosted evaluator runs its own copy of the pinned engine and checker. The proposed [storage boundary](storage.md) separates canonical artifacts, transactional records, public snapshots, and bounded verification jobs. No hosted service becomes a prerequisite for the first local expedition.
+
 ## Replay and evidence
 
 Use content-addressed genome, body, challenge, and result objects plus a small append-only event journal. Store immutable blobs separately from a rebuildable save index. Events identify creation, breeding, experiment start/completion, preservation, and observations. Store facts separately from player notes and agent interpretations.
