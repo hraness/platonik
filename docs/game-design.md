@@ -1,6 +1,6 @@
 # Platonik game design
 
-Living design proposal, revised 11 September 2026. The website and its bounded browser experiments are implemented. The Rust game engine, complete campaign, agent skills, and leaderboard described here are proposed. Campaign creatures, dialogue, and results are illustrative unless linked to a specific browser-model run.
+Living design proposal, revised 11 September 2026. The website and its bounded browser experiments are implemented. A bounded [Rust bridge and agent play guide](rust-bridge.md) are implemented. The complete campaign, persistent game engine, and leaderboard described here remain proposed. Campaign creatures, dialogue, and results are illustrative unless linked to a specific recorded experiment.
 
 ## The premise
 

@@ -21,9 +21,15 @@ export const documents = [
     question: "How does a companion become a civilization?",
   },
   {
+    slug: "rust-bridge",
+    title: "Run the Rust bridge",
+    description: "Real shared-habitat experiments, exact replay artifacts, and an agent-facing CLI for testing what composes.",
+    question: "Can I run and change the first integrated experiment?",
+  },
+  {
     slug: "design-validation",
     title: "Will the whole game work?",
-    description: "Evidence today, the missing integration test, player-study thresholds, and decisions if the promise fails.",
+    description: "Evidence from the first integration slice, remaining campaign tests, player-study thresholds, and decisions if the promise fails.",
     question: "What would justify confidence in the complete arc?",
   },
   {
@@ -59,7 +65,7 @@ export const documents = [
   {
     slug: "engine",
     title: "Agents & engine",
-    description: "The proposed Rust engine, agent-facing CLI, skills, and the first playable milestone.",
+    description: "The implemented Rust slice, proposed campaign engine, and remaining first-playable criteria.",
     question: "How would an agent drive the game?",
   },
   {

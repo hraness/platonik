@@ -1,6 +1,6 @@
 # The Long Trail
 
-Campaign proposal, 11 September 2026. A hopeful space western about a herd becoming an alien civilization. The characters, settings, discoveries, and scenes here are fiction for an unbuilt campaign. The [observatory](observatory.md) contains bounded browser experiments; it has not demonstrated this full journey. The first Rust engine milestone remains one local beacon expedition.
+Campaign proposal, 11 September 2026. A hopeful space western about a herd becoming an alien civilization. The characters, settings, discoveries, and scenes here are fiction for an unbuilt campaign. The [observatory](observatory.md) contains bounded browser experiments; it has not demonstrated this full journey. The first [Rust integration slice](rust-bridge.md) connects courier delivery, signals, memory, and beacon control; it does not implement a complete chapter.
 
 ## One companion, a distant light
 

@@ -80,7 +80,8 @@ Activate bounded regions, pause other regions explicitly, and declare how transf
 | --- | --- |
 | Courier portraits, one-courier journeys, local collection, truth maps, browser budget sample | Implemented browser demonstrations; see the [observatory guide](observatory.md) |
 | Digital relay, gate, memory, arithmetic, and finite blueprint assembly | Bounded [Autoverse bench](https://platonik.space/lab#autoverse) prototypes in this website update; each identifies its actual model and tested scope |
-| Shared spatial transport/signal/memory/construction protocol | Proposed; the separate browser models have not been integrated into one ecology |
+| Shared spatial transport, signals, memory, and service routing | Implemented in the bounded [Rust bridge](rust-bridge.md); finite public fixtures, not the complete campaign protocol |
+| In-world construction within that same runtime | Proposed; the separate browser assembler does not implement it |
 | Full stored-program computer, autonomous candidate search, self-construction | Proposed achievements; an adder or prescribed assembler does not establish them |
 | Rust campaign, living arks, distributed settlements, integrated finale | Proposed; no complete campaign or large ecology has been demonstrated |
 

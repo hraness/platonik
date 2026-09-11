@@ -19,4 +19,5 @@ jobs:
         with:
           bun-version: '1.3.14'
       - run: bun install --frozen-lockfile
+      - run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
       - run: bun run check

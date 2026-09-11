@@ -1,6 +1,6 @@
 # Earning confidence in the whole game
 
-Validation proposal, 11 September 2026. Platonik has working browser experiments and a specified campaign direction. It does not yet have a playable Rust campaign, a demonstrated audience, or evidence that large ecologies produce useful new algorithms. This page defines what would justify those claims and what would make us change course.
+Validation proposal, 11 September 2026. Platonik has working browser experiments, a small [Rust integration slice](rust-bridge.md), and a specified campaign direction. It does not yet have a playable Rust campaign, a demonstrated audience, or evidence that large ecologies produce useful new algorithms. This page defines what would justify those claims and what would make us change course.
 
 **The design decision is to build one engineering adventure with a finite ending and an open workshop beyond it.** The [campaign](campaign.md) supplies reasons to care; the [Autoverse contract](autoverse.md) supplies the capabilities that make its changes of scale possible. Complexity creates tradeoffs. It is not a score that grows just because a program gets longer.
 
@@ -9,10 +9,10 @@ Validation proposal, 11 September 2026. Platonik has working browser experiments
 | Question | Evidence available | What remains to establish |
 | --- | --- | --- |
 | Can a small program have a recognizable, changeable habit? | Editable courier rules, deterministic journeys, parent comparisons, and structural portraits in the observatory | Attachment and understandable improvement when a new player drives it through an agent |
-| Can simple components support more elaborate computation? | The separate signal workbench checks relays, NAND behavior, resettable registers, four-bit addition, and an accumulator | A spatial substrate, a stored-program computer assembled within it, and a shared transport/signal runtime |
+| Can simple components support more elaborate computation? | The separate signal workbench checks relays, NAND behavior, resettable registers, four-bit addition, and an accumulator | The Rust bridge adds shared spatial transport and control; a stored-program computer and in-world construction remain unimplemented |
 | Can construction have real limits? | The workbench copies a blueprint into an initially empty graph with finite build steps and node material | Construction performed by an organism inside the world; sensing, acquiring material, repairing, and generating useful descendants |
 | Does the narrative have an earned end? | Six chapters with observable capability contracts and a final delivery-and-reply objective | A complete playable expedition, pacing, player choices, and an ending players find satisfying |
-| Can larger worlds be affordable? | Explicit active-region budgets and an arithmetic cost model; bounded browser runs | Rust throughput, memory, replay and verification measurements on supported hardware |
+| Can larger worlds be affordable? | Fixed Rust workload measurements, including a 16-cell/128-tick queue-saturating probe and a measured memory repair; see the [bridge evidence](rust-bridge.md#measured-cost-and-the-memory-repair) | Larger envelopes, worst-case workloads, supported hardware tiers, and long-lived process behavior |
 | Will play produce useful research? | A falsifiable comparison and transfer protocol | Replicated results that survive matched baselines and an independent implementation |
 
 Passing the circuit tests establishes those finite circuit behaviors. It does not validate all the chapters, establish universality, or predict that the game will be fun. The [workbench](https://platonik.space/lab#autoverse) makes that boundary visible rather than hiding it behind a campaign completion meter.
@@ -27,7 +27,7 @@ Before expanding the setting, build a short **migration-to-ark bridge** in the R
 
 Use one manifest, one time model, typed interfaces, and one cost ledger. A “colony module” must expand into the actual cells and connections it contains. A signal cannot conjure a spark, a saved pattern cannot smuggle in extra memory, and a disconnected component cannot read the world through its agent. Templates may provide working examples; they carry their full execution costs.
 
-This bridge is the main go/no-go decision. If earlier creatures stop mattering when circuits appear, or each transition needs an unrelated simulator with invented conversion rewards, revise the substrate and campaign before building more planets. The opening courier experiment and Boolean workbench have not yet passed this integration test.
+This bridge is the main go/no-go decision. If earlier creatures stop mattering when circuits appear, or each transition needs an unrelated simulator with invented conversion rewards, revise the substrate and campaign before building more planets. The [Rust bridge](rust-bridge.md) now tests the core transport–signal–memory–routing chain in one runtime, with unchanged-policy comparisons and component removals. Its static damaged opening map and stationary service fixture are narrower than the three-task gate above: scheduled route collapse, moving-habitat services, persistent creations, and player-driven reuse remain to be completed.
 
 Require at least one unchanged earlier controller or module to do causal work in two different bridge tasks. Remove it in a comparison copy and check the resulting loss or changed tradeoff on frozen cases. A lineage label or a paid conversion unlock does not establish reuse. If a module needs a change, record that change and call the result adaptation.
 
@@ -74,7 +74,7 @@ Every new capability needs a finite, independently checkable scenario contract a
 
 The reference campaign must run from a new save through the ending without the multiplayer market, paid services, developer intervention, or spending while paused. Save and replay every transition. Repeat across a frozen set of admissible hazard schedules, and check that restart, partial failure, and budget exhaustion preserve the player's collection. Reference solutions demonstrate reachability; player studies establish whether people can find and understand solutions.
 
-For the first Rust bridge, propose a supported reference workload of at most 128 active cells, 2,000 ticks, and 32 policy operations per activation: at most 8,192,000 policy operations, plus all world and interface work. Pin a reference machine and a fixed set of cases before measuring. Target a two-second p95 run, including checking, with less than 256 MiB peak resident memory and less than 5 MiB for a compact replay artifact. These are admission targets, not measured capacity. If they fail, reduce the active envelope or improve the implementation; keep charged work truthful.
+For a later admitted Rust bridge envelope, propose a supported reference workload of at most 128 active cells, 2,000 ticks, and 32 policy operations per activation: at most 8,192,000 policy operations, plus all world and interface work. Pin a reference machine and a fixed set of cases before measuring. Target a two-second p95 run, including checking, with less than 256 MiB peak resident memory and less than 5 MiB for a compact replay artifact. These are admission targets, not measured capacity. The implemented prototype is capped at 128 ticks; it does not satisfy this 2,000-tick envelope. If they fail, reduce the active envelope or improve the implementation; keep charged work truthful.
 
 For later tiers, publish measured p50/p95 runtime, peak memory, artifact bytes, verifier time, and the total cost of the permitted candidate search. A hundred cheap-looking candidate runs can dominate the one replay a player sees. Require a new capacity receipt before raising an envelope; extrapolation is not admission evidence.
 
@@ -105,4 +105,4 @@ Before implementing commerce, try three manual local commissions from distinct r
 | Research gains disappear against fair baselines | Publish that result and redirect the research track; retain the engineering game only if people enjoy it |
 | The complete compressed campaign does not sustain interest | Rewrite the failing transition and ending; do not stretch it with grind, rarity, or a market |
 
-The next release decision is therefore concrete: earn the transport-to-control bridge in Rust, and put it in front of new players. The fuller campaign has a testable design now; confidence in its success must grow through those results.
+The next release decision is concrete: extend the checked Rust transport-to-control slice into the persistent, player-operated bridge above, then put it in front of new players. The fuller campaign has a testable design now; confidence in its success must grow through those results.
