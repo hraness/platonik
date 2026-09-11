@@ -21,10 +21,22 @@ export const documents = [
     question: "What makes one organism better?",
   },
   {
+    slug: "economy",
+    title: "The shared economy",
+    description: "Research commissions, useful public discoveries, and an economy around your own laboratory.",
+    question: "Who needs what your creature can do?",
+  },
+  {
     slug: "engine",
     title: "Agents & engine",
     description: "The proposed Rust engine, agent-facing CLI, skills, and the first playable milestone.",
     question: "How would an agent drive the game?",
+  },
+  {
+    slug: "storage",
+    title: "Storage & cost",
+    description: "Local experimentation, content-addressed artifacts, and a small hosted market with bounded costs.",
+    question: "How could a shared world stay inexpensive?",
   },
   {
     slug: "research",

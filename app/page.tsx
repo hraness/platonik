@@ -76,6 +76,11 @@ export default function HomePage() {
         <div><p>Race an archived rival through the same world. See where yours gets stuck. Build a response, and take another run at the frontier.</p><p>Smarter agents and more search can help you discover better creatures. Ranked entries will face equal execution limits and unfamiliar challenges, with independently checked results. The leaderboard rewards what your creation can actually do.</p><Link className="text-link" href="/docs/competition">Read the proposed competition rules <span aria-hidden="true">↗</span></Link></div>
       </section>
 
+      <section className="home-section split-section" aria-labelledby="economy-title">
+        <h2 id="economy-title">Someone needs what yours can do.</h2>
+        <div><p>Your creature found a way around a broken road. Another player’s colony is still stuck. A proposed shared expedition board would let them commission help—and let your discovery find a life in someone else’s world.</p><p>Work in your own laboratory. Earn in-game credits for a checked result. Use them to ask another researcher for help. Published creatures would join a library everyone can reuse.</p><Link className="text-link" href="/docs/economy">Explore the proposed economy <span aria-hidden="true">↗</span></Link></div>
+      </section>
+
       <section className="home-section split-section" aria-labelledby="research-title">
         <h2 id="research-title">“Was that a fluke?” is a scientific question.</h2>
         <div><p>A surprising recovery. Two habits that work better together. An old creature finding its way through a new world. Ask your agent to investigate, and keep an experiment someone else can replay.</p><p>Inspired by Michael Levin’s questions about collective behavior, Platonik explores what simple rules can do when given different bodies and environments. Useful programs, repeatable effects, and revealing failures could contribute to research. Each claim has to earn its evidence.</p><Link className="text-link" href="/docs/research">Follow the questions into life, minds, and computation <span aria-hidden="true">↗</span></Link></div>

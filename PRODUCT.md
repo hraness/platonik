@@ -44,6 +44,10 @@ The documents under docs/ contain the original design proposal and source citati
 - Keep engine facts, fictional narration, empirical claims, and proofs distinct.
 - Preserve readable text, usable navigation, and accessible controls on desktop and mobile.
 
+## Shared Economy Direction
+
+Single-player laboratories can participate in a proposed multiplayer expedition board. Players commission objectively checked improvements, earn in-game credits, and publish reusable organisms with lineage credit. The market remains a proposal; public code is copyable, and wealth does not determine organism rank. Hosted work must have explicit operating budgets. Research commissions, storage alternatives, and their costs are reviewable in the field guide.
+
 ## Open Decisions
 
 Game balancing, instruction limits, season constants, and later chapters remain proposals. This website does not freeze those rules.

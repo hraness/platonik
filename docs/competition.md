@@ -24,6 +24,12 @@ A local ghost race shows the two organisms in separate copies of the same habita
 
 This rule favors broad completion before micro-optimization. Clearing a finite tier is an observation on that tier's cases, not a universal correctness or reliability proof. The comparison stops at the season's published maximum; extending the frontier requires a new version or season.
 
+## An economy around the competition
+
+The proposed [shared economy](economy.md) lets players commission useful adaptations and fund research work. A purchased or commissioned routine must be declared with its definitions and charged like any other routine. Wealth, sale price, contract count, and discovery compute add no points and buy no extra ranked attempts, execution fuel, sensors, or hidden-test feedback. Separate contract assays cannot query a live ranked round's held-out cases.
+
+The [storage proposal](storage.md) publishes admitted rankings as bounded cached snapshots, with a visible round and update time. Authoritative results still come from the evaluator. A cached page and a local score file cannot award rank or settle a contract.
+
 ## What the evaluator charges
 
 Each division fixes language version, code and body size, memory, sensors, communication, and per-case fuel. A season's cost table includes instruction evaluation, sensing, state updates, copying, communication, activation scheduling, and actions. Failed actions and inactive scheduling still incur their specified costs. Multi-cell execution costs sum across cells; simulated parallelism does not erase work.
