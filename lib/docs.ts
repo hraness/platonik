@@ -15,6 +15,18 @@ export const documents = [
     question: "Where could this whole journey lead?",
   },
   {
+    slug: "observatory",
+    title: "The observatory",
+    description: "Try three browser experiments: executable specimens, truth landscapes, and the cost of a larger world.",
+    question: "What can I explore right now?",
+  },
+  {
+    slug: "complexity-and-scale",
+    title: "Complexity & scale",
+    description: "Complexity as a tradeoff, a testable research thesis, and the engineering limits of larger ecologies.",
+    question: "Could this produce useful computation?",
+  },
+  {
     slug: "symbols-and-facts",
     title: "Symbols & facts",
     description: "A growing Wittgenstein-inspired vocabulary for representation, composition, and checking what is true in a world.",

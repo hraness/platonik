@@ -2,9 +2,11 @@
 
 Platonik is a game concept about making creatures with your AI, helping them survive, and discovering what else they can do. Players would describe a wish in chat; an external agent would turn it into a small program, run it in a deterministic Rust world, and help improve it. Deeper play leads to collective behavior and independently checked competition.
 
-This repository currently implements the **marketing and documentation website** for [platonik.space](https://platonik.space), using Next.js on Vercel. The game engine, CLI, skills, and hosted leaderboard are not implemented. Gameplay conversations and creatures on the site are explicitly illustrative.
+This repository implements the **website and browser observatory** for [platonik.space](https://platonik.space), using Next.js on Vercel. The observatory has three bounded local experiments: editable courier programs with collectible structural portraits, coupled fuzzy-truth systems, and a world-cost calculator with an optional browser benchmark. The Rust game engine, CLI, skills, and hosted leaderboard are not implemented. Campaign scenes remain illustrative; observatory traces come from its separate TypeScript models.
 
 ## Explore the design
+
+Start in [the observatory](https://platonik.space/lab), or read its [guide](docs/observatory.md). Export a specimen's JSON, ask an external agent to change it, and paste it back to compare the result. The [complexity and scale thesis](docs/complexity-and-scale.md) explains the separate work, memory, and structural costs, the proposed research comparisons, and the limits on larger worlds.
 
 Begin with the [game design](docs/game-design.md): grow a colony that carries sparks to a beacon, help it recover when a route collapses, and take a favorite descendant into an unfamiliar habitat. The proposed world then expands from cells into tissues, ecologies, and algorithm discovery. Sorting remains a later research habitat.
 
@@ -25,9 +27,9 @@ bun install --frozen-lockfile
 bun run dev
 ```
 
-Open `http://localhost:3000`, follow **Explore the game design**, and navigate among the documentation pages. The pages render the Markdown files in `docs/` at build time; editing one of those files updates both the source document and its website projection. The separately authored home page presents the same product facts in a shorter form.
+Open `http://localhost:3000` and follow **Enter the observatory**, or visit `/docs` for the field guide. The documentation renders the Markdown files in `docs/` at build time; editing one updates both the source document and its website projection. The separately authored homepage presents the same product facts in a shorter form.
 
-The website loads its reading font locally and has no analytics, account system, forms, or model calls. Following source links leaves the site.
+The website loads its reading font locally and has no analytics, account system, or model calls. Observatory controls run locally; saved specimens use bounded browser local storage. No program text is sent to a service. Following source links leaves the site.
 
 ## Validate and deploy
 
@@ -35,7 +37,7 @@ The website loads its reading font locally and has no analytics, account system,
 bun run check
 ```
 
-The gate checks document registration, relative links, proposal labels, and public identity; generates Next.js route types; runs TypeScript; and builds all routes. Browser review covers the home page, documentation navigation, tables and code on narrow screens, keyboard access, and missing pages. These checks validate the website, not the proposed game engine.
+The gate checks document registration, relative links, proposal labels, and public identity; tests the bounded browser models; generates Next.js route types; runs TypeScript; and builds all routes. Browser review covers program editing and errors, parent comparisons, collection persistence, export, replay, truth controls, budget measurement/cancellation, mobile layout, navigation, keyboard access, and missing pages. These checks validate the website and its laboratory models, not the proposed Rust game engine.
 
 Vercel detects the Next.js application at the repository root. `vercel.json` supplies the locked install and full build gate. Use the Hraness `platonik` project and `platonik.space` domain; `.vercel/` and local environment files are ignored. GitHub runs the same source gate for pull requests and main.
 

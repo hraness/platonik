@@ -11,7 +11,8 @@
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
     "check:content": "bun scripts/check-content.ts",
-    "check": "bun run check:content && bun run typecheck && bun run build"
+    "test:lab": "bun test lib/observatory",
+    "check": "bun run check:content && bun run test:lab && bun run typecheck && bun run build"
   },
   "dependencies": {
     "@fontsource/newsreader": "5.3.0",

@@ -2,6 +2,8 @@
 
 Proposal, 11 September 2026. The current milestone is the Platonik website and documentation. The Rust engine, CLI, file formats, and skills below are not implemented. This is the first prototype's intended contract, not an installation guide.
 
+The implemented [browser observatory](observatory.md) is a separate, bounded TypeScript demonstrator. Its single courier, fuzzy truth maps, and cost calculator do not implement the colony or beacon contract below. Its JSON format is a laboratory format, not a released Rust CLI schema.
+
 ## The agent runs the laboratory
 
 The Rust executable owns genomes, simulation, random seeds, costs, saves, and outcomes. An external agent reads structured observations, writes candidate genomes, chooses experiments, and explains results in chat. The agent's prose cannot mutate facts or award itself discoveries.
