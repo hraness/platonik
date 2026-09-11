@@ -12,7 +12,7 @@ User-selected: standard Next.js on Vercel. The future game engine is Rust and is
 
 ## Users
 
-People interested in agent-driven games, algorithm discovery, and minimal computational organisms. The immediate reader is reviewing the proposed game through its marketing and documentation website.
+People who have felt the thrill of building something with an AI agent, including those without a computer science background. They want to invent, grow attached to their creations, and discover surprising behavior. The immediate reader is reviewing the proposed game through its marketing and documentation website.
 
 ## Product Purpose
 
@@ -20,7 +20,7 @@ Present Platonik's proposed play loop, progression, competitive model, and resea
 
 ## Positioning
 
-External agents operate a deterministic game engine. Players breed algorithmic organisms, study collective behavior, and eventually compete on independently verified problems.
+Make a creature with your AI. Watch it find its way, help it recover, and discover what else it can do. External agents translate player wishes into programs for a deterministic engine. Deeper play leads to collective behavior, reproducible experiments, and independently verified competition.
 
 ## Capabilities and Constraints
 
@@ -37,6 +37,9 @@ The documents under docs/ contain the original design proposal and source citati
 ## Product Principles
 
 - Make a consequential player decision visible before describing infrastructure.
+- Start with a wish, a recognizable creature, and a visible consequence. Introduce technical vocabulary when it helps explain something the player already cares about.
+- Earn attachment through persistent lineages and observed behavior. Let failure create a new idea without erasing the player's creation.
+- Make scientific inquiry an accessible next question: “Was that a fluke?” Evidence gathering can happen through the agent within the player's budget.
 - Let readers move from a short concept to exact proposed rules.
 - Keep engine facts, fictional narration, empirical claims, and proofs distinct.
 - Preserve readable text, usable navigation, and accessible controls on desktop and mobile.

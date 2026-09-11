@@ -47,13 +47,11 @@ p { text-wrap: pretty; }
 .section-intro > p { margin-top: 17px; color: var(--muted); }
 .home-section > p { max-width: 70ch; margin-top: 25px; }
 .text-link { display: inline-block; color: var(--accent); margin-top: 24px; font-size: 14px; }
-.cell-figure { margin-block: 30px; }
-.cell-row { display: flex; align-items: center; gap: 10px; max-width: 620px; }
-.cell { border: 1px solid #849981; background: #e2e9dc; width: 64px; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 20px; position: relative; border-radius: 8px; font-variant-numeric: tabular-nums; }
-.cell-second { background: #f1e9dc; border-color: #b6a184; }
-.cell-policy { position: absolute; bottom: 2px; font-size: 9px; line-height: 1; }
-.cell-wounded { background: var(--paper); border-style: dashed; border-color: #7a6255; }
-.wound-mark { position: absolute; top: -9px; right: -5px; background: var(--paper); color: #765445; width: 16px; font-size: 16px; line-height: 1; text-align: center; }
+.habitat-figure { margin-block: 30px; }
+.habitat-map { display: block; width: min(100%, 420px); height: auto; color: var(--accent); font-family: var(--body); font-size: 19px; }
+.habitat-path { stroke: #849981; }
+.habitat-block { stroke: #765445; }
+.habitat-label { fill: var(--muted); font-size: 17px; }
 figcaption { margin-top: 22px; font-size: 14px; line-height: 1.6; }
 figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
 .conversation { margin-top: 28px; max-width: 730px; }
@@ -143,9 +141,6 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
   .status-note { max-width: 29ch; }
   .home-section { padding-block: 38px 42px; }
   .home-section h2, .closing h2 { font-size: 31px; }
-  .cell-row { gap: 6px; }
-  .cell { width: calc((100% - 42px) / 8); font-size: 16px; border-radius: 5px; }
-  .wound-mark { font-size: 14px; width: 13px; top: -7px; }
   .message { grid-template-columns: 42px 1fr; gap: 12px; }
   .message p { font-size: 15px; }
   .chapter-list li { grid-template-columns: 1fr; gap: 4px; }

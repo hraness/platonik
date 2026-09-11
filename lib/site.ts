@@ -3,5 +3,5 @@ export const site = {
   url: "https://platonik.space",
   repository: "https://github.com/hraness/platonik",
   description:
-    "A game concept about breeding algorithmic organisms. Guide an agent, explore emergent behavior, and discover what small rules can do together.",
+    "Make a creature with your AI. Help it survive, discover what it can do, and follow small surprises into bigger questions about life and minds. A game in design.",
 } as const;

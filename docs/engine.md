@@ -1,6 +1,6 @@
 # Rust engine and agent interface proposal
 
-Proposal, 10 September 2026. The current milestone is the Platonik website and documentation. The Rust engine, CLI, file formats, and skills below are not implemented. This is the first prototype's intended contract, not an installation guide.
+Proposal, 11 September 2026. The current milestone is the Platonik website and documentation. The Rust engine, CLI, file formats, and skills below are not implemented. This is the first prototype's intended contract, not an installation guide.
 
 ## The agent runs the laboratory
 
@@ -10,17 +10,29 @@ Do not embed an LLM in each cell. The organism is a small executable policy; the
 
 Use one Cargo workspace with a small library and CLI at first. Keep the deterministic interpreter, simulation, checker, and persistence behind distinct module boundaries. A hosted evaluator can reuse them later; no service, account, model provider, or Oh installation should be needed for the first local episode.
 
-## The first world
+## The first world: keep the beacon alight
 
-The initial body is a line of cells carrying immutable input values, local registers, and policy identifiers. A local exchange moves the whole cell, including its policy and memory. This makes clustering by policy measurable; ancestry remains a separate lineage record. Identity and policy labels are visible to the observer but unavailable to organism instructions.
+A small finite grid contains a spring, a beacon, obstacles, and a colony of courier cells. The spring holds a finite supply of integer spark units. Each cell carries at most one unit and occupies one tile. Cells must physically collect sparks and deliver them to the beacon. Moving a cell moves its cargo, policy, and local memory together. Identities, ancestry, and policy labels are visible to the observer but unavailable to organism instructions.
 
-Proposed instructions include bounded integer and Boolean operations, neighbor comparisons, local register reads and writes, conditional choice, and a request to swap with an adjacent cell. Reject unchecked native code, unbounded integers, recursion, and unbounded allocation in the first language. All permitted loops or repeated activations terminate under fuel. Bounds are prototype decisions to calibrate, then version explicitly.
+A cell can inspect its own tile, cargo, bounded local registers, and the four adjacent tiles' terrain and occupancy, including whether each connecting edge is open. It can choose a direction, move to an unoccupied neighboring tile across an open edge, collect one available spark while on the spring, deposit its cargo while on the beacon, or wait. It cannot inspect a remote map, another cell's memory, or an unannounced future event. The first world needs neither reproduction nor a physics engine.
 
-Activate cells in a specified seeded order using stable cell identities. Complete each activation atomically; the next cell observes committed state. Moving a cell does not give it an accidental extra activation in the same sweep. A wounded controller cannot initiate an action, but a neighbor can still exchange with it. Damage schedules must name whether they target a cell identity or a location; the tutorial disables one cell identity. Two passive cells cannot exchange with each other, so later challenges with multiple disabled controllers need a reachability check or a known feasible construction. Additional injury semantics require new challenge definitions.
+The starter pair should make a visible tradeoff: a fast direct-route policy and a slower policy that can recover from a blockage. Calibrate the tutorial for an attainable improvement without forcing a particular child to win. Mixing policies changes the actual colony's behavior; a name or narrated personality has no effect on the simulation.
 
-The checker independently verifies the final values are a permutation of the original input and meet the ordering objective. It does not trust a policy's declaration of success. A stalled or exhausted run is unfinished within budget, not evidence that the task has no solution. The competitive rules score it as a non-completion.
+### Time, resources, and interventions
 
-Sorting is the first habitat because it has a small readable state and cheap independent checking. General grids, transport tasks, and endogenous reproduction can be added after the loop proves interesting.
+Define one simulation tick as a complete sweep of the colony. Apply scheduled terrain changes at the start of a tick, activate each cell once in a specified seeded order using stable identities, then apply any charge drain due that tick. Each activation commits atomically and permits at most one action; later cells see the committed state. Movement never grants an extra activation. Failed actions still consume their declared execution fuel.
+
+One deposited spark adds one charge unit. The beacon drains one unit every N ticks, where N is a fixed positive integer in the challenge; ticks start at one and the first drain is at tick N. The challenge also fixes the positive initial charge, finite spring supply, duration in ticks, and minimum required deliveries. Success means completing that duration with positive charge after every drain and meeting the delivery target. A zero-charge endpoint fails even if a courier could deliver next tick. Charge changes only during a run; reading state or thinking in chat advances no time.
+
+Keep game resources separate from computation: sparks and charge are integer world quantities, ticks measure simulated time, and fuel measures charged execution. The checker verifies that spring supply, carried sparks, beacon charge, and cumulative drained charge sum to the starting supply plus initial charge. Cumulative deliveries are a separate achievement counter, not an additional reservoir. Policies cannot create sparks, declare deliveries, or report their own success.
+
+The opening hazard closes a declared route edge at a specified tick. It does not delete cells or cargo. A challenge must retain an alternate route and have a successful checked witness run from its starting state under the same event schedule, body bounds, duration, and resource limits. Connectivity alone is insufficient: travel time and traffic can make an apparently connected world impossible. Admission checks feasibility; an individual colony can still strand itself or run out of charge. Later damage types need their own precise semantics and feasibility checks.
+
+### Bounded rules and later habitats
+
+The policy language provides bounded integer and Boolean operations, local sensing and register access, conditional choice, and the actions above. Reject unchecked native code, unbounded integers, recursion, and unbounded allocation. Interpreter steps, sensing, memory access, and successful or failed actions pay versioned costs; cap both individual activations and whole experiments. A stalled or exhausted run is unfinished within budget and cannot count as a completion.
+
+Sorting remains a proposed later calibration habitat with a small readable state and cheap checking. It uses a line of cells with immutable input values and local swaps, verifies ordering and preservation of the input permutation, and specifies controller damage separately from terrain collapse. It can investigate sorting-specific recovery and policy clustering; the beacon world does not itself reproduce those experiments. Evolving body graphs and endogenous reproduction also come later.
 
 ## Representations and checked facts
 
@@ -30,18 +42,18 @@ Keep observer notation separate from executable policy notation. A notebook can 
 
 Record the expression and definition versions, object bindings, snapshot or trace identity, and check scope with every checked claim. Where evidence is missing, retain an unknown or unassessed status; do not confuse it with a false expression or a failed task. Reject malformed or ill-typed expressions separately as invalid. A compound claim requires compatible scope and evidence for its components. Check records stay attached to their original state and scope when the world advances; unchecked claims are not observations.
 
-Begin with expressions already supported by the sorting rules and an observer-side notebook. Open-ended predicates, communication vocabularies, and theorem proving are later proposals, not requirements for the first playable release.
+Begin with expressions already supported by the transport rules and an observer-side notebook: for example, “carrying a spark and the adjacent route is blocked.” A name for that condition does not add a remote sensor. Open-ended predicates, communication vocabularies, and theorem proving are later proposals, not requirements for the first playable release.
 
 ## A small command surface
 
 Illustrative future commands:
 
 ```text
-platonik init --world wound --seed 7
+platonik init --world beacon --seed 7
 platonik status --json
 platonik inspect starter-a --json
 platonik breed starter-a starter-b --mode chimera --seed 19 --name moth
-platonik run moth --suite wound-training --fuel-limit 2000000 --request-id trial-1
+platonik run moth --suite beacon-training --fuel-limit 2000000 --request-id trial-1
 platonik observe trial-1 --view recovery --json
 platonik export trial-1 --output expedition.json
 platonik replay expedition.json --json
@@ -49,7 +61,7 @@ platonik replay expedition.json --json
 
 Here `--fuel-limit` caps the whole experiment, including all children and cases when batching is supported. The suite also supplies per-case limits. Reaching the total cap records remaining cases as not run; it cannot produce a ranked complete result. Long jobs should expose resumable progress or bounded chunks and support cancellation without leaving a partial result labeled complete.
 
-All commands should support structured output with schema version, status, stable IDs, costs, result references, and explicit errors. Help must expose valid commands and JSON schemas. Human-readable tables and a tiny array rendering are useful fallback views; a separate TUI is unnecessary for this prototype.
+All commands should support structured output with schema version, status, stable IDs, costs, result references, and explicit errors. Help must expose valid commands and JSON schemas. A tiny grid rendering and selected event frames let the agent show a delivery, a blockage, or a recovery in chat. Every frame and captioned event must reference actual recorded state; a separate TUI is unnecessary for this prototype.
 
 Mutations take a request ID and expected save revision. Retrying an identical request returns its prior result; reusing an ID for different input fails. Reads do not advance the simulation. Persist new content before atomically publishing a new save revision, so cancellation preserves the previous valid state. A failed append or interrupted write needs a tested recovery path.
 
@@ -75,14 +87,14 @@ No engine dependency set or Rust toolchain is pinned by this proposal. The first
 
 The first release should support one complete loop, with no hosted infrastructure:
 
-- Start a seeded world, inspect two baseline policies, create a chimera or mutation, and preserve its ancestry.
-- Run healthy and wounded sorting trials, with strict code, memory, per-case, and whole-job limits.
-- Inspect a stalled activation and a recovery trace in chat using engine-derived facts.
+- Start a seeded beacon world, inspect two baseline policies, create a chimera or mutation, and preserve its ancestry.
+- Run intact-route and collapsed-route trials with verified feasible starting challenges, conserved sparks, and strict code, memory, per-case, and whole-job limits.
+- Show a delivery, a blockage, and a baseline recovery trace in chat using engine-derived frames and facts. An evolved child may improve, trade one capability for another, or fail.
 - Compare a child with its parents on matched cases, then on a reserved local confirmation set. Label that set as locally inspectable, not authoritative hidden evaluation.
 - Export, close the game, and replay the same outcomes and charged costs from a fresh save.
 - Recover from an interrupted write and reject stale revisions or altered replay inputs.
 - Demonstrate the complete loop through an external agent using the shipped skill, including a failed trial and a bounded batch.
 
-Before release, test that organisms cannot fabricate success, exceed budgets through failed actions, double-activate through movement, hide failed cases, or change outcomes by resuming. Verify the interpreter and checker independently on exhaustive tiny states. Run `cargo fmt --check`, strict Clippy, and the project's actual test suite once those exist.
+Before release, test that organisms cannot fabricate success, create or duplicate sparks, exceed budgets through failed actions, double-activate through movement, hide failed cases, or change outcomes by resuming. Verify tick ordering, final-tick charge checks, intervention feasibility, and the interpreter and checker independently on exhaustive tiny states. Run `cargo fmt --check`, strict Clippy, and the project's actual test suite once those exist.
 
 The first milestone succeeds when a player can recognize a behavioral difference, ask a useful question, and reproduce an improvement or a refutation. It need not demonstrate a novel algorithm. Competitive service work begins only after this local loop is worth playing.

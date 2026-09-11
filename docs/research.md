@@ -1,6 +1,6 @@
 # Research foundations and useful results
 
-Proposal, 10 September 2026. The website and documentation come first; the game engine and research archive described here are proposed. Platonik aims to make algorithm discovery and controlled experiments enjoyable. Its credibility depends on distinguishing performance records, causal explanations, and mathematical proofs.
+Proposal, 11 September 2026. The website and documentation come first; the game engine and research archive described here are proposed. Platonik starts with a simple ambition: build a colony that carries light across a changing world. Its research value depends on what that colony demonstrably does, which explanations survive testing, and what others can reuse.
 
 ## Michael Levin's minimal systems
 
@@ -10,20 +10,24 @@ Zhang, Goldstein, and Levin's sorting study reports damage responses, temporary 
 
 In *Ingressing Minds*, Levin proposes studying minimal systems and novel embodiments to understand relationships between constructed interfaces and the patterns they express. The essay also advances hypotheses about minds and nonphysical patterns. Platonik can test concrete behavioral predictions inspired by this program without treating its philosophical interpretation as a simulation result. [Ingressing Minds](https://doi.org/10.3390/philosophies11050161).
 
-His discussion of sorting also suggests looking for useful side effects under different observational descriptions of the same computation. In Platonik, task progress and policy clustering can be measured from one unchanged trace. The selected objective need not exhaust what is worth studying. [Levin's discussion](https://thoughtforms.life/algorithms-redux-finding-unexpected-properties-in-truly-minimal-systems/).
+His discussion of sorting also suggests looking for useful side effects under different observational descriptions of the same computation. A later sorting habitat could measure task progress and policy clustering from one unchanged trace. The selected objective need not exhaust what is worth studying. [Levin's discussion](https://thoughtforms.life/algorithms-redux-finding-unexpected-properties-in-truly-minimal-systems/).
+
+The opening beacon habitat is a new game model, not a reproduction of the sorting study. Its couriers move conserved sparks from a finite spring to a draining beacon. Start by measuring deliveries, charge over simulation time, occupied routes, recovery after a declared route collapse, and charged computation. Successful delivery demonstrates performance in that specified world; it does not establish cognition, consciousness, or a theory of life.
 
 ## Experiments that become game mechanics
 
 | Question | Player action | Evidence needed |
 | --- | --- | --- |
-| Does a temporary setback enable recovery? | Disable or replace the suspected detour rule in a copied lineage | Matched starting states, complete trajectories, costs, and a held-out comparison |
-| Does a chimera organize by policy without sensing labels? | Mix cell types and inspect transient clusters | No type-reading instruction, shuffled-label nulls, and controls for value/position correlations |
-| Which capabilities survive a new embodiment? | Move the same policy into a changed body or schedule | Frozen genome, explicit sensor changes, and separate immediate and adapted results |
+| Does a detour rule help after a route collapses? | Disable that rule in a copy and race both colonies | Matched starting states and collapse schedules, complete trajectories, execution costs, and new held-out maps |
+| Does a mixed colony beat its strongest constituent? | Send the mixture and each uniform parent colony on the same expedition | Equal cell counts, supply, initial charge, duration, and execution budgets; varied starting positions |
+| Does a capability travel? | Move an unchanged lineage to new maps or activation schedules | Frozen genome, fixed sensor contract, and separate results before and after further adaptation |
 | Did a side effect precede selection? | Assay baseline populations before breeding for one task | Pre-selection records, a declared search objective, and later independent assays |
-| What does memory contribute? | Wipe or graft state between matched organisms | Separate genome and memory identities; charge construction, storage, access, and residual work |
-| Does cooperation beat the strongest part? | Compare a colony with its constituent policies | Equal total resources and communication accounting, not just fewer apparent rounds |
+| What does local memory contribute? | Disable access to a register in a copied policy | Matched trials with defined replacement behavior, separate genome and state identities, and full memory costs |
+| Does a sorting chimera cluster without sensing labels? | Later, mix cell types in the sorting habitat and inspect their positions | No type-reading instruction, shuffled-label nulls, and controls for value/position correlations |
 
-These mechanics are design extrapolations, not claims that their outcomes are known. Define each measure before interpreting it: adjacent ordered pairs and total inversions are different measures of sorting progress, and policy clustering is different from shared ancestry. A temporary drop in a chosen progress measure does not by itself establish planning or a beneficial detour. Exploratory observations can generate hypotheses. A confirmatory experiment freezes the hypothesis, measurement, comparator, and evaluation cases before it runs. An agent should preserve unsuccessful cases and distinguish an observation from an explanation.
+These are proposed experiments with unknown outcomes. Define each measure before interpreting it: a courier moving away from the beacon is an observation, not proof of a useful detour or of planning. Test whether changing the suspected rule changes the result. Preserve failures and report healthy-route costs as well as recovery gains.
+
+The player can ask, “Was that a fluke?” The agent should turn the question into a bounded comparison and a readable evidence record. A confirmatory experiment freezes the hypothesis, measurement, comparator, and evaluation cases before it runs. Exploration and confirmation need separate cases; repeated selection on the confirmation set turns it into training data.
 
 ## Wittgenstein and representation
 
@@ -35,7 +39,7 @@ This connects to the existing organism experiments through representation and tr
 
 ## A route toward P versus NP research
 
-Start with sorting and collective recovery. Later add constraint habitats in which local cells propose Boolean assignments, or organisms choose branching, propagation, representations, and reusable components for a solver. A satisfying assignment is independently checkable. An unsatisfiability claim needs a checked proof; a timeout is only unfinished search.
+Start with transport, recovery, and reproducible comparisons; add sorting as a calibration habitat. Later constraint habitats could let local cells propose Boolean assignments, or organisms choose branching, propagation, representations, and reusable components for a solver. A satisfying assignment is independently checkable. An unsatisfiability claim needs a checked proof; a timeout is only unfinished search. Improving a beacon colony does not by itself advance a complexity-theoretic claim.
 
 Potentially useful outputs include faster heuristics on declared families, reusable solver components with their acquisition costs included, adversarial counterexamples, structural conjectures, and proofs about restricted algorithm classes. Each output should travel with its code, protocol, costs, and evidence.
 
@@ -55,4 +59,12 @@ Cost accounting is especially worth preserving. A useful abstraction or memory c
 
 ## What the game can honestly produce
 
-The strongest near-term outcome is a public collection of reproducible organisms, informative failures, and controlled experiments in minimal collective computation. Novel algorithms would be valuable. Progress on a major complexity question would require evidence beyond the game score. Interesting cognition-like behavior can remain worth studying without requiring a conclusion about consciousness or metaphysics.
+The archive should show three distinct states of a finding:
+
+- **Observed:** a result or surprising event occurred in an identified run. Its trace and conditions are preserved.
+- **Replicated:** a frozen protocol produced the stated effect across new declared cases, with the relevant controls and uncertainty reported. Replaying the same seed verifies reproducibility; it does not establish generalization.
+- **Reviewed contribution:** independent review finds the evidence sound and the result useful in relation to existing work. This may be a reusable benchmark, an informative negative result, or an algorithmic finding. A high game score alone cannot award this status.
+
+The player sees the creature and its expedition first. The agent prepares the underlying record, including unsuccessful cases, and explains what has and has not been established. A potential contribution can emerge from play without making every successful rescue a discovery.
+
+The strongest near-term outcome is a collection of reproducible organisms and controlled experiments in minimal collective computation. Novel algorithms would be valuable. Progress on a major complexity question needs evidence beyond the game score. Interesting behavior remains worth studying without requiring a conclusion about consciousness or metaphysics.
