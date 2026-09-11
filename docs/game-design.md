@@ -47,6 +47,16 @@ Players can also ask their agent to write a new genome. There is no advantage fo
 
 Memory grafts, spontaneous replication, and evolving body graphs arrive later. Each adds real experimental ambiguity and should earn its place through interesting play.
 
+## Evolving a way to represent the world
+
+An organism's rules can contain reusable descriptions of situations as well as actions. Starting from simple symbols, compose expressions for local relations, inspect their parts, and breed compatible fragments. A pattern named “repairable pair” still has to earn that description in a trial.
+
+The player’s notebook distinguishes a possible situation from a claim checked against the world. A symbol names; an expression represents; the engine checks whether the represented condition holds at a particular snapshot. This gives the agent a concrete job: explain what a lineage's condition means, find where it fails, and test whether it travels to a new environment.
+
+After the first wound, try naming a recurring local inversion, using that expression in a copied policy, and testing it on new values. Later, transplant a lineage's vocabulary into a different body or let tissues communicate through it. Aliases preserve their definitions and execution costs; a shorter name does not create a cheaper primitive or expose a hidden sensor.
+
+The [symbols and facts glossary](symbols-and-facts.md) develops these mechanics from simple symbols, complex symbols, Sachverhalte, and Tatsachen. It is a dated, revisable reading aid. The introductory episode and competitive ranking stay focused on observable behavior.
+
 ## The first fifteen minutes: The Wound
 
 Start with a short line of numbered cells, two transparent starter policies, and one goal: put the numbers in order. A cell can inspect its immediate neighbors, retain a little state, and propose a local exchange. The engine shows the values, policy colors, and a few important events as compact text that the chat agent can quote.

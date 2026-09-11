@@ -22,6 +22,16 @@ The checker independently verifies the final values are a permutation of the ori
 
 Sorting is the first habitat because it has a small readable state and cheap independent checking. General grids, transport tasks, and endogenous reproduction can be added after the loop proves interesting.
 
+## Representations and checked facts
+
+The proposed [symbols and facts layer](symbols-and-facts.md) builds on the typed rule language. Treat simple symbols as declared syntactic leaves and complex expressions as inspectable syntax trees. A named compound keeps a versioned definition; a display alias cannot turn it into a primitive instruction. Initial aliases expand to finite expressions without recursion or cycles and pay for their constituent evaluation and representation costs.
+
+Keep observer notation separate from executable policy notation. A notebook can name cells in a recorded world; an organism can only bind references allowed by its local sensor contract. Compiling a notebook description into a policy must reject unavailable observations and type-invalid compositions. Boolean combinations do not acquire new sensory privileges.
+
+Record the expression and definition versions, object bindings, snapshot or trace identity, and check scope with every checked claim. Where evidence is missing, retain an unknown or unassessed status; do not confuse it with a false expression or a failed task. Reject malformed or ill-typed expressions separately as invalid. A compound claim requires compatible scope and evidence for its components. Check records stay attached to their original state and scope when the world advances; unchecked claims are not observations.
+
+Begin with expressions already supported by the sorting rules and an observer-side notebook. Open-ended predicates, communication vocabularies, and theorem proving are later proposals, not requirements for the first playable release.
+
 ## A small command surface
 
 Illustrative future commands:
