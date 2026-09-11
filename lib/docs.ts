@@ -5,7 +5,7 @@ export const documents = [
   {
     slug: "game-design",
     title: "The game",
-    description: "Creatures, breeding, the first fifteen minutes, and a world that changes scale.",
+    description: "Make a creature, keep a beacon alive, and follow a first rescue into a world that changes scale.",
     question: "What would it feel like to play?",
   },
   {

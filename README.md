@@ -1,12 +1,12 @@
 # Platonik
 
-Platonik is a game concept about breeding algorithmic organisms. Players would direct an external AI agent to design creatures, investigate collective behavior, and compete on independently checked challenges. A deterministic Rust engine is planned to own the world.
+Platonik is a game concept about making creatures with your AI, helping them survive, and discovering what else they can do. Players would describe a wish in chat; an external agent would turn it into a small program, run it in a deterministic Rust world, and help improve it. Deeper play leads to collective behavior and independently checked competition.
 
 This repository currently implements the **marketing and documentation website** for [platonik.space](https://platonik.space), using Next.js on Vercel. The game engine, CLI, skills, and hosted leaderboard are not implemented. Gameplay conversations and creatures on the site are explicitly illustrative.
 
 ## Explore the design
 
-Begin with the [game design](docs/game-design.md): breed a colony of self-sorting cells, disable one controller, and investigate which lineages can recover. The proposed world then expands from cells into tissues, ecologies, and algorithm discovery.
+Begin with the [game design](docs/game-design.md): grow a colony that carries sparks to a beacon, help it recover when a route collapses, and take a favorite descendant into an unfamiliar habitat. The proposed world then expands from cells into tissues, ecologies, and algorithm discovery. Sorting remains a later research habitat.
 
 The [competition model](docs/competition.md) compares organisms under equal execution limits while allowing open-ended discovery effort. The [engine proposal](docs/engine.md) defines an agent-facing Rust CLI and the first playable acceptance criteria. The [research foundations](docs/research.md) connect the design to Michael Levin's minimal systems and distinguish empirical results from mathematical claims.
 

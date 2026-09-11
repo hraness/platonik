@@ -1,16 +1,65 @@
 # Platonik game design
 
-Proposal, 10 September 2026. The Platonik website and documentation are being built first. The Rust game engine, agent skills, and leaderboard described here are proposed. Example creatures, dialogue, and results are fictional.
+Living design proposal, revised 11 September 2026. The Platonik website and documentation are being built first. The Rust game engine, agent skills, and leaderboard described here are proposed. Example creatures, dialogue, and results are fictional.
 
 ## The premise
 
-You inherit a chamber containing a handful of simple rules. Give them bodies, and they begin to organize. Your job is to discover which patterns can survive, cooperate, remember, and solve problems in worlds they have never encountered.
+**Make a little creature with your AI. Help it survive. Discover something neither of you expected.**
 
-The creatures are executable algorithms. Their personalities come from observable behavior: one rushes and jams, another waits and repairs, a third succeeds only in a mixed colony. An external AI agent is your field scientist. You direct its attention, set ambitions, name lineages, and choose experiments; it operates the engine and explains what the evidence shows.
+You inherit a small world with a spring of sparks and a beacon that needs them. Give your creature a name and an ambition: “Make it quick,” “Help it find its way home,” or “Keep the light alive even when something goes wrong.” Your agent turns the wish into rules, shows you what it changed, and sends the creature into the world. You watch, form an opinion, and try another idea.
 
-The central loop is **observe → hypothesize → breed or edit → challenge → explain → preserve**. Each cycle should produce a decision a player can understand. Automatic search is useful, but a screenful of fitness numbers is not the entire game.
+This is the pleasure of building with AI, given a persistent world and consequences. The creature you made yesterday is still yours today. Its children inherit recognizable habits. A change can work beautifully, fail in an interesting way, or solve a problem you had not yet thought to give it.
 
-You accumulate **capabilities**: surviving a wound, coordinating across a larger body, carrying useful memory into a new task. The laboratory records these as an atlas of conquered habitats and preserved lineages. Program length, unpredictability, and time spent computing do not themselves earn progress.
+The creatures are executable algorithms. They do not contain chatting language models; your external agent is your collaborator at the workbench. No programming or philosophy vocabulary is required to begin. Code, exact costs, and research methods become available when the player asks how something works.
+
+The central loop is **wish → build → watch → surprise → improve**. Each pass should leave the player with a visible change and a consequential choice. Automatic search can help, but the player owns the ambition, the favorites, and the question to pursue next.
+
+## Something worth caring about
+
+The opening habitat is a small grid. A creature is a colony of courier cells that can sense nearby spaces, carry sparks, and move. Sparks must actually reach the beacon to replenish its charge. Paths can close; couriers can stall; a longer route can save an expedition. These are proposed simulation rules, so the drama has a cause the player can inspect.
+
+The beacon dims only as the simulation advances. Reading a result, thinking, or closing the game costs no light. Failed expeditions preserve the parent genome and lineage. Stakes come from a difficult journey, a limited roster, and the choice of what to improve next.
+
+Two starter lineages make the first tradeoff legible. **Moth** favors a direct route. **Moss** spends more movement on exploring alternatives. Those names describe intended starter behaviors to implement and calibrate, not measured performance. Neither is universally better. Mixing their cells may help recovery, or waste scarce movement on unnecessary detours.
+
+The world should offer small moments the player can recognize: a courier doubling back with its spark, a cluster gathering at a blocked path, a late delivery keeping the beacon lit. The engine determines whether they happen. The agent can highlight an event; it cannot invent a rescue to make an episode satisfying.
+
+## The first fifteen minutes: The Wound
+
+The intended first session is one complete creation-and-rescue story. This is a storyboard for an unbuilt game, not a playable tutorial.
+
+1. **Make something yours.** Name a starter colony and give it a wish: “Get the light there quickly.” The agent shows one plain-language rule change and runs a short, bounded expedition. See a spark reach its destination before learning a metric.
+2. **Watch its habit.** Inspect three compact map snapshots: departure, the decisive moment, and the outcome. Track the same cells between frames. A short explanation connects their movements to the change you requested.
+3. **Meet the wound.** Choose a trial whose announced hazard closes the direct route while leaving an attainable alternative. The same colony now has to adapt. The light may survive or go out; this is decided by the run.
+4. **Ask for a rescue.** “Keep Moth fast, but help it stop getting stuck.” The agent offers two understandable approaches, such as changing every cell's rule or mixing in a few explorers. Explain the likely cost, let the player choose, and preserve the parent.
+5. **See whether it helped.** Run the child and parent on matched worlds within the agreed budget. Show the decisive difference and any new weakness. An improvement earns a name; a failure earns a next hypothesis.
+6. **Leave with a new ambition.** Take the favorite into an unseen local map: deliver more light, survive another obstruction, or race an archived rival when that mode exists. Keep a replay and the family tree.
+
+Calibrate the authored opening so a useful improvement is attainable and the first run is short. Do not guarantee that every wish works or every child improves. Before expanding the engine, test whether a new player can say what changed, care which child they keep, and spontaneously ask to try another idea.
+
+An illustrative conversation:
+
+> **You:** I like Moth. Make it less helpless when the road disappears. Keep the original.
+>
+> **Agent:** We can give every cell a way to turn back, or mix in a few explorers. Explorers might find another route, but spend more of the expedition wandering.
+>
+> **You:** Try a few explorers. Twelve children at most, within our experiment budget.
+>
+> **Agent:** This child reached the beacon after the collapse. One courier turned back and took the lower path. It delivered less light on the intact map than Moth did. Here are the two replays.
+>
+> **You:** Keep it. Was that a fluke?
+>
+> **Agent:** We can compare them on new maps, then remove that turn-back rule in a copy to see what it contributed.
+
+All dialogue and outcomes above are fictional. A real result must name its cases, costs, and trace evidence. “Helpless,” “persistent,” and “brave” are ways to talk about observed behavior, not diagnoses of a mental state.
+
+## Chat with something to watch
+
+Chat remains the primary interface. The player describes intent; the agent operates the Rust CLI. A normal response leads with what happened, shows a compact spatial view, and offers a choice. Detailed traces, programs, and statistics sit behind follow-up requests.
+
+The first engine should emit a small text map with a stable legend for couriers, carried sparks, the spring, blocked spaces, and the beacon. Its event log can say “Moth-3 turned back at the closed passage” only when the trace supports it. Preserve cell identity across frames and show the result of every completed expedition, including failures. Richer replay images can come later from those same states, without requiring a separate game interface.
+
+Translate wishes into inspectable changes. “Make it brave” might become “try an unexplored adjacent space after repeated failed moves.” The agent explains that interpretation before a consequential experiment; the word itself grants no ability. Respect the player's existing experiment budget and external-agent spending limits. No hidden overnight searches are needed to keep the creature alive.
 
 ## A universe that changes scale
 
@@ -18,19 +67,19 @@ Universal Paperclips changes the player's responsibilities as its economy expand
 
 | Chapter | What you control | The new tension | What survives the transition |
 | --- | --- | --- | --- |
-| **The Cell** | Tiny local programs and a small body | Fast behavior can be brittle; a useful detour can look like failure | Named genomes and the ability to read their actions |
-| **The Wound** | Chimeric colonies and damage experiments | Mixed strategies can help or interfere; recovery has a cost | Tested repair strategies and persistent lineages |
-| **The Tissue** | Networks of colonies with explicit interfaces | Coordination, memory, and communication compete for resources | A whole colony becomes a callable component, with its costs intact |
+| **The Cell** | Your first spark-carrying creature | Reach the beacon before its light runs out | A named lineage with a recognizable habit |
+| **The Wound** | A creature facing an altered world | Keep a favorite useful when its usual route fails | Descendants that recover, with their tradeoffs recorded |
+| **The Tissue** | Several colonies forming a larger body | Get specialists to cooperate under shared limits | A whole colony becomes a component, with its costs intact |
 | **The Ecology** | A stable of specialists and their partnerships | No strategy dominates every habitat; competitors expose weaknesses | An adaptive portfolio and a record of its tradeoffs |
 | **The Frontier** | Search processes that invent organisms and experiments | Finding useful representations becomes the problem | Reusable algorithms, counterexamples, and research records |
 
 The first playable release covers a small slice of the first two chapters. Later transitions introduce new choices, not merely larger quantities of the same resource.
 
-The narrative reveal is that the world you mastered can become a cell in another world. Promotion preserves a component's real execution, memory, and communication costs. It never turns an expensive algorithm into a free primitive.
+The narrative reveal is that the world you mastered can become a cell in another world. Your first creature might become the transport system of something much larger. An old favorite returns in a new role, and you have to learn what its habits mean at that scale. Promotion preserves a component's real execution, memory, and communication costs. It never turns an expensive algorithm into a free primitive.
 
 The campaign can culminate in an expedition toward **the Witness**: a method that finds checkable answers across increasingly difficult constraint worlds. It is a fictional destination for an open research frontier, not a promise that the campaign has a P=NP solution hidden at its end.
 
-## Creatures you can understand
+## What you are actually building
 
 An organism has four distinct parts:
 
@@ -53,48 +102,31 @@ An organism's rules can contain reusable descriptions of situations as well as a
 
 The player’s notebook distinguishes a possible situation from a claim checked against the world. A symbol names; an expression represents; the engine checks whether the represented condition holds at a particular snapshot. This gives the agent a concrete job: explain what a lineage's condition means, find where it fails, and test whether it travels to a new environment.
 
-After the first wound, try naming a recurring local inversion, using that expression in a copied policy, and testing it on new values. Later, transplant a lineage's vocabulary into a different body or let tissues communicate through it. Aliases preserve their definitions and execution costs; a shorter name does not create a cheaper primitive or expose a hidden sensor.
+After the first rescue, name a recurring situation such as “carrying a spark and blocked ahead.” Inspect the two conditions, use the expression in a copied policy, and test it on a new map. A name such as “trapped” can be disproved by a replay in which the courier finds another way. Later, transplant a lineage's vocabulary into a different body or let tissues communicate through it. Aliases preserve their definitions and execution costs; a shorter name does not create a cheaper primitive or expose a hidden sensor.
 
 The [symbols and facts glossary](symbols-and-facts.md) develops these mechanics from simple symbols, complex symbols, Sachverhalte, and Tatsachen. It is a dated, revisable reading aid. The introductory episode and competitive ranking stay focused on observable behavior.
-
-## The first fifteen minutes: The Wound
-
-Start with a short line of numbered cells, two transparent starter policies, and one goal: put the numbers in order. A cell can inspect its immediate neighbors, retain a little state, and propose a local exchange. The engine shows the values, policy colors, and a few important events as compact text that the chat agent can quote.
-
-1. **Meet two lineages.** Run each on the same small array. Inspect one cell's sensing and action. The agent explains a visible difference in their rules.
-2. **Make a chimera.** Mix the policies and name the offspring. Compare it with both parents on matched starting arrays.
-3. **Introduce a wound.** Disable one cell's controller partway through the run. Other cells may still exchange with that passive cell, so it can reach its sorted position. Later challenges with multiple disabled controllers must establish that the target remains reachable.
-4. **Investigate the failure.** Inspect a short trace around the stall. Form a hypothesis about one rule, the update schedule, or the mixture.
-5. **Breed a rescue.** Evaluate a small batch with an explicit compute cap. Preserve a useful child, then move it to unseen arrays or a different schedule.
-6. **Archive the expedition.** Save its lineage and a replayable result. An eventual ranked submission sends the organism to an independent evaluator.
-
-The lesson is not pre-scripted success: both starters or their offspring may fail a challenge. The authored tutorial must be calibrated to supply an attainable improvement, while all reported outcomes come from the simulation.
-
-An illustrative conversation:
-
-> **Player:** Moth is quick, but it falls apart after the wound. Cross it with the patient one. Spend at most two million fuel units.
->
-> **Agent:** I tested twelve children. Moth-7 recovered on 18 of 20 training worlds; Moth recovered on 9. The child sometimes makes the array less ordered before it frees a stalled neighbor. It spends more fuel on healthy arrays.
->
-> **Player:** Is the detour actually helping, or is it just lucky?
->
-> **Agent:** I can disable that rule in a copy and run both on matched worlds. That tests the mechanism. A separate unseen batch tests whether the improvement travels.
->
-> **Player:** Do both. Keep the original intact.
-
-These numbers illustrate the intended conversation and are not experimental results. The engine returns exact counts and trace references; the agent supplies the explanation. Calling a creature "patient" is narrative shorthand, not a claim about its mental state.
 
 ## What makes another session worthwhile
 
 **Attachment:** lineages have names, ancestry, characteristic failures, and visible inherited rules. A failed child can remain valuable in a different habitat. Keep a small active stable and a larger archive so choice matters without deleting discoveries.
 
-**Discovery:** observations beyond the selected objective can become side quests. Does a mixed colony cluster by policy even though cells cannot read policy labels? Does the same genome recover under a different schedule? A surprising trace prompts a controlled experiment, not an automatic scientific award.
+**Discovery:** a creature bred for delivery might also recover from damage or perform well with an unfamiliar body. Ask “What else can it do?” and let the agent run a bounded side experiment. Later research habitats include self-sorting cells, where players can investigate clustering and temporary setbacks in a particularly transparent world.
 
 **Tradeoffs:** a fast specialist, a slow repairer, and a memory-heavy generalist can all be worth keeping. A finite expedition roster makes the player choose which capabilities to bring. Any routing policy used in competition is part of the submitted organism and pays for its decisions.
 
-**Rivalry:** fight archived rival organisms on the same challenges. Later stressor tournaments can pit repairers against challenge-generating organisms. Stressors operate inside declared, solvable task rules. Direct attacks on another player's save, arbitrary execution, and resource theft are outside the game.
+**Rivalry:** race archived rival organisms through the same habitat under equal execution limits. Show where a favorite falls behind and let the player build a response. A rival is an observable benchmark with a strategy to understand. Later stressor tournaments can pit repairers against challenge-generating organisms. Stressors operate inside declared, solvable task rules. Direct attacks on another player's save, arbitrary execution, and resource theft are outside the game.
 
-**Agency:** the player can ask an excellent question, commission a broad search, pursue a strange side effect, or design a better representation. The agent can automate experiments within explicit budgets. Nothing depends on a daily timer, a paid hint, or leaving the application idling.
+**Agency:** the player chooses the next ambition, the creature to keep, and the cost they are willing to pay. They can ask an excellent question, commission a broad search, pursue a strange side effect, or design a better representation. The agent can automate experiments within explicit budgets. Nothing depends on a daily timer, a paid hint, or leaving the application idling.
+
+## Adventure that can become an experiment
+
+The player earns a growing **atlas of capabilities**: this lineage recovered, that partnership carried more, this habit survived a new body. Familiar creatures, replayable discoveries, and access to harder expeditions make progress tangible. The atlas records what happened under which conditions; it does not add points for program length or generated claims.
+
+Research begins with ordinary curiosity. “Was that a fluke?” commissions a comparison on new worlds. “Why did it work?” commissions a controlled change. “Could anyone else use this?” prepares a reproducible export. The agent handles the protocol within a budget, while the player can inspect the evidence or keep exploring.
+
+Keep three levels visible in the notebook: **observed here**, **reproduced under stated tests**, and **reviewed contribution**. The last requires independent checking and a defensible question or improvement; most play will remain at the first two levels. A new personal best still deserves celebration without being called a scientific breakthrough. Publication is a separate player action.
+
+The larger fiction explores a space of possible forms: how different bodies express a rule, what a colony can do together, and which habits persist when the world changes. Michael Levin's research and philosophical proposals provide questions for these expeditions; the [research foundations](research.md) distinguish experimental findings from speculative interpretations. Play can invite wonder about life and minds without awarding a consciousness score or declaring that a metaphysical theory is true.
 
 ## An open ceiling
 

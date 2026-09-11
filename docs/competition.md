@@ -1,6 +1,6 @@
 # Competition proposal
 
-Proposal, 10 September 2026. The Platonik website and documentation are the current milestone. The game engine and leaderboard are proposed; no hosted ranking service exists yet. This page specifies the intended merit model and the work needed before calling results official.
+Proposal, 11 September 2026. The Platonik website and documentation are the current milestone. The game engine and leaderboard are proposed; no hosted ranking service exists yet. This page specifies the intended merit model and the work needed before calling results official.
 
 ## What it means to be better
 
@@ -10,7 +10,7 @@ This is an open engineering competition. Equal execution limits do not mean equa
 
 ## One readable main rank
 
-A season publishes ordered difficulty tiers. Each tier contains several balanced habitat classes, exact case counts, and resource limits. For the sorting prototype, candidate classes are healthy arrays, wounded controllers, and changed activation schedules. Larger tiers change array sizes or constraints. Exact constants must be calibrated before a season is frozen.
+A season publishes ordered difficulty tiers. Each tier contains several balanced habitat classes, exact case counts, and resource limits. For an initial beacon season, candidate classes are intact routes, declared route collapses, and changed activation schedules. Larger tiers can increase map size, traffic, or delivery requirements while retaining checked feasibility. A later sorting division would use its own array and controller-damage rules. Exact constants must be calibrated before a season is frozen.
 
 Rank a player's single selected submission lexicographically by:
 
@@ -19,6 +19,8 @@ Rank a player's single selected submission lexicographically by:
 3. **Lower charged execution cost:** for entries tied after clearing K tiers, compare total charged work on tiers 1 through K+1, capped at the season's last tier. Run every case in that prefix; an early failure cannot omit later cases. Cases that exhaust their budget or fail without a valid answer receive their full case allowance. Exact ties share rank.
 
 Report class-by-class outcomes beside the rank, including all failures and budget exhaustion. Each player nominates one submission before a round closes; it replaces that player's previous nomination for that round. Retries and duplicate offspring cannot accumulate score. Separate specialist tables can expose useful tradeoffs without changing the main ordering.
+
+A local ghost race shows the two organisms in separate copies of the same habitat, with aligned simulation ticks and equal limits. Couriers cannot collide with the rival across copies. A visually faster delivery is one moment in the race; the displayed verdict follows the published completion and cost rules.
 
 This rule favors broad completion before micro-optimization. Clearing a finite tier is an observation on that tier's cases, not a universal correctness or reliability proof. The comparison stops at the season's published maximum; extending the frontier requires a new version or season.
 

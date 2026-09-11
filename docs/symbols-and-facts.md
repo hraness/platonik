@@ -4,11 +4,13 @@ Design proposal and working glossary, 11 September 2026. These ideas extend Plat
 
 ## Give an organism a way to describe its world
 
-A creature can inherit more than an action rule. It can inherit a useful way of grouping observations: a neighboring pair that needs sorting, a local configuration that permits a repair, or a remembered signal that predicts trouble. Breeding can change how these descriptions are composed and how a policy responds to them.
+A creature can inherit more than an action rule. It can inherit a useful way of grouping observations: a courier carrying a spark toward a blocked space, a local configuration that permits a repair, or a remembered signal that predicts trouble. Breeding can change how these descriptions are composed and how a policy responds to them.
 
 The player names a pattern, inspects its parts, and asks whether it represents something useful. A new name earns its place when it helps an organism act in unfamiliar conditions. Naming alone does not change the world or establish a fact.
 
 This adds a representation experiment to the existing loop: **observe a relation → describe it → combine descriptions → act → check the world**. It does not require a new score or a separate resource economy.
+
+In the first beacon expedition, start with “carrying a spark” and “blocked ahead.” Combine them into a condition, inspect its parts, and choose what a copied creature should do when both hold. Whether that condition is true in a recorded moment is a separate, checkable question. The formal vocabulary can wait until the player wants it.
 
 ## A growing vocabulary
 
@@ -25,7 +27,7 @@ The game mapping is a design choice, not an interpretation claiming to settle th
 
 ## Keep the description separate from the situation
 
-In an observer's notebook, let `a` and `b` name two cells. The expression `left_of(a, b)` represents a possible relation. It can be true or false at a particular snapshot. If the engine confirms it there, the notebook can attach evidence to that claim. The expression itself is not the pair of cells, and a well-formed expression is not automatically true.
+In the later sorting habitat's observer notebook, let `a` and `b` name two cells. The expression `left_of(a, b)` represents a possible relation. It can be true or false at a particular snapshot. If the engine confirms it there, the notebook can attach evidence to that claim. The expression itself is not the pair of cells, and a well-formed expression is not automatically true.
 
 Now combine it with a second expression:
 
@@ -45,7 +47,7 @@ Notebook descriptions can refer to the full recorded world. Organisms retain the
 
 **Transplant a vocabulary.** Move a genome and its definitions to a new body or activation schedule. Preserve every definition and the sensor contract, documenting any unavoidable changes. Does the same local description remain useful? Compare immediate performance with a separately adapted descendant. Later tissues can exchange bounded messages carrying these descriptions; receivers must learn or share the interpretation rather than receiving truth by declaration.
 
-The first experiment belongs after the introductory wound. Crossovers of conditions can use the existing typed-rule breeding system. Vocabulary transplantation and communication belong to later chapters; they do not expand the first playable release into a general symbolic reasoning engine.
+Naming a useful condition can begin after the introductory beacon rescue; the sorting example above belongs to a later research habitat. Crossovers of conditions can use the existing typed-rule breeding system. Vocabulary transplantation and communication belong to later chapters; they do not expand the first playable release into a general symbolic reasoning engine.
 
 ## Names are not free computation
 
