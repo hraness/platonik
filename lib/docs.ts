@@ -9,6 +9,12 @@ export const documents = [
     question: "What would it feel like to play?",
   },
   {
+    slug: "campaign",
+    title: "The Long Trail",
+    description: "A hopeful space western: one companion, a traveling herd, living arks, and a civilization following a distant light.",
+    question: "Where could this whole journey lead?",
+  },
+  {
     slug: "symbols-and-facts",
     title: "Symbols & facts",
     description: "A growing Wittgenstein-inspired vocabulary for representation, composition, and checking what is true in a world.",

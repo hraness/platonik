@@ -4,11 +4,12 @@ import Link from "next/link";
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const chapters = [
-  ["Make it", "Give a little creature a name and a job. Watch your idea take its first steps."],
-  ["Help it recover", "Its usual route has failed. Keep the habit you love; change the one that gets it stuck."],
-  ["Bring it company", "Try a mixed colony. Discover whether different habits help each other."],
-  ["Change its world", "Take a favorite somewhere unfamiliar. Find out what it learned to do—and where it still fails."],
-  ["Build something larger", "Let your colony become part of another organism. Meet a whole new scale of problems."],
+  ["A spark in the dust", "Help your first companion carry light home. A distant beacon begins to answer."],
+  ["The long trail", "Gather a herd of strange specialists. Find a way through worlds no creature can cross alone."],
+  ["A living ark", "Build a habitat from their cooperating abilities. Watch your home leave the planet."],
+  ["The free ports", "Connect independent settlements. Let a discovery you made help someone far from home."],
+  ["The bloom", "Your creations begin creating. Guide the ambitions of a civilization learning to sustain itself."],
+  ["Across the Quiet", "Lead living worlds beyond the last familiar route. Reach the Far Beacon—and answer it."],
 ];
 
 export default function HomePage() {
@@ -16,8 +17,8 @@ export default function HomePage() {
     <main id="main" className="home">
       <section className="hero" aria-labelledby="hero-title">
         <h1 id="hero-title">Make a creature.<br />See what it becomes.</h1>
-        <p className="hero-description">A game about building little creatures with your AI—and discovering what they can do.</p>
-        <p className="hero-detail">Give yours a name. Ask it to do something. Help it survive when the world changes. Follow small surprises into bigger questions about life and minds.</p>
+        <p className="hero-description">A space western about growing strange little creatures with your AI—and the civilization they could become.</p>
+        <p className="hero-detail">Start with a companion and a flickering light. Gather a herd. Grow a home that can travel among the stars. Somewhere beyond the charted trails, another beacon is answering.</p>
         <div className="hero-links"><Link className="primary-link" href="/docs/game-design">Explore the game design <span aria-hidden="true">↗</span></Link><Link href="/docs">Read the field guide</Link></div>
         <p className="status-note">A game in design. This site explores the proposal; there is no playable release yet.</p>
       </section>
@@ -66,9 +67,11 @@ export default function HomePage() {
       </section>
 
       <section className="home-section" aria-labelledby="scale-title">
-        <div className="section-intro"><h2 id="scale-title">Your favorite has a future.</h2><p>A creature becomes a colony. A colony becomes part of a larger body. The little thing you made keeps finding new roles.</p></div>
+        <div className="section-intro"><h2 id="scale-title">One companion. A civilization among the stars.</h2><p>Follow the Far Beacon. Each new journey asks more of your herd—and gives an old favorite another way to matter.</p></div>
         <ol className="chapter-list">{chapters.map(([title, description]) => <li key={title}><h3>{title}</h3><p>{description}</p></li>)}</ol>
-        <p className="figure-note">The first prototype is proposed around one beacon expedition. Larger bodies and later worlds remain future directions.</p>
+        <p>Keep the original. Grow a descendant. Build a place where different habits flourish together. The herd you once led through the dust could become a fleet of living worlds.</p>
+        <p className="figure-note">Proposed campaign arc. The first prototype covers one local beacon expedition; living arks, settlements, and autonomous discovery are later directions.</p>
+        <Link className="text-link" href="/docs/campaign">Follow the Long Trail <span aria-hidden="true">↗</span></Link>
       </section>
 
       <section className="home-section split-section" aria-labelledby="competition-title">
