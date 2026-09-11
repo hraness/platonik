@@ -8,28 +8,32 @@ import { isContinuityReceipt, type ContinuityIndex } from "@/lib/bridge/continui
 const number = (value: number) => value.toLocaleString("en-US");
 const work = (costs: Record<string, number>) => Object.values(costs).reduce((sum, value) => sum + value, 0);
 
-export function ContinuityLab({ index }: { index: ContinuityIndex }) {
+export function ContinuityLab({ index, artifactDirectory = "habitat" }: {
+  index: ContinuityIndex;
+  artifactDirectory?: "habitat" | "navigation";
+}) {
   const [selected, setSelected] = useState(index.cases[0]?.id ?? "");
-  const [loaded, setLoaded] = useState<{ id: string; receipt: Receipt } | null>(null);
+  const [loaded, setLoaded] = useState<{ path: string; receipt: Receipt } | null>(null);
   const [at, setAt] = useState(0);
   const [error, setError] = useState("");
   const [retry, setRetry] = useState(0);
   const chosen = index.cases.find(item => item.id === selected);
+  const artifactPath = `/${artifactDirectory}/${encodeURIComponent(selected)}`;
   useEffect(() => {
     if (!chosen) return;
     const controller = new AbortController();
     setError("");
-    fetch(`/habitat/${encodeURIComponent(selected)}.receipt.json`, { signal: controller.signal })
+    fetch(`${artifactPath}.receipt.json`, { signal: controller.signal })
       .then(async response => {
         if (!response.ok) throw new Error("The recorded habitat could not be loaded.");
         const data: unknown = await response.json();
         if (!isContinuityReceipt(data) || data.result_hash !== chosen.result_hash) throw new Error("The record does not match this comparison. Reload it to try again.");
-        if (!controller.signal.aborted) setLoaded({ id: selected, receipt: data });
+        if (!controller.signal.aborted) setLoaded({ path: artifactPath, receipt: data });
       }).catch(cause => { if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "The recorded habitat could not be loaded."); });
     return () => controller.abort();
-  }, [selected, chosen, retry]);
+  }, [artifactPath, chosen, retry]);
   if (!chosen) return <p role="status">No continuous-habitat records have been published.</p>;
-  const receipt = loaded?.id === selected ? loaded.receipt : null;
+  const receipt = loaded?.path === artifactPath ? loaded.receipt : null;
   const frame = receipt?.result.frames[Math.min(at, receipt.result.frames.length - 1)];
   function select(id: string) {
     if (!index.cases.some(item => item.id === id)) return;
@@ -55,7 +59,7 @@ export function ContinuityLab({ index }: { index: ContinuityIndex }) {
         <ol>{chosen.cuts.map(cut => <li key={cut.tick}><button className="lab-text-button" onClick={() => { setAt(cut.tick); document.getElementById("habitat-tick")?.focus(); }}>{cut.label} · tick {cut.tick}</button><p>{cut.detail}</p></li>)}</ol>
         <p data-testid="habitat-continuity">Resumed result equals uninterrupted result: <strong>{chosen.uninterrupted_equal ? "yes" : "no"}</strong>. Exported and restored result equals the original: <strong>{chosen.restored_equal ? "yes" : "no"}</strong>. Equality includes every frame, pending report, resource, cost, and outcome.</p>
       </section>
-      <section className="bridge-artifacts"><h2>Give this world to your agent.</h2><div className="lab-actions"><a className="lab-button secondary" href={`/habitat/${encodeURIComponent(selected)}.experiment.json`} download>Download experiment</a><a className="lab-button secondary" href={`/habitat/${encodeURIComponent(selected)}.receipt.json`} download>Download receipt</a><a className="lab-button secondary" href={`/habitat/${encodeURIComponent(selected)}.bundle.json`} download>Download saved habitat</a></div><pre tabIndex={0}><code>{`./target/release/platonik habitat init my-habitat ${selected}.experiment.json\n./target/release/platonik habitat advance my-habitat --until 9 --expect-revision 0 --request-id first-leg\n./target/release/platonik habitat status my-habitat`}</code></pre><details className="lab-details"><summary>Record identity and limits</summary><p>{receipt.protocol}; {receipt.experiment.ticks} ticks; {number(receipt.experiment.fuel)} total modeled work; {receipt.experiment.activation_fuel} work per activation.</p><p className="bridge-hash">Experiment: <code>{receipt.experiment_hash}</code><br />Result: <code>{receipt.result_hash}</code></p></details></section>
+      <section className="bridge-artifacts"><h2>Give this world to your agent.</h2><div className="lab-actions"><a className="lab-button secondary" href={`${artifactPath}.experiment.json`} download>Download experiment</a><a className="lab-button secondary" href={`${artifactPath}.receipt.json`} download>Download receipt</a><a className="lab-button secondary" href={`${artifactPath}.bundle.json`} download>Download saved habitat</a></div><pre tabIndex={0}><code>{`./target/release/platonik habitat init my-habitat ${selected}.experiment.json\n./target/release/platonik habitat advance my-habitat --until 9 --expect-revision 0 --request-id first-leg\n./target/release/platonik habitat status my-habitat`}</code></pre><details className="lab-details"><summary>Record identity and limits</summary><p>{receipt.protocol}; {receipt.experiment.ticks} ticks; {number(receipt.experiment.fuel)} total modeled work; {receipt.experiment.activation_fuel} work per activation.</p><p className="bridge-hash">Experiment: <code>{receipt.experiment_hash}</code><br />Result: <code>{receipt.result_hash}</code></p></details></section>
     </>}
   </>;
 }

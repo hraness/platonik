@@ -39,7 +39,7 @@ The first fixture draft gave both beacons8 initial charge. Several sequences beg
 
 Two navigation failures remained. Reopening the reversed crossing at tick 50 or the late crossing at tick 61 can remove the wall beside the recovery courier. It then follows a four-position loop, leaving two or one supplies at the source. Those inputs and complete failure receipts remain committed as regression cases.
 
-The qualified versions reopen at tick 88, after supply collection. That is a narrower admitted journey, not a navigation repair. A later navigation gate must escape the original loops with unchanged event times. The world simulator was not changed to rescue the courier.
+The qualified versions reopen at tick 88, after supply collection. That is a narrower admitted journey, not a navigation repair. The subsequent [navigation diagnostic](navigation-evaluation.md) tests new courier programs on the original event times and retains these historical failures. The world simulator was not changed to rescue the courier.
 
 Seven controls test the reference: idle courier, idle relay, idle keeper, an in-gap memory clear, each constant answer, and a shortened total fuel allowance. Their failures establish dependence of this particular crew on its parts and resources. The successful blind design is a direct reason to avoid claiming that signals are necessary for every lawful architecture.
 
@@ -89,7 +89,7 @@ The static replay and published study are projections of actual Rust artifacts, 
 
 ## What this admits next
 
-The continuous-state gate passes. The Frugal transfer failures keep the general-navigation gate open; they are not converted into an overall successful campaign claim. Exact continuity can justify keeping a world while the next capability is added. It cannot establish that the whole game is compelling or scientifically productive. Before a complete campaign claim, the [automated validation path](design-validation.md#the-automated-path-before-people-play) still requires repaired navigation on preserved counterexamples, material-dependent construction, useful execution by constructed organisms, continuation without a reset, and traversal of the compressed campaign.
+The continuous-state gate passes. Its Frugal transfer failures remain failures; they are not converted into an overall successful campaign claim. A subsequent [bounded navigation repair](navigation-evaluation.md) passes the two preserved counterexamples and a declared timing-and-bearing neighborhood. General navigation remains open. Exact continuity can justify keeping a world while the next capability is added. It cannot establish that the whole game is compelling or scientifically productive. Before a complete campaign claim, the [automated validation path](design-validation.md#the-automated-path-before-people-play) still requires material-dependent construction, useful execution by constructed organisms, continuation without a reset, and traversal of the compressed campaign.
 
 Human playtesting remains last. The next automated stage should test whether players' existing creations remain useful as they build something larger, and whether distinct ambitions produce meaningful tradeoffs under honest cost accounting.
 

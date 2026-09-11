@@ -23,7 +23,7 @@ p { text-wrap: pretty; }
 .skip-link { position: fixed; top: 8px; left: 8px; z-index: 10; background: var(--paper); padding: 10px 16px; transform: translateY(-150%); }
 .skip-link:focus { transform: translateY(0); }
 .site-header, .site-footer { max-width: 1160px; margin-inline: auto; padding-inline: 44px; }
-.site-header { min-height: 112px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.site-header { min-height: 112px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
 .wordmark { font-family: var(--display); font-size: 29px; letter-spacing: -.04em; text-decoration: none; line-height: 1; }
 .wordmark span { color: var(--accent); }
 .site-header nav { display: flex; gap: 29px; font-size: 14px; }
