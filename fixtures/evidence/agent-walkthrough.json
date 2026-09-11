@@ -1,0 +1,69 @@
+{
+  "new_evaluations": 4,
+  "verification_recomputations": 8,
+  "rows": [
+    {
+      "variant": "parent",
+      "case": "normal",
+      "exit": 0,
+      "passed": true,
+      "work": 2412,
+      "deliveries": 3,
+      "delivery_ticks": [
+        6,
+        18,
+        30
+      ],
+      "first_blocked_action_tick": null,
+      "receipt_bytes": 119082,
+      "verified": true
+    },
+    {
+      "variant": "child",
+      "case": "normal",
+      "exit": 0,
+      "passed": true,
+      "work": 2805,
+      "deliveries": 3,
+      "delivery_ticks": [
+        8,
+        20,
+        32
+      ],
+      "first_blocked_action_tick": null,
+      "receipt_bytes": 119369,
+      "verified": true
+    },
+    {
+      "variant": "parent",
+      "case": "wounded",
+      "exit": 1,
+      "passed": false,
+      "work": 2461,
+      "deliveries": 0,
+      "delivery_ticks": [],
+      "first_blocked_action_tick": null,
+      "receipt_bytes": 111696,
+      "verified": true
+    },
+    {
+      "variant": "child",
+      "case": "wounded",
+      "exit": 0,
+      "passed": true,
+      "work": 2850,
+      "deliveries": 3,
+      "delivery_ticks": [
+        8,
+        22,
+        36
+      ],
+      "first_blocked_action_tick": null,
+      "receipt_bytes": 119097,
+      "verified": true
+    }
+  ],
+  "parent_preservation": "contents and modification times unchanged",
+  "candidate": "Copied the public resilient courier program; not a novel algorithm or human pilot.",
+  "scope": "Developer agent following the shipped skill; copied public recovery policy; not a blinded human study or equal-agent optimization comparison."
+}

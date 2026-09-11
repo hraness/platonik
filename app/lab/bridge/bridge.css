@@ -1,0 +1,24 @@
+.bridge .lab-header > a { display: inline-block; margin-bottom: 2rem; }
+.bridge-intro { max-width: 72ch; margin: 3rem 0 2rem; }
+.bridge h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.bridge h3 { font-size: 1.15rem; margin: 1.5rem 0 .7rem; }
+.bridge-picker { max-width: 36rem; }
+.bridge-replay { display: grid; grid-template-columns: 1.15fr 1fr; gap: 3rem; margin: 2rem 0 3rem; align-items: start; }
+.bridge-map { width: 100%; max-height: 32rem; display: block; border: 1px solid var(--line); }
+.bridge figure { margin: 0 0 1.5rem; }
+.bridge figcaption { color: var(--muted); font-size: .875rem; line-height: 1.6; margin-top: .8rem; }
+.bridge-observations h3:first-child { margin-top: 0; }
+.bridge ul { padding-left: 1.2rem; line-height: 1.7; }
+.bridge-artifacts { border-top: 1px solid var(--line); padding: 1rem 0 2rem; }
+.bridge pre { overflow-x: auto; background: var(--wash); padding: 1rem; font-size: .85rem; line-height: 1.7; }
+.bridge-hash { overflow-wrap: anywhere; font-size: .85rem; }
+.bridge-evidence { border-top: 1px solid var(--line); padding-top: 2rem; }
+.bridge-evidence > p, .bridge-checks { max-width: 75ch; }
+.bridge-table { overflow-x: auto; max-width: 100%; margin: 1.5rem 0; }
+.bridge table { width: 100%; border-collapse: collapse; text-align: left; font-variant-numeric: tabular-nums; }
+.bridge th, .bridge td { padding: .65rem .8rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.bridge th:first-child, .bridge td:first-child { padding-left: 0; }
+.bridge th { font-weight: 500; }
+.bridge-checks li { margin: .85rem 0; }
+.bridge button:disabled { opacity: .55; cursor: default; }
+@media (max-width: 760px) { .bridge-replay { grid-template-columns: 1fr; gap: 1.5rem; } .bridge-map { max-height: 25rem; } .bridge .lab-actions { flex-wrap: wrap; } }

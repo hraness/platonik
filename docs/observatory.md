@@ -1,6 +1,6 @@
 # Explore the observatory
 
-Browser prototype guide, 11 September 2026. The experiments described here are implemented on the website. The Rust game, agent skills, rankings, and shared world remain a proposal. These small models are for testing a design direction, not evidence that the larger ecology works.
+Browser prototype guide, 11 September 2026. The experiments described here are implemented on the website. The complete campaign, rankings, and large shared world remain a proposal. A separate [Rust bridge](rust-bridge.md) now supplies real CLI experiments and an agent play guide; [replay its recorded evidence](https://platonik.space/lab/bridge). These small models are for testing a design direction, not evidence that the larger ecology works.
 
 ## Put a specimen on the bench
 

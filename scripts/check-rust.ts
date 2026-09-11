@@ -1,0 +1,16 @@
+import { spawnSync } from "node:child_process";
+
+function run(command: string, args: string[]) {
+  const result = spawnSync(command, args, { stdio: "inherit" });
+  if (result.error) throw result.error;
+  if (result.status !== 0) process.exit(result.status ?? 1);
+}
+
+const version = spawnSync("rustc", ["--version"], { encoding: "utf8" });
+if (version.status !== 0 || !version.stdout.startsWith("rustc 1.97.1 ")) {
+  throw new Error("The Rust gate requires rustc 1.97.1; install the pinned rust-toolchain.toml toolchain.");
+}
+run("cargo", ["fmt", "--all", "--", "--check"]);
+run("cargo", ["clippy", "--workspace", "--all-targets", "--locked", "--", "-D", "warnings"]);
+run("cargo", ["test", "--workspace", "--locked"]);
+run("bun", ["scripts/record-bridge.ts", "--check"]);

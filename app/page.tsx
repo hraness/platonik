@@ -20,7 +20,7 @@ export default function HomePage() {
         <p className="hero-description">An engineering adventure about growing strange little creatures with your AI—and the civilization they could become.</p>
         <p className="hero-detail">Start with a companion and a flickering light. Gather a herd. Grow a home that can travel among the stars. Somewhere beyond the charted trails, another beacon is answering.</p>
         <div className="hero-links"><Link className="primary-link" href="/lab">Enter the observatory <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Explore the game design</Link></div>
-        <p className="status-note">A game in design, with three working browser experiments. The Rust engine and agent skills remain to be built.</p>
+        <p className="status-note">A game in design, with four browser experiments and a working Rust integration prototype. <Link href="/lab/bridge">See the first shared habitat.</Link></p>
       </section>
 
       <section className="home-section first-world" aria-labelledby="first-world-title">
@@ -61,7 +61,7 @@ export default function HomePage() {
           <div className="message"><span className="speaker">Agent</span><p>We could teach every cell to turn back, or mix in a few explorers. The explorers may find another route, but spend more of the journey wandering.</p></div>
           <div className="message"><span className="speaker">You</span><p>Try a few explorers. Show me what happens.</p></div>
         </div>
-        <p className="figure-note">Illustrative dialogue. The Rust engine and agent skills are still to be built.</p>
+        <p className="figure-note">Illustrative campaign dialogue. A smaller Rust experiment runner and agent play guide are available now.</p>
         <p>Chat is the interface. Your agent turns a wish into a small program; the engine runs it and returns snapshots of what happened. You choose what to keep, what to change, and how far to search.</p>
         <Link className="text-link" href="/docs/game-design#chat-with-something-to-watch">How play would feel in chat <span aria-hidden="true">↗</span></Link>
       </section>
@@ -70,7 +70,7 @@ export default function HomePage() {
         <div className="section-intro"><h2 id="scale-title">One companion. A civilization among the stars.</h2><p>Follow the Far Beacon. Each new journey asks more of your herd—and gives an old favorite another way to matter.</p></div>
         <ol className="chapter-list">{chapters.map(([title, description]) => <li key={title}><h3>{title}</h3><p>{description}</p></li>)}</ol>
         <p>Keep the original. Grow a descendant. Build a place where different habits flourish together. The herd you once led through the dust could become a fleet of living worlds.</p>
-        <p className="figure-note">Proposed campaign arc. The first Rust milestone is one local beacon expedition. The observatory offers smaller browser experiments; living arks, settlements, and autonomous discovery are later directions.</p>
+        <p className="figure-note">Proposed campaign arc. The first Rust prototype connects courier delivery to local beacon control. Living arks, settlements, and autonomous discovery remain later directions.</p>
         <Link className="text-link" href="/docs/campaign">Follow the Long Trail <span aria-hidden="true">↗</span></Link>
         <p>Your couriers learn to carry signals. Signals become memory and control. Working habitats become places that can construct new ones. The Autoverse path gives each change of scale a capability to earn—and a reason to bring an earlier creation along.</p>
         <Link className="text-link" href="/docs/autoverse">Explore the Autoverse path <span aria-hidden="true">↗</span></Link>

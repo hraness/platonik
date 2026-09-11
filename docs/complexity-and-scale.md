@@ -1,6 +1,6 @@
 # Complexity, engineering, and scale
 
-Proposal, 11 September 2026. These are decisions to test as Platonik develops. The Rust engine, competitive evaluator, and large ecologies are not implemented. The browser laboratory is a bounded design prototype, with its own rules.
+Proposal, 11 September 2026. These are decisions to test as Platonik develops. A bounded [Rust integration prototype](rust-bridge.md) is implemented; the competitive evaluator and large ecologies are not. The browser laboratory is a bounded design prototype, with its own rules.
 
 **You are an engineer of living systems.** A favorite companion can become a component in a bridge, a memory, or a civilization. Engineering gives the player something concrete to master; the [Long Trail](campaign.md) gives those creations a reason to matter.
 
@@ -68,4 +68,4 @@ Then let players build reusable modules, compilers into the habitat, repairable 
 
 A player's small creation should remain useful inside a larger system, with enough openness for someone else to discover an unexpected use for it.
 
-The [Autoverse design contract](autoverse.md) makes this progression part of the campaign: its interfaces, module admission rules, computer and constructor criteria, and final voyage depend on earlier capabilities. The separate [signal workbench](https://platonik.space/lab#autoverse) now tests finite circuits and budgeted blueprint assembly. It does not yet integrate those capabilities with courier organisms. The [validation plan](design-validation.md) defines that missing bridge, measured scale-admission targets, and player tests for the complete arc.
+The [Autoverse design contract](autoverse.md) makes this progression part of the campaign: its interfaces, module admission rules, computer and constructor criteria, and final voyage depend on earlier capabilities. The separate [signal workbench](https://platonik.space/lab#autoverse) now tests finite circuits and budgeted blueprint assembly. Its Boolean model remains separate. The [Rust bridge](rust-bridge.md) now integrates physical couriers, delayed signals, retained state, and local service routing in small public fixtures. It does not integrate construction or a complete ark. The [validation plan](design-validation.md) defines the remaining bridge, scale-admission, and player tests.
