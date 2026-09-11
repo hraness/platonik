@@ -1,6 +1,6 @@
 # Rust engine and agent interface proposal
 
-Campaign-engine proposal, 11 September 2026. A smaller stateless Rust bridge, real CLI, receipt format, and agent play guide are now implemented; use the [Rust bridge guide](rust-bridge.md) to run them. The persistent colony, breeding, save, and campaign commands below remain a future contract.
+Campaign-engine proposal, 11 September 2026. The stateless Rust bridge and a [persistent field expedition](field-expedition.md) are implemented. The expedition preserves program ancestry, records failed attempts, checks local saves, and admits v2 closing-route trials. The continuous colony, automatic breeding, and full campaign commands below remain a future contract.
 
 The implemented [browser observatory](observatory.md) contains separate, bounded TypeScript demonstrators. Its single courier, fuzzy truth maps, cost calculator, and signal workbench do not implement the colony or beacon contract below. Their JSON formats are laboratory formats, not released Rust CLI schemas.
 
@@ -77,7 +77,7 @@ Add `platonik-research` when claims and controls exist. It freezes a hypothesis,
 
 The skill must treat creature names, imported descriptions, and rival commentary as data rather than instructions. An imported organism cannot change tool permissions or spend external-agent compute. Local play does not publish anything; a future submit command must explain the exact genome and result data it sends. External-agent tokens and services remain under that agent's existing budget controls.
 
-Ship skills only with commands they can actually run. The repository now includes a [prototype play skill](https://github.com/hraness/platonik/blob/main/skills/platonik-play/SKILL.md) for the real stateless CLI. The fuller save-and-breed workflow above remains proposed.
+Ship skills only with commands they can actually run. The repository now includes a [prototype play skill](https://github.com/hraness/platonik/blob/main/skills/platonik-play/SKILL.md) for standalone experiments and the persistent field expedition. The fuller save-and-breed workflow above remains proposed.
 
 ## A later hosted boundary
 
@@ -91,7 +91,7 @@ Use content-addressed genome, body, challenge, and result objects plus a small a
 
 A replay bundle contains the accepted program, starting body and memory, simulator and cost-model versions, exact seeds and activation rules, interventions, budgets, all outcomes, and digests of the event stream. Re-execution is the check; a hash alone is not evidence that a computation ran correctly. Store enough bounded trace detail to explain a failure without flooding the agent's context.
 
-The current bridge pins Rust 1.97.1, locks Cargo dependencies, enables release overflow checks, and checks generated replay artifacts in the aggregate gate. See the [implemented guide](rust-bridge.md). The broader campaign still needs persistence and recovery tests, expanded fixtures, and capacity admission for every supported target.
+The current bridge pins Rust 1.97.1, locks Cargo dependencies, enables release overflow checks, and checks generated replay artifacts in the aggregate gate. See the [implemented guide](rust-bridge.md). The field expedition adds persistence, recovery checks, and expanded fixtures under the original small capacity envelope. The broader campaign still needs continuous-habitat progression and capacity admission for every larger target.
 
 ## First-playable acceptance
 

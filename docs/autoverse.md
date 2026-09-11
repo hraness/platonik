@@ -83,6 +83,7 @@ Activate bounded regions, pause other regions explicitly, and declare how transf
 | Shared spatial transport, signals, memory, and service routing | Implemented in the bounded [Rust bridge](rust-bridge.md); finite public fixtures, not the complete campaign protocol |
 | In-world construction within that same runtime | Proposed; the separate browser assembler does not implement it |
 | Full stored-program computer, autonomous candidate search, self-construction | Proposed achievements; an adder or prescribed assembler does not establish them |
+| Persistent collection, local save and ancestry, closing-route field expedition | Implemented in the [field expedition](field-expedition.md), with separate bounded trials and frozen confirmation |
 | Rust campaign, living arks, distributed settlements, integrated finale | Proposed; no complete campaign or large ecology has been demonstrated |
 
 The campaign has a finite ending. Continuing mastery comes from better designs, new reviewed habitats, larger admitted limits, and useful exported results. It depends on [research evidence](research.md#what-the-game-can-honestly-produce), not a promise that complexity must keep increasing.

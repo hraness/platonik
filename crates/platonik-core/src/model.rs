@@ -2,12 +2,21 @@ use serde::{Deserialize, Serialize};
 
 pub const MODEL_VERSION: u32 = 1;
 pub const PROTOCOL: &str = "platonik-habitat-v1";
+pub const HAZARD_VERSION: u32 = 2;
+pub const HAZARD_PROTOCOL: &str = "platonik-habitat-v2";
+pub fn protocol_for_version(version: u32) -> Option<&'static str> {
+    match version {
+        MODEL_VERSION => Some(PROTOCOL),
+        HAZARD_VERSION => Some(HAZARD_PROTOCOL),
+        _ => None,
+    }
+}
 pub const MAX_INPUT_BYTES: usize = 65_536;
 pub const MAX_TICKS: u32 = 128;
 pub const MAX_FUEL: u64 = 2_000_000;
 pub const MAX_PENDING: usize = 128;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Point {
     pub x: u8,
@@ -16,6 +25,26 @@ pub struct Point {
 impl Point {
     pub fn distance(self, other: Self) -> u16 {
         self.x.abs_diff(other.x) as u16 + self.y.abs_diff(other.y) as u16
+    }
+}
+
+/// A canonical undirected movement edge; closing it never removes either endpoint.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Edge {
+    pub a: Point,
+    pub b: Point,
+}
+impl Edge {
+    pub fn new(a: Point, b: Point) -> Self {
+        if a < b {
+            Self { a, b }
+        } else {
+            Self { a: b, b: a }
+        }
+    }
+    pub fn is_canonical(self) -> bool {
+        self.a < self.b && self.a.distance(self.b) == 1
     }
 }
 
@@ -162,6 +191,7 @@ pub enum EventKind {
     LinkEnabled { id: u16, enabled: bool },
     ValveEnabled { id: u16, enabled: bool },
     ClearMemory { cell: u16 },
+    EdgeBlocked { edge: Edge, blocked: bool },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -290,6 +320,9 @@ pub struct State {
     pub pending: Vec<Signal>,
     pub delivered: Vec<Delivery>,
     pub next_signal: u64,
+    /// Omitted in legacy receipts so habitat-v1 bytes and identities stay unchanged.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub closed_edges: Vec<Edge>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

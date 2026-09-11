@@ -66,7 +66,7 @@ pub fn make_receipt(experiment: &Experiment) -> Result<Receipt, String> {
     validate_result(experiment, &result)?;
     Ok(Receipt {
         schema: RECEIPT_SCHEMA.into(),
-        protocol: PROTOCOL.into(),
+        protocol: result.protocol.clone(),
         experiment_hash: artifact_hash(experiment)?,
         result_hash: artifact_hash(&result)?,
         experiment: experiment.clone(),
@@ -76,7 +76,8 @@ pub fn make_receipt(experiment: &Experiment) -> Result<Receipt, String> {
 
 pub fn verify_receipt(receipt: &Receipt) -> Result<VerificationReport, String> {
     ensure(
-        receipt.schema == RECEIPT_SCHEMA && receipt.protocol == PROTOCOL,
+        receipt.schema == RECEIPT_SCHEMA
+            && protocol_for_version(receipt.experiment.version) == Some(receipt.protocol.as_str()),
         "Unsupported receipt or protocol version.",
     )?;
     ensure(
@@ -97,7 +98,7 @@ pub fn verify_receipt(receipt: &Receipt) -> Result<VerificationReport, String> {
         schema: "platonik-verification-v1".into(),
         verified: true,
         passed: receipt.passed(),
-        protocol: PROTOCOL.into(),
+        protocol: receipt.protocol.clone(),
         experiment_hash: receipt.experiment_hash.clone(),
         result_hash: receipt.result_hash.clone(),
         ticks_completed: replayed.ticks_completed,
@@ -153,6 +154,17 @@ fn validate_state(
     ensure(
         state.tick <= experiment.ticks,
         "A state exceeds the declared tick horizon.",
+    )?;
+    ensure(
+        state.closed_edges.len() <= experiment.events.len()
+            && state.closed_edges.windows(2).all(|pair| pair[0] < pair[1])
+            && state.closed_edges.iter().all(|edge| {
+                experiment.version == HAZARD_VERSION && edge.is_canonical()
+                    && experiment.events.iter().any(|event| {
+                        matches!(event.event, EventKind::EdgeBlocked { edge: declared, .. } if declared == *edge)
+                    })
+            }),
+        "Closed movement edges are not distinct declared v2 edges.",
     )?;
     ensure(
         ids_match(
@@ -385,7 +397,7 @@ fn validate_signal(
 pub fn validate_result(experiment: &Experiment, result: &RunResult) -> Result<(), String> {
     validate_experiment(experiment)?;
     ensure(
-        result.protocol == PROTOCOL,
+        protocol_for_version(experiment.version) == Some(result.protocol.as_str()),
         "Run protocol does not match the supported model.",
     )?;
     ensure(
@@ -491,7 +503,8 @@ fn validate_initial(experiment: &Experiment, frame: &Frame) -> Result<(), String
             && frame.events.is_empty()
             && frame.signals.is_empty()
             && frame.state.delivered.is_empty()
-            && frame.state.pending.is_empty(),
+            && frame.state.pending.is_empty()
+            && frame.state.closed_edges.is_empty(),
         "Initial state contains work or deliveries that never occurred.",
     )?;
     for cell in &frame.state.cells {
@@ -624,6 +637,7 @@ fn validate_transition(
         .iter()
         .map(|valve| (valve.id, valve.enabled))
         .collect();
+    let mut closed_edges: BTreeSet<_> = previous.state.closed_edges.iter().copied().collect();
     for event in &frame.events {
         match event {
             EventKind::LinkEnabled { id, enabled } => {
@@ -633,8 +647,19 @@ fn validate_transition(
                 valves.insert(*id, *enabled);
             }
             EventKind::ClearMemory { .. } => {}
+            EventKind::EdgeBlocked { edge, blocked } => {
+                if *blocked {
+                    closed_edges.insert(*edge);
+                } else {
+                    closed_edges.remove(edge);
+                }
+            }
         }
     }
+    ensure(
+        frame.state.closed_edges == closed_edges.into_iter().collect::<Vec<_>>(),
+        "Movement edges changed outside their declared intervention prefix.",
+    )?;
     ensure(
         frame
             .state
@@ -916,7 +941,11 @@ fn validate_action_effects(
                     ensure(
                         destination.x < experiment.width
                             && destination.y < experiment.height
-                            && !experiment.walls.contains(&destination),
+                            && !experiment.walls.contains(&destination)
+                            && !frame
+                                .state
+                                .closed_edges
+                                .contains(&Edge::new(position, destination)),
                         "A move crosses blocked terrain.",
                     )?;
                     ensure(

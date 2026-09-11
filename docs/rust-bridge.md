@@ -1,6 +1,6 @@
 # Run the first shared habitat
 
-Implemented validation prototype, 11 September 2026. The complete campaign remains a proposal. This Rust slice connects physical delivery, delayed local messages, bounded memory, and beacon routing in one runtime. It is a stateless experiment runner, not a persistent campaign release.
+Implemented validation prototype, 11 September 2026. The complete campaign remains a proposal. This Rust slice connects physical delivery, delayed local messages, bounded memory, and beacon routing in one runtime. The commands on this page are stateless experiments. For persistent creations, ancestry, closing-route trials, and local recovery, use the [field expedition](field-expedition.md).
 
 ## Watch before editing
 
@@ -22,7 +22,7 @@ cargo build --release --locked -p platonik-cli
 ./target/release/platonik examples
 ```
 
-Use a new directory and new filenames for this walkthrough. Shell redirection can overwrite existing files, even though the CLI itself never writes one.
+Use a new directory and new filenames for this walkthrough. Shell redirection can overwrite existing files, even though the standalone commands in this walkthrough never write one.
 
 ```sh
 mkdir bridge-trial
@@ -50,7 +50,7 @@ An external agent can follow the repository's [platonik-play skill](https://gith
 
 File-taking commands also accept `-` for bounded standard input. JSON goes to stdout; operational errors are JSON on stderr. Exit **0** means success, **1** means a valid mission or suite failed, and **2** means invalid input, tampering, I/O, or usage error. A valid failed mission can verify with exit 0: integrity and success are different questions. Capture exit codes rather than hiding failed attempts with a pipeline.
 
-`verify` and `inspect` consume real CPU because they rerun the experiment. Neither advances a persisted world. There is no save journal, resume operation, automatic breeding, hosted submission, or leaderboard in this version. Immutable parent and child files provide the current preservation workflow; they do not implement the proposed first-playable persistence contract.
+`verify` and `inspect` consume real CPU because they rerun the experiment. Neither advances a persisted world. The separate `expedition` command family now provides a checked local journal and interrupted-trial recovery. Immutable parent and child files remain useful for standalone experiments. There is no automatic breeding, hosted submission, or leaderboard.
 
 ## The actual laws
 
@@ -83,7 +83,7 @@ The shipped skill was exercised with four new evaluations and eight explicit ver
 | Compact, initially wounded | Fail | 2,461 | None |
 | Recovery, initially wounded | Pass | 2,850 | 8, 22, 36 |
 
-That is a real choice: retain the cheaper ordinary route or pay more for this demonstrated recovery behavior. It does not prove that a better generalist is impossible. The [walkthrough record](https://github.com/hraness/platonik/blob/main/fixtures/evidence/agent-walkthrough.json) includes every attempt. The next agency test still needs unfamiliar admissible cases and equal discovery budgets across different agent objectives.
+That is a real choice: retain the cheaper ordinary route or pay more for this demonstrated recovery behavior. It does not prove that a better generalist is impossible. The [walkthrough record](https://github.com/hraness/platonik/blob/main/fixtures/evidence/agent-walkthrough.json) includes every attempt. The [field expedition](field-expedition.md) now supplies public transfer cases and persistent objectives for equal-budget agent comparisons. Its outcomes must be judged separately from this earlier walkthrough.
 
 ## Measured cost and the memory repair
 

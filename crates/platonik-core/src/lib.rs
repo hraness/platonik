@@ -1,4 +1,6 @@
 pub mod check;
+pub mod expedition;
+pub mod expedition_fixtures;
 pub mod fixtures;
 pub mod model;
 pub mod policy;
