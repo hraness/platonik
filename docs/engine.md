@@ -2,7 +2,9 @@
 
 Proposal, 11 September 2026. The current milestone is the Platonik website and documentation. The Rust engine, CLI, file formats, and skills below are not implemented. This is the first prototype's intended contract, not an installation guide.
 
-The implemented [browser observatory](observatory.md) is a separate, bounded TypeScript demonstrator. Its single courier, fuzzy truth maps, and cost calculator do not implement the colony or beacon contract below. Its JSON format is a laboratory format, not a released Rust CLI schema.
+The implemented [browser observatory](observatory.md) contains separate, bounded TypeScript demonstrators. Its single courier, fuzzy truth maps, cost calculator, and signal workbench do not implement the colony or beacon contract below. Their JSON formats are laboratory formats, not released Rust CLI schemas.
+
+The [Autoverse path](autoverse.md) now defines the later module interfaces and capability dependencies. Preserve this first transport contract while admitting explicit versions of signals, memory, and construction. The next integration milestone after the opening is the [migration-to-ark bridge](design-validation.md#the-bridge-we-must-build-first): the same saved creations must carry sparks, retain a signal, and control a bounded habitat under one runtime and ledger. A Boolean circuit demonstration alone does not meet that gate.
 
 ## The agent runs the laboratory
 

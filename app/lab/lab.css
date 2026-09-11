@@ -11,7 +11,7 @@
 .lab h2, .lab h3 { font-family: var(--display); font-weight: 400; font-size: 28px; letter-spacing: -.02em; line-height: 1.25; }
 .lab h2 + p, .lab h3 + p { margin-top: 14px; }
 .lab p { max-width: 72ch; }
-.lab-tabs { display: flex; border-bottom: 1px solid var(--line); margin-bottom: 34px; gap: 32px; }
+.lab-tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--line); margin-bottom: 34px; gap: 0 32px; }
 .lab-tabs button { background: transparent; border: 0; border-radius: 0; padding: 12px 0; border-bottom: 2px solid transparent; font-size: 15px; color: var(--muted); }
 .lab-tabs button[aria-selected=true] { color: var(--ink); border-bottom-color: var(--accent); }
 .lab-tabs button:hover { color: var(--accent); }
@@ -90,6 +90,15 @@
 .lab-table th, .lab-table td { padding: 9px 12px 9px 0; text-align: left; border-bottom: 1px solid var(--line); }
 .lab-reading { margin-top: 38px; border-top: 1px solid var(--line); padding-top: 28px; font-size: 15px; }
 .lab-reading a { display: inline-block; color: var(--accent); margin-top: 10px; }
+.autoverse-circuit { display: block; width: 100%; min-height: 180px; max-height: 520px; margin-block: 24px; }
+.autoverse-bench .lab-controls > p { font-size: 15px; }
+.autoverse-bench .lab-controls > .lab-note { font-size: 13px; }
+.signal-output { padding-block: 16px; border-block: 1px solid var(--line); font-size: 14px; overflow-wrap: anywhere; }
+.signal-output strong, .signal-output span { display: block; }
+.signal-output span { margin-top: 8px; font-variant-numeric: tabular-nums; }
+.signal-phases, .assay-checks { padding-left: 22px; font-size: 13px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.signal-phases li, .assay-checks li { margin-block: 8px; }
+.assay-checks { max-height: 340px; overflow-y: auto; }
 @media (max-width: 850px) {
   .lab { padding-inline: 28px; }
   .specimen-bench { gap: 28px; grid-template-columns: minmax(0, 1fr) minmax(250px, .9fr); }
@@ -106,7 +115,7 @@
 @media (max-width: 480px) {
   .lab { padding-inline: 22px; margin-top: 16px; }
   .lab-header > p { font-size: 17px; }
-  .lab-tabs { gap: 22px; }
+  .lab-tabs { gap: 0 20px; }
   .lab-tabs button { font-size: 13px; }
   .lab-metrics { gap: 16px; }
   .lab-metrics dd { font-size: 18px; }

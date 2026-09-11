@@ -41,3 +41,35 @@ Truth degrees are not probabilities or confidence scores. The formulas, schedule
 In **World budget**, choose active cells, simulation ticks, average primitive work, state bytes, and trace bytes. The calculator separates policy operations, current state, and an uncompressed per-cell history. These are assumptions, not demonstrated capacities of a Rust engine.
 
 **Measure this browser** runs 64 bounded 256-tick courier experiments using the specimen currently on the bench. It yields between runs, supports cancellation, and reports observed modeled work per elapsed second for that browser and program. Leaving the view cancels an unfinished sample. The rough time estimate uses that sample and excludes important whole-world costs; it cannot predict Rust throughput. Read the [complexity and scale proposal](complexity-and-scale.md) before interpreting a large number as an affordable world.
+
+## Build toward the Autoverse
+
+Open **Autoverse** in [the observatory](https://platonik.space/lab#autoverse). This is a fourth experiment: a finite, synchronous Boolean graph named `autoverse-circuit-v1`. It is separate from the courier model and the proposed Rust habitat. Its drawn layout does not represent physical distance or spatial locality.
+
+1. Choose a relay, NAND gate, resettable memory, four-bit adder, or sequential accumulator. The selected reference runs a fixed stimulus. Scrub **Inspect signal tick** to see actual node and output states.
+2. Choose **Check behavior**. The relay has three finite checks, NAND has four input combinations, memory has five load/hold/reset checks, the adder has 256 input pairs including carry, and the accumulator has six reset/intermediate-total checks. Reports include failed cases, broken-wire reads, and modeled work.
+3. **Break a connection**, then check again. An absent connection reads zero and records a fault. Even an accidentally correct output fails the assay if any broken wire was read. **Restore reference circuit** recovers the supplied design.
+4. In **Build it from an empty bench**, lower the construction steps or node material, then **Assemble blueprint**. Inspect where the build stops. With enough resources, **Check the constructed circuit** evaluates the newly assembled graph against the same cases. A complete but faulty blueprint can still fail.
+5. **Export circuit and evidence** saves the circuit, selected contract, fixed stimulus, demonstration, and available check and construction results. An agent can edit the circuit object. Expand **Edit circuit JSON**, paste it, and choose **Apply circuit**. Preserve the selected contract's input names; incompatible or invalid input leaves the current circuit in place. The assay also checks required outputs.
+
+The bench resets when its tab is left. Export work before leaving; it does not use the specimen drawer or hosted storage. An exported report is a review bundle, not an independently certified result.
+
+### Signal rules and costs
+
+Circuit JSON declares `version: 1`, a `nodes` array, and named `outputs`. Nodes are `input`, binary `constant`, two-input `nand`, or `register` with data, enable, and reset connections. Use the reference JSON's exact fields. Node names must be unique lowercase identifiers of at most 24 characters. Named connections must resolve to a node; `null` is an explicit broken connection. Unknown fields are rejected; no user JavaScript executes.
+
+All node state starts at zero. Each tick reads the preceding tick's node values and commits the new state together. Input nodes receive the current stimulus; their neighbors see it a tick later. Registers reset to zero when reset is one, otherwise load data when enabled, otherwise retain their value. Reset wins over load. Output bindings observe the newly committed node values. Registers are supplied storage primitives; the model does not claim to evolve memory from NAND feedback.
+
+Each node evaluation, connected or broken input-wire read, stimulus read, state write, and output read costs one modeled unit. Registers always read their three input wires. A run is capped at 128 nodes, 32 output bindings, 32 stimulus phases, 256 total ticks, and 2,000,000 work units. JSON is capped at 32 KiB. The finite schema also bounds fan-in: NAND uses two connections and a register uses three. Input/output names and canonical ordering are independent of the displayed layout.
+
+Expand **Stimulus and execution limit** to read the stimulus or change the demonstration's work cap. An exhausted partial tick commits no state, but attempted work stays charged. The trace records committed ticks; total spent work can therefore exceed the work on its last frame. Behavior checks use their fixed cap per case, independently of this demonstration setting. Parsing, orchestration, diagram rendering, and trace serialization also take real computer time outside the modeled ledger.
+
+The adder's 36 NAND gates check all 256 pairs after 32 ticks from zero state; this establishes neither every transition between pairs nor a faster settling bound. The accumulator combines that structure with five registers and externally timed load pulses. Its checked intermediate totals and carry matter: checking only its final reset would miss a broken arithmetic circuit. It has no instruction fetch/decode loop and is not a stored-program computer.
+
+### Construction is an operation, not an announcement
+
+The assembler starts with no nodes or output bindings. It allocates nodes, copies each connected input wire, then binds outputs. Every operation or failed attempt costs one step and one work unit; each allocated node consumes one material. Steps are capped at 1,024 and node material/capacity at 128. Exhausting steps stops before the next attempt; failing an allocation consumes its attempt. Partial graphs remain available in the exported result. A supplied zero-bit constant is a Boolean value, not free physical energy or node material.
+
+For the supplied adder, a complete build uses 45 nodes, 72 input connections, and five output bindings: 122 operations and 45 node material. Running and checking it costs additional work. This assembler is external and has privileged access to its supplied blueprint. It does not discover a design, gather resources, construct itself, or live inside the signal graph.
+
+The [Autoverse path](autoverse.md) defines those later milestones. The [validation plan](design-validation.md) explains why the next decisive test is a shared transport-to-control journey, followed by real player evidence for the complete campaign.

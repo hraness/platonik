@@ -72,6 +72,9 @@ export default function HomePage() {
         <p>Keep the original. Grow a descendant. Build a place where different habits flourish together. The herd you once led through the dust could become a fleet of living worlds.</p>
         <p className="figure-note">Proposed campaign arc. The first Rust milestone is one local beacon expedition. The observatory offers smaller browser experiments; living arks, settlements, and autonomous discovery are later directions.</p>
         <Link className="text-link" href="/docs/campaign">Follow the Long Trail <span aria-hidden="true">↗</span></Link>
+        <p>Your couriers learn to carry signals. Signals become memory and control. Working habitats become places that can construct new ones. The Autoverse path gives each change of scale a capability to earn—and a reason to bring an earlier creation along.</p>
+        <Link className="text-link" href="/docs/autoverse">Explore the Autoverse path <span aria-hidden="true">↗</span></Link>
+        <p className="figure-note">A complete design needs evidence from play. <Link href="/docs/design-validation">See what works today and the tests that come next.</Link></p>
       </section>
 
       <section className="home-section split-section" aria-labelledby="competition-title">

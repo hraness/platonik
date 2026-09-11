@@ -2,7 +2,7 @@
 
 Platonik is a game concept about making creatures with your AI, helping them survive, and discovering what else they can do. Players would describe a wish in chat; an external agent would turn it into a small program, run it in a deterministic Rust world, and help improve it. Deeper play leads to collective behavior and independently checked competition.
 
-This repository implements the **website and browser observatory** for [platonik.space](https://platonik.space), using Next.js on Vercel. The observatory has three bounded local experiments: editable courier programs with collectible structural portraits, coupled fuzzy-truth systems, and a world-cost calculator with an optional browser benchmark. The Rust game engine, CLI, skills, and hosted leaderboard are not implemented. Campaign scenes remain illustrative; observatory traces come from its separate TypeScript models.
+This repository implements the **website and browser observatory** for [platonik.space](https://platonik.space), using Next.js on Vercel. The observatory has four bounded local experiments: editable courier programs with collectible structural portraits, coupled fuzzy-truth systems, a world-cost calculator, and a signal workbench for circuits and budgeted blueprint assembly. The Rust game engine, CLI, skills, and hosted leaderboard are not implemented. Campaign scenes remain illustrative; observatory traces come from its separate TypeScript models.
 
 ## Explore the design
 
@@ -11,6 +11,8 @@ Start in [the observatory](https://platonik.space/lab), or read its [guide](docs
 Begin with the [game design](docs/game-design.md): grow a colony that carries sparks to a beacon, help it recover when a route collapses, and take a favorite descendant into an unfamiliar habitat. The proposed world then expands from cells into tissues, ecologies, and algorithm discovery. Sorting remains a later research habitat.
 
 The proposed campaign, [The Long Trail](docs/campaign.md), follows a first companion into a traveling herd, living arks, cooperating settlements, and a civilization capable of answering a distant beacon. Its hopeful space-western tone preserves familiar creatures as the player's responsibilities change scale.
+
+The [Autoverse path](docs/autoverse.md) connects those chapters to transport, signals, memory, programmable control, and construction. The [validation plan](docs/design-validation.md) distinguishes checked browser behaviors from the missing shared-runtime bridge, full campaign, player evidence, and large-world capacity. Try the [Autoverse workbench](https://platonik.space/lab#autoverse) to change a circuit, break a connection, and check its behavior under explicit limits.
 
 The [competition model](docs/competition.md) compares organisms under equal execution limits while allowing open-ended discovery effort. The [engine proposal](docs/engine.md) defines an agent-facing Rust CLI and the first playable acceptance criteria. The [research foundations](docs/research.md) connect the design to Michael Levin's minimal systems and distinguish empirical results from mathematical claims.
 
@@ -37,7 +39,7 @@ The website loads its reading font locally and has no analytics, account system,
 bun run check
 ```
 
-The gate checks document registration, relative links, proposal labels, and public identity; tests the bounded browser models; generates Next.js route types; runs TypeScript; and builds all routes. Browser review covers program editing and errors, parent comparisons, collection persistence, export, replay, truth controls, budget measurement/cancellation, mobile layout, navigation, keyboard access, and missing pages. These checks validate the website and its laboratory models, not the proposed Rust game engine.
+The gate checks document registration, relative links, proposal labels, and public identity; tests the bounded browser models; generates Next.js route types; runs TypeScript; and builds all routes. Browser review covers program editing and errors, parent comparisons, collection persistence, export, replay, truth controls, budget measurement/cancellation, signal assays and construction limits, mobile layout, navigation, keyboard access, and missing pages. These checks validate the website and its laboratory models, not the proposed Rust game engine.
 
 Vercel detects the Next.js application at the repository root. `vercel.json` supplies the locked install and full build gate. Use the Hraness `platonik` project and `platonik.space` domain; `.vercel/` and local environment files are ignored. GitHub runs the same source gate for pull requests and main.
 

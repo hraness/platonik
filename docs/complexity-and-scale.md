@@ -67,3 +67,5 @@ Introduce a separate, versioned signal habitat: bounded local channels, explicit
 Then let players build reusable modules, compilers into the habitat, repairable circuits, and organisms that assemble other organisms within declared budgets. A computer takes space and work; nesting one never supplies free compute. Increasing finite limits can extend the playground while universality remains a separate mathematical question.
 
 A player's small creation should remain useful inside a larger system, with enough openness for someone else to discover an unexpected use for it.
+
+The [Autoverse design contract](autoverse.md) makes this progression part of the campaign: its interfaces, module admission rules, computer and constructor criteria, and final voyage depend on earlier capabilities. The separate [signal workbench](https://platonik.space/lab#autoverse) now tests finite circuits and budgeted blueprint assembly. It does not yet integrate those capabilities with courier organisms. The [validation plan](design-validation.md) defines that missing bridge, measured scale-admission targets, and player tests for the complete arc.
