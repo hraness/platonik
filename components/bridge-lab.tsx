@@ -1,34 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { BridgeIndex, Frame, Point, Receipt } from "@/lib/bridge/types";
+import { RecordedHabitat } from "@/components/recorded-habitat";
+import type { BridgeIndex, Receipt } from "@/lib/bridge/types";
 
 const number = (value: number) => value.toLocaleString("en-US");
 const words = (value: string) => value.replaceAll(/[-_]/g, " ");
 const work = (costs: Record<string, number>) => Object.values(costs).reduce((sum, value) => sum + value, 0);
 
-function Habitat({ receipt, frame }: { receipt: Receipt; frame: Frame }) {
-  const world = receipt.experiment, state = frame.state;
-  const center = (point: Point) => ({ x: point.x * 36 + 18, y: point.y * 36 + 18 });
-  const label = (point: Point, text: string, fill = "#304f3d") => <text x={center(point).x} y={center(point).y + 5} textAnchor="middle" fontSize="13" fontWeight="600" fill={fill}>{text}</text>;
-  return <svg className="bridge-map" viewBox={`0 0 ${world.width * 36} ${world.height * 36}`} role="img" aria-label={`Recorded habitat at tick ${frame.tick}. ${state.delivered.length} sparks delivered to beacons. S: source, D: depot, V: valve, B: beacon, numbered circles: cells. Exact memory and service values follow below.`}>
-    <rect width="100%" height="100%" fill="#f9f9f6" />
-    {world.walls.map(point => <rect key={`${point.x},${point.y}`} x={point.x * 36 + 2} y={point.y * 36 + 2} width="32" height="32" fill="#dde3d9" />)}
-    {world.links.map(link => {
-      const from = link.from.kind === "cell" ? state.cells.find(cell => cell.id === link.from.id) : world.depots.find(depot => depot.id === link.from.id);
-      const to = state.cells.find(cell => cell.id === link.to_cell);
-      if (!from || !to) return null;
-      const a = center(from.position), b = center(to.position);
-      const enabled = state.links.find(item => item.id === link.id)?.enabled;
-      return <line key={link.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={enabled ? "#668768" : "#805d2d"} strokeWidth="3" strokeDasharray={enabled ? undefined : "3 4"} />;
-    })}
-    {world.sources.map(item => <g key={`source-${item.id}`}>{label(item.position, "S", "#805d2d")}</g>)}
-    {world.depots.map(item => <g key={`depot-${item.id}`}>{label(item.position, "D")}</g>)}
-    {world.valves.map(item => <g key={`valve-${item.id}`}>{label(item.position, "V")}</g>)}
-    {world.beacons.map(item => <g key={`beacon-${item.id}`}>{label(item.position, `B${item.id}`)}</g>)}
-    {state.cells.map(cell => <g key={cell.id}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r="11" fill={cell.cargo ? "#805d2d" : "#304f3d"} stroke="#f9f9f6" strokeWidth="2" />{label(cell.position, String(cell.id), "#ffffff")}</g>)}
-  </svg>;
-}
 
 export function BridgeLab() {
   const [index, setIndex] = useState<BridgeIndex | null>(null);
@@ -69,7 +48,7 @@ export function BridgeLab() {
     <section className="bridge-intro"><h2>Supply the right light after contact is lost.</h2><p>The spark carries one bit of information: which beacon needs its energy. A depot reports its arrival, a relay forwards the report, and the controller stores it. Later, the valve opens. The same local rules must make the right choice for either report.</p><p>Compare the complete chain with a missing part. An expected failure is evidence about that dependency; it is still a failed mission.</p></section>
     <div className="lab-field bridge-picker"><label htmlFor="bridge-case">Recorded experiment</label><select id="bridge-case" value={selected} onChange={event => chooseCase(event.target.value)}>{index.cases.map(item => <option key={item.id} value={item.id}>{words(item.id)} · {item.passed ? "mission passed" : "mission failed"}</option>)}</select></div>
     {!receipt || !frame ? <p role="status">Loading the recorded run…</p> : <section className="bridge-replay" aria-label="Recorded Rust replay">
-      <div><figure><Habitat receipt={receipt} frame={frame} /><figcaption>S: source · D: depot · V: valve · B: beacon · numbered circles: cells. Amber cells carry a spark; dashed links are disabled. Cells can obscure the facility beneath them.</figcaption></figure>
+      <div><figure><RecordedHabitat receipt={receipt} frame={frame} /><figcaption>S: source · D: depot · V: valve · B: beacon · numbered circles: cells. Amber cells carry a spark; dashed links are disabled. Cells can obscure the facility beneath them.</figcaption></figure>
       <label htmlFor="bridge-tick">Recorded tick {frame.tick}{!frame.complete ? " · incomplete" : ""}</label><input id="bridge-tick" type="range" min="0" max={receipt.result.frames.length - 1} value={at} onChange={event => setAt(Number(event.target.value))} />
       <div className="lab-actions"><button className="lab-button secondary" disabled={at === 0} onClick={() => setAt(value => value - 1)}>Previous tick</button><button className="lab-button secondary" disabled={at === receipt.result.frames.length - 1} onClick={() => setAt(value => value + 1)}>Next tick</button><button className="lab-text-button" onClick={() => setAt(receipt.result.frames.length - 1)}>Jump to outcome</button></div>
       <p className="lab-note">{number(work(frame.costs))} modeled work so far. Sparks remaining at sources: {frame.state.sources.reduce((sum, item) => sum + item.sparks.length, 0)}; at depots: {frame.state.depots.reduce((sum, item) => sum + item.sparks.length, 0)}; delivered to beacons: {frame.state.delivered.length}.</p></div>

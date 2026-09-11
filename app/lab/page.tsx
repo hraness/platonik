@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function LabPage() {
-  return <main id="main" className="lab"><header className="lab-header"><h1>A small window into possible life.</h1><p>You are a frontier engineer. Grow a program, examine what it does, and find out what a larger world would cost.</p><p className="lab-note">Four local browser experiments, with no AI calls or paid compute. A separate Rust prototype now connects transport, signals, memory, and control.</p><p><Link href="/lab/bridge">Replay the first shared Rust habitat →</Link></p></header><Observatory /></main>;
+  return <main id="main" className="lab"><header className="lab-header"><h1>A small window into possible life.</h1><p>You are a frontier engineer. Grow a program, examine what it does, and find out what a larger world would cost.</p><p className="lab-note">Four local browser experiments, with no AI calls or paid compute. A separate Rust prototype connects transport, signals, memory, and control, and preserves that world between visits.</p><p><Link href="/lab/habitat">Follow a continuous habitat →</Link><br /><Link href="/lab/bridge">Replay the first shared Rust habitat →</Link></p></header><Observatory /></main>;
 }

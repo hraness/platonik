@@ -1,0 +1,786 @@
+{
+  "schema": "platonik-continuity-protocol-v1",
+  "status": "qualified-frozen",
+  "runtime_protocol": "platonik-habitat-v2",
+  "purpose": "Qualify one bounded habitat whose crew, cargo, changing reports, memory, queued signals and service state survive explicit pauses and continuation before construction or the full campaign.",
+  "claim_boundary": "Public source, public reference programs, prior developer context and inspectable transfer recipes. These are finite engineering demonstrations, not blinded evaluation, a moving ark, human enjoyment, universality or novel scientific results.",
+  "cases": {
+    "training": [
+      "changing-one",
+      "changing-zero",
+      "broken-crossing",
+      "slow-radio"
+    ],
+    "transfer": [
+      "early-crossing",
+      "reversed-crossing",
+      "repeated-reports",
+      "late-crossing"
+    ],
+    "source": "crates/platonik-core/src/continuity_fixtures.rs",
+    "recipes": [
+      {
+        "id": "changing-one",
+        "bits": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "hop_delay": 1,
+        "seed": 0
+      },
+      {
+        "id": "changing-zero",
+        "bits": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        "hop_delay": 1,
+        "seed": 0
+      },
+      {
+        "id": "broken-crossing",
+        "bits": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0
+        ],
+        "hop_delay": 1,
+        "seed": 0,
+        "closure": [
+          10,
+          34
+        ]
+      },
+      {
+        "id": "slow-radio",
+        "bits": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        "hop_delay": 3,
+        "seed": 0
+      },
+      {
+        "id": "early-crossing",
+        "bits": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "hop_delay": 1,
+        "seed": 0,
+        "closure": [
+          3,
+          30
+        ]
+      },
+      {
+        "id": "reversed-crossing",
+        "bits": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        "hop_delay": 1,
+        "seed": 29,
+        "closure": [
+          27,
+          88
+        ],
+        "rotate_degrees": 180
+      },
+      {
+        "id": "repeated-reports",
+        "bits": [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        "hop_delay": 3,
+        "seed": 17
+      },
+      {
+        "id": "late-crossing",
+        "bits": [
+          0,
+          1,
+          1,
+          0,
+          0,
+          1
+        ],
+        "hop_delay": 3,
+        "seed": 29,
+        "closure": [
+          39,
+          88
+        ]
+      }
+    ]
+  },
+  "world": {
+    "ticks": 96,
+    "maximum_supported_ticks": 128,
+    "cells": 4,
+    "maximum_supported_cells": 16,
+    "courier_id": 1,
+    "relay_id": 2,
+    "controller_id": 3,
+    "boundary_id": 4,
+    "source_sparks": 6,
+    "depot_capacity": 1,
+    "beacon_quotas": [
+      3,
+      3
+    ],
+    "beacon_initial_charge": 12,
+    "beacon_spark_charge": 6,
+    "drain_amount": 1,
+    "drain_every": 4,
+    "relay_to_controller_disabled_ticks": [
+      15,
+      18
+    ],
+    "valve_enabled_at_tick": 19,
+    "fuel": 20000,
+    "activation_fuel": 128,
+    "accounting": "One original input load and one cumulative modeled ledger over the entire 96 ticks. Explicit pauses do not refill fuel or recharge service. Verification/replay CPU is recorded separately. The six identified sparks remain conserved across source, cargo, depot and delivered stock.",
+    "report_interface": "Only a successful physical Drop emits the buffered spark bit. Capacity one prevents a later successful report from overtaking a different buffered head. Full-depot failures retain the next cargo without inventing a report. Signals are local and delayed; event clocks and case IDs are not policy observations."
+  },
+  "continuity": {
+    "advance_to_ticks": [
+      5,
+      9,
+      14,
+      19,
+      27,
+      47,
+      79,
+      96
+    ],
+    "targeted_states": {
+      "5": "courier holds spark 1",
+      "9": "a report is still queued",
+      "14": "keeper retains the first bit and evidence while depot holds spark 1",
+      "19": "first routing changes service reserves",
+      "27": "closed edge in broken-crossing",
+      "47": "the same edge has reopened"
+    },
+    "contract": "One immutable initial world and admitted crew are advanced to increasing absolute ticks. Resume carries all cell positions/headings/registers/evidence/cargo/inboxes, source/depot stocks, beacon charge/drained/exhausted/delivered state, pending messages and IDs, link/valve state, closed edges, absolute time and cumulative costs. Earlier receipts and parent creations remain unchanged.",
+    "equality": "Whole-horizon execution and concatenated continuation must produce identical final state, ordered physical trace, outcome and cumulative modeled costs, with only explicitly documented segment-envelope metadata differing. Check both a normal and a delayed or disrupted case. Export/import in the middle must reproduce the same continuation, including signals pending across the cut.",
+    "paused_state": "Status, wall-clock waiting and export do not advance simulated time. Unknown/tampered checkpoints and stale revisions reject without rewriting committed state. Exact intent retry or interrupted continuation recovers once.",
+    "scope": "Continuity of this stationary service habitat and moving courier is the admitted capability. Relocation of an entire physical habitat and construction are separate milestones.",
+    "parent_preservation": "The original expedition collection remains unchanged. Preparing a habitat copies its checked frozen pair into a new fixed manifest. Candidate files remain available with parent hashes. This milestone does not claim new in-world growth or an evolving organism roster."
+  },
+  "baselines": [
+    {
+      "id": "unchanged-reference",
+      "courier": "fixtures::resilient_courier",
+      "controller": "fixtures::controller_program",
+      "cases": "all eight",
+      "role": "Feasible reusable report-taking reference."
+    },
+    {
+      "id": "previous-resilient",
+      "source": "fixtures/evidence/expedition-study.json arms.resilient.frozen_pair",
+      "cases": "all eight",
+      "role": "Known two-rule report-taking winner, retained unchanged as the strongest prior memory baseline."
+    },
+    {
+      "id": "previous-frugal",
+      "source": "fixtures/evidence/expedition-study.json arms.frugal.frozen_pair",
+      "cases": "all eight",
+      "role": "Prior winning courier and positive-only keeper, unchanged; preserve its outcome on changing reports."
+    },
+    {
+      "id": "blind-alternator",
+      "courier": "fixtures::resilient_courier",
+      "controller": "continuity_fixtures::blind_alternator",
+      "cases": "all eight",
+      "role": "Legal strong baseline that alternates route attempts without reading reports. Do not exclude it or invent penalties if it succeeds or dominates."
+    }
+  ],
+  "causal_controls": [
+    {
+      "id": "idle-courier",
+      "case": "changing-one",
+      "change": "Replace courier behavior with Wait while retaining its body.",
+      "expected": "Complete honest quota failure."
+    },
+    {
+      "id": "idle-relay",
+      "case": "changing-one",
+      "change": "Replace relay behavior with Wait while retaining its body.",
+      "expected": "Complete honest quota failure for the reference architecture."
+    },
+    {
+      "id": "idle-keeper",
+      "case": "changing-one",
+      "change": "Replace controller behavior with Wait while retaining its body.",
+      "expected": "Complete honest quota failure."
+    },
+    {
+      "id": "forgotten-report",
+      "case": "changing-one",
+      "change": "Clear controller memory at tick17 in the contact gap.",
+      "expected": "Complete honest quota failure for the reference architecture."
+    },
+    {
+      "id": "constant-zero",
+      "case": "changing-one",
+      "change": "Always route to zero.",
+      "expected": "Complete honest quota failure on mixed stock."
+    },
+    {
+      "id": "constant-one",
+      "case": "changing-one",
+      "change": "Always route to one.",
+      "expected": "Complete honest quota failure on mixed stock."
+    },
+    {
+      "id": "shortened-fuel",
+      "case": "changing-one",
+      "change": "Reduce total fuel to4000.",
+      "expected": "Fuel-exhausted honest failure with conserved resources and no refill on continuation."
+    }
+  ],
+  "arms": [
+    {
+      "id": "frugal",
+      "wish": "Complete the continuous journey with minimum total modeled work. Preserve all parents; courier/controller may change."
+    },
+    {
+      "id": "resilient",
+      "wish": "Complete the same journey while preserving the exact original recovery courier. Controller may change; retain every parent."
+    }
+  ],
+  "selection": {
+    "admission": "One identical courier/controller pair across every training case, with all other world fields unchanged. Relay remains fixed. Mid-journey policy replacement is outside this initial comparison; a later refit feature needs its own metered protocol.",
+    "ordering": [
+      "complete checked success on all four training trajectories",
+      "lowest total modeled work",
+      "lowest canonical pair bytes",
+      "earliest submitted candidate"
+    ],
+    "freeze": "Qualify all public references and controls, record every preflight attempt and adjustment, then hash source/protocol/cases and configurations before agent trials. Freeze exactly one winner per arm before any transfer feedback. Preserve all failures and do not tune the winner after confirmation."
+  },
+  "budget": {
+    "candidate_batches_per_agent": 4,
+    "training_cases_per_batch": 4,
+    "training_evaluations_per_agent": 16,
+    "transfer_evaluations_per_agent": 4,
+    "agents": 2,
+    "baseline_evaluations": 32,
+    "causal_control_evaluations": 7,
+    "mechanical_probe_evaluations_maximum": 12,
+    "maximum_logical_evaluations": 91,
+    "maximum_actual_engine_executions_including_replay": 15872,
+    "maximum_advances_per_trajectory": 8,
+    "status": "Source-derived and focused-CLI-measured allowance: init2, advances7/13/19/25/31/37/43/49. Preflight must still qualify the full helper including middle restoration and exact cold verification before frozen admission.",
+    "definition": "A logical evaluation is one candidate on one complete fixed 96-tick trajectory. Segment advances, failed commands, replay/import/status verification and diagnostic copies all consume observed engine executions and elapsed CPU. No hidden local simulator or sweeps may expand the four candidate slots. Invalid submissions consume a slot.",
+    "reservation": "Before each CLI command reserve64 actual engine executions from its assigned share; qualify this conservative bound against the implemented replay behavior before freeze. Stop on unknown metrics or an unsafe reservation. All twenty trajectories per arm may use the declared eight advances. Any overrun remains recorded and fails the budget claim; no silent reset or skipped integrity replay.",
+    "external_reasoning_tokens": null,
+    "preflight": "Focused invariant tests and initial fixture calibration occur before optimization and are recorded separately. Preflight is not a place for candidate-informed hidden search. Capacity verification after selection requires its own explicitly reserved share of the same actual-execution ceiling.",
+    "parallel_reservations": {
+      "each_optimizer_arm": 6144,
+      "optimizer_arms_total": 12288,
+      "baselines_controls_and_four_segmented_site_replays": 1536,
+      "adversarial_probes": 1024,
+      "capacity": 1024,
+      "sum_reserved": 15872
+    },
+    "per_cli_command_reservation": 64
+  },
+  "decision_thresholds": [
+    "All eight unchanged reference trajectories complete within96 ticks, preserve all six sparks, deliver exactly three of each bit and never exhaust either service beacon.",
+    "Whole and segmented normal/disrupted trajectories match exactly in state, physical trace, cumulative modeled work and outcome; middle export/import and repeated intent preserve the same history.",
+    "Reference courier/relay/controller removals and in-gap memory clear show the declared causal failures; no stronger claim that every lawful architecture must use signals is implied.",
+    "The prior positive-only winner has an inspectable loss on at least one1\u21920 task. Report all baseline successes and work, including a blind controller that may be competitive.",
+    "Each agent gets four candidates, retains every outcome and all original creations, freezes its training winner and completes all four transfer cases unchanged before the next automated milestone.",
+    "Measure the actual continuous artifact/verification cost before raising the envelope. Do not infer human enjoyment, moving-habitat support, construction, or scientific novelty from these finite outcomes."
+  ],
+  "qualification_attempts": [
+    {
+      "attempt": 1,
+      "status": "failed-before-freeze",
+      "purpose": "Initial public fixture/reference/baseline/control qualification before freeze",
+      "command": "cargo test -p platonik-core --test continuity_fixtures --locked -- --nocapture --test-threads=1",
+      "fixture_source_sha256": "d8677e368de3296e9c30e79b2cb3438576e1de585730dd36c1b5f72865c670c6",
+      "test_source_sha256": "d5325f5e3e466f063efd33bbd922416fc794e80b4ecc4badee8ed21c1606a4a1",
+      "parameters": {
+        "horizon": 96,
+        "initial_charge": 8,
+        "spark_charge": 6
+      },
+      "prediction": "Repeated starting bits may miss the opposite beacon first-credit deadline at tick32; preserve observed failures before any timing/resource adjustment.",
+      "exit_code": 101,
+      "tests_passed": 5,
+      "tests_failed": 1,
+      "actual_engine_executions": 41,
+      "reference_failures": [
+        "broken-crossing",
+        "slow-radio",
+        "reversed-crossing",
+        "repeated-reports",
+        "late-crossing"
+      ],
+      "previous_frugal_successes": 0,
+      "observations": "All references completed96 ticks and verified; three repeated-bit cases reached six deliveries but exhausted a service before its first opposite-bit credit. Reversed/late cases delivered only four/five sparks and require additional trace diagnosis. Checkpoint and six causal removals/constants plus shortened-fuel assertions passed. Initial tool output was partially truncated; full reference failure list and final execution count were retained."
+    },
+    {
+      "attempt": 2,
+      "status": "failed-before-freeze",
+      "purpose": "Correct the observed first-credit deadline and diagnose the two incomplete-delivery cases",
+      "command": "cargo test -p platonik-core --test continuity_fixtures --locked -- --nocapture --test-threads=1",
+      "fixture_source_sha256": "2098049d441244b0cc01f017b580d0e27b9ea683a849dbf948f1926ea11c22de",
+      "test_source_sha256": "27869688692b6c9ec3befed43bb0c0903a0caa4c767ff735ad7f631c88abccd5",
+      "parameters": {
+        "horizon": 96,
+        "initial_charge": 12,
+        "spark_charge": 6
+      },
+      "change_from_previous": "Raise both initial charges8\u219212, moving their no-credit deadline32\u219248 so repeated report bits remain admissible. Programs, cases, signal windows and legal blind baseline unchanged. Add final-state and courier-position diagnostics; full output is captured.",
+      "exit_code": 101,
+      "tests_passed": 5,
+      "tests_failed": 1,
+      "actual_engine_executions": 41,
+      "reference_failures": [
+        "reversed-crossing",
+        "late-crossing"
+      ],
+      "observations": "Charge12 fixed repeated-bit service exhaustion. Reopening50 in reversed-crossing and61 in late-crossing strands the unchanged wall follower in a four-position loop with two/one supplies remaining. Preserve both counterexamples; final bounded schedules reopen at88, after supply collection. This does not establish arbitrary reopening robustness."
+    },
+    {
+      "attempt": 3,
+      "status": "passed-before-freeze",
+      "purpose": "Retain reopening counterexamples, qualify later reopenings88 and strongest prior report-taking controller before source freeze.",
+      "parameters": {
+        "horizon": 96,
+        "initial_charge": 12,
+        "reversed_reopening": 88,
+        "late_reopening": 88
+      },
+      "command": "cargo test -p platonik-core --test continuity_fixtures --locked -- --nocapture --test-threads=1",
+      "exit_code": 0,
+      "tests_passed": 8,
+      "tests_failed": 0,
+      "actual_engine_executions": 51,
+      "fixture_source_sha256": "69c012303cdbce3a99bd4d94514f93526a79d6de9ba786c927ffe800249dec40",
+      "test_source_sha256": "1ab06d09bf9bdaff48f8658ad8b78d0d4b90d68f1e57d1f81b01c2adbf377201",
+      "log_sha256": "bd2ec662faffa382144989a947ea640ce6639d51762da26707ee09a1877afda5",
+      "results": [
+        {
+          "case": "blind-alternator/changing-one",
+          "experiment_hash": "sha256:38d88bdfab10bea5b96e3bf62d540cb82189236f7c2aaefe4f4ade1ee3b624e5",
+          "result_hash": "sha256:545a60cedebf6d5977ab987940fe5c63d41dd7be020fd09100889fb95f5d112a",
+          "passed": true,
+          "status": "complete",
+          "work": 8024,
+          "engine_executions_so_far": 1
+        },
+        {
+          "case": "blind-alternator/changing-zero",
+          "experiment_hash": "sha256:8135c2e290654878ef0ad0372ce987c6677863fcd10717d9f8a23c7772ffdbd0",
+          "result_hash": "sha256:de6b5625b52bad532cc16ecae7139a9dae5bb8c22d211a1998f8e14a65fa3e48",
+          "passed": true,
+          "status": "complete",
+          "work": 8027,
+          "engine_executions_so_far": 2
+        },
+        {
+          "case": "blind-alternator/broken-crossing",
+          "experiment_hash": "sha256:34c748abf750b1d613ce4c172c448faf28f8af77985631c07d60169dd96f719b",
+          "result_hash": "sha256:3870c06de17f230d8cc91d25bdeaf2d3a85f0dd7ea443d52c4662229e391d9a5",
+          "passed": true,
+          "status": "complete",
+          "work": 8356,
+          "engine_executions_so_far": 3
+        },
+        {
+          "case": "blind-alternator/slow-radio",
+          "experiment_hash": "sha256:a2cea0c29a107fd08892a9de63ba956ef403f1e9042325bf1ca769d0f0a0a42e",
+          "result_hash": "sha256:597c744c8cb0056dc748be8713f8f392574b991ced4a1fe8afc862a00bb13986",
+          "passed": true,
+          "status": "complete",
+          "work": 8027,
+          "engine_executions_so_far": 4
+        },
+        {
+          "case": "blind-alternator/early-crossing",
+          "experiment_hash": "sha256:01a7428ec60ea79d83cfdfbac174dd2729dcff6d2830af9ef43022eb0205127d",
+          "result_hash": "sha256:e2c201b9d04f86da85047d016587cc10e5205ce97d179f3c6187aac11ea3b291",
+          "passed": true,
+          "status": "complete",
+          "work": 8365,
+          "engine_executions_so_far": 5
+        },
+        {
+          "case": "blind-alternator/reversed-crossing",
+          "experiment_hash": "sha256:3c8bbde2976cc54cc15e5e1bd33ceb56026dc792565987cb822fb4693da2cb84",
+          "result_hash": "sha256:0dbccda36208822a5860a93ddf2618f47975ba1ae7d25dfae00cbca1e74d0b9d",
+          "passed": true,
+          "status": "complete",
+          "work": 8501,
+          "engine_executions_so_far": 6
+        },
+        {
+          "case": "blind-alternator/repeated-reports",
+          "experiment_hash": "sha256:244d419f1c0ccd52d71a23263e5e8dae1a7bf80f10a4d2d52bb63bca1d5a2f92",
+          "result_hash": "sha256:5792c804c59c32e1397966ea6075106b542b8c1a3a24db44a1adf401269b8656",
+          "passed": true,
+          "status": "complete",
+          "work": 8028,
+          "engine_executions_so_far": 7
+        },
+        {
+          "case": "blind-alternator/late-crossing",
+          "experiment_hash": "sha256:869c2f98829367dd690fe30af758255696dc7ca9bd361682459d2a4ce73d0f00",
+          "result_hash": "sha256:0ba18f714b6812031125c78a1cac5a813454277c95ba7140e171f67eeed2457a",
+          "passed": true,
+          "status": "complete",
+          "work": 8439,
+          "engine_executions_so_far": 8
+        },
+        {
+          "case": "control/idle-courier",
+          "experiment_hash": "sha256:333de3e49187c32fe998c566f5002414e332a925afa0e88e91539ea1480282d0",
+          "result_hash": "sha256:9157272de5b87cea4eb892bd79b04a010f30cca5d476c5e22398551cff59fb61",
+          "passed": false,
+          "status": "complete",
+          "work": 6216,
+          "engine_executions_so_far": 9
+        },
+        {
+          "case": "control/idle-relay",
+          "experiment_hash": "sha256:8b67c2cab6f628bc5e57bb15b0dd936c3fa98ef742d4f4dec27ea1332747a38a",
+          "result_hash": "sha256:f16cce24ab9611953fa5ba7b3c1b73ad6bb1564868fdba742ce2e03cc24cb55d",
+          "passed": false,
+          "status": "complete",
+          "work": 7121,
+          "engine_executions_so_far": 10
+        },
+        {
+          "case": "control/idle-keeper",
+          "experiment_hash": "sha256:86cbc06289cd35b8a73e375491c4cb01f05873523565917cdef45cbf83a5eb51",
+          "result_hash": "sha256:4e1c35235df700b1566d22f9c69635490bba1f894f62c5dc38630f15bcb7a0fd",
+          "passed": false,
+          "status": "complete",
+          "work": 6705,
+          "engine_executions_so_far": 11
+        },
+        {
+          "case": "control/constant-zero",
+          "experiment_hash": "sha256:dc902e682367f45b81223cf4c119dd5b2ba40007db79fc901d2bd6b5b6dd8d84",
+          "result_hash": "sha256:92f80757f9de34c44607e44a8c090807f88f5865713c3883bc8eb3006e88111f",
+          "passed": false,
+          "status": "complete",
+          "work": 6949,
+          "engine_executions_so_far": 12
+        },
+        {
+          "case": "control/constant-one",
+          "experiment_hash": "sha256:582a33595b9b489bd561a65ef583bb9655e657eb83c21c4d4df60f80022635d4",
+          "result_hash": "sha256:16f241c189b02e6c13a34538060ff30078265309b4ed128a611c50b5fbb0dd04",
+          "passed": false,
+          "status": "complete",
+          "work": 7060,
+          "engine_executions_so_far": 13
+        },
+        {
+          "case": "control/forgotten-report",
+          "experiment_hash": "sha256:269e2d2cf865734d53caf846443d4cc7fcff7f6debbd159a6af03785d886e9dc",
+          "result_hash": "sha256:2c0450fc0a69e076dc5aa84c2d73d5a9d4fae7a53142c779d71a1e9d2653a0f3",
+          "passed": false,
+          "status": "complete",
+          "work": 7618,
+          "engine_executions_so_far": 14
+        },
+        {
+          "case": "control/shortened-fuel",
+          "experiment_hash": "sha256:87b414b76152d1376adefbd092c86275cf55c2820218ef5699db00ef79e42642",
+          "result_hash": "sha256:5a5618b48d90e3ea96d4f693221e324c2acf355b39391c5f915a3969d0f58808",
+          "passed": false,
+          "status": "fuel_exhausted",
+          "work": 4000,
+          "engine_executions_so_far": 15
+        },
+        {
+          "case": "checkpoints/changing-one",
+          "experiment_hash": "sha256:885761ee03e5877b6f804e832697aa212fc92f7f87d1e57430b132572c0cfdf6",
+          "result_hash": "sha256:563bde197fb2f602193ca90158c1a750d9400233517c6cee146d75fe686754d3",
+          "passed": true,
+          "status": "complete",
+          "work": 8199,
+          "engine_executions_so_far": 16
+        },
+        {
+          "case": "checkpoints/broken-crossing",
+          "experiment_hash": "sha256:89cd54276b874fa6b9117f4f7c12e1bc3d070b754d11b3639480d8dd4c4c8357",
+          "result_hash": "sha256:31312b4b29579d3af5a5d02b80a6782fec5b07c468c5f3c582a77643064e5d03",
+          "passed": true,
+          "status": "complete",
+          "work": 8528,
+          "engine_executions_so_far": 17
+        },
+        {
+          "case": "reference/changing-one",
+          "experiment_hash": "sha256:885761ee03e5877b6f804e832697aa212fc92f7f87d1e57430b132572c0cfdf6",
+          "result_hash": "sha256:563bde197fb2f602193ca90158c1a750d9400233517c6cee146d75fe686754d3",
+          "passed": true,
+          "status": "complete",
+          "work": 8199,
+          "engine_executions_so_far": 18
+        },
+        {
+          "case": "reference/changing-zero",
+          "experiment_hash": "sha256:2b1a328cfcc8975fd6cf1d5bb869a30093a2258196fcd0ed2572fd31aec16370",
+          "result_hash": "sha256:f52d3f3e2349f18ce6ee32bfdb625f548a390cc8e51cd09f79176264bd208bd0",
+          "passed": true,
+          "status": "complete",
+          "work": 8199,
+          "engine_executions_so_far": 20
+        },
+        {
+          "case": "reference/broken-crossing",
+          "experiment_hash": "sha256:89cd54276b874fa6b9117f4f7c12e1bc3d070b754d11b3639480d8dd4c4c8357",
+          "result_hash": "sha256:31312b4b29579d3af5a5d02b80a6782fec5b07c468c5f3c582a77643064e5d03",
+          "passed": true,
+          "status": "complete",
+          "work": 8528,
+          "engine_executions_so_far": 22
+        },
+        {
+          "case": "reference/slow-radio",
+          "experiment_hash": "sha256:85872dac0e085814e83b5e2ca543dda87a170710b49ff5fa5f7f3c19e84d1c64",
+          "result_hash": "sha256:5af520f321fdd781e50c3bfba1a84cb5a6714c492ea89f29c7a9bab72f8dd469",
+          "passed": true,
+          "status": "complete",
+          "work": 8195,
+          "engine_executions_so_far": 24
+        },
+        {
+          "case": "reference/early-crossing",
+          "experiment_hash": "sha256:66ea11e5ae006966985e6d73fcdd4c098c38b2917748b934061f2b33fe42e981",
+          "result_hash": "sha256:ab2b0c9ef11358e0bd64ffb0b0cb88cda513c59d01c73cffabd98a2328a58e1a",
+          "passed": true,
+          "status": "complete",
+          "work": 8537,
+          "engine_executions_so_far": 26
+        },
+        {
+          "case": "reference/reversed-crossing",
+          "experiment_hash": "sha256:2c8b2ed185341386f1d10a04b0bf0846a93add4445d38026a8c15cdfc02ce3ea",
+          "result_hash": "sha256:611685915f3cd4c9e8f17c0ce5b27fcb3dd9a69ea6245992c438092af4ba17ae",
+          "passed": true,
+          "status": "complete",
+          "work": 8673,
+          "engine_executions_so_far": 28
+        },
+        {
+          "case": "reference/repeated-reports",
+          "experiment_hash": "sha256:bcfe8926f3d493d7e53c8af4cabe21ac327f15351627f673cab8d08bc42b2970",
+          "result_hash": "sha256:3bbb79badd6e2d50ef94153342c0ddd6b44265255d4fcd9607fae7a58e44ad28",
+          "passed": true,
+          "status": "complete",
+          "work": 8196,
+          "engine_executions_so_far": 30
+        },
+        {
+          "case": "reference/late-crossing",
+          "experiment_hash": "sha256:079cdf7cf8aaf42a632580dfd2cc37dca46cf97dd8ab5a7463e2e24df7cde55e",
+          "result_hash": "sha256:926cf26e2164ef7f3e02ef6147bdcd2191ca8234a43b1be326c9ff8e4036980f",
+          "passed": true,
+          "status": "complete",
+          "work": 8607,
+          "engine_executions_so_far": 32
+        },
+        {
+          "case": "previous-frugal/changing-one",
+          "experiment_hash": "sha256:acb9e95efbf5b5c417e71bf21703704209bbc7c351f746cc4a70c592a06eccd7",
+          "result_hash": "sha256:288d3997de86cf7a08eb8c49b9906cec05d5c061aed95b15a07a1df35025d315",
+          "passed": false,
+          "status": "complete",
+          "work": 7441,
+          "engine_executions_so_far": 34
+        },
+        {
+          "case": "previous-frugal/changing-zero",
+          "experiment_hash": "sha256:76ceb648ed9375158ff6e1a6e885fb828ab5863a871b95534b7825d023400a97",
+          "result_hash": "sha256:6405d1a70b0cfddc8a4cc5738d33fe467dec6491ffd1e374850480570925e66c",
+          "passed": false,
+          "status": "complete",
+          "work": 7509,
+          "engine_executions_so_far": 35
+        },
+        {
+          "case": "previous-frugal/broken-crossing",
+          "experiment_hash": "sha256:d0f57fc05ed68312340201f47a0e7d8b2512853741a0f3d57c8a53b66d935a8c",
+          "result_hash": "sha256:6b235678a31849b2bea4c141f1172392023e47859deaf999905b0bf589f09849",
+          "passed": false,
+          "status": "complete",
+          "work": 7818,
+          "engine_executions_so_far": 36
+        },
+        {
+          "case": "previous-frugal/slow-radio",
+          "experiment_hash": "sha256:2681722a2f2836a8ceec0b80ed060550ade5a72bd852af7c972a90df2ed4d5c4",
+          "result_hash": "sha256:887884b2aa181eddefa125c4aa006b1128ffafc36ba210ea0f7e856637af3526",
+          "passed": false,
+          "status": "complete",
+          "work": 7577,
+          "engine_executions_so_far": 37
+        },
+        {
+          "case": "previous-frugal/early-crossing",
+          "experiment_hash": "sha256:4200694cc83f8ab646af64a0b360182cfad7dcebf857601025d81ba635e068b6",
+          "result_hash": "sha256:f192124ca006ed7c57359f5d8e1c152eda8e38e85686233814a4915116f2b37a",
+          "passed": false,
+          "status": "complete",
+          "work": 7760,
+          "engine_executions_so_far": 38
+        },
+        {
+          "case": "previous-frugal/reversed-crossing",
+          "experiment_hash": "sha256:13823607f1f7c8105cecea38e3c57e7bbcc61c9c4e49d772e7674517be3a5b64",
+          "result_hash": "sha256:91c114b2301addeb9ca25909a0f013c42ec95125864525e5a755fd6981b20694",
+          "passed": false,
+          "status": "complete",
+          "work": 7849,
+          "engine_executions_so_far": 39
+        },
+        {
+          "case": "previous-frugal/repeated-reports",
+          "experiment_hash": "sha256:4ddb5453360889131f7aa86825e016ce62c2be319ffa9134a8e2257013ec5c4a",
+          "result_hash": "sha256:0798e97dc8481d3af03d955357fbc93f610adccda60c61647321036ec0a92d16",
+          "passed": false,
+          "status": "complete",
+          "work": 7508,
+          "engine_executions_so_far": 40
+        },
+        {
+          "case": "previous-frugal/late-crossing",
+          "experiment_hash": "sha256:f589c50f66db831f27e38949e2df92ca7b8ceec3dac6195678b3b1eff17f7b53",
+          "result_hash": "sha256:20d604293d42afecebcb78a4e84ebf4657db711c60c5091393b562c2643f8dc0",
+          "passed": false,
+          "status": "complete",
+          "work": 7903,
+          "engine_executions_so_far": 41
+        },
+        {
+          "case": "counterexample/reversed-crossing",
+          "experiment_hash": "sha256:827552af9e820339259a2d8b871c8fafff104b9129d76e3596bad8b9d7646106",
+          "result_hash": "sha256:1aa728603a4c2f230950d0e0adaaaeca4bf09fe24abdb818c18a47f31bc2b2dd",
+          "passed": false,
+          "status": "complete",
+          "work": 8457,
+          "engine_executions_so_far": 42
+        },
+        {
+          "case": "counterexample/late-crossing",
+          "experiment_hash": "sha256:bd65b1c301ee2fb724f6ec9709b4675b52daa31ba805ae1b270b6f89a5241fc9",
+          "result_hash": "sha256:71090eddc71b38739092f6f9dffef7a87cf469b83d28cc5c5bf673b4055f8f06",
+          "passed": false,
+          "status": "complete",
+          "work": 8500,
+          "engine_executions_so_far": 43
+        },
+        {
+          "case": "previous-resilient/changing-one",
+          "experiment_hash": "sha256:22da2174921e80526e7c3fba0762f9b6660cfe980bd3877079462d8ee8e0942c",
+          "result_hash": "sha256:83bd467cd7c7d0ba9c0bec2f334fdd31ca24cb832a956568f82aed7ddedd0437",
+          "passed": true,
+          "status": "complete",
+          "work": 7917,
+          "engine_executions_so_far": 44
+        },
+        {
+          "case": "previous-resilient/changing-zero",
+          "experiment_hash": "sha256:074707d4f250a1146fa4aea40d3be6f29e577581a8238aa425f6a012ab9cfd64",
+          "result_hash": "sha256:7954c9e1a5a4f31b143e7b29caa5f949db9960af2b990c71c37238fe0e861b50",
+          "passed": true,
+          "status": "complete",
+          "work": 7917,
+          "engine_executions_so_far": 45
+        },
+        {
+          "case": "previous-resilient/broken-crossing",
+          "experiment_hash": "sha256:1407867c371ce661e02ecf917679cdb42c6b603849b345f883946309967a1fe3",
+          "result_hash": "sha256:9a47bbc5cf4e7741b22aa9ff94b7bd6f6c88c204fe89672bf7c3585a8c68f49b",
+          "passed": true,
+          "status": "complete",
+          "work": 8246,
+          "engine_executions_so_far": 46
+        },
+        {
+          "case": "previous-resilient/slow-radio",
+          "experiment_hash": "sha256:48e7f215fc449b4ae18905d2cbdfe3186f2416b110a98b936f3232f21bac9df3",
+          "result_hash": "sha256:d312715d4461a7198468c8b1f566819b2b57a572ed34974b20661f9f90d08d08",
+          "passed": true,
+          "status": "complete",
+          "work": 7917,
+          "engine_executions_so_far": 47
+        },
+        {
+          "case": "previous-resilient/early-crossing",
+          "experiment_hash": "sha256:352a9a390aa8ecd8602a72f9cb7f895b17750e767448340ff50968139953cc51",
+          "result_hash": "sha256:84c2b57d3d9822b67b0dd456820c104e25ba9f152ad0928a5d605bed9dd882b7",
+          "passed": true,
+          "status": "complete",
+          "work": 8255,
+          "engine_executions_so_far": 48
+        },
+        {
+          "case": "previous-resilient/reversed-crossing",
+          "experiment_hash": "sha256:5eaef0e91193e08a46f33bc0afc3278da1224ed895205368a23bcee31db93e31",
+          "result_hash": "sha256:91b786f2ba8e9bfe35cac37ec4e578a7fc58991c62de28a9364a23a754ef35ed",
+          "passed": true,
+          "status": "complete",
+          "work": 8391,
+          "engine_executions_so_far": 49
+        },
+        {
+          "case": "previous-resilient/repeated-reports",
+          "experiment_hash": "sha256:20ca4e33b2238215cdfe58c37a70fb5e39e944197aab35e50673dba5c3190ad7",
+          "result_hash": "sha256:2750c360ded708b8989f03e45b7a8a9ab964d901dbf353e9b8d14fdf3a27a995",
+          "passed": true,
+          "status": "complete",
+          "work": 7918,
+          "engine_executions_so_far": 50
+        },
+        {
+          "case": "previous-resilient/late-crossing",
+          "experiment_hash": "sha256:82759a06ba3f0218d2bee18ac988ccaad012db58053bfa78b2f12a80c5f20e38",
+          "result_hash": "sha256:900d04f41198c9cf1b7529971e5f370044f011a60390cf69ecaa152d5384726c",
+          "passed": true,
+          "status": "complete",
+          "work": 8329,
+          "engine_executions_so_far": 51
+        }
+      ]
+    }
+  ]
+}

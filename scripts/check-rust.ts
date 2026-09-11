@@ -15,3 +15,4 @@ run("cargo", ["clippy", "--workspace", "--all-targets", "--locked", "--", "-D", 
 run("cargo", ["test", "--workspace", "--locked"]);
 run("bun", ["scripts/record-bridge.ts", "--check"]);
 run("node", ["scripts/check-expedition-evidence.mjs"]);
+run("node", ["scripts/check-continuity-evidence.mjs"]);

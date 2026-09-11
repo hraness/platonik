@@ -1,0 +1,101 @@
+{
+  "id": "depot-phase",
+  "courier": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "at_source",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "pickup"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "at_depot",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "drop"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "blocked",
+            "direction": "forward",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "back"
+        },
+        "remember": null
+      },
+      {
+        "when": [],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      }
+    ]
+  },
+  "controller": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 0
+          }
+        ],
+        "action": {
+          "kind": "route",
+          "valve": 30,
+          "bit": {
+            "kind": "constant",
+            "value": true
+          }
+        },
+        "remember": {
+          "slot": 0,
+          "value": 1
+        }
+      },
+      {
+        "when": [],
+        "action": {
+          "kind": "route",
+          "valve": 30,
+          "bit": {
+            "kind": "constant",
+            "value": false
+          }
+        },
+        "remember": {
+          "slot": 0,
+          "value": 0
+        }
+      }
+    ]
+  }
+}
