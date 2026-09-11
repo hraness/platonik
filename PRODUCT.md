@@ -44,6 +44,12 @@ The documents under docs/ contain the original design proposal and source citati
 - Keep engine facts, fictional narration, empirical claims, and proofs distinct.
 - Preserve readable text, usable navigation, and accessible controls on desktop and mobile.
 
+## Campaign Direction
+
+The Long Trail is a hopeful space western with a singularity arc: a first companion becomes a traveling herd, cooperating colonies form living arks, settlements connect, and bounded discovery processes let the creations begin creating. The campaign's destination is the Far Beacon. Its final crossing echoes the opening rescue, while a completed story leaves an open research frontier.
+
+The player is a naturalist and trail guide growing into a civilization's steward. Preserve parents, keep favorite lineages visible, and make habitat fit and cooperation mechanically useful. Creatures are companions rather than consumable crafting ingredients. Avoid body horror, compulsory sacrifice or fusion, and neglect penalties while offline. Fictional minds and narrative first contact remain separate from measured software behavior.
+
 ## Shared Economy Direction
 
 Single-player laboratories can participate in a proposed multiplayer expedition board. Players commission objectively checked improvements, earn in-game credits, and publish reusable organisms with lineage credit. The market remains a proposal; public code is copyable, and wealth does not determine organism rank. Hosted work must have explicit operating budgets. Research commissions, storage alternatives, and their costs are reviewable in the field guide.

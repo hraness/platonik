@@ -14,6 +14,8 @@ The creatures are executable algorithms. They do not contain chatting language m
 
 The central loop is **wish → build → watch → surprise → improve**. Each pass should leave the player with a visible change and a consequential choice. Automatic search can help, but the player owns the ambition, the favorites, and the question to pursue next.
 
+The longer campaign is [The Long Trail](campaign.md): a hopeful space western in which a first companion becomes a herd, the herd helps build living arks, and their settlements grow into a civilization capable of reaching a distant beacon. The player is a naturalist and trail guide whose role grows with the creatures' capabilities. Its space-opera fiction gives these experiments a continuing destination.
+
 ## A laboratory of your own, a world of other researchers
 
 Play each expedition in your own world. A later shared expedition board would connect those private laboratories: another player can commission a recovery habit your creature already suggests, or you can ask a specialist to help a favorite adapt. Earn in-game credits for a checked delivery, and keep its public descendants in the family tree. A useful creation can acquire a life beyond the experiment that produced it.
@@ -69,21 +71,22 @@ Translate wishes into inspectable changes. “Make it brave” might become “t
 
 ## A universe that changes scale
 
-Universal Paperclips changes the player's responsibilities as its economy expands into planetary industry and autonomous exploration. Platonik borrows that pattern of major mechanical transitions, while using its own fiction and rules. [Universal Paperclips](https://www.decisionproblem.com/paperclips/index2.html).
+The campaign has one recurring problem: carry something precious, keep a home connected, and recover when a familiar route fails. Each transition in [The Long Trail](campaign.md) introduces a new way to solve it.
 
-| Chapter | What you control | The new tension | What survives the transition |
-| --- | --- | --- | --- |
-| **The Cell** | Your first spark-carrying creature | Reach the beacon before its light runs out | A named lineage with a recognizable habit |
-| **The Wound** | A creature facing an altered world | Keep a favorite useful when its usual route fails | Descendants that recover, with their tradeoffs recorded |
-| **The Tissue** | Several colonies forming a larger body | Get specialists to cooperate under shared limits | A whole colony becomes a component, with its costs intact |
-| **The Ecology** | A stable of specialists and their partnerships | No strategy dominates every habitat; competitors expose weaknesses | An adaptive portfolio and a record of its tradeoffs |
-| **The Frontier** | Search processes that invent organisms and experiments | Finding useful representations becomes the problem | Reusable algorithms, counterexamples, and research records |
+| Campaign stage | New player action | Capability that earns the next scale |
+| --- | --- | --- |
+| **A spark in the dust** | Improve a companion's local habits | Keep the first beacon connected through a route collapse |
+| **The long trail** | Prepare a complementary expedition herd | Complete a sequence of different habitats within shared reserves |
+| **A herd that carries home** | Connect colonies into working infrastructure | Sustain a mobile habitat through a checked autonomous voyage |
+| **The free ports** | Connect independent settlements | Maintain services and exchanges despite interrupted contact |
+| **The bloom** | Set goals and budgets for organisms that propose other organisms | Produce a checked useful candidate through a bounded search process |
+| **Across the Quiet** | Lead a civilization beyond its familiar network | Sustain the voyage and establish a two-way link to the Far Beacon |
 
-The first playable release covers a small slice of the first two chapters. Later transitions introduce new choices, not merely larger quantities of the same resource.
+These are future campaign gates, not implemented achievements. The first playable release tests the opening rescue only. Later habitats require precise rules, calibrated thresholds, baselines, and independent checks before their chapter can be claimed playable.
 
-The narrative reveal is that the world you mastered can become a cell in another world. Your first creature might become the transport system of something much larger. An old favorite returns in a new role, and you have to learn what its habits mean at that scale. Promotion preserves a component's real execution, memory, and communication costs. It never turns an expensive algorithm into a free primitive.
+A colony can become a component of a larger body without consuming the parent or erasing its identity. Its descendants might form the transport system of a living ark while the original remains at home. Composition preserves execution, memory, and communication costs. Changing scale never turns an expensive algorithm into a free primitive.
 
-The campaign can culminate in an expedition toward **the Witness**: a method that finds checkable answers across increasingly difficult constraint worlds. It is a fictional destination for an open research frontier, not a promise that the campaign has a P=NP solution hidden at its end.
+The campaign culminates in a fictional first contact, with success determined by a bounded expedition. Research into checkable answers and complexity remains an optional open frontier. Finishing the story does not require or imply solving P versus NP.
 
 ## What you are actually building
 
