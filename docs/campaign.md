@@ -32,6 +32,8 @@ Discovery needs recognizable families and observable habits, alongside room for 
 
 At the next camp, your field guide records a new lineage and a new stretch of trail. The signal has more structure than anyone expected.
 
+A later scene worth earning: the herd returns to a troublesome valley, and a familiar traveler takes a turn its fresh descendants miss. You recognize an old companion through something it does. The notebook can then investigate [what carries that history](research.md#the-remembered-trail), without inventing a memory for the sake of the story.
+
 ## A herd that carries home
 
 Longer journeys expose a limit: every expedition still depends on supplies from the homestead. To go farther, the herd needs to carry a working habitat with it.
@@ -41,6 +43,8 @@ You begin building with its abilities. Courier colonies form circulation routes.
 This is the first great change of scale: **the home you built becomes a living ark**. Its first departure is a chapter event earned by a checked autonomous voyage, not by reaching an arbitrary creature count. The settlers inside are still inspectable. The routes you once laid out by hand are running beneath your feet.
 
 An intended future scene: you stand in a garden aboard the ark while a descendant of your first courier carries light through its branches. The skyline moves. Home is leaving the planet.
+
+The ark also changes what can live along the trail. A small colony keeps a waystation's passage open; later, an unfamiliar caravan makes it through because that work continues. Your first companions can become known for a place they help sustain. Construction, upkeep, and the visitors' successful crossing must occur in the simulation. This is how the herd begins making room for a civilization.
 
 ## The free ports
 

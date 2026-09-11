@@ -14,6 +14,27 @@ His discussion of sorting also suggests looking for useful side effects under di
 
 The opening beacon habitat is a new game model, not a reproduction of the sorting study. Its couriers move conserved sparks from a finite spring to a draining beacon. Start by measuring deliveries, charge over simulation time, occupied routes, recovery after a declared route collapse, and charged computation. Successful delivery demonstrates performance in that specified world; it does not establish cognition, consciousness, or a theory of life.
 
+## Symbiosis, sensing, and living habitats
+
+František Baluška's *Cognitive Cells: From Cellular Senomic Spheres to Earth's Biosphere* (26 February 2025) connects cellular sensing, symbiosis, and environmental organization. His proposed **senome** describes an integrated sensory apparatus, distinguished from the genome and epigenome. The article extends this framework toward cellular sentience and a planetary mind. It is a conceptual synthesis and argument; those larger interpretations are hypotheses, not conclusions established by every biological example it discusses. [Baluška, 2025](https://link.springer.com/article/10.1007/s13752-025-00489-5).
+
+The following are original game adaptations. They give [the living-ark campaign](campaign.md#a-herd-that-carries-home) more ways for a small companion to matter:
+
+- **Different sensory worlds.** A passage detectable by one specialist may be invisible to another. A later habitat can offer bounded sensing channels and explicit signals between partners. Disable a channel to test its contribution. Compare organisms under the same information allowance and charge sensing, communication, and propagation; an extra sensor is not evidence of superior cooperation.
+- **A history beyond the genome.** Separate what a creature senses now, what it retains from experience, its body configuration, and its inherited program. Let the player compare a seasoned traveler with a fresh copy. These are software distinctions to define and test, not a simulation of the paper's proposed biological apparatus.
+- **Partnerships that earn their place.** An ark can depend on several lineages doing compatible work. Compare the assembly with its constituents and component-removal controls under matched total resources, cell counts, and information access. Preserve each lineage and count interface costs and delays. Calling an assembly a higher intelligence supplies no performance bonus.
+- **A habitat as an achievement.** A colony may maintain a route or shelter that makes later expeditions possible. Measure what subsequent travelers gain, including construction and upkeep. Test fresh arrivals with and without that infrastructure. The player has changed the conditions for other creatures, and the replay can show how.
+
+These proposals require later, versioned habitat modules. The first courier VM keeps its existing local observations and state limits. Neither a signal field nor persistent environmental memory is silently added to it. A useful software result would concern performance, transfer, or dependence under those rules; it would not demonstrate cellular consciousness, electromagnetic cognition, or a resolution of P versus NP. The source article is available under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); the game adaptations here are Platonik's, not claims made by its author.
+
+### The remembered trail
+
+A concrete experimental lead appears in a study cited by Baluška. Fukasawa, Savoury, and Boddy found preferential regrowth along a previous predominant growth direction when colonized wood was transferred to fresh soil. They explicitly avoid claiming memory of the bait's direction: bait effects and unequal soil area were not separated, and a further control was absent. Physiological change and the carry-over distribution of fungal biomass remained possible explanations. [Fukasawa and colleagues, *ISME Journal* 14, 380–388 (2020)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6976561/).
+
+For the game, start with an ordinary question: **“Does Moss remember this place?”** Preserve the experienced traveler, then compare copies with the same program while separately resetting internal memory, restoring the initial body configuration, and transferring into an equivalent clean habitat. Include an untrained baseline and controlled combinations of resets. Define exactly what each reset preserves; otherwise “memory” can conceal a changed body or a trail left in the world.
+
+After exploration, freeze the proposed explanation and use fresh, unselected cases to test it. Preserve the program, initial body, internal state, and environment state needed for replay. Account separately for acquiring, storing, loading, and using experience; prepared state cannot smuggle undeclared clues into a ranked trial. The player gets a recognizable habit to investigate, with a result that can distinguish competing explanations. Whether the proposed creature shows any such effect remains unknown.
+
 ## Experiments that become game mechanics
 
 | Question | Player action | Evidence needed |
