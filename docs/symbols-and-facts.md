@@ -39,6 +39,14 @@ This illustrative expression describes an inversion, using a strictly-left-of re
 
 Notebook descriptions can refer to the full recorded world. Organisms retain their limited sensors: a cell may use `self` and a visible neighbor, but cannot read global identities, other policies, or hidden evaluator information because the player has named them. No notebook assertion becomes a free sensor.
 
+## A language, a sensor, and a world
+
+Wittgenstein's proposition 5.6 connects the limits of language and world. Platonik uses that as a question for experiment: what changes when a creature gets a richer way to describe the same observations? This is a design adaptation, not a literal implementation of the philosophical claim. [Tractatus, 5.6](https://courses.umass.edu/klement/tlp/tlp.html).
+
+Keep three interventions separate. A new **name** can abbreviate an existing expression without changing its behavior. A new **representation** can reorganize the same information into rules the agent finds easier to compose. A new **sensor** can supply information the creature previously lacked. Compare names with their expansions, representations under matched information and costs, and sensor changes only in challenges that explicitly permit them.
+
+Ask the agent to show a cell's local view beside the complete recorded world. Missing local evidence does not make the unseen part nonexistent. It identifies the observer boundary. The chat agent's explanation, the program's internal state, and the world state are different objects; none is a direct measurement of subjective experience.
+
 ## Three experiments to play
 
 **Name the useful relation.** After a sorting trial, identify a recurring local inversion. Define a parameterized expression for it, inspect its expansion, and use it as a condition in a copied policy. Changed values and held-out worlds test generalization. Separately, rename the observer's cells while preserving their bindings: replay should remain identical because those labels are not policy inputs. Compare the alias with its expanded condition for identical behavior and correctly accounted costs. Reusing a name may help the player or agent compose rules without improving the organism's execution; measure those benefits separately.

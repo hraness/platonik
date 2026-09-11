@@ -49,6 +49,28 @@ Consequently the game has no "percent of P=NP solved" meter. Its frontier is emp
 
 The name Levin can also refer to **Leonid Levin**, the complexity theorist associated with [universal search](https://www.cs.bu.edu/fac/lnd/research/cc.htm). He is a different researcher from Michael Levin. Enumerating small candidate programs is an optional future search strategy; it is not the source of the organism metaphor and is not a premise that useful search will be cheap.
 
+## Perspective, language, and what is granted
+
+A useful distinction is between a first-person philosophical argument and third-person evidence about a system. Descartes's *Discourse on Method*, Part IV, gives the familiar “I think, therefore I am.” Recasting this as “I interact” is a further proposal about what matters, not the same argument or a test the simulator can use to detect consciousness. [Descartes, Part IV](https://www.gutenberg.org/files/59/59-h/59-h.htm).
+
+The game can compare observable perspectives: local sensing, internal registers, collective behavior, and the external agent's account. It can also compare a changed vocabulary with a changed information supply. These experiments do not assume that all human thought, or all model computation, is explicit language. The relationship between representation and reasoning is itself something to investigate.
+
+P versus NP is a precise question under standard computational definitions. A library or clue can change an algorithm's practical performance; an oracle, advice supplied by input length, free input-specific clues, or an altered unit-cost model can change which mathematical question is being asked. State that change explicitly instead of treating an expanded permission set as a solution of the original problem. The relevant design question is: **what was supplied, how was it obtained, and what work remains?** Different cost models answer different questions; a declared model can still assign precise costs to every permitted operation.
+
+Likewise, the presence of an emergent pattern does not establish that a solver can efficiently discover and use a sound clue on every input. The proposed [perspective and inheritance experiments](game-design.md#a-world-seen-from-three-places) make those missing steps visible. A habitat may deliberately grant extra information; that permission is an explicit simulation rule, with no authority to obtain private information or bypass access controls outside the game.
+
+## Learning from past P versus NP claims
+
+[Gerhard Woeginger's P-versus-NP page](https://wscor.win.tue.nl/woeginger/P-versus-NP.htm) is a historical index of attempted resolutions and related criticism, last revised 26 September 2016. Inclusion is not an endorsement. Read its assertions as descriptions of claims, and follow the particular paper, version, and critique before assigning a status. As checked on 11 September 2026, [Clay still lists the problem as unsolved](https://www.claymath.org/millennium/p-vs-np/).
+
+Two primary records show why preserving scope and revisions matters. Yannakakis proves an exponential size requirement for symmetric linear-programming formulations of matching and the traveling salesman problem. That rules out a specified formulation approach; it does not prove P≠NP or a lower bound for every algorithm. [Yannakakis, 1991](https://www.sciencedirect.com/science/article/pii/002200009190024Y). Gillet's proposed polynomial-time route through flow networks was withdrawn; the author's record says the method fails and points to an analysis of why. [Gillet, withdrawn version 6](https://arxiv.org/abs/1310.1971v6).
+
+For Platonik, the lesson is to make claims precise enough to challenge. Store the original statement, program and source versions, input family, computational model, claimed guarantee, tests, and any counterexample or withdrawal. Keep “untested,” “passed these cases,” “refuted within this scope,” and “proved under these assumptions” distinct. An agent's confidence cannot change those statuses.
+
+Before treating a shortcut as a complexity result, account for constructing its representation, acquiring any knowledge, storing and querying it, and completing the remaining search. Count bit lengths and growing intermediate objects. A quick lookup after expensive preparation is useful in some settings, but its cost model must remain visible.
+
+This motivates a later **counterexample expedition**. Freeze a claim about a creature, search for an admitted world where it fails, and simplify the failure while preserving the claim's conditions and the world's feasibility. Keep the smallest example found; call it globally smallest only if that has been established. The reward is a replayable discovery and a better next design. Testing a historical mathematical argument requires its own faithful formalization; a beacon replay cannot refute a SAT proof. No such argument has been audited or refuted by this website update.
+
 ## Reuse from peqnp and Oh
 
 [peqnp](https://github.com/hraness/peqnp) provides a relevant experimental approach: small typed programs, deterministic generators, explicit computational costs, independent checking, and preserved negative results. Adapt these ideas to a game-sized runtime. Inspect the exact source and license before importing any implementation; this proposal specifies no dependency on peqnp or Oh and makes no claim that their current interfaces already fit the game.

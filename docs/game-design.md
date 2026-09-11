@@ -106,6 +106,16 @@ After the first rescue, name a recurring situation such as “carrying a spark a
 
 The [symbols and facts glossary](symbols-and-facts.md) develops these mechanics from simple symbols, complex symbols, Sachverhalte, and Tatsachen. It is a dated, revisable reading aid. The introductory episode and competitive ranking stay focused on observable behavior.
 
+## A world seen from three places
+
+“Show me what this cell can see.” The same expedition can be read through a cell's nearby observations, the colony's overall movements, or the player's explanation. A cell may see a blocked passage while the player sees a route around it. Showing those views together makes its strange behavior understandable and suggests a change to try.
+
+The proposed viewpoint selector changes what the observer sees; it grants the organism no new sensor. A creature's self-description would be another program output to inspect. Saying “I exist” does not unlock a mind or certify consciousness.
+
+A later expedition could ask: “What if I give it what the older one learned?” Try an inherited routine, a memory with a declared origin, or a paid clue supplied by that habitat. Compare the same creature with and without the gift. Does it recover better, use too much memory, or depend on a hint that will disappear in the next world?
+
+**What is granted must be counted.** A library brings executable routines and stored information, not just another item in an inventory. Its construction, loading, storage, use, and remaining work all matter. Separate what the outside agent knows from what actually enters the creature. Ordinary ranked habitats retain their existing information limits; assistance belongs to a separately declared challenge or division with equal access and explicit costs. These are later proposals, not additions required for the first beacon rescue.
+
 ## What makes another session worthwhile
 
 **Attachment:** lineages have names, ancestry, characteristic failures, and visible inherited rules. A failed child can remain valuable in a different habitat. Keep a small active stable and a larger archive so choice matters without deleting discoveries.
@@ -125,6 +135,8 @@ The player earns a growing **atlas of capabilities**: this lineage recovered, th
 Research begins with ordinary curiosity. “Was that a fluke?” commissions a comparison on new worlds. “Why did it work?” commissions a controlled change. “Could anyone else use this?” prepares a reproducible export. The agent handles the protocol within a budget, while the player can inspect the evidence or keep exploring.
 
 Keep three levels visible in the notebook: **observed here**, **reproduced under stated tests**, and **reviewed contribution**. The last requires independent checking and a defensible question or improvement; most play will remain at the first two levels. A new personal best still deserves celebration without being called a scientific breakthrough. Publication is a separate player action.
+
+A later counterexample expedition turns confidence into a challenge: “I think Moth can always find another way.” Freeze what “another way” means and the allowed worlds, then let your agent look for a failure. Simplify the map until the weak spot is easy to see. Keep the smallest case found and use it to breed a response. Worlds must remain feasible under the declared limits; an impossible expedition proves nothing about the creature's relative ability. This proposed mode draws a practical lesson from [past P versus NP claims](research.md#learning-from-past-p-versus-np-claims): a precise, reproducible failure can be useful progress. It earns a place in the notebook, with no extra currency for manufacturing claims.
 
 The larger fiction explores a space of possible forms: how different bodies express a rule, what a colony can do together, and which habits persist when the world changes. Michael Levin's research and philosophical proposals provide questions for these expeditions; the [research foundations](research.md) distinguish experimental findings from speculative interpretations. Play can invite wonder about life and minds without awarding a consciousness score or declaring that a metaphysical theory is true.
 
