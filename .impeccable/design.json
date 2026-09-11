@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-11T02:06:06Z",
+  "title": "Design System: Platonik",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Dark green"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Off-white paper"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Dark ink"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted text"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Fine divider"
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Quotation and code wash"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Homepage headline",
+        "purpose": "The large homepage heading."
+      },
+      "headline": {
+        "displayName": "Document title",
+        "purpose": "Documentation page headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Homepage body text and shared copy."
+      },
+      "prose": {
+        "displayName": "Document prose",
+        "purpose": "Long-form documentation."
+      }
+    },
+    "breakpoints": [
+      {
+        "name": "single-column",
+        "value": "800px"
+      },
+      {
+        "name": "narrow",
+        "value": "480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary link",
+      "kind": "custom",
+      "refersTo": "primary-link",
+      "description": "A navigational anchor for the main reading action, with an immediate hover state and keyboard outline.",
+      "html": "<a class=\"ds-primary-link\" href=\"/docs/game-design\">Explore the game design <span aria-hidden=\"true\">↗</span></a>",
+      "css": ".ds-primary-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--paper, #f9f9f6); background: var(--accent, #304f3d); padding: 12px 18px; border-radius: 3px; text-decoration: none; font-size: 14px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-primary-link:hover { background: #213d2c; color: white; } .ds-primary-link:focus-visible { outline: 2px solid var(--accent, #304f3d); outline-offset: 5px; border-radius: 2px; }"
+    },
+    {
+      "name": "Header navigation",
+      "kind": "nav",
+      "refersTo": "navigation-link",
+      "description": "The two header links retain plain text styling, with an underline on hover.",
+      "html": "<nav class=\"ds-header-nav\" aria-label=\"Main navigation\"><a href=\"/docs\">Documentation</a><a href=\"https://github.com/hraness/platonik\">GitHub</a></nav>",
+      "css": ".ds-header-nav { display: flex; gap: 29px; font-size: 14px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-header-nav a { color: var(--ink, #262c28); text-decoration: none; padding-block: 12px; text-underline-offset: .22em; text-decoration-thickness: 1px; } .ds-header-nav a:hover { color: var(--accent, #304f3d); text-decoration: underline; } .ds-header-nav a:focus-visible { outline: 2px solid var(--accent, #304f3d); outline-offset: 5px; border-radius: 2px; } @media (max-width: 480px) { .ds-header-nav { font-size: 12px; gap: 18px; } }"
+    },
+    {
+      "name": "Documentation navigation",
+      "kind": "nav",
+      "refersTo": "documentation-link",
+      "description": "A vertical link list with an explicit current page; it wraps horizontally on smaller screens.",
+      "html": "<nav class=\"ds-doc-nav\" aria-label=\"Documentation\"><a href=\"/docs\">Overview</a><a href=\"/docs/game-design\" aria-current=\"page\">The game</a><a href=\"/docs/competition\">Competition</a><a href=\"/docs/engine\">Agents &amp; engine</a><a href=\"/docs/research\">Research foundations</a></nav>",
+      "css": ".ds-doc-nav { display: flex; flex-direction: column; gap: 6px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-doc-nav a { font-size: 14px; padding: 7px 0; text-decoration: none; color: var(--muted, #616a63); text-underline-offset: .22em; text-decoration-thickness: 1px; } .ds-doc-nav a:hover { text-decoration: underline; color: var(--ink, #262c28); } .ds-doc-nav a[aria-current=page] { color: var(--ink, #262c28); font-weight: 600; } .ds-doc-nav a:focus-visible { outline: 2px solid var(--accent, #304f3d); outline-offset: 5px; border-radius: 2px; } @media (max-width: 800px) { .ds-doc-nav { flex-direction: row; flex-wrap: wrap; gap: 2px 22px; } .ds-doc-nav a { font-size: 13px; } }"
+    },
+    {
+      "name": "Cell diagram",
+      "kind": "custom",
+      "refersTo": "policy-a-cell",
+      "description": "Eight static cells use values, A/B labels, a dashed border, and a cross to explain policy and controller state.",
+      "html": "<figure class=\"ds-cell-figure\"><div class=\"ds-cell-row\" role=\"img\" aria-label=\"Illustrative cells by value and policy: 3 B, 1 A, 6 A, 2 B, 8 A, 4 A, 7 B, 5 A. Cell 6 has a disabled controller. A and B are two local policies.\"><div class=\"ds-cell ds-cell-second\" aria-hidden=\"true\"><span>3</span><span class=\"ds-cell-policy\">B</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>1</span><span class=\"ds-cell-policy\">A</span></div><div class=\"ds-cell ds-cell-wounded\" aria-hidden=\"true\"><span>6</span><span class=\"ds-cell-policy\">A</span><span class=\"ds-wound-mark\">×</span></div><div class=\"ds-cell ds-cell-second\" aria-hidden=\"true\"><span>2</span><span class=\"ds-cell-policy\">B</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>8</span><span class=\"ds-cell-policy\">A</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>4</span><span class=\"ds-cell-policy\">A</span></div><div class=\"ds-cell ds-cell-second\" aria-hidden=\"true\"><span>7</span><span class=\"ds-cell-policy\">B</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>5</span><span class=\"ds-cell-policy\">A</span></div></div><figcaption>A and B: two local policies. ×: a disabled controller.<br>Can the colony restore order?<br><span>Concept illustration · not a simulation result</span></figcaption></figure>",
+      "css": ".ds-cell-figure { margin: 30px 0; color: var(--ink, #262c28); font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-cell-row { display: flex; align-items: center; gap: 10px; max-width: 620px; } .ds-cell { border: 1px solid #849981; background: #e2e9dc; width: 64px; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 20px; position: relative; border-radius: 8px; font-variant-numeric: tabular-nums; line-height: 1.65; } .ds-cell-second { background: #f1e9dc; border-color: #b6a184; } .ds-cell-policy { position: absolute; bottom: 2px; font-size: 9px; line-height: 1; } .ds-cell-wounded { background: var(--paper, #f9f9f6); border-style: dashed; border-color: #7a6255; } .ds-wound-mark { position: absolute; top: -9px; right: -5px; background: var(--paper, #f9f9f6); color: #765445; width: 16px; font-size: 16px; line-height: 1; text-align: center; } .ds-cell-figure figcaption { margin-top: 22px; font-size: 14px; line-height: 1.6; } .ds-cell-figure figcaption > span { color: var(--muted, #616a63); font-size: 12px; } @media (max-width: 480px) { .ds-cell-row { gap: 6px; } .ds-cell { width: calc((100% - 42px) / 8); font-size: 16px; border-radius: 5px; } .ds-wound-mark { font-size: 14px; width: 13px; top: -7px; } }"
+    },
+    {
+      "name": "Illustrative conversation",
+      "kind": "custom",
+      "refersTo": "conversation-row",
+      "description": "Labeled turns separated by rules, reproducing the homepage conversation without interactive chat controls.",
+      "html": "<div class=\"ds-conversation\" aria-label=\"Illustrative player and agent conversation\"><div class=\"ds-message\"><span class=\"ds-speaker\">You</span><p>Keep the quick one. Breed for recovery. I want to know what changes.</p></div><div class=\"ds-message\"><span class=\"ds-speaker\">Agent</span><p>The offspring spends longer on healthy arrays, but gets around the stalled cell. I can disable its detour rule and compare both versions.</p></div><div class=\"ds-message\"><span class=\"ds-speaker\">You</span><p>Do that. Then try a world it hasn’t seen.</p></div></div><p class=\"ds-figure-note\">An example of intended play. The Rust engine and agent skills are still to be built.</p>",
+      "css": ".ds-conversation { margin-top: 28px; max-width: 730px; color: var(--ink, #262c28); font-size: 17px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-message { display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line, #d9ddd5); } .ds-message:last-child { border-bottom: 1px solid var(--line, #d9ddd5); } .ds-speaker { font-size: 13px; font-weight: 600; padding-top: 3px; } .ds-message p { margin: 0; max-width: 60ch; text-wrap: pretty; } .ds-figure-note { margin: 14px 0 0; color: var(--muted, #616a63); font-size: 12px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } @media (max-width: 480px) { .ds-message { grid-template-columns: 42px 1fr; gap: 12px; } .ds-message p { font-size: 15px; } }"
+    },
+    {
+      "name": "Documentation code block",
+      "kind": "custom",
+      "refersTo": "code-block",
+      "description": "Monospace proposal commands on the wash surface, with local horizontal scrolling. The example is not an installable CLI.",
+      "html": "<pre class=\"ds-code-block\"><code>platonik status --json\nplatonik inspect starter-a --json</code></pre>",
+      "css": ".ds-code-block { color: var(--ink, #262c28); background: var(--wash, #edf0e9); padding: 22px; border-radius: 3px; overflow-x: auto; font-size: 13px; line-height: 1.75; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; } .ds-code-block code { padding: 0; background: transparent; font-size: inherit; font-family: inherit; white-space: pre; } @media (max-width: 480px) { .ds-code-block { padding: 16px; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Minimal styling",
+    "overview": "The website uses an off-white page, dark text, serif headings, and restrained green links. Hierarchy comes from type size, reading width, whitespace, and fine dividers. The user requested minimal styling; this record describes the resulting implementation rather than a new visual direction.\n\nThe layout stays flat. Small labeled diagrams explain the game concept, and documentation uses the same type and palette as the homepage. There are no decorative animations, gradients, or shadows in the current implementation.",
+    "keyCharacteristics": [
+      "Off-white background with dark text and muted supporting copy.",
+      "Newsreader headings paired with Arial body text.",
+      "Flat sections separated by thin rules and generous spacing.",
+      "Diagrams use labels and marks alongside color.",
+      "Immediate hover and focus feedback, with no animated transitions."
+    ],
+    "rules": [],
+    "dos": [
+      "Do preserve the off-white page, dark text, green accent, and fine dividers.",
+      "Do use Newsreader regular for large headings and Arial for body text and navigation.",
+      "Do retain visible keyboard focus and the skip link.",
+      "Do label diagram categories and disabled controllers with text or marks as well as color.",
+      "Do keep wide code and tables scrollable within the reading column.",
+      "Do identify concept illustrations and illustrative conversation as proposals."
+    ],
+    "donts": [
+      "Don't add decorative motion, shadows, or gradients when extending this minimally styled surface.",
+      "Don't substitute interactive game controls for the current static illustrations.",
+      "Don't rely on color alone to convey policy or controller state.",
+      "Don't describe this captured website system as an implemented game interface."
+    ]
+  }
+}

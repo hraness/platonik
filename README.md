@@ -1,0 +1,36 @@
+# Platonik
+
+Platonik is a game concept about breeding algorithmic organisms. Players would direct an external AI agent to design creatures, investigate collective behavior, and compete on independently checked challenges. A deterministic Rust engine is planned to own the world.
+
+This repository currently implements the **marketing and documentation website** for [platonik.space](https://platonik.space), using Next.js on Vercel. The game engine, CLI, skills, and hosted leaderboard are not implemented. Gameplay conversations and creatures on the site are explicitly illustrative.
+
+## Explore the design
+
+Begin with the [game design](docs/game-design.md): breed a colony of self-sorting cells, disable one controller, and investigate which lineages can recover. The proposed world then expands from cells into tissues, ecologies, and algorithm discovery.
+
+The [competition model](docs/competition.md) compares organisms under equal execution limits while allowing open-ended discovery effort. The [engine proposal](docs/engine.md) defines an agent-facing Rust CLI and the first playable acceptance criteria. The [research foundations](docs/research.md) connect the design to Michael Levin's minimal systems and distinguish empirical results from mathematical claims.
+
+## Run the website
+
+Use Node.js 24 and Bun 1.3.14. No credentials, database, or paid API is required to run the website locally.
+
+```sh
+bun install --frozen-lockfile
+bun run dev
+```
+
+Open `http://localhost:3000`, follow **Explore the game design**, and navigate among the four documentation pages. The pages render the Markdown files in `docs/` at build time; editing one of those files updates both the source document and its website projection. The separately authored home page presents the same product facts in a shorter form.
+
+The website loads its reading font locally and has no analytics, account system, forms, or model calls. Following source links leaves the site.
+
+## Validate and deploy
+
+```sh
+bun run check
+```
+
+The gate checks document registration, relative links, proposal labels, and public identity; generates Next.js route types; runs TypeScript; and builds all routes. Browser review covers the home page, documentation navigation, tables and code on narrow screens, keyboard access, and missing pages. These checks validate the website, not the proposed game engine.
+
+Vercel detects the Next.js application at the repository root. `vercel.json` supplies the locked install and full build gate. Use the Hraness `platonik` project and `platonik.space` domain; `.vercel/` and local environment files are ignored. GitHub runs the same source gate for pull requests and main.
+
+Contribution and delivery rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Original repository material is [MIT licensed](LICENSE); linked research and other games retain their own rights. Newsreader is distributed by Fontsource under the SIL Open Font License.

@@ -1,0 +1,12 @@
+/target/
+/.platonik/
+/node_modules/
+/.next/
+/.vercel/
+/.impeccable/review/
+/.impeccable/mocks/
+/.impeccable/live/
+*.tsbuildinfo
+.env*
+.DS_Store
+.vercel
