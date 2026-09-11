@@ -20,7 +20,7 @@ export default function HomePage() {
         <p className="hero-description">An engineering adventure about growing strange little creatures with your AI—and the civilization they could become.</p>
         <p className="hero-detail">Start with a companion and a flickering light. Gather a herd. Grow a home that can travel among the stars. Somewhere beyond the charted trails, another beacon is answering.</p>
         <div className="hero-links"><Link className="primary-link" href="/lab">Enter the observatory <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Explore the game design</Link></div>
-        <p className="status-note">A game in design, with four browser experiments and a working Rust integration prototype. <Link href="/lab/bridge">See the first shared habitat.</Link></p>
+        <p className="status-note">A game in design, with four browser experiments and a persistent Rust field expedition. <Link href="/docs/field-expedition">Take a companion to the next camp.</Link></p>
       </section>
 
       <section className="home-section first-world" aria-labelledby="first-world-title">
@@ -61,7 +61,7 @@ export default function HomePage() {
           <div className="message"><span className="speaker">Agent</span><p>We could teach every cell to turn back, or mix in a few explorers. The explorers may find another route, but spend more of the journey wandering.</p></div>
           <div className="message"><span className="speaker">You</span><p>Try a few explorers. Show me what happens.</p></div>
         </div>
-        <p className="figure-note">Illustrative campaign dialogue. A smaller Rust experiment runner and agent play guide are available now.</p>
+        <p className="figure-note">Illustrative campaign dialogue. A smaller Rust field expedition and agent play guide are available now.</p>
         <p>Chat is the interface. Your agent turns a wish into a small program; the engine runs it and returns snapshots of what happened. You choose what to keep, what to change, and how far to search.</p>
         <Link className="text-link" href="/docs/game-design#chat-with-something-to-watch">How play would feel in chat <span aria-hidden="true">↗</span></Link>
       </section>

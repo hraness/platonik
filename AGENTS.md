@@ -1,6 +1,6 @@
 # Platonik repository guidance
 
-Platonik contains a Next.js website, bounded TypeScript browser models, and a Rust shared-habitat validation prototype with a CLI and play skill. The `/lab/bridge` page displays exact recorded Rust results; it must not reimplement the simulation in TypeScript. The full persistent campaign, breeding, rankings, and construction remain proposals. Document only commands implemented by the CLI.
+Platonik contains a Next.js website, bounded TypeScript browser models, and a Rust shared-habitat validation prototype with a CLI and play skill. The `/lab/bridge` page displays exact recorded Rust results; it must not reimplement the simulation in TypeScript. A local persistent field expedition adds an append-only save, immutable program ancestry, opt-in v2 edge hazards, and frozen transfer trials. The full campaign, endogenous breeding, rankings, and construction remain proposals. Document only commands implemented by the CLI.
 
 For every documentation surface, follow the [Hraness documentation guidelines](https://github.com/hraness/.github/blob/main/DOCUMENTATION_GUIDELINES.md): distinguish guided learning, task completion, factual reference, and explanation; keep each page or section focused on its reader's need, and link between forms. Verify prerequisites, capabilities, effects, and a complete path to the stated result. Also follow the [README guidelines](https://github.com/hraness/.github/blob/main/README_GUIDELINES.md) and [public writing style](https://github.com/hraness/.github/blob/main/STYLE.md).
 

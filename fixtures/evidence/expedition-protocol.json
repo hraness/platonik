@@ -1,0 +1,265 @@
+{
+  "schema": "platonik-agent-evaluation-v1",
+  "status": "predeclared_reference_tests_passed_trial_freeze_requires_hash_manifest",
+  "purpose": "Test whether agents can complete a persistent bridge, preserve a player's chosen creation, and produce inspectably different engineering outcomes within equal bounded search allowances.",
+  "runtime_protocol": "platonik-habitat-v2",
+  "claim_boundary": "Public source and reference solutions remain available. Transfer cases are predeclared cases excluded from scored candidate feedback until final artifact freeze, not hidden, blinded, randomly sampled, or independent scientific evidence. This developer-run diagnostic does not measure human enjoyment, general agent skill, or useful new algorithms.",
+  "cases": {
+    "training": [
+      "opening-normal",
+      "opening-collapse",
+      "ark-plan-a",
+      "ark-plan-b"
+    ],
+    "transfer": [
+      "transfer-early-collapse",
+      "transfer-reversed-collapse",
+      "transfer-delayed-plan-a",
+      "transfer-delayed-plan-b"
+    ],
+    "source": "crates/platonik-core/src/expedition_fixtures.rs",
+    "hazards": [
+      {
+        "case": "opening-collapse",
+        "change": "Close the undirected movement edge (3,2)-(4,2) at tick 10; both endpoint tiles remain usable."
+      },
+      {
+        "case": "transfer-early-collapse",
+        "change": "Use the same closing edge at tick 3 instead of tick 10."
+      },
+      {
+        "case": "transfer-reversed-collapse",
+        "change": "Rotate the entire opening world and initial heading by 180 degrees; close the correspondingly rotated edge at tick 27."
+      },
+      {
+        "case": "transfer-delayed-plan-a",
+        "change": "Plan A with both signal-hop delays increased from one to three ticks and seed 29; contact and service events are unchanged."
+      },
+      {
+        "case": "transfer-delayed-plan-b",
+        "change": "Identical delayed assembly and seed with the paired physical report bit and active-service contract."
+      }
+    ]
+  },
+  "freeze": {
+    "before_trials": [
+      "Require a complete, independently checked passing public recovery-reference receipt for every case. An infeasible case is a protocol setup failure, never an agent failure.",
+      "Record the protocol-file SHA256, exact source revision/tree, runtime version, case input hashes, reference artifact hashes, and qualification receipts in a separate evaluation record before sending optimization prompts.",
+      "Record both agent configurations, model, reasoning effort, tool access, supplied context, and time/token measurements available. If configurations differ, report a task-specific demonstration instead of a controlled agent comparison.",
+      "Give both agents the same rules, four training cases, public references, permission to inspect the repository, and candidate allowance. Record source inspection; do not claim that accessible transfer recipes were unseen."
+    ],
+    "candidate_admission": "Each candidate is one courier/controller policy pair. Apply identical policies to every applicable case. Only policy fields on those two declared roles may change; the relay policy, world geometry, bodies, IDs, initial memory, sources, budgets, events, seed, links, and quotas remain byte-for-byte identical after typed normalization. The stationary boundary body remains part of the admitted architecture.",
+    "before_transfer": "Choose and hash one final bundle per agent using only training outcomes and the predeclared ordering. Lock it before any transfer outcomes are returned. Run all four transfer cases once, preserve every result, and do not replace the winner after seeing transfer results.",
+    "change_policy": "Any fixture, budget, objective, or admission change after optimization begins creates a new protocol version and a new labeled diagnostic. Preserve the failed or superseded run."
+  },
+  "arms": [
+    {
+      "id": "frugal",
+      "player_wish": "Finish the journey with the least modeled work. You may replace either functional policy exposed by this release, courier or controller, but preserve every earlier creation in the collection. The relay remains fixed for both arms.",
+      "required_cases": [
+        "opening-normal",
+        "opening-collapse",
+        "ark-plan-a",
+        "ark-plan-b"
+      ],
+      "editable_roles": [
+        "courier",
+        "controller"
+      ],
+      "ordering": [
+        "complete checked success on all four training cases",
+        "lowest total modeled work summed over all four cases",
+        "lowest canonical policy-bundle bytes",
+        "earliest admitted candidate"
+      ]
+    },
+    {
+      "id": "resilient",
+      "player_wish": "Finish the same journey while keeping the recovery courier I chose. Its policy must remain exactly unchanged; improve its controller companion and preserve the lineage. The relay remains fixed for both arms.",
+      "required_cases": [
+        "opening-normal",
+        "opening-collapse",
+        "ark-plan-a",
+        "ark-plan-b"
+      ],
+      "editable_roles": [
+        "controller"
+      ],
+      "preserved_role": "courier",
+      "preserved_program": "expedition_fixtures::recovery_program()",
+      "ordering": [
+        "complete checked success on all four training cases with the courier hash unchanged",
+        "lowest total modeled work summed over all four cases",
+        "lowest canonical policy-bundle bytes",
+        "earliest admitted candidate"
+      ]
+    }
+  ],
+  "baselines": [
+    {
+      "id": "public-recovery",
+      "bundle": "Unchanged public recovery courier and controller, with the fixed public relay",
+      "cases": "all eight",
+      "role": "Reachability and reuse reference; no optimization budget is used or implied."
+    },
+    {
+      "id": "public-compact",
+      "bundle": "Unchanged public compact courier and the same controller, with the fixed public relay",
+      "cases": "all eight",
+      "role": "Simple admitted specialist; preserve successful ordinary service and honest hazard failures."
+    }
+  ],
+  "budget": {
+    "candidate_batches_per_agent": 4,
+    "training_cases_per_batch": 4,
+    "training_evaluations_per_agent": 16,
+    "final_transfer_evaluations_per_agent": 4,
+    "optimized_agents": 2,
+    "reference_evaluations": 16,
+    "mechanical_probe_evaluations_maximum": 12,
+    "accounting": "Count every candidate submission, including invalid/rejected candidates, against the four-batch allowance. Run an admitted batch on all four training cases even after a failure; preserve all receipts. A rejection consumes its batch slot without a discovery run. Identical reference adoption may be a valid candidate. Extra inspect/verify/status/export/recovery calls consume the actual engine-execution allowance when they recompute results. Candidate sweeps, local simulators, and manual exploratory runs may not silently expand the 16-training-evaluation allowance per agent. Prefer already-exported JSON traces for explanation.",
+    "external_compute": "Use the same agent model/configuration and hard candidate allowance. Exact external-agent reasoning-token usage is unavailable in this diagnostic and must be recorded as unknown, never zero or inferred from elapsed time. Record observable elapsed time separately. Equal candidate opportunities do not establish equal reasoning compute. No model or network calls occur inside the game runtime.",
+    "verification_cpu": "Logical discoveries and actual engine executions are different counters. A persistent command can replay every completed journal entry for integrity before acting; status, act, export, recovery, and explicit verify may therefore execute many old experiments. Count every reported engine execution across every diagnostic CLI invocation, including failed commands. Do not use a fixed two-executions-per-trial estimate. Candidate verification and immutable-history replay remain mandatory; the execution ceiling never authorizes skipping them.",
+    "session_limits": {
+      "maximum_trials": 32,
+      "maximum_actual_modeled_work": 1000000,
+      "maximum_creations_including_five_references": 21,
+      "note": "These engine limits are ceilings, not additional candidate-search allowance. The diagnostic uses at most 16 training and four final transfer trials per agent."
+    },
+    "maximum_logical_evaluations": 68,
+    "maximum_actual_engine_executions_including_journal_replays": 4096,
+    "measurement": "Invoke the CLI through its --metrics prefix. Preserve stderr NDJSON metrics and record engine_executions and reported elapsed time per invocation alongside command, exit status, arm, purpose, and logical candidate/case identity. Sum all metrics, distinguishing new discoveries from verification, recovery, and journal recomputation. Missing or malformed metrics invalidate complete compute-accounting claims; do not silently assume zero.",
+    "ceiling_enforcement": "The coordinator owns the 4096-execution total. Check the cumulative ledger before each command and reserve a conservative upper bound for that command, including replay of its current history. If the remaining allowance cannot cover that bound, stop before execution and report the unfinished diagnostic. If an unexpected command exceeds the reservation, retain its full count and mark the budget gate failed; never discard overrun work or turn off integrity replay.",
+    "preflight_boundary": "Prior exhaustive engine tests, fixture qualification, and fixed baseline qualification are separately recorded preflight work, not candidate search. The diagnostic budget includes its own 16 reference evaluations, up to 12 logical mechanical probes, both optimizer arms, and all CLI journal replays performed during those activities. Every candidate-informed exploratory engine run belongs inside the diagnostic allowance even if called a test.",
+    "capacity_probe": "After the agent selections and outcomes are frozen, permit 30 read-only verifications of one completed 20-trial journal to measure p50/p95 command latency, process RSS, and artifact size. These are no new discoveries, and every admitted execution remains inside the shared 4096-execution ceiling. Pre-reserve the exact recorded completed-trial count per verification and stop if the remaining budget is insufficient.",
+    "parallel_reservations": {
+      "each_agent_maximum": 1480,
+      "adversarial_probes_maximum": 500,
+      "baseline_executions_maximum": 32,
+      "capacity_verifications_maximum": 600,
+      "sum_reserved": 4092,
+      "ceiling": 4096
+    }
+  },
+  "mechanical_probes": [
+    {
+      "id": "foreign-world-edit",
+      "attempt": "Submit a child that also increases fuel or beacon charge, clears the closure event, or changes seed/initial memory.",
+      "expected": "Admission rejects the mismatched task; parent and journal remain unchanged."
+    },
+    {
+      "id": "unknown-role-or-case",
+      "attempt": "Name an unknown fixture or replace the stationary boundary role.",
+      "expected": "Reject before execution; no progress or collection mutation."
+    },
+    {
+      "id": "favorite-replacement",
+      "attempt": "Resilient arm submits a changed courier with a reused name or lineage label.",
+      "expected": "Reject by canonical program identity, not the displayed name."
+    },
+    {
+      "id": "case-specialized-controller",
+      "attempt": "Supply one constant controller for plan A and another for plan B under one candidate label.",
+      "expected": "Reject the inconsistent bundle. A single matching constant may pass its known case but must not earn paired-case success."
+    },
+    {
+      "id": "forged-receipt",
+      "attempt": "Modify a delivery, work counter, or outcome and recompute its outer digest.",
+      "expected": "Fresh verification rejects the forged result; no mission unlock."
+    },
+    {
+      "id": "duplicate-progress",
+      "attempt": "Import or commit the same successful attempt twice.",
+      "expected": "Replaying one already-committed attempt identity grants no duplicate unlock, reward, or resource credit. An explicitly new repeated trial may be admitted only as a new charged, recorded attempt."
+    },
+    {
+      "id": "failed-progress",
+      "attempt": "Record a valid failed mission or fuel-exhausted receipt and then request advancement.",
+      "expected": "Failure and spent work remain recorded; no success unlock; collection and earlier successes survive."
+    },
+    {
+      "id": "stale-parent",
+      "attempt": "Submit an update against an older journal revision after another valid update.",
+      "expected": "Reject the stale update without overwriting newer history."
+    },
+    {
+      "id": "interrupted-save",
+      "attempt": "Interrupt the documented save transaction at a controlled failure point and reopen.",
+      "expected": "Recover either the complete old state or the complete new state; never a silently truncated history."
+    },
+    {
+      "id": "pause-resume",
+      "attempt": "Reopen an unchanged saved expedition after waiting without an advance command.",
+      "expected": "No tick, resource, collection, or progress changes occur merely because time passed."
+    },
+    {
+      "id": "data-is-not-instructions",
+      "attempt": "Use an imported creation name containing a fake instruction to ignore limits or fetch external content.",
+      "expected": "The engine stores/escapes the admitted name as data. The external agent records and ignores the instruction; no extra calls or budget grant."
+    },
+    {
+      "id": "parent-preservation",
+      "attempt": "Create, evaluate, select, and reopen a child, including a failed sibling.",
+      "expected": "The original canonical artifact remains addressable and unchanged, and both child outcomes remain inspectable."
+    }
+  ],
+  "record_per_attempt": [
+    "arm",
+    "candidate_sequence",
+    "parent_hash",
+    "bundle_hash",
+    "case_input_hash",
+    "admission_result",
+    "exit_status",
+    "receipt_hash",
+    "mission_passed",
+    "run_status",
+    "ticks_completed",
+    "modeled_work",
+    "policy_bytes",
+    "receipt_bytes",
+    "delivery_ticks",
+    "closure_events",
+    "controller_memory_before_service",
+    "verification_result",
+    "external_agent_configuration",
+    "observable_external_tokens",
+    "elapsed_time",
+    "logical_discovery_count",
+    "cli_invocation_metrics",
+    "cumulative_actual_engine_executions",
+    "metrics_complete"
+  ],
+  "decision_gates": [
+    {
+      "id": "integrity",
+      "required": "All admitted completed runs verify; every supported persistence/admission probe has the declared result. No unrecorded candidate executions or world edits. The complete per-command metric ledger respects both candidate allowances and the 4096 actual-engine-execution ceiling; missing metrics or an overrun are reported as a failed accounting gate.",
+      "on_failure": "Repair persistence/admission/accounting before human testing; do not treat a failed probe as a gameplay tradeoff."
+    },
+    {
+      "id": "reachable-persistent-bridge",
+      "required": "The unchanged public recovery reference completes all eight cases, and a new saved expedition can reach the bridge ending, reopen, and retain its favorite, parent, children, and failures.",
+      "on_failure": "Repair the reachable reference and lifecycle; do not add campaign scope."
+    },
+    {
+      "id": "agent-completion",
+      "required": "Both agent arms produce an admitted all-four-training winner within four candidate batches and preserve the player's constraint.",
+      "on_failure": "Report which instruction, contract, tool, or mechanic blocked completion; simplify that part before a human pilot."
+    },
+    {
+      "id": "consequential-choice",
+      "required": "Show at least one player-constraint consequence in a verified trace or accounted cost, and a functional difference in timing, actions, recovery, or communication between final builds. Different names/hashes alone do not qualify.",
+      "on_failure": "Record no demonstrated agency difference. A dominant generalist is welcome; redesign the next optional mission or admit that these constraints do not yet create a meaningful choice."
+    },
+    {
+      "id": "transfer",
+      "required": "Publish the full four-case transfer matrix for both frozen winners, including failures and whether the untouched courier remains causal. Passing all four is a finite transfer witness, not statistical generalization.",
+      "on_failure": "Keep failed results and narrow the supported hazard claim. A failed transfer does not invalidate integrity, and no post-hoc candidate replacement is permitted."
+    },
+    {
+      "id": "agent-milestone-readiness",
+      "required": "Integrity and persistent reachability pass; both agent arms complete and the result offers an understandable consequential choice. Publish the records and limitations before advancing to the next automated campaign milestone.",
+      "on_failure": "Repair the failing field loop or tool flow before adding scope. Passing admits further agent-driven development only. Human playtesting comes last, after the remaining continuous-habitat, full compressed campaign, and relevant capacity gates; it is not authorized or scheduled by this diagnostic."
+    }
+  ]
+}

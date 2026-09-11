@@ -1,0 +1,6 @@
+{
+  "kind": "trial",
+  "case_id": "transfer-delayed-plan-b",
+  "courier": "moth-child",
+  "controller": "memory"
+}

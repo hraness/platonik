@@ -21,10 +21,22 @@ export const documents = [
     question: "How does a companion become a civilization?",
   },
   {
+    slug: "field-expedition",
+    title: "Play a field expedition",
+    description: "Keep a collection, survive a closing route, freeze a design, and check its next crossing through your agent.",
+    question: "Can my agent take a creation through a persistent adventure?",
+  },
+  {
     slug: "rust-bridge",
     title: "Run the Rust bridge",
     description: "Real shared-habitat experiments, exact replay artifacts, and an agent-facing CLI for testing what composes.",
     question: "Can I run and change the first integrated experiment?",
+  },
+  {
+    slug: "agent-evaluation",
+    title: "What the agents found",
+    description: "Two persistent expeditions, every candidate and transfer result, adversarial checks, and the measured cost of replay.",
+    question: "What happened when agents actually played?",
   },
   {
     slug: "design-validation",

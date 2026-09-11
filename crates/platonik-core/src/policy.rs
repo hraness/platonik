@@ -44,6 +44,9 @@ pub fn blocked(experiment: &Experiment, state: &State, cell: usize, direction: R
                 || point.y >= experiment.height
                 || experiment.walls.contains(&point)
                 || state
+                    .closed_edges
+                    .contains(&Edge::new(actor.position, point))
+                || state
                     .cells
                     .iter()
                     .any(|other| other.id != actor.id && other.position == point)
@@ -100,6 +103,7 @@ fn check_condition(
                 == *value
         }
         Condition::Blocked { direction, value } => {
+            meter.charge(Cat::Checking, state.closed_edges.len() as u64)?;
             blocked(experiment, state, index, *direction) == *value
         }
         Condition::HasMessage { port, value } => cell.inbox[*port as usize].is_some() == *value,
@@ -178,6 +182,7 @@ fn execute(
         Action::Wait => {}
         Action::Move { direction } => {
             meter.charge(Cat::Checking, 1)?;
+            meter.charge(Cat::Checking, state.closed_edges.len() as u64)?;
             if !experiment.cells[index].mobile || blocked(experiment, state, index, *direction) {
                 return Err(Fault::Action("movement_blocked"));
             }

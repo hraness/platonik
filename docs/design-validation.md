@@ -1,6 +1,6 @@
 # Earning confidence in the whole game
 
-Validation proposal, 11 September 2026. Platonik has working browser experiments, a small [Rust integration slice](rust-bridge.md), and a specified campaign direction. It does not yet have a playable Rust campaign, a demonstrated audience, or evidence that large ecologies produce useful new algorithms. This page defines what would justify those claims and what would make us change course.
+Validation proposal, 11 September 2026. Platonik has working browser experiments, a small [Rust integration slice](rust-bridge.md), and a specified campaign direction. A [persistent field expedition](field-expedition.md) extends that slice into agent-operated trials. It does not yet have the complete Rust campaign, a demonstrated audience, or evidence that large ecologies produce useful new algorithms. This page defines what would justify those claims and what would make us change course.
 
 **The design decision is to build one engineering adventure with a finite ending and an open workshop beyond it.** The [campaign](campaign.md) supplies reasons to care; the [Autoverse contract](autoverse.md) supplies the capabilities that make its changes of scale possible. Complexity creates tradeoffs. It is not a score that grows just because a program gets longer.
 
@@ -27,7 +27,7 @@ Before expanding the setting, build a short **migration-to-ark bridge** in the R
 
 Use one manifest, one time model, typed interfaces, and one cost ledger. A “colony module” must expand into the actual cells and connections it contains. A signal cannot conjure a spark, a saved pattern cannot smuggle in extra memory, and a disconnected component cannot read the world through its agent. Templates may provide working examples; they carry their full execution costs.
 
-This bridge is the main go/no-go decision. If earlier creatures stop mattering when circuits appear, or each transition needs an unrelated simulator with invented conversion rewards, revise the substrate and campaign before building more planets. The [Rust bridge](rust-bridge.md) now tests the core transport–signal–memory–routing chain in one runtime, with unchanged-policy comparisons and component removals. Its static damaged opening map and stationary service fixture are narrower than the three-task gate above: scheduled route collapse, moving-habitat services, persistent creations, and player-driven reuse remain to be completed.
+This bridge is the main go/no-go decision. If earlier creatures stop mattering when circuits appear, or each transition needs an unrelated simulator with invented conversion rewards, revise the substrate and campaign before building more planets. The [Rust bridge](rust-bridge.md) now tests the core transport–signal–memory–routing chain in one runtime, with unchanged-policy comparisons and component removals. The field expedition adds scheduled edge closure, persistent creations, ancestry, and checked reuse across training and transfer cases. Its physical trials reset independently, and the service fixture stays stationary: a moving habitat and continuous expedition services still remain to be completed.
 
 Require at least one unchanged earlier controller or module to do causal work in two different bridge tasks. Remove it in a comparison copy and check the resulting loss or changed tradeoff on frozen cases. A lineage label or a paid conversion unlock does not establish reuse. If a module needs a change, record that change and call the result adaptation.
 
@@ -45,7 +45,24 @@ Before recruiting players, demonstrate a real choice on frozen cases: one feasib
 
 Also run an agent stress test under equal stated discovery allowances: an unchanged public reference, an agent optimizing the next objective, and an agent maintaining a persistent player constraint. Charge adaptation and include unfamiliar admissible cases. Copying a reference may legitimately finish the story. Revise the missions if every ambition yields the same assembly with no observable sacrifice, or the player's chosen constraint has no effect. This diagnostic is separate from the human pilot, not a controlled comparison against it.
 
-## A small player study before a large world
+## The automated path before people play
+
+The current field expedition is the first persistent checkpoint. Its agent diagnostic freezes inputs and search allowances, compares two player ambitions, then evaluates the unchanged winners on public transfer cases. Its record must include every failed candidate, replay computation, and supported integrity probe. The [first agent diagnostic](agent-evaluation.md) completed both ambitions, preserved every creation, passed the four frozen transfer cases, and recorded all twelve adversarial probes. That admits the next automated milestone; it does not admit the complete campaign or human playtesting.
+
+The remaining sequence is:
+
+1. **Persistent field loop:** complete training and confirmation, preserve parents and failures, and recover the same outcomes after closing and restoring the save.
+2. **Continuous habitat:** carry actual service state through a bounded journey and interruption. Earlier creations must still do causal work; resetting separate test worlds is not this capability.
+3. **Construction and continuation:** obtain material, build an executable continuation inside the shared runtime, and measure every generated candidate and failed attempt.
+4. **Compressed Long Trail:** automatically complete each chapter transition and the final outbound-and-matching-reply contract from a new save. Include successful references, distinct agent ambitions, adverse schedules, interrupted runs, and preserved collections.
+5. **Capacity and sustained operation:** qualify the actual active envelope, repeated-session memory, replay size, verifier cost, and total permitted search on declared hardware. Raise limits only after those measurements.
+6. **Human playtesting:** test comprehension, attachment, agency, pacing, and voluntary continuation after the useful agent and engineering investigations above. Agents can uncover friction and unreachable goals; their completion is not evidence that people enjoy the game.
+
+A failed automated gate leads to a repair or a narrower claim. Publish refutations and costs along the way. More chapters, compute, or market activity cannot substitute for a demonstrated transition.
+
+## Human playtesting comes after agent evaluation
+
+Human sessions are the last validation stage, after persistent agent play, adversarial checks, capacity measurements, and a compressed executable campaign have exhausted the useful automated investigations. Do not recruit players merely because the first field expedition passes. The stages below describe the later human study, not a current launch gate.
 
 These are proposed decision thresholds, not results or population estimates. Recruit twelve people who have enjoyed building with an AI; include at least six without formal computer-science training. Record prior experience. Use the same agent configuration and a published per-session search allowance, record assistance, and obtain permission before collecting session data. Use a separate later cohort for any confirmation after redesign.
 
@@ -58,7 +75,7 @@ Start with a 30–45 minute opening session. A successful pilot requires at leas
 - **8 of 12** voluntarily request another experiment when given a genuine option to stop.
 - **8 of 12** choose a creation to keep and identify an observed habit that makes it worth keeping. A name or attractive portrait alone is insufficient.
 
-Report the individual outcomes and exact counts, including withdrawals and failed runs. These small samples catch large design failures; they do not establish retention or a market. If a threshold is missed, change the opening and repeat with new players before adding campaign chapters.
+Report the individual outcomes and exact counts, including withdrawals and failed runs. These small samples catch large design failures; they do not establish retention or a market. If a threshold is missed, change the opening and repeat with new players before expanding the campaign beyond the evaluated journey.
 
 Then test the migration-to-ark bridge with a new twelve-person cohort, in two sessions. Require at least eight to reuse an earlier creation successfully, explain a cross-component failure, and make an unaided consequential choice in the second session. Ask participants to describe the goal of the journey in their own words. If they remember only disconnected puzzles, revise the integration and story presentation.
 
@@ -105,4 +122,4 @@ Before implementing commerce, try three manual local commissions from distinct r
 | Research gains disappear against fair baselines | Publish that result and redirect the research track; retain the engineering game only if people enjoy it |
 | The complete compressed campaign does not sustain interest | Rewrite the failing transition and ending; do not stretch it with grind, rarity, or a market |
 
-The next release decision is concrete: extend the checked Rust transport-to-control slice into the persistent, player-operated bridge above, then put it in front of new players. The fuller campaign has a testable design now; confidence in its success must grow through those results.
+The next decisions follow the field-expedition evidence: build the missing continuous habitat, then automatically traverse construction, continuation, and the compressed campaign. Repeat bounded agent search, transfer, replay, recovery, exploit evaluation, and cost measurement after each new capability. Human playtesting comes last, once the complete compressed journey and the relevant automated gates hold. Automated completion establishes reachability and exposes defects; it cannot establish human enjoyment.

@@ -1,8 +1,8 @@
 # Platonik
 
-Platonik is a game concept about making creatures with your AI, helping them survive, and discovering what else they can do. Players would describe a wish in chat; an external agent would turn it into a small program, run it in a deterministic Rust world, and help improve it. Deeper play leads to collective behavior and independently checked competition.
+Platonik is an engineering game in development about making creatures with your AI, helping them survive, and discovering what else they can do. In the local prototype, you describe a wish in chat; an external agent edits a small program, runs it in a deterministic Rust world, and helps improve it. Deeper play leads to collective behavior and independently checked competition.
 
-This repository implements the **website and browser observatory** for [platonik.space](https://platonik.space), using Next.js on Vercel. The observatory has four bounded local experiments: editable courier programs with collectible structural portraits, coupled fuzzy-truth systems, a world-cost calculator, and a signal workbench for circuits and budgeted blueprint assembly. It also implements a **bounded Rust habitat prototype**, a real agent-facing CLI, immutable checked receipts, and a portable play skill. Its [recorded bridge](https://platonik.space/lab/bridge) connects physical delivery, signals, memory, and service routing. The complete campaign, persistent saves, breeding, and hosted leaderboard remain unimplemented. Older observatory traces come from their separate TypeScript models.
+This repository implements the **website and browser observatory** for [platonik.space](https://platonik.space), using Next.js on Vercel. The observatory has four bounded local experiments: editable courier programs with collectible structural portraits, coupled fuzzy-truth systems, a world-cost calculator, and a signal workbench for circuits and budgeted blueprint assembly. It also implements a **bounded Rust habitat prototype**, a real agent-facing CLI, immutable checked receipts, and a portable play skill. Its [recorded bridge](https://platonik.space/lab/bridge) connects physical delivery, signals, memory, and service routing. The [field expedition](docs/field-expedition.md) adds a persistent collection, checked local saves, scheduled route closure, and frozen transfer trials. The complete campaign, in-world breeding, and hosted leaderboard remain unimplemented. Older observatory traces come from their separate TypeScript models.
 
 ## Explore the design
 
@@ -30,7 +30,9 @@ cargo build --release --locked -p platonik-cli
 ./target/release/platonik examples
 ```
 
-Follow the [complete walkthrough](docs/rust-bridge.md) to export a parent, edit a child, run both, and verify the receipts. Give an external agent [skills/platonik-play/SKILL.md](skills/platonik-play/SKILL.md) for a bounded comparison workflow. The CLI writes results to stdout and never overwrites an input file; use new filenames for shell redirection. This is a stateless validation prototype, not the full first-playable campaign contract.
+Follow the [complete walkthrough](docs/rust-bridge.md) to export a parent, edit a child, run both, and verify the receipts. Give an external agent [skills/platonik-play/SKILL.md](skills/platonik-play/SKILL.md) for a bounded comparison workflow. The experiment commands write results to stdout; use new filenames for shell redirection. For a saved adventure, follow [the field expedition walkthrough](docs/field-expedition.md): initialize a new save, try a crossing, grow a child while preserving its parent, and compare the outcomes. Expedition commands write an append-only local journal; they do not advance a world while paused. The complete campaign remains a proposal.
+
+Read [the agent evaluation](docs/agent-evaluation.md) for the two completed expeditions, all candidate and transfer results, recovery probes, and measured replay costs. Both archives are committed and rechecked by the aggregate gate.
 
 ## Run the website
 

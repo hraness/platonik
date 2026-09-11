@@ -14,3 +14,4 @@ run("cargo", ["fmt", "--all", "--", "--check"]);
 run("cargo", ["clippy", "--workspace", "--all-targets", "--locked", "--", "-D", "warnings"]);
 run("cargo", ["test", "--workspace", "--locked"]);
 run("bun", ["scripts/record-bridge.ts", "--check"]);
+run("node", ["scripts/check-expedition-evidence.mjs"]);

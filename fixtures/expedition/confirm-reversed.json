@@ -1,0 +1,6 @@
+{
+  "kind": "trial",
+  "case_id": "transfer-reversed-collapse",
+  "courier": "moth-child",
+  "controller": "memory"
+}

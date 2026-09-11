@@ -1,6 +1,15 @@
 use crate::model::*;
 use crate::policy;
 use std::collections::BTreeSet;
+use std::sync::atomic::{AtomicU64, Ordering};
+
+static EXECUTIONS: AtomicU64 = AtomicU64::new(0);
+
+/// Process-local telemetry, including verification replays. It is observer data,
+/// outside deterministic receipts and the modeled world-work ledger.
+pub fn execution_count() -> u64 {
+    EXECUTIONS.load(Ordering::Relaxed)
+}
 
 #[derive(Clone, Copy)]
 pub(crate) enum Cat {
@@ -87,7 +96,7 @@ pub fn parse_experiment(input: &str) -> Result<Experiment, String> {
 }
 pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
     require(
-        experiment.version == MODEL_VERSION,
+        protocol_for_version(experiment.version).is_some(),
         "Unsupported model version.",
     )?;
     require(
@@ -295,6 +304,12 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
                 EventKind::ClearMemory { cell } => {
                     experiment.cells.iter().any(|entry| entry.id == cell)
                 }
+                EventKind::EdgeBlocked { edge, .. } => {
+                    experiment.version == HAZARD_VERSION
+                        && edge.is_canonical()
+                        && usable(edge.a)
+                        && usable(edge.b)
+                }
             },
             "Event target does not exist.",
         )?;
@@ -454,6 +469,7 @@ fn initial_state(experiment: &Experiment) -> State {
         pending: Vec::new(),
         delivered: Vec::new(),
         next_signal: 1,
+        closed_edges: Vec::new(),
     }
 }
 fn outcome(experiment: &Experiment, state: &State, status: RunStatus, initial: u32) -> Outcome {
@@ -492,6 +508,17 @@ fn outcome(experiment: &Experiment, state: &State, status: RunStatus, initial: u
 }
 
 fn check_live_invariants(experiment: &Experiment, state: &State) -> Result<(), String> {
+    require(
+        state.closed_edges.len() <= experiment.events.len()
+            && state.closed_edges.windows(2).all(|pair| pair[0] < pair[1])
+            && state.closed_edges.iter().all(|edge| {
+                experiment.version == HAZARD_VERSION && edge.is_canonical()
+                    && experiment.events.iter().any(|event| {
+                        matches!(event.event, EventKind::EdgeBlocked { edge: declared, .. } if declared == *edge)
+                    })
+            }),
+        "Runtime invariant: closed movement edges are not bounded declared edges.",
+    )?;
     let expected: std::collections::BTreeMap<_, _> = experiment
         .sources
         .iter()
@@ -540,6 +567,7 @@ fn check_live_invariants(experiment: &Experiment, state: &State) -> Result<(), S
 
 pub fn run(experiment: &Experiment) -> Result<RunResult, String> {
     validate_experiment(experiment)?;
+    EXECUTIONS.fetch_add(1, Ordering::Relaxed);
     let mut state = initial_state(experiment);
     let initial_sparks = state
         .sources
@@ -640,6 +668,19 @@ pub fn run(experiment: &Experiment) -> Result<RunResult, String> {
                             actor.memory = [0; 4];
                             actor.evidence = [None; 4];
                         }
+                        EventKind::EdgeBlocked { edge, blocked } => {
+                            meter.charge(Cat::Checking, next.closed_edges.len() as u64)?;
+                            meter.charge(Cat::Actions, 1)?;
+                            match next.closed_edges.binary_search(&edge) {
+                                Ok(index) if !blocked => {
+                                    next.closed_edges.remove(index);
+                                }
+                                Err(index) if blocked => {
+                                    next.closed_edges.insert(index, edge);
+                                }
+                                _ => {}
+                            }
+                        }
                     }
                     state = next;
                     frame.events.push(event.event.clone());
@@ -716,7 +757,10 @@ pub fn run(experiment: &Experiment) -> Result<RunResult, String> {
                 // Reserve modeled checking work before checking identities and beacon energy below.
                 meter.charge(
                     Cat::Checking,
-                    state.cells.len() as u64 + state.beacons.len() as u64 + initial_sparks as u64,
+                    state.cells.len() as u64
+                        + state.beacons.len() as u64
+                        + initial_sparks as u64
+                        + state.closed_edges.len() as u64,
                 )?;
                 Ok(())
             })();
@@ -735,7 +779,7 @@ pub fn run(experiment: &Experiment) -> Result<RunResult, String> {
         }
     }
     Ok(RunResult {
-        protocol: PROTOCOL.into(),
+        protocol: protocol_for_version(experiment.version).unwrap().into(),
         status,
         ticks_completed,
         initial_sparks,
@@ -1201,5 +1245,205 @@ mod tests {
             activation_order(&experiment, 7),
             activation_order(&experiment, 8)
         );
+    }
+}
+
+#[cfg(test)]
+mod hazard_tests {
+    use super::*;
+    use crate::check::{make_receipt, validate_result, verify_receipt};
+    use crate::fixtures;
+
+    fn point(x: u8, y: u8) -> Point {
+        Point { x, y }
+    }
+    fn edge() -> Edge {
+        Edge::new(point(1, 2), point(2, 2))
+    }
+    fn event(tick: u32, blocked: bool) -> Event {
+        Event {
+            tick,
+            event: EventKind::EdgeBlocked {
+                edge: edge(),
+                blocked,
+            },
+        }
+    }
+    fn trial() -> Experiment {
+        let mut experiment = fixtures::experiment("opening-normal").unwrap();
+        experiment.version = HAZARD_VERSION;
+        // Keep the service rules but deliberately try blocked moves: failure must be charged.
+        experiment.cells[0].program.rules.remove(2);
+        experiment.ticks = 10;
+        experiment.beacons[0].initial_charge = 100;
+        experiment.beacons[0].required_deliveries = 1;
+        experiment.events = vec![event(2, true), event(4, false)];
+        experiment
+    }
+
+    #[test]
+    fn closure_preserves_cargo_and_reopening_precedes_the_same_tick_move() {
+        let experiment = trial();
+        let receipt = make_receipt(&experiment).unwrap();
+        assert_eq!(receipt.protocol, HAZARD_PROTOCOL);
+        assert!(receipt.passed());
+        assert!(verify_receipt(&receipt).unwrap().verified);
+        let frames = &receipt.result.frames;
+        for tick in [2, 3] {
+            assert_eq!(frames[tick].state.cells[0].position, point(1, 2));
+            assert_eq!(frames[tick].state.cells[0].cargo.unwrap().id, 1);
+            assert_eq!(frames[tick].state.closed_edges, vec![edge()]);
+            let action = &frames[tick].activations[0];
+            assert_eq!(action.error.as_deref(), Some("movement_blocked"));
+            assert!(action.work_after > action.work_before);
+        }
+        assert_eq!(frames[4].state.cells[0].position, point(2, 2));
+        assert!(frames[4].state.closed_edges.is_empty());
+        assert_eq!(receipt.result.final_state.delivered[0].tick, 8);
+        assert!(receipt.result.outcome.conserved);
+        assert_eq!(make_receipt(&experiment).unwrap(), receipt);
+    }
+
+    #[test]
+    fn closed_edges_are_symmetric_and_only_the_local_blocked_direction_changes() {
+        let mut experiment = trial();
+        experiment.cells[0].position = point(2, 2);
+        experiment.cells[0].heading = Direction::West;
+        experiment.sources[0].position = point(2, 2);
+        let result = run(&experiment).unwrap();
+        assert_eq!(result.frames[2].state.cells[0].position, point(2, 2));
+        assert_eq!(
+            result.frames[2].activations[0].error.as_deref(),
+            Some("movement_blocked")
+        );
+        assert_eq!(result.frames[4].state.cells[0].position, point(1, 2));
+
+        let mut experiment = trial();
+        experiment.cells[0].program.rules.insert(
+            2,
+            Rule {
+                when: vec![
+                    Condition::Blocked {
+                        direction: Relative::Forward,
+                        value: true,
+                    },
+                    Condition::Blocked {
+                        direction: Relative::Right,
+                        value: false,
+                    },
+                ],
+                action: Action::Move {
+                    direction: Relative::Right,
+                },
+                remember: None,
+            },
+        );
+        let result = run(&experiment).unwrap();
+        assert_eq!(result.frames[2].state.cells[0].position, point(1, 3));
+        assert_eq!(result.frames[2].state.cells[0].cargo.unwrap().id, 1);
+        assert!(result.frames[2].activations[0].success);
+    }
+
+    #[test]
+    fn duplicate_closures_are_idempotent_and_input_edges_are_versioned_and_bounded() {
+        let mut experiment = trial();
+        experiment.events = vec![
+            event(1, true),
+            event(1, true),
+            event(2, false),
+            event(2, false),
+        ];
+        let receipt = make_receipt(&experiment).unwrap();
+        assert_eq!(receipt.result.frames[1].state.closed_edges, vec![edge()]);
+        assert_eq!(receipt.result.frames[1].events.len(), 2);
+        assert!(receipt.result.frames[2].state.closed_edges.is_empty());
+        assert_eq!(receipt.result.frames[2].events.len(), 2);
+        assert!(verify_receipt(&receipt).unwrap().verified);
+        experiment.version = MODEL_VERSION;
+        assert!(validate_experiment(&experiment).is_err());
+        experiment.version = HAZARD_VERSION;
+        for invalid in [
+            Edge {
+                a: edge().b,
+                b: edge().a,
+            },
+            Edge::new(point(1, 2), point(3, 2)),
+            Edge::new(point(0, 2), point(1, 2)),
+            Edge::new(point(30, 2), point(31, 2)),
+        ] {
+            experiment.events = vec![Event {
+                tick: 1,
+                event: EventKind::EdgeBlocked {
+                    edge: invalid,
+                    blocked: true,
+                },
+            }];
+            assert!(validate_experiment(&experiment).is_err());
+        }
+        experiment.events = vec![event(1, true); 65];
+        assert!(validate_experiment(&experiment).is_err());
+    }
+
+    #[test]
+    fn fuel_interruptions_commit_only_a_complete_event_prefix() {
+        let mut experiment = trial();
+        experiment.fuel = 5_000;
+        experiment.events = vec![event(1, true), event(1, false)];
+        let loading = run(&experiment).unwrap().frames[0].costs.total();
+        assert!((1_000..10_000).contains(&(loading + 2)));
+        for (extra, expected_events, expected_closed) in
+            [(2, 0, false), (3, 1, true), (5, 1, true), (6, 2, false)]
+        {
+            experiment.fuel = loading + extra;
+            let receipt = make_receipt(&experiment).unwrap();
+            assert_eq!(receipt.result.status, RunStatus::FuelExhausted);
+            let frame = receipt.result.frames.last().unwrap();
+            assert!(!frame.complete);
+            assert_eq!(frame.events.len(), expected_events);
+            assert_eq!(!frame.state.closed_edges.is_empty(), expected_closed);
+            assert!(verify_receipt(&receipt).unwrap().verified);
+        }
+    }
+
+    #[test]
+    fn independent_checker_rejects_undeclared_edges_and_crossings() {
+        let experiment = trial();
+        let result = run(&experiment).unwrap();
+        let mut changed = result.clone();
+        changed.frames[2].state.closed_edges.clear();
+        assert!(
+            validate_result(&experiment, &changed)
+                .unwrap_err()
+                .contains("intervention")
+        );
+        let mut changed = result.clone();
+        changed.frames[1].state.closed_edges.push(edge());
+        assert!(
+            validate_result(&experiment, &changed)
+                .unwrap_err()
+                .contains("intervention")
+        );
+        let mut changed = result;
+        changed.frames[2].activations[0].success = true;
+        changed.frames[2].activations[0].error = None;
+        changed.frames[2].activations[0].position_after = point(2, 2);
+        changed.frames[2].state.cells[0].position = point(2, 2);
+        assert!(
+            validate_result(&experiment, &changed)
+                .unwrap_err()
+                .contains("blocked terrain")
+        );
+    }
+
+    #[test]
+    fn legacy_public_receipt_bytes_and_protocol_remain_unchanged() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../public/bridge/opening-normal.receipt.json");
+        let saved = std::fs::read_to_string(path).unwrap();
+        let receipt = make_receipt(&fixtures::experiment("opening-normal").unwrap()).unwrap();
+        assert_eq!(serde_json::to_string(&receipt).unwrap() + "\n", saved);
+        assert_eq!(receipt.protocol, PROTOCOL);
+        assert!(!saved.contains("closed_edges"));
+        assert!(verify_receipt(&receipt).unwrap().verified);
     }
 }

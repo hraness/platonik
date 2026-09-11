@@ -1,0 +1,288 @@
+{
+  "schema": "platonik-expedition-freeze-v1",
+  "frozen_at": "2026-09-11T19:27:37.047Z",
+  "protocol_sha256": "75fd7e221d8eab1eef16a07671418a9856949abe2cae1af2baaeeb15f08824fd",
+  "source_files_sha256": {
+    "Cargo.lock": "dc9b3d71e43601172444edf3cdf16edc6ed50d1fc494d9708f344c018f5a8584",
+    "Cargo.toml": "1880cbd83b8e24cf7843dd1ab6a4b15739a07c67b21b1003d90bddcb4a86b7db",
+    "crates/platonik-cli/src/expedition_store.rs": "f63ad378500eb9af3dbe591cb5e25f9035e616cc12443a652df8e7c0b736f609",
+    "crates/platonik-cli/src/main.rs": "b7ae1f8537e6e43bf6b129c3f59212c727e12d08c41b1382bc170e4ef2151ca8",
+    "crates/platonik-core/src/check.rs": "2c66c00838c62de290c30115a75575b893161903cbc9f0dbcf2401c24a272346",
+    "crates/platonik-core/src/expedition.rs": "324844414572ca46af225f4bf39215bfe66579c14f36add455d7dcdfc42b5757",
+    "crates/platonik-core/src/expedition_fixtures.rs": "e98f0d994b563ce82c939802a6128767deb5b0f16d6bff5c19ad4a329d372725",
+    "crates/platonik-core/src/fixtures.rs": "6eb2d6fed3990a7b1e9762259bbc7f3599aa4bd60da36f8cb075abc2fd0b33ca",
+    "crates/platonik-core/src/lib.rs": "c93d283696e6453283e0ca7182f7fe5daca4c22c2d2cb66e29182447d3df115e",
+    "crates/platonik-core/src/model.rs": "c5b1009942cf09ec9609766818d72663caa2b5c3935929a4c2736c3d0312dd3e",
+    "crates/platonik-core/src/policy.rs": "eb9a3fb78a462280488f58c060bdc429f14147f417ae1bde8791d41e6bba69aa",
+    "crates/platonik-core/src/sim.rs": "2ef18dc86435b62ffab0d3473c1d240f9f9ee90c9cc401bed6d78f97f83cef5c",
+    "crates/platonik-core/src/suite.rs": "caf4e288ddeca5c06bf1782bcf6e30c5a2a9549b94b23032691eff2768ead220",
+    "fixtures/evidence/expedition-protocol.json": "75fd7e221d8eab1eef16a07671418a9856949abe2cae1af2baaeeb15f08824fd",
+    "rust-toolchain.toml": "559f488c181e0e9e77cf17c29de663977f036ec7ff2e2060585714bf53c52d62",
+    "scripts/evaluation/agent-session.mjs": "450dbe3e084d460137cafa9f81d782236ca2ecc240d4579f415428e7e8bbac5e",
+    "scripts/evaluation/freeze.mjs": "e63bd11aeb2540a5b682bd2f27d1c8f59da201d9dbc385a6ac562d35ac839366"
+  },
+  "source_tree_digest": "92d419038f73121c206dabe30c6c0c573baf560e6e4d56fc6c932e1cd3824dcf",
+  "release_binary_sha256": "f8cc8442ec5fee784362aa501477ea9fa1a9ff0caa713b0554bb98e6b57c573b",
+  "agent_configuration": {
+    "model": "Inherited caller model; no override. Exact provider model identifier unobserved.",
+    "reasoning": "Inherited caller reasoning; no override. Token usage unavailable.",
+    "context": "Two existing developer subagents with different prior implementation/review context. Both may inspect public source and reference data. This is a task-specific demonstration, not a controlled comparison of models.",
+    "restrictions": "Four candidate batches per arm; training-only execution feedback until freeze; no external simulator or extra candidate execution."
+  },
+  "preflight": {
+    "cases": [
+      {
+        "id": "opening-normal",
+        "experiment_hash": "sha256:2e873455027008d3d6cc469565f1aa22480542ea213390750a4ecdd632149525",
+        "result_hash": "sha256:a17a31933a05e52df17326d2d76ff69d02dfa45fe686a8a0bd85c955cfc062ad",
+        "passed": true,
+        "verified": true,
+        "work": 2805,
+        "ticks": 44,
+        "receipt_file_sha256": "f69e9b25e8a300f0c0d995175aea8f84324b2a99b0d59614e750935036337647"
+      },
+      {
+        "id": "opening-collapse",
+        "experiment_hash": "sha256:8f52397055f6d57ca40b843dea703ad4a377601715f503b163ff8e0bb6c34dc8",
+        "result_hash": "sha256:331c4018e3f9d47c1bba76fba62df792facb68531593ce6cf72872d628e90a77",
+        "passed": true,
+        "verified": true,
+        "work": 3071,
+        "ticks": 44,
+        "receipt_file_sha256": "a8926818da21185b406e805d69a5642906d4b24519b04da77b5c36e7db6697f6"
+      },
+      {
+        "id": "ark-plan-a",
+        "experiment_hash": "sha256:e82876a0a5680ec3cf5c93f5e5b1b5f88a6d5c67d0d0627b05a32dc38d007ddb",
+        "result_hash": "sha256:de874d221a79ef3fcb4ccb83d0ee6473aada8626cba702c74c18f1512bf28c26",
+        "passed": true,
+        "verified": true,
+        "work": 5963,
+        "ticks": 55,
+        "receipt_file_sha256": "9abb2909c4a5be39552e05b42f55ec2c8fb6b8017cb6d9de78b212d2c8c9b13c"
+      },
+      {
+        "id": "ark-plan-b",
+        "experiment_hash": "sha256:1b77cb9c6444ea4ce2f29c480a508dab347c7a0045b682febbec4a09f4b98a1f",
+        "result_hash": "sha256:6ceb3220b6b824e003dd49059b6c75440fb3e5fb3a93a8e5e05539af2e946aa6",
+        "passed": true,
+        "verified": true,
+        "work": 5959,
+        "ticks": 55,
+        "receipt_file_sha256": "a9c2fd99b9f743e9d5198de2daac47904441379f7560621173d097979853b530"
+      },
+      {
+        "id": "transfer-early-collapse",
+        "experiment_hash": "sha256:87b8204525f768cd5456eebfec658a0ba0322413bbe934a7605c728ee1459990",
+        "result_hash": "sha256:1606393dbef62eee8cdb281f9aa02f71f0204d29d9b74d860aa2002b73a84b37",
+        "passed": true,
+        "verified": true,
+        "work": 3098,
+        "ticks": 44,
+        "receipt_file_sha256": "6bb881fc0f7c1a5ba4d618cc5d407f2e3889aa509df740643a4f4d5ddf5306ac"
+      },
+      {
+        "id": "transfer-reversed-collapse",
+        "experiment_hash": "sha256:3e95f7cf0a67bbd60ef247cf20236e3d4d676297f2ee3ecb7effedcb1471dde5",
+        "result_hash": "sha256:c749d8063b6ff023c3519f5437a1bdbe189a9a93c59226fec6c7cc99abe3d7db",
+        "passed": true,
+        "verified": true,
+        "work": 2975,
+        "ticks": 44,
+        "receipt_file_sha256": "8055405065622060cc1e3af63516f4fd9748e92fc49fcb94c200d598d1ffebd0"
+      },
+      {
+        "id": "transfer-delayed-plan-a",
+        "experiment_hash": "sha256:7fb3bef71513b3938f978e94c90603833857db9888ca1a170a86a681e4c9e322",
+        "result_hash": "sha256:03b9ae72a4c798a823b8afc0588e4c1d31a677900015ac37c549edbad59dc8e3",
+        "passed": true,
+        "verified": true,
+        "work": 5961,
+        "ticks": 55,
+        "receipt_file_sha256": "a45f9424d41d13f9a3b7896990419d81847c92d59d6ace94a8d07551f6721e7c"
+      },
+      {
+        "id": "transfer-delayed-plan-b",
+        "experiment_hash": "sha256:25bde6fcbb2f303fd5c806f1ee74f8121e69f49b043601ac79aa4c491d9e290e",
+        "result_hash": "sha256:fc36eb4a7e0d23adaf4c9f0d969de45982fea1b3b592e9e4b84d84967d3bb064",
+        "passed": true,
+        "verified": true,
+        "work": 5957,
+        "ticks": 55,
+        "receipt_file_sha256": "909a0418dc7745c4ecca736b5be9f986bc8dc2843a7966ebb5ffac057a26791a"
+      }
+    ],
+    "cli_metrics": [
+      {
+        "id": "opening-normal-input",
+        "exit_code": 0,
+        "elapsed_micros": 511,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "opening-normal-run",
+        "exit_code": 0,
+        "elapsed_micros": 937,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "opening-normal-verify",
+        "exit_code": 0,
+        "elapsed_micros": 591,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "opening-collapse-input",
+        "exit_code": 0,
+        "elapsed_micros": 360,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "opening-collapse-run",
+        "exit_code": 0,
+        "elapsed_micros": 671,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "opening-collapse-verify",
+        "exit_code": 0,
+        "elapsed_micros": 626,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "ark-plan-a-input",
+        "exit_code": 0,
+        "elapsed_micros": 408,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "ark-plan-a-run",
+        "exit_code": 0,
+        "elapsed_micros": 1398,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "ark-plan-a-verify",
+        "exit_code": 0,
+        "elapsed_micros": 1341,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "ark-plan-b-input",
+        "exit_code": 0,
+        "elapsed_micros": 501,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "ark-plan-b-run",
+        "exit_code": 0,
+        "elapsed_micros": 1157,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "ark-plan-b-verify",
+        "exit_code": 0,
+        "elapsed_micros": 1215,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-early-collapse-input",
+        "exit_code": 0,
+        "elapsed_micros": 251,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-early-collapse-run",
+        "exit_code": 0,
+        "elapsed_micros": 572,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-early-collapse-verify",
+        "exit_code": 0,
+        "elapsed_micros": 566,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-reversed-collapse-input",
+        "exit_code": 0,
+        "elapsed_micros": 234,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-reversed-collapse-run",
+        "exit_code": 0,
+        "elapsed_micros": 671,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-reversed-collapse-verify",
+        "exit_code": 0,
+        "elapsed_micros": 565,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-delayed-plan-a-input",
+        "exit_code": 0,
+        "elapsed_micros": 366,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-delayed-plan-a-run",
+        "exit_code": 0,
+        "elapsed_micros": 1273,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-delayed-plan-a-verify",
+        "exit_code": 0,
+        "elapsed_micros": 1328,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-delayed-plan-b-input",
+        "exit_code": 0,
+        "elapsed_micros": 352,
+        "engine_executions": 0,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-delayed-plan-b-run",
+        "exit_code": 0,
+        "elapsed_micros": 1183,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      },
+      {
+        "id": "transfer-delayed-plan-b-verify",
+        "exit_code": 0,
+        "elapsed_micros": 1239,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    ],
+    "actual_engine_executions": 16,
+    "scope": "Fixture qualification before optimizer prompts; separate from the 4096-execution diagnostic allowance. Prior automated tests are separately reported."
+  }
+}
