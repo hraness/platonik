@@ -30,6 +30,8 @@ An organism has no access to the network, filesystem, system clock, hidden seeds
 
 Most cases reset memory. A separately declared sequence track can retain it, but charges building, storing, loading, and reusing it. The reset boundary, initial contents, and entire sequence are part of the benchmark. Compiling a colony into a reusable component preserves its original costs.
 
+The proposed [symbol vocabulary](symbols-and-facts.md) changes how players compose and understand policies, not the ranking rule. A submitted named expression includes its definitions; the evaluator charges their evaluation, storage, binding, and communication under the same cost model. The observer's checked facts cannot become hidden inputs to a contestant. Symbol counts, accumulated claims, and shorter aliases earn no additional points.
+
 Wall time is useful operational information; deterministic work is the primary comparison. Memory and code size remain hard limits and reported dimensions. The game does not claim that a VM fuel unit is a universal measure of physical energy or computational complexity.
 
 ## Training, submission, and replay

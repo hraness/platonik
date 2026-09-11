@@ -25,6 +25,14 @@ His discussion of sorting also suggests looking for useful side effects under di
 
 These mechanics are design extrapolations, not claims that their outcomes are known. Define each measure before interpreting it: adjacent ordered pairs and total inversions are different measures of sorting progress, and policy clustering is different from shared ancestry. A temporary drop in a chosen progress measure does not by itself establish planning or a beneficial detour. Exploratory observations can generate hypotheses. A confirmatory experiment freezes the hypothesis, measurement, comparator, and evaluation cases before it runs. An agent should preserve unsuccessful cases and distinguish an observation from an explanation.
 
+## Wittgenstein and representation
+
+Wittgenstein's *Tractatus*, together with Russell's introductory account, offers a second line of inspiration: distinguish the structure of a representation from the situation it represents and from evidence that it is true. Platonik adapts simple and complex symbols into inspectable expressions, while treating states of affairs and checked facts as different things. This is an analogy for game design, not a claim that the simulator implements Wittgenstein's ontology. [Tractatus, propositions 2–2.01, 2.1–2.225, and 3.3](https://courses.umass.edu/klement/tlp/tlp.html).
+
+The [working glossary](symbols-and-facts.md) starts with four terms and can grow through dated revisions. Its experiments ask whether a reusable description helps a policy generalize, whether recombining descriptions changes behavior, and whether a vocabulary survives a new embodiment. Compare aliases with their expanded programs, freeze interpretation across matched runs, and charge representation and evaluation costs. A concise name, a correct snapshot description, and a useful predictive model are different achievements.
+
+This connects to the existing organism experiments through representation and transfer. Michael Levin motivates investigating collective competencies; the Wittgenstein-inspired layer makes the relationship between a description and the observed world an explicit object of play. Neither connection makes symbolic elegance evidence about P versus NP.
+
 ## A route toward P versus NP research
 
 Start with sorting and collective recovery. Later add constraint habitats in which local cells propose Boolean assignments, or organisms choose branching, propagation, representations, and reusable components for a solver. A satisfying assignment is independently checkable. An unsatisfiability claim needs a checked proof; a timeout is only unfinished search.

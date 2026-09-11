@@ -10,6 +10,8 @@ Begin with the [game design](docs/game-design.md): breed a colony of self-sortin
 
 The [competition model](docs/competition.md) compares organisms under equal execution limits while allowing open-ended discovery effort. The [engine proposal](docs/engine.md) defines an agent-facing Rust CLI and the first playable acceptance criteria. The [research foundations](docs/research.md) connect the design to Michael Levin's minimal systems and distinguish empirical results from mathematical claims.
 
+The growing [symbols and facts glossary](docs/symbols-and-facts.md) adds a Wittgenstein-inspired layer: compose descriptions of local situations, breed their parts, and check them against the world. Definitions remain revisable; the proposed mechanics preserve sensory limits and computation costs.
+
 ## Run the website
 
 Use Node.js 24 and Bun 1.3.14. No credentials, database, or paid API is required to run the website locally.
@@ -19,7 +21,7 @@ bun install --frozen-lockfile
 bun run dev
 ```
 
-Open `http://localhost:3000`, follow **Explore the game design**, and navigate among the four documentation pages. The pages render the Markdown files in `docs/` at build time; editing one of those files updates both the source document and its website projection. The separately authored home page presents the same product facts in a shorter form.
+Open `http://localhost:3000`, follow **Explore the game design**, and navigate among the documentation pages. The pages render the Markdown files in `docs/` at build time; editing one of those files updates both the source document and its website projection. The separately authored home page presents the same product facts in a shorter form.
 
 The website loads its reading font locally and has no analytics, account system, forms, or model calls. Following source links leaves the site.
 

@@ -9,6 +9,12 @@ export const documents = [
     question: "What would it feel like to play?",
   },
   {
+    slug: "symbols-and-facts",
+    title: "Symbols & facts",
+    description: "A growing Wittgenstein-inspired vocabulary for representation, composition, and checking what is true in a world.",
+    question: "What can an organism learn to represent?",
+  },
+  {
     slug: "competition",
     title: "Competition",
     description: "A readable frontier rank, equal execution limits, and independently replayable results.",
