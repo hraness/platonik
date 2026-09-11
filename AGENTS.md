@@ -1,6 +1,6 @@
 # Platonik repository guidance
 
-Platonik contains a Next.js marketing/documentation website and a design proposal for an agent-driven game of algorithmic organisms. The intended game engine language is Rust. Do not describe proposed game commands, skills, rankings, or experiments as implemented.
+Platonik contains a Next.js website, bounded TypeScript browser laboratory models, and a design proposal for an agent-driven game of algorithmic organisms. The intended game engine language is Rust. The `/lab` demonstrators are implemented separately; do not describe proposed Rust game commands, skills, rankings, or later experiments as implemented.
 
 For every documentation surface, follow the [Hraness documentation guidelines](https://github.com/hraness/.github/blob/main/DOCUMENTATION_GUIDELINES.md): distinguish guided learning, task completion, factual reference, and explanation; keep each page or section focused on its reader's need, and link between forms. Verify prerequisites, capabilities, effects, and a complete path to the stated result. Also follow the [README guidelines](https://github.com/hraness/.github/blob/main/README_GUIDELINES.md) and [public writing style](https://github.com/hraness/.github/blob/main/STYLE.md).
 
@@ -14,7 +14,7 @@ For every documentation surface, follow the [Hraness documentation guidelines](h
 
 ## Delivery and validation
 
-Run `bun run check` after convergence: content checks, Next.js route generation, TypeScript, and production build. Review desktop/mobile rendering, keyboard navigation, document anchors, overflow, and the 404 path for UI changes. Obtain independent review and run `git diff --check` (including the staged diff before the first commit). Do not invent an engine test suite or claim a playable game path has been tested.
+Run `bun run check` after convergence: content checks, browser-model tests, Next.js route generation, TypeScript, and production build. Review desktop/mobile rendering, keyboard navigation, document anchors, overflow, and the 404 path for UI changes. For laboratory changes, also exercise editing/error recovery, deterministic replay, collection persistence/export, truth controls, and budget measurement/cancellation as relevant. Obtain independent review and run `git diff --check` (including the staged diff before the first commit). Browser-model tests are not Rust-engine verification; do not claim the proposed campaign has been tested.
 
 An initial reviewed repository bootstrap may go directly to an empty main branch. Subsequent changes use a branch and pull request, with independent review and all applicable repository and GitHub checks before merging. Preserve unrelated work. The website deploys from this root to the Hraness Vercel project `platonik` at `platonik.space`. Verify the deployed domain and changed pages. No game service or package release exists yet.
 

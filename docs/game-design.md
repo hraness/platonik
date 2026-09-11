@@ -14,7 +14,9 @@ The creatures are executable algorithms. They do not contain chatting language m
 
 The central loop is **wish → build → watch → surprise → improve**. Each pass should leave the player with a visible change and a consequential choice. Automatic search can help, but the player owns the ambition, the favorites, and the question to pursue next.
 
-The longer campaign is [The Long Trail](campaign.md): a hopeful space western in which a first companion becomes a herd, the herd helps build living arks, and their settlements grow into a civilization capable of reaching a distant beacon. The player is a naturalist and trail guide whose role grows with the creatures' capabilities. Its space-opera fiction gives these experiments a continuing destination.
+The longer campaign is [The Long Trail](campaign.md): a hopeful space western in which a first companion becomes a herd, the herd helps build living arks, and their settlements grow into a civilization capable of reaching a distant beacon. The player is a frontier engineer of living systems, with a naturalist's curiosity and a trail guide's care. Its space-opera fiction gives these experiments a continuing destination.
+
+The [observatory](observatory.md) now offers three smaller browser experiments to review that promise. Its executable courier sketches, structural portraits, and truth maps are separate from this proposed Rust campaign. The [complexity and scale decision](complexity-and-scale.md) explains why work, structural footprint, memory, and demonstrated capability remain separate, and how useful results would have to earn their evidence.
 
 ## A laboratory of your own, a world of other researchers
 

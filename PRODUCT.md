@@ -24,7 +24,7 @@ Make a creature with your AI. Watch it find its way, help it recover, and discov
 
 ## Capabilities and Constraints
 
-The website must make the concept and documentation easy to review. It must distinguish proposed gameplay and illustrative examples from implemented behavior and measured results. There is no playable engine, public ranking, or installation flow yet.
+The website makes the concept and documentation easy to review. Its observatory offers three bounded, working browser prototypes: editable courier programs with structural portraits and a local specimen drawer, fuzzy truth maps, and a world-cost calculator with optional browser measurement. These TypeScript models are separate from the proposed Rust game. There is no Rust release, public ranking, or installation flow yet. Distinguish authored fiction, measured model behavior, and scientific claims.
 
 ## Brand Commitments
 
@@ -48,7 +48,11 @@ The documents under docs/ contain the original design proposal and source citati
 
 The Long Trail is a hopeful space western with a singularity arc: a first companion becomes a traveling herd, cooperating colonies form living arks, settlements connect, and bounded discovery processes let the creations begin creating. The campaign's destination is the Far Beacon. Its final crossing echoes the opening rescue, while a completed story leaves an open research frontier.
 
-The player is a naturalist and trail guide growing into a civilization's steward. Preserve parents, keep favorite lineages visible, and make habitat fit and cooperation mechanically useful. Creatures are companions rather than consumable crafting ingredients. Avoid body horror, compulsory sacrifice or fusion, and neglect penalties while offline. Fictional minds and narrative first contact remain separate from measured software behavior.
+The player is a frontier engineer of living systems, with a naturalist's curiosity and a trail guide's care, growing into a civilization's steward. Preserve parents, keep favorite lineages visible, and make habitat fit and cooperation mechanically useful. Creatures are companions rather than consumable crafting ingredients. Avoid body horror, compulsory sacrifice or fusion, and neglect penalties while offline. Fictional minds and narrative first contact remain separate from measured software behavior.
+
+## Observatory Direction
+
+The visitor should be able to collect a recognizable abstract specimen, alter its actual bounded program, and compare what it does. The microscope-like portrait derives from rule structure and memory usage, while the journey view shows execution. Appearance is a lossy encoding with no fitness or novelty guarantee. Retain the minimal site identity; let the computed artifact supply the visual interest. Agent virtuosity comes from inspectable program edits and experiments. Work, program footprint, memory, and demonstrated capability remain distinct. Large ecologies and useful external results require the explicit evidence gates in the complexity and scale proposal.
 
 ## Shared Economy Direction
 

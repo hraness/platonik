@@ -130,7 +130,7 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
 @media (max-width: 480px) {
   body { font-size: 16px; }
   .site-header { min-height: 90px; padding-inline: 22px; gap: 18px; }
-  .site-header nav { font-size: 12px; gap: 18px; }
+  .site-header nav { font-size: 12px; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
   .wordmark { font-size: 26px; }
   .home { width: calc(100% - 44px); }
   .hero { padding-block: 36px 52px; }

@@ -10,7 +10,7 @@ Your first discovery is a strange little pattern that can carry a spark. Give it
 
 **Follow the Far Beacon. Grow the civilization that can reach it.**
 
-The player fantasy is a Platonic space cowboy: part naturalist, part trail guide, part builder. Travel between alien habitats, discover forms that can flourish there, gather a remarkable herd, and grow a home that can travel with it. Your shipboard agent helps turn “what if?” into something you can watch.
+The player is a **frontier engineer of living systems**: part naturalist, part trail guide, part builder. Travel between alien habitats, discover forms that can flourish there, gather a remarkable herd, and grow a home that can travel with it. Your shipboard agent helps turn “what if?” into something you can watch. The space-western warmth stays, while engineering names the skill you develop: making systems that work together under real constraints.
 
 In this fiction, Platonic space is a wilderness of possible forms. Searching it finds candidate patterns; a body and habitat let a pattern express itself. The star map connects places to explore, while the laboratory explores possible organisms. They are related layers, not interchangeable maps. This is a story premise inspired by the [research questions](research.md), not a claim that software has confirmed a realm of pre-existing living minds.
 

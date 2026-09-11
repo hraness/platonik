@@ -35,6 +35,22 @@ For the game, start with an ordinary question: **“Does Moss remember this plac
 
 After exploration, freeze the proposed explanation and use fresh, unselected cases to test it. Preserve the program, initial body, internal state, and environment state needed for replay. Account separately for acquiring, storing, loading, and using experience; prepared state cannot smuggle undeclared clues into a ranked trial. The player gets a recognizable habit to investigate, with a result that can distinguish competing explanations. Whether the proposed creature shows any such effect remains unknown.
 
+## Fractional truth and fractal patterns
+
+Levin's *Ingressing Minds* points to Patrick Grim's experiments with self-referential fuzzy statements in the discussion leading into Figure 8. Grim chooses explicit truth functions and repeatedly revises their values. The resulting dynamical systems can trace attractors and generate intricate threshold maps; the work does not resolve semantic paradoxes by assigning their final truth. [Levin](https://doi.org/10.3390/philosophies11050161), [Grim, *Self-Reference and Chaos in Fuzzy Logic*, 1993](https://www.pgrim.org/articles/self-referenceandchaosinfuzzylogic.pdf).
+
+The [observatory](observatory.md) implements two of Grim's paired systems, using simultaneous updates by default. For old values x and y, the first gives x′ = 1 − |x − y| and y′ = 1 − |y − (1 − x)²|. The second gives x′ = (x − y)² and y′ = √|y − (1 − x)|. A separate sequential option uses the new x in the second equation. That change defines a different dynamical system.
+
+The prototype uses finite Float64 arithmetic and adds no noise. Truth degree is neither probability nor agent confidence. Starting values, update order, threshold, sampling resolution, iteration cap, and precision belong to the experiment. The threshold map records first crossings of x² + y² > radius² after an update. It is not escape to infinity. An intricate finite image alone establishes neither an infinite fractal nor useful computation.
+
+An original game direction is to give such dynamics a concrete task in a later signal habitat: retain a bit, switch reliably, route a signal, or recover after disturbance. Compare with simple digital and analog baselines under matched precision, noise, timing, and resource assumptions. A stable-looking attractor becomes interesting as a memory only when write, hold, read, and error behavior are specified and checked. These signal capabilities are not added to the courier model by displaying a truth map.
+
+## An engineerable world
+
+Greg Egan's fictional Autoverse supplies an imaginative precedent for a world built from simple rules whose chemistry and inhabitants become worth studying. His discussion of universal computation and simulation shortcuts also makes clear that computational expressiveness does not guarantee inexpensive evolution. The fiction is inspiration, not an implementation specification or a universality proof for Platonik. [Egan's *Permutation City*](https://www.gregegan.net/PERMUTATION/Permutation.html), [author's FAQ](https://www.gregegan.net/PERMUTATION/FAQ/FAQ.html).
+
+The [complexity and scale thesis](complexity-and-scale.md) makes the practical commitment explicit: useful work must survive ordinary-controller comparisons, held-out cases, full cost accounting, and an independent implementation when an external performance claim is made. Begin with bounded cells and small checked components; grow the world only when measurement justifies its cost. A computer inside the world would remain an engineered construction that consumes resources.
+
 ## Experiments that become game mechanics
 
 | Question | Player action | Evidence needed |

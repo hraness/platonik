@@ -231,6 +231,14 @@ The sidecar contains standalone examples of the primary link, header navigation,
 ### Don't:
 
 - Don't add decorative motion, shadows, or gradients when extending this minimally styled surface.
-- Don't substitute interactive game controls for the current static illustrations.
+- Keep the campaign illustrations labeled as proposals; the observatory's interactive controls belong to its separate browser models.
 - Don't rely on color alone to convey policy or controller state.
 - Don't describe this captured website system as an implemented game interface.
+
+## Observatory extension
+
+The user requested interactive prototypes and abstract microscope-like algorithm portraits. The `/lab` surface inherits the paper, ink, Newsreader, fine dividers, and minimal styling of the reading site. Its mode is Operate: choose a program, inspect a computed form or replay, compare a variation, and keep or export a specimen. Three keyboard-operable tabs separate specimens, truth landscapes, and world budgets.
+
+The desktop bench places a large computed artifact beside its controls; mobile stacks the artifact and controls. The artifact supplies visual interest through actual data: summed rule fields form a membrane-like portrait, exact trajectories draw journeys, and threshold counts color truth maps. Those fields are visualization encodings rather than decorative backgrounds. Portraits are static; motion occurs only during an explicitly requested bounded replay. The specimen drawer is an open collection of thumbnails and names separated by rules.
+
+Inputs, buttons, selectors, and expandable editors use the existing paper/wash surfaces, green action color, and visible focus outlines. Errors use a dark warm tone with text. Disabled actions remain labeled. Tab changes and control feedback are immediate, with no decorative transitions. The observation legend and numeric/text results accompany visual encodings so appearance never carries the only explanation.

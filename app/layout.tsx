@@ -20,6 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <header className="site-header">
           <Link href="/" className="wordmark" aria-label="Platonik home">platonik<span aria-hidden="true">.</span></Link>
           <nav aria-label="Main navigation">
+            <Link href="/lab">Observatory</Link>
             <Link href="/docs">Documentation</Link>
             <a href={site.repository}>GitHub</a>
           </nav>
