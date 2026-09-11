@@ -1,0 +1,132 @@
+{
+  "rules": [
+    {
+      "when": [
+        {
+          "kind": "at_receiver",
+          "value": true
+        },
+        {
+          "kind": "carrying",
+          "value": true
+        }
+      ],
+      "action": {
+        "kind": "drop"
+      },
+      "remember": {
+        "slot": 0,
+        "value": 0
+      }
+    },
+    {
+      "when": [
+        {
+          "kind": "at_source",
+          "value": true
+        },
+        {
+          "kind": "carrying",
+          "value": false
+        }
+      ],
+      "action": {
+        "kind": "pickup"
+      },
+      "remember": {
+        "slot": 0,
+        "value": 0
+      }
+    },
+    {
+      "when": [
+        {
+          "kind": "memory",
+          "slot": 0,
+          "value": 1
+        },
+        {
+          "kind": "blocked",
+          "direction": "forward",
+          "value": false
+        }
+      ],
+      "action": {
+        "kind": "move",
+        "direction": "forward"
+      },
+      "remember": {
+        "slot": 0,
+        "value": 0
+      }
+    },
+    {
+      "when": [
+        {
+          "kind": "blocked",
+          "direction": "right",
+          "value": false
+        }
+      ],
+      "action": {
+        "kind": "move",
+        "direction": "right"
+      },
+      "remember": {
+        "slot": 0,
+        "value": 1
+      }
+    },
+    {
+      "when": [
+        {
+          "kind": "blocked",
+          "direction": "forward",
+          "value": false
+        }
+      ],
+      "action": {
+        "kind": "move",
+        "direction": "forward"
+      },
+      "remember": {
+        "slot": 0,
+        "value": 0
+      }
+    },
+    {
+      "when": [
+        {
+          "kind": "blocked",
+          "direction": "left",
+          "value": false
+        }
+      ],
+      "action": {
+        "kind": "move",
+        "direction": "left"
+      },
+      "remember": {
+        "slot": 0,
+        "value": 0
+      }
+    },
+    {
+      "when": [
+        {
+          "kind": "blocked",
+          "direction": "back",
+          "value": false
+        }
+      ],
+      "action": {
+        "kind": "move",
+        "direction": "back"
+      },
+      "remember": {
+        "slot": 0,
+        "value": 0
+      }
+    }
+  ]
+}

@@ -34,6 +34,8 @@ Follow the [complete walkthrough](docs/rust-bridge.md) to export a parent, edit 
 
 Read [the agent evaluation](docs/agent-evaluation.md) for the two completed expeditions, all candidate and transfer results, recovery probes, and measured replay costs. Both archives are committed and rechecked by the aggregate gate. For physical continuity, follow the [save-and-resume guide](docs/continuous-habitat.md) and inspect the [recorded habitat](https://platonik.space/lab/habitat).
 
+The [navigation diagnostic](docs/navigation-evaluation.md) keeps two failed reopening journeys unchanged and tests courier-only repairs, simpler baselines, and a frozen timing-and-bearing neighborhood. Compare the original and selected programs in the [navigation replay](https://platonik.space/lab/navigation). Complete compressed receipts preserve failed attempts while reducing stored duplication.
+
 ## Run the website
 
 Use Node.js 24 and Bun 1.3.14. No credentials, database, or paid API is required to run the website locally.

@@ -39,6 +39,12 @@ export const documents = [
     question: "What did the next agent trials establish?",
   },
   {
+    slug: "navigation-evaluation",
+    title: "When the courier gets lost",
+    description: "Two bounded searches, preserved failures, frozen navigation comparisons, and the cost of keeping a crew useful.",
+    question: "Can an old creature learn a more reliable habit?",
+  },
+  {
     slug: "rust-bridge",
     title: "Run the Rust bridge",
     description: "Real shared-habitat experiments, exact replay artifacts, and an agent-facing CLI for testing what composes.",
