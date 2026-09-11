@@ -27,7 +27,7 @@ Before expanding the setting, build a short **migration-to-ark bridge** in the R
 
 Use one manifest, one time model, typed interfaces, and one cost ledger. A “colony module” must expand into the actual cells and connections it contains. A signal cannot conjure a spark, a saved pattern cannot smuggle in extra memory, and a disconnected component cannot read the world through its agent. Templates may provide working examples; they carry their full execution costs.
 
-This bridge is the main go/no-go decision. If earlier creatures stop mattering when circuits appear, or each transition needs an unrelated simulator with invented conversion rewards, revise the substrate and campaign before building more planets. The [Rust bridge](rust-bridge.md) now tests the core transport–signal–memory–routing chain in one runtime, with unchanged-policy comparisons and component removals. The field expedition adds scheduled edge closure, persistent creations, ancestry, and checked reuse across training and transfer cases. Its physical trials reset independently, and the service fixture stays stationary: a moving habitat and continuous expedition services still remain to be completed.
+This bridge is the main go/no-go decision. If earlier creatures stop mattering when circuits appear, or each transition needs an unrelated simulator with invented conversion rewards, revise the substrate and campaign before building more planets. The [Rust bridge](rust-bridge.md) now tests the core transport–signal–memory–routing chain in one runtime, with unchanged-policy comparisons and component removals. The field expedition adds scheduled edge closure, persistent creations, ancestry, and checked reuse across training and transfer cases. Its physical trials reset independently. The [continuous habitat](continuous-habitat.md) now preserves one stationary service world between explicit advances; a moving habitat remains to be completed.
 
 Require at least one unchanged earlier controller or module to do causal work in two different bridge tasks. Remove it in a comparison copy and check the resulting loss or changed tradeoff on frozen cases. A lineage label or a paid conversion unlock does not establish reuse. If a module needs a change, record that change and call the result adaptation.
 
@@ -59,6 +59,18 @@ The remaining sequence is:
 6. **Human playtesting:** test comprehension, attachment, agency, pacing, and voluntary continuation after the useful agent and engineering investigations above. Agents can uncover friction and unreachable goals; their completion is not evidence that people enjoy the game.
 
 A failed automated gate leads to a repair or a narrower claim. Publish refutations and costs along the way. More chapters, compute, or market activity cannot substitute for a demonstrated transition.
+
+### Admission for the continuous habitat
+
+Before construction, the [continuous-habitat evaluation](continuity-evaluation.md) must record five separate results:
+
+- All eight reference worlds qualify; eight-cut continuation and a middle export/import preserve the exact state, trace, outcome, and cumulative modeled work. Terminal fuel failures stay terminal, activation failures stay recorded, and retries cannot double-spend or advance twice.
+- Compare the full reference, prior two-rule memory keeper, prior positive-only keeper, and blind alternator. Rank successful designs by the declared work and size criteria. Communication is allowed to lose; removing the reference relay establishes dependence of that design only.
+- Preserve the navigation failures with crossings reopened at ticks 50 and 61. The admitted 88-tick reopenings qualify narrower journeys. They do not establish general reopening robustness.
+- Each agent consumes four candidate slots, selects using training only, freezes one pair, then runs four unchanged transfer cases. Retain every failure, submitted parent, and actual verification execution.
+- Measure complete saved-history verification and artifact size at the permitted eight-advance envelope before increasing it. Pausing avoids background simulation; it does not eliminate parsing, hashing, and replay costs.
+
+A following navigation gate should require escaping the preserved four-position loops without moving their event times. Construction can begin in a separately declared bounded habitat, but success must require acquired material, admitted offspring, and useful execution by that offspring. It must preserve the existing world and costs across continuation. Only after those capabilities compose should agents attempt the compressed full campaign.
 
 ## Human playtesting comes after agent evaluation
 
@@ -122,4 +134,4 @@ Before implementing commerce, try three manual local commissions from distinct r
 | Research gains disappear against fair baselines | Publish that result and redirect the research track; retain the engineering game only if people enjoy it |
 | The complete compressed campaign does not sustain interest | Rewrite the failing transition and ending; do not stretch it with grind, rarity, or a market |
 
-The next decisions follow the field-expedition evidence: build the missing continuous habitat, then automatically traverse construction, continuation, and the compressed campaign. Repeat bounded agent search, transfer, replay, recovery, exploit evaluation, and cost measurement after each new capability. Human playtesting comes last, once the complete compressed journey and the relevant automated gates hold. Automated completion establishes reachability and exposes defects; it cannot establish human enjoyment.
+The next decisions follow the field-expedition evidence: qualify the continuous habitat, then automatically traverse construction, continuation, and the compressed campaign. Repeat bounded agent search, transfer, replay, recovery, exploit evaluation, and cost measurement after each new capability. Human playtesting comes last, once the complete compressed journey and the relevant automated gates hold. Automated completion establishes reachability and exposes defects; it cannot establish human enjoyment.

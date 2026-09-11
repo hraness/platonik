@@ -1,0 +1,7 @@
+.continuity-detail, .continuity-stops > p { max-width: 72ch; }
+.continuity-stops { border-top: 1px solid var(--line); padding-top: 2rem; }
+.continuity-stops ol { padding: 0; margin: 2rem 0; list-style: none; }
+.continuity-stops li { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.continuity-stops li p { margin: .4rem 0 0; max-width: 68ch; }
+.continuity-stops button { font: inherit; font-weight: 600; }
+.continuity .bridge-observations h2 { margin-top: 0; }

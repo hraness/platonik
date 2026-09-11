@@ -566,53 +566,100 @@ fn check_live_invariants(experiment: &Experiment, state: &State) -> Result<(), S
 }
 
 pub fn run(experiment: &Experiment) -> Result<RunResult, String> {
+    run_through(experiment, experiment.ticks, None)
+}
+
+/// The optional prefix is admitted only by continuation's checked replay path.
+/// This crate-private driver never makes a caller-supplied state authoritative.
+pub(crate) fn run_through(
+    experiment: &Experiment,
+    through_tick: u32,
+    prefix: Option<&[Frame]>,
+) -> Result<RunResult, String> {
     validate_experiment(experiment)?;
+    require(
+        through_tick <= experiment.ticks,
+        "Advance exceeds the original tick horizon.",
+    )?;
+    if let Some(frames) = prefix {
+        require(
+            !frames.is_empty()
+                && frames.len() <= experiment.ticks as usize
+                && frames.iter().all(|frame| frame.complete)
+                && frames.last().is_some_and(|frame| frame.tick < through_tick),
+            "Continuation requires a complete prefix and a later absolute tick.",
+        )?;
+    }
     EXECUTIONS.fetch_add(1, Ordering::Relaxed);
-    let mut state = initial_state(experiment);
-    let initial_sparks = state
+    let initial_sparks = experiment
         .sources
         .iter()
         .map(|source| source.sparks.len() as u32)
         .sum();
-    let mut meter = Meter {
-        costs: Costs::default(),
-        fuel: experiment.fuel,
-        activation: None,
-    };
-    // Loading charges every canonical input byte; host serialization/allocation time is not a CPU estimate.
-    let loading = serde_json::to_vec(experiment)
-        .map_err(|error| error.to_string())?
-        .len() as u64;
-    let initial_checking = (experiment.walls.len()
-        + experiment.cells.len()
-        + experiment.sources.len()
-        + experiment.depots.len()
-        + experiment.beacons.len()
-        + experiment.valves.len()
-        + experiment.links.len()
-        + experiment.events.len()) as u64
-        + initial_sparks as u64;
-    let loaded = meter
-        .charge(Cat::Loading, loading)
-        .and_then(|_| meter.charge(Cat::Checking, initial_checking))
-        .is_ok();
-    let mut status = if loaded {
-        RunStatus::Complete
-    } else {
-        RunStatus::FuelExhausted
-    };
-    let mut frames = vec![Frame {
-        tick: 0,
-        complete: loaded,
-        events: Vec::new(),
-        signals: Vec::new(),
-        activations: Vec::new(),
-        state: state.clone(),
-        costs: meter.costs.clone(),
-    }];
-    let mut ticks_completed = 0;
-    if loaded {
-        for tick in 1..=experiment.ticks {
+    let (mut state, mut meter, mut status, mut frames, mut ticks_completed) =
+        if let Some(prefix) = prefix {
+            let last = prefix.last().unwrap();
+            let limited = prefix
+                .iter()
+                .flat_map(|frame| &frame.activations)
+                .any(|activation| activation.error.as_deref() == Some("activation_limit"));
+            (
+                last.state.clone(),
+                Meter {
+                    costs: last.costs.clone(),
+                    fuel: experiment.fuel,
+                    activation: None,
+                },
+                if limited {
+                    RunStatus::ActivationLimit
+                } else {
+                    RunStatus::Complete
+                },
+                prefix.to_vec(),
+                last.tick,
+            )
+        } else {
+            let state = initial_state(experiment);
+            let mut meter = Meter {
+                costs: Costs::default(),
+                fuel: experiment.fuel,
+                activation: None,
+            };
+            // Loading charges every canonical input byte; host serialization/allocation time is not a CPU estimate.
+            let loading = serde_json::to_vec(experiment)
+                .map_err(|error| error.to_string())?
+                .len() as u64;
+            let initial_checking = (experiment.walls.len()
+                + experiment.cells.len()
+                + experiment.sources.len()
+                + experiment.depots.len()
+                + experiment.beacons.len()
+                + experiment.valves.len()
+                + experiment.links.len()
+                + experiment.events.len()) as u64
+                + initial_sparks as u64;
+            let loaded = meter
+                .charge(Cat::Loading, loading)
+                .and_then(|_| meter.charge(Cat::Checking, initial_checking))
+                .is_ok();
+            let status = if loaded {
+                RunStatus::Complete
+            } else {
+                RunStatus::FuelExhausted
+            };
+            let frames = vec![Frame {
+                tick: 0,
+                complete: loaded,
+                events: Vec::new(),
+                signals: Vec::new(),
+                activations: Vec::new(),
+                state: state.clone(),
+                costs: meter.costs.clone(),
+            }];
+            (state, meter, status, frames, 0)
+        };
+    if frames.last().unwrap().complete {
+        for tick in ticks_completed + 1..=through_tick {
             state.tick = tick;
             let mut frame = Frame {
                 tick,
@@ -778,13 +825,15 @@ pub fn run(experiment: &Experiment) -> Result<RunResult, String> {
             ticks_completed += 1;
         }
     }
+    let mut measured_outcome = outcome(experiment, &state, status, initial_sparks);
+    measured_outcome.passed &= ticks_completed == experiment.ticks;
     Ok(RunResult {
         protocol: protocol_for_version(experiment.version).unwrap().into(),
         status,
         ticks_completed,
         initial_sparks,
         costs: meter.costs,
-        outcome: outcome(experiment, &state, status, initial_sparks),
+        outcome: measured_outcome,
         frames,
         final_state: state,
     })

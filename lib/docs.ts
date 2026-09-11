@@ -27,6 +27,18 @@ export const documents = [
     question: "Can my agent take a creation through a persistent adventure?",
   },
   {
+    slug: "continuous-habitat",
+    title: "Carry one world forward",
+    description: "Pause with cargo in hand or a report in flight, then resume the same checked Rust habitat.",
+    question: "Can my crew keep its actual world between visits?",
+  },
+  {
+    slug: "continuity-evaluation",
+    title: "What survived the journey",
+    description: "Changing reports, simpler competing controllers, exact continuation, and the measured cost of keeping a world.",
+    question: "What did the next agent trials establish?",
+  },
+  {
     slug: "rust-bridge",
     title: "Run the Rust bridge",
     description: "Real shared-habitat experiments, exact replay artifacts, and an agent-facing CLI for testing what composes.",

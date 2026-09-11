@@ -392,16 +392,30 @@ fn validate_signal(
     Ok(())
 }
 
-/// Independent structural, conservation, timing, transition, budget, and outcome
-/// checks. Full rule evaluation is checked additionally by fresh recomputation.
-pub fn validate_result(experiment: &Experiment, result: &RunResult) -> Result<(), String> {
+/// Observed progress of a checked prefix; this is not a final success claim.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PrefixSummary {
+    pub tick: u32,
+    pub work: u64,
+    pub activation_limited: bool,
+}
+
+/// Independent trace invariants for a resumable prefix, without asserting a
+/// final quota result. Exact policy selection and charges also require replay.
+pub fn validate_prefix(experiment: &Experiment, frames: &[Frame]) -> Result<PrefixSummary, String> {
+    let summary = validate_frames(experiment, frames)?;
+    ensure(
+        frames.iter().all(|frame| frame.complete) && summary.tick < experiment.ticks,
+        "A checkpoint must end at a complete tick before the original horizon.",
+    )?;
+    Ok(summary)
+}
+
+fn validate_frames(experiment: &Experiment, frames: &[Frame]) -> Result<PrefixSummary, String> {
     validate_experiment(experiment)?;
     ensure(
-        protocol_for_version(experiment.version) == Some(result.protocol.as_str()),
-        "Run protocol does not match the supported model.",
-    )?;
-    ensure(
-        !result.frames.is_empty() && result.frames.len() <= experiment.ticks as usize + 1,
+        !frames.is_empty() && frames.len() <= experiment.ticks as usize + 1,
         "Invalid or unbounded frame count.",
     )?;
     let mut initial = BTreeMap::new();
@@ -411,13 +425,9 @@ pub fn validate_result(experiment: &Experiment, result: &RunResult) -> Result<()
             "Initial spark identities are duplicated.",
         )?;
     }
-    ensure(
-        result.initial_sparks as usize == initial.len(),
-        "Initial spark count is incorrect.",
-    )?;
     let mut previous_costs = [0u64; 11];
     let mut previous_frame: Option<&Frame> = None;
-    for (index, frame) in result.frames.iter().enumerate() {
+    for (index, frame) in frames.iter().enumerate() {
         ensure(
             frame.tick == index as u32 && frame.state.tick == frame.tick,
             "Frame ticks are not contiguous.",
@@ -444,18 +454,44 @@ pub fn validate_result(experiment: &Experiment, result: &RunResult) -> Result<()
         previous_costs = current_costs;
         previous_frame = Some(frame);
     }
+    Ok(PrefixSummary {
+        tick: frames
+            .iter()
+            .filter(|frame| frame.complete)
+            .map(|frame| frame.tick)
+            .max()
+            .unwrap_or(0),
+        work: checked_work(&frames.last().unwrap().costs)?,
+        activation_limited: frames
+            .iter()
+            .flat_map(|frame| &frame.activations)
+            .any(|activation| activation.error.as_deref() == Some("activation_limit")),
+    })
+}
+
+/// Independent structural, conservation, timing, transition, budget, and outcome
+/// checks. Full rule evaluation is checked additionally by fresh recomputation.
+pub fn validate_result(experiment: &Experiment, result: &RunResult) -> Result<(), String> {
+    let summary = validate_frames(experiment, &result.frames)?;
+    ensure(
+        protocol_for_version(experiment.version) == Some(result.protocol.as_str()),
+        "Run protocol does not match the supported model.",
+    )?;
+    ensure(
+        result.initial_sparks as usize
+            == experiment
+                .sources
+                .iter()
+                .map(|source| source.sparks.len())
+                .sum::<usize>(),
+        "Initial spark count is incorrect.",
+    )?;
     let last = result.frames.last().unwrap();
     ensure(
         last.state == result.final_state && last.costs == result.costs,
         "Final state or costs disagree with the last frame.",
     )?;
-    let completed = result
-        .frames
-        .iter()
-        .filter(|frame| frame.complete)
-        .map(|frame| frame.tick)
-        .max()
-        .unwrap_or(0);
+    let completed = summary.tick;
     ensure(
         result.ticks_completed == completed,
         "Completed tick count disagrees with the trace.",

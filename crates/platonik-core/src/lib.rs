@@ -1,4 +1,6 @@
 pub mod check;
+pub mod continuation;
+pub mod continuity_fixtures;
 pub mod expedition;
 pub mod expedition_fixtures;
 pub mod fixtures;

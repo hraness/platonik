@@ -20,7 +20,7 @@ export default function HomePage() {
         <p className="hero-description">An engineering adventure about growing strange little creatures with your AI—and the civilization they could become.</p>
         <p className="hero-detail">Start with a companion and a flickering light. Gather a herd. Grow a home that can travel among the stars. Somewhere beyond the charted trails, another beacon is answering.</p>
         <div className="hero-links"><Link className="primary-link" href="/lab">Enter the observatory <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Explore the game design</Link></div>
-        <p className="status-note">A game in design, with four browser experiments and a persistent Rust field expedition. <Link href="/docs/field-expedition">Take a companion to the next camp.</Link></p>
+        <p className="status-note">A game in design, with browser experiments, a Rust field expedition, and a habitat that keeps its state between visits. <Link href="/lab/habitat">Follow one crew through a changing world.</Link></p>
       </section>
 
       <section className="home-section first-world" aria-labelledby="first-world-title">

@@ -2,9 +2,10 @@
 export type Point = { x: number; y: number };
 export type Signal = { id: number; link: number; bit: boolean; sent_tick: number; deliver_tick: number; receipt_spark: number | null };
 export type Cell = { id: number; position: Point; heading: string; mobile: boolean };
-export type CellState = { id: number; position: Point; memory: number[]; cargo: { id: number; bit: boolean } | null; inbox: (Signal | null)[] };
+export type CellState = { id: number; position: Point; memory: number[]; evidence: (number | null)[]; cargo: { id: number; bit: boolean } | null; inbox: (Signal | null)[] };
 export type State = {
   tick: number; cells: CellState[];
+  closed_edges?: { a: Point; b: Point }[];
   sources: { id: number; sparks: unknown[] }[]; depots: { id: number; sparks: unknown[] }[];
   beacons: { id: number; charge: number; delivered: number; exhausted: boolean }[];
   valves: { id: number; enabled: boolean }[]; links: { id: number; enabled: boolean }[];

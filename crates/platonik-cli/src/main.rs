@@ -11,6 +11,8 @@ use std::process::ExitCode;
 use std::time::Instant;
 
 mod expedition_store;
+mod habitat_store;
+mod journal;
 
 const MAX_EXPERIMENT_BYTES: u64 = 65_536;
 const MAX_RECEIPT_BYTES: u64 = 32 * 1024 * 1024;
@@ -23,10 +25,11 @@ Usage:\n\
   platonik inspect <receipt.json|-> Verify, then print compact replay maps\n\
   platonik suite [bridge-v1]        Run the frozen engineering validation suite\n\
   platonik expedition help          Show durable local expedition commands\n\
+  platonik habitat help             Show continuous-habitat checkpoint commands\n\
   platonik --metrics <command...>   Emit process execution metrics on stderr\n\
   platonik --help                   Show this help\n\
   platonik --version                Show the CLI version\n\n\
-JSON commands write to stdout; errors are JSON on stderr. Expedition commands\n\
+JSON commands write to stdout; errors are JSON on stderr. Expedition/habitat commands\n\
 write only their selected store; the other commands do not write files.\n\
 Use a new output filename when redirecting stdout.\n\
 Input '-' reads bounded JSON from stdin. Experiments: at most 64 KiB; receipts:\n\
@@ -60,6 +63,37 @@ are preserved. Store paths cannot traverse symlinks; malicious concurrent direct
 replacement is outside this local contract. Limits: 32 trials, 1,000,000 modeled\n\
 work, 257 entries, 1,024 files, 256 MiB store, 32 MiB object, 64 MiB export/import.\n\
 A valid store can exceed the export limit; preserve it if export is rejected.\n";
+
+const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
+  platonik habitat init <new-dir> <experiment.json|->\n\
+  platonik habitat status <dir>\n\
+  platonik habitat verify <dir>\n\
+  platonik habitat cases\n\
+  platonik habitat case <id>\n\
+  platonik habitat prepare <case-id> <expedition-dir>\n\
+  platonik habitat advance <dir> --until N --expect-revision N --request-id ID\n\
+  platonik habitat recover <dir> --expect-revision N --request-id ID\n\
+  platonik habitat export <dir>\n\
+  platonik habitat import <bundle.json|-> <new-dir>\n\n\
+Init loads an immutable experiment at tick zero and revision zero. Advance to\n\
+an absolute later tick, preserving the actual physical state, queues, memories,\n\
+event clock, spent work, and original fuel cap. At most eight advances and 128\n\
+total ticks are admitted. Paused is not mission success. A finished failed run\n\
+cannot be refueled or continued; its evidence remains available.\n\n\
+Each advance commits intent before execution and completion afterward, using\n\
+two revisions. Retry with the same request ID, until, and original expected\n\
+revision. Recover uses pending_request_id and the current revision from status.\n\
+Reports show current state/costs and artifact identities; full traces are in\n\
+exported bundles. Verify/import replay the journal, never trust a caller State.\n\n\
+Prepare verifies an expedition's frozen pair and prints a case Experiment with\n\
+those courier/controller programs. It does not modify that separate collection\n\
+or authenticate ownership. Use a new filename for redirected output.\n\n\
+Exit 1 means init/advance/recover finished with a valid mission failure; a valid\n\
+failed habitat can status/verify/import with exit 0. Exit 2 is invalid input,\n\
+stale revision, corruption, or an operational error. Prefix --metrics to count\n\
+actual engine executions including history/prefix replays. Reads advance no\n\
+physical time. Objects: 32 MiB; export/import: 64 MiB; local store: 256 MiB.\n\
+Existing expedition-v1 saves remain a separate format.\n";
 
 #[derive(Serialize)]
 struct ErrorReport<'a> {
@@ -181,6 +215,7 @@ fn print_receipt(receipt: &check::Receipt) -> Result<(), Failure> {
 fn execute(args: &[String]) -> Result<u8, Failure> {
     match args {
         [command, rest @ ..] if command == "expedition" => execute_expedition(rest),
+        [command, rest @ ..] if command == "habitat" => execute_habitat(rest),
         [] => {
             print_text(HELP)?;
             Ok(0)
@@ -327,6 +362,107 @@ fn execute_expedition(args: &[String]) -> Result<u8, Failure> {
         _ => Err(Failure::new(
             "usage",
             "Unknown expedition command or arguments. Run 'platonik expedition help'.",
+        )),
+    }
+}
+
+fn execute_habitat(args: &[String]) -> Result<u8, Failure> {
+    let error = |message| Failure::new("invalid_habitat", message);
+    let emit = |report: habitat_store::Report, operation: bool| -> Result<u8, Failure> {
+        let failed = operation && report.phase == "finished" && !report.mission_passed;
+        print_json(&report)?;
+        Ok(if failed { 1 } else { 0 })
+    };
+    let revision = |value: &str| {
+        value
+            .parse::<u64>()
+            .map_err(|_| Failure::new("usage", "Expected revision must be an unsigned integer."))
+    };
+    match args {
+        [] => {
+            print_text(HABITAT_HELP)?;
+            Ok(0)
+        }
+        [command] if matches!(command.as_str(), "help" | "--help" | "-h") => {
+            print_text(HABITAT_HELP)?;
+            Ok(0)
+        }
+        [command, dir, input] if command == "init" => {
+            let experiment = read_json(input, MAX_EXPERIMENT_BYTES)?;
+            emit(
+                habitat_store::initialize(Path::new(dir), experiment).map_err(error)?,
+                true,
+            )
+        }
+        [command, dir] if command == "status" || command == "verify" => {
+            emit(habitat_store::status(Path::new(dir)).map_err(error)?, false)
+        }
+        [command] if command == "cases" => {
+            print_json(&Examples {
+                schema: "platonik-habitat-cases-v1",
+                examples: habitat_store::cases(),
+            })?;
+            Ok(0)
+        }
+        [command, id] if command == "case" => {
+            print_json(&habitat_store::case(id).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, id, source] if command == "prepare" => {
+            print_json(&habitat_store::prepare(id, Path::new(source)).map_err(error)?)?;
+            Ok(0)
+        }
+        [
+            command,
+            dir,
+            until_flag,
+            until,
+            expected_flag,
+            expected,
+            id_flag,
+            id,
+        ] if command == "advance"
+            && until_flag == "--until"
+            && expected_flag == "--expect-revision"
+            && id_flag == "--request-id" =>
+        {
+            let until = until
+                .parse::<u32>()
+                .map_err(|_| Failure::new("usage", "Until must be an unsigned tick."))?;
+            emit(
+                habitat_store::advance(Path::new(dir), until, revision(expected)?, id)
+                    .map_err(error)?,
+                true,
+            )
+        }
+        [command, dir, expected_flag, expected, id_flag, id]
+            if command == "recover"
+                && expected_flag == "--expect-revision"
+                && id_flag == "--request-id" =>
+        {
+            emit(
+                habitat_store::recover(Path::new(dir), revision(expected)?, id).map_err(error)?,
+                true,
+            )
+        }
+        [command, dir] if command == "export" => {
+            let bytes = habitat_store::export(Path::new(dir)).map_err(error)?;
+            io::stdout()
+                .lock()
+                .write_all(&bytes)
+                .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
+            Ok(0)
+        }
+        [command, input, dir] if command == "import" => {
+            let bundle = read_json(input, habitat_store::MAX_BUNDLE_BYTES)?;
+            emit(
+                habitat_store::import(bundle, Path::new(dir)).map_err(error)?,
+                false,
+            )
+        }
+        _ => Err(Failure::new(
+            "usage",
+            "Unknown habitat command or arguments. Run 'platonik habitat help'.",
         )),
     }
 }
