@@ -1,0 +1,623 @@
+{
+  "id": "rested-builder",
+  "courier": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 0
+          },
+          {
+            "kind": "at_source",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": false
+          },
+          {
+            "kind": "heading",
+            "direction": "east"
+          }
+        ],
+        "action": {
+          "kind": "write_memory",
+          "slot": 0,
+          "value": 1
+        },
+        "remember": {
+          "slot": 1,
+          "value": 1
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 0
+          },
+          {
+            "kind": "at_source",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": false
+          },
+          {
+            "kind": "heading",
+            "direction": "west"
+          }
+        ],
+        "action": {
+          "kind": "write_memory",
+          "slot": 0,
+          "value": 2
+        },
+        "remember": {
+          "slot": 1,
+          "value": 2
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "at_receiver",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": true
+          },
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 1
+          }
+        ],
+        "action": {
+          "kind": "drop"
+        },
+        "remember": {
+          "slot": 1,
+          "value": 2
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "at_receiver",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": true
+          },
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 2
+          }
+        ],
+        "action": {
+          "kind": "drop"
+        },
+        "remember": {
+          "slot": 1,
+          "value": 1
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "at_source",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": false
+          },
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 1
+          }
+        ],
+        "action": {
+          "kind": "pickup"
+        },
+        "remember": {
+          "slot": 1,
+          "value": 1
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "at_source",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": false
+          },
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 2
+          }
+        ],
+        "action": {
+          "kind": "pickup"
+        },
+        "remember": {
+          "slot": 1,
+          "value": 2
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "east"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 1
+          },
+          {
+            "kind": "blocked",
+            "direction": "forward",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "east"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 2
+          },
+          {
+            "kind": "blocked",
+            "direction": "back",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "back"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "west"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 1
+          },
+          {
+            "kind": "blocked",
+            "direction": "back",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "back"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "west"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 2
+          },
+          {
+            "kind": "blocked",
+            "direction": "forward",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "north"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 1
+          },
+          {
+            "kind": "blocked",
+            "direction": "right",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "right"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "north"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 2
+          },
+          {
+            "kind": "blocked",
+            "direction": "left",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "left"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "south"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 1
+          },
+          {
+            "kind": "blocked",
+            "direction": "left",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "left"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "south"
+          },
+          {
+            "kind": "memory",
+            "slot": 1,
+            "value": 2
+          },
+          {
+            "kind": "blocked",
+            "direction": "right",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "right"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "north"
+          },
+          {
+            "kind": "blocked",
+            "direction": "forward",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "north"
+          },
+          {
+            "kind": "blocked",
+            "direction": "back",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "back"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "east"
+          },
+          {
+            "kind": "blocked",
+            "direction": "left",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "left"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "east"
+          },
+          {
+            "kind": "blocked",
+            "direction": "right",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "right"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "south"
+          },
+          {
+            "kind": "blocked",
+            "direction": "back",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "back"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "south"
+          },
+          {
+            "kind": "blocked",
+            "direction": "forward",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "west"
+          },
+          {
+            "kind": "blocked",
+            "direction": "right",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "right"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "heading",
+            "direction": "west"
+          },
+          {
+            "kind": "blocked",
+            "direction": "left",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "left"
+        },
+        "remember": null
+      }
+    ]
+  },
+  "builder": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 1
+          }
+        ],
+        "action": {
+          "kind": "wait"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "assembly_stage",
+            "blueprint": 50,
+            "stage": "ready"
+          }
+        ],
+        "action": {
+          "kind": "activate",
+          "blueprint": 50
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "assembly_stage",
+            "blueprint": 50,
+            "stage": "absent"
+          },
+          {
+            "kind": "has_material",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "gather_material",
+          "stock": 60
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "assembly_stage",
+            "blueprint": 50,
+            "stage": "born"
+          },
+          {
+            "kind": "assembly_stage",
+            "blueprint": 51,
+            "stage": "ready"
+          }
+        ],
+        "action": {
+          "kind": "activate",
+          "blueprint": 51
+        },
+        "remember": {
+          "slot": 0,
+          "value": 1
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "assembly_stage",
+            "blueprint": 50,
+            "stage": "born"
+          },
+          {
+            "kind": "assembly_stage",
+            "blueprint": 51,
+            "stage": "absent"
+          },
+          {
+            "kind": "has_material",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "gather_material",
+          "stock": 60
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "assembly_stage",
+            "blueprint": 50,
+            "stage": "born"
+          }
+        ],
+        "action": {
+          "kind": "build",
+          "blueprint": 51
+        },
+        "remember": null
+      },
+      {
+        "when": [],
+        "action": {
+          "kind": "build",
+          "blueprint": 50
+        },
+        "remember": null
+      }
+    ]
+  },
+  "reply": {
+    "rules": [
+      {
+        "when": [],
+        "action": {
+          "kind": "send",
+          "port": 0,
+          "bit": {
+            "kind": "message",
+            "port": 0
+          }
+        },
+        "remember": null
+      }
+    ]
+  }
+}

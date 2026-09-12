@@ -681,6 +681,180 @@ fn construction_case_exports_preserve_the_inherited_programs_without_running_the
 }
 
 #[test]
+fn first_answer_case_exports_and_readonly_journey_preserve_existing_status() {
+    use platonik_core::answer_fixtures as answer;
+    let (listed, runs) = measured(&["habitat", "cases"], None);
+    assert_eq!(runs, 0);
+    for id in answer::case_ids() {
+        assert!(listed["examples"].as_array().unwrap().contains(&json!(id)));
+        let (exported, runs) = measured(&["habitat", "case", id], None);
+        assert_eq!(runs, 0);
+        assert_eq!(
+            serde_json::from_value::<Experiment>(exported).unwrap(),
+            answer::experiment(id).unwrap()
+        );
+    }
+    let sandbox = Sandbox::new();
+    let source = sandbox.path("answer");
+    let restored = sandbox.path("restored-answer");
+    let exp = answer::experiment("answer-one").unwrap();
+    success(init(&source, &exp));
+    let genesis = journal(&source);
+    let (status, status_runs) = measured(&["habitat", "status", text(&source)], None);
+    let (loaded, journey_runs) = measured(&["habitat", "journey", text(&source)], None);
+    assert_eq!(loaded["schema"], "platonik-first-answer-report-v1");
+    assert_eq!(loaded["habitat"], status);
+    assert_eq!(
+        status_runs, journey_runs,
+        "Grading must reuse the verified snapshot"
+    );
+    assert!(
+        status.get("journey").is_none(),
+        "Legacy status shape stays unchanged"
+    );
+    assert_eq!(loaded["journey"]["phase"], "in_progress");
+    assert_eq!(loaded["journey"]["milestones"], json!([]));
+    assert_eq!(loaded["journey"]["answer"], Value::Null);
+    assert_eq!(journal(&source), genesis);
+
+    let cold = cli(&["run", "-"], Some(&serde_json::to_vec(&exp).unwrap()));
+    assert!(cold.status.success());
+    let (grade, grade_runs) = measured(&["habitat", "answer", "-"], Some(&cold.stdout));
+    assert_eq!(
+        grade_runs, 1,
+        "A cold grade must freshly replay exactly once"
+    );
+    assert_eq!(grade["answered"], true);
+    let contact = grade["milestones"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|milestone| milestone["kind"] == "matching_reply")
+        .unwrap()["tick"]
+        .as_u64()
+        .unwrap() as u32;
+    assert!(contact > 5 && contact < exp.ticks);
+
+    // Follow the public continuation tutorial, then inspect the earned contact
+    // before the horizon. Neither a reached milestone nor restoration reveals
+    // a future success or changes the remaining physical budget.
+    let at_five = success(advance(&source, 5, 0, "first-leg"));
+    let exported = cli(&["habitat", "export", text(&source)], None);
+    assert!(exported.status.success());
+    let imported = success(cli(
+        &["habitat", "import", "-", text(&restored)],
+        Some(&exported.stdout),
+    ));
+    assert_eq!(imported["current_state"], at_five["current_state"]);
+    assert_eq!(imported["costs"], at_five["costs"]);
+    success(advance(&restored, contact, 2, "contact"));
+    let (at_contact, contact_runs) = measured(&["habitat", "journey", text(&restored)], None);
+    let (contact_status, status_runs) = measured(&["habitat", "status", text(&restored)], None);
+    assert_eq!(at_contact["habitat"], contact_status);
+    assert_eq!(contact_runs, status_runs);
+    assert_eq!(at_contact["journey"]["phase"], "in_progress");
+    assert_eq!(at_contact["journey"]["answered"], false);
+    assert_eq!(at_contact["journey"]["answer"], Value::Null);
+    assert_eq!(at_contact["journey"]["milestones"], grade["milestones"]);
+    success(advance(&restored, exp.ticks, 4, "finish"));
+    let before = journal(&restored);
+    let final_grade = success(cli(&["habitat", "journey", text(&restored)], None));
+    assert_eq!(
+        final_grade["journey"], grade,
+        "Saved and cold evidence identities must agree"
+    );
+    assert_eq!(journal(&restored), before);
+    for (file, bytes) in genesis {
+        assert_eq!(fs::read(file).unwrap(), bytes);
+    }
+}
+
+#[test]
+fn first_answer_pending_intent_reveals_only_committed_progress_and_recovers_once() {
+    let sandbox = Sandbox::new();
+    let source = sandbox.path("completed-answer");
+    let pending = sandbox.path("pending-answer");
+    success(init(
+        &source,
+        &platonik_core::answer_fixtures::experiment("answer-one").unwrap(),
+    ));
+    success(advance(&source, 5, 0, "first-leg"));
+    let before = success(cli(&["habitat", "journey", text(&source)], None));
+    let original = success(advance(&source, 128, 2, "return-home"));
+    let original_journey = success(cli(&["habitat", "journey", text(&source)], None));
+    let output = cli(&["habitat", "export", text(&source)], None);
+    assert!(output.status.success());
+    let mut bundle: Bundle = serde_json::from_slice(&output.stdout).unwrap();
+    let completion = bundle.entries.pop().unwrap();
+    bundle.objects.remove(&completion.event.event_hash).unwrap();
+    success(cli(
+        &["habitat", "import", "-", text(&pending)],
+        Some(&serde_json::to_vec(&bundle).unwrap()),
+    ));
+    let journal_before = journal(&pending);
+    let read = success(cli(&["habitat", "journey", text(&pending)], None));
+    assert_eq!(read["journey"], before["journey"]);
+    assert_eq!(read["habitat"]["pending_request_id"], "return-home");
+    assert_eq!(read["habitat"]["revision"], 3);
+    assert_eq!(read["journey"]["answered"], false);
+    assert_eq!(journal(&pending), journal_before);
+    let recovered = success(cli(
+        &[
+            "habitat",
+            "recover",
+            text(&pending),
+            "--expect-revision",
+            "3",
+            "--request-id",
+            "return-home",
+        ],
+        None,
+    ));
+    assert_eq!(recovered, original);
+    assert_eq!(
+        success(cli(&["habitat", "journey", text(&pending)], None)),
+        original_journey
+    );
+    let settled = journal(&pending);
+    assert_eq!(success(advance(&pending, 128, 2, "return-home")), original);
+    assert_eq!(journal(&pending), settled);
+}
+
+#[test]
+fn first_answer_accepts_failed_evidence_but_rejects_tampered_receipts() {
+    let sandbox = Sandbox::new();
+    let path = sandbox.path("no-fuel-answer");
+    let mut exp = platonik_core::answer_fixtures::experiment("answer-one").unwrap();
+    exp.fuel = 0;
+    assert_eq!(init(&path, &exp).status.code(), Some(1));
+    let read = success(cli(&["habitat", "journey", text(&path)], None));
+    assert_eq!(read["journey"]["phase"], "finished_without_answer");
+    assert_eq!(read["journey"]["answered"], false);
+    assert_eq!(read["journey"]["answer"], Value::Null);
+    let failed = cli(&["run", "-"], Some(&serde_json::to_vec(&exp).unwrap()));
+    assert_eq!(failed.status.code(), Some(1));
+    let (grade, runs) = measured(&["habitat", "answer", "-"], Some(&failed.stdout));
+    assert_eq!(runs, 1);
+    assert_eq!(grade, read["journey"]);
+    let receipt_path = sandbox.path("failed.receipt.json");
+    fs::write(&receipt_path, &failed.stdout).unwrap();
+    assert_eq!(
+        success(cli(&["habitat", "answer", text(&receipt_path)], None)),
+        grade
+    );
+    assert_eq!(fs::read(&receipt_path).unwrap(), failed.stdout);
+    let mut forged = value(&failed);
+    forged["result"]["costs"]["loading"] = json!(1);
+    let bad = cli(
+        &["habitat", "answer", "-"],
+        Some(&serde_json::to_vec(&forged).unwrap()),
+    );
+    assert_eq!(bad.status.code(), Some(2));
+    assert!(bad.stdout.is_empty());
+    assert!(serde_json::from_slice::<Value>(&bad.stderr).unwrap()["error"].is_object());
+}
+
+#[test]
 fn construction_partial_body_wiring_and_child_execution_survive_restoration() {
     use platonik_core::construction_fixtures as construction;
     let sandbox = Sandbox::new();

@@ -38,6 +38,8 @@ The [navigation diagnostic](docs/navigation-evaluation.md) keeps two failed reop
 
 The [construction diagnostic](docs/construction-evaluation.md) adds finite material, paid byte copying, inactive wiring, and next-tick child execution in v3. A prescribed keeper must help the inherited crew in the same saved world. Inspect its assembly and service in the [construction replay](https://platonik.space/lab/construction); the diagnostic also compares prebuilt and simpler keepers.
 
+For a short adventure with a local ending, [bring a signal home](docs/first-answer.md). **The First Answer** combines the familiar courier, two constructed crew members, continuing service, and a returned report traced to the final delivered spark. The [recorded journey](https://platonik.space/lab/answer) reveals checked milestones and the authored ending. It is one construction-to-contact adventure; the complete six-chapter campaign remains a proposal.
+
 ## Run the website
 
 Use Node.js 24 and Bun 1.3.14. No credentials, database, or paid API is required to run the website locally.

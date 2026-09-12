@@ -51,6 +51,18 @@ export const documents = [
     question: "Can the crew build its next useful member?",
   },
   {
+    slug: "first-answer",
+    title: "Bring a signal home",
+    description: "Build two useful crew members, preserve an unfinished body, and earn a checked local ending through your agent.",
+    question: "Can my crew complete a short adventure?",
+  },
+  {
+    slug: "answer-evaluation",
+    title: "What earned the answer",
+    description: "Frozen agent comparisons, physical signal provenance, restored journeys, and the measured cost of the complete local adventure.",
+    question: "Does construction compose into an earned ending?",
+  },
+  {
     slug: "rust-bridge",
     title: "Run the Rust bridge",
     description: "Real shared-habitat experiments, exact replay artifacts, and an agent-facing CLI for testing what composes.",

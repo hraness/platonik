@@ -1,0 +1,74 @@
+{
+  "answer_tick": 109,
+  "attempt": 1,
+  "births": [
+    {
+      "cell": 3,
+      "material": 1001,
+      "tick": 17
+    },
+    {
+      "cell": 6,
+      "material": 1002,
+      "tick": 38
+    }
+  ],
+  "engine_executions": 2,
+  "engine_executions_so_far": 2,
+  "error": null,
+  "expected_answer": true,
+  "expected_service": true,
+  "grading_error": null,
+  "id": "answer-one",
+  "input_hash": "sha256:9eab67605b803de97acdacec3fbf1c1872f6ed2bf1a0019fbfa5c2510b44aa07",
+  "journey": {
+    "answer": "A pattern crossed the quiet. Your crew kept the lights on, built a new member, and brought a trace of its work home. The workshop is still yours.",
+    "answered": true,
+    "evidence_hash": "sha256:80c58cadcb7c6ee5c344ab2752e5ca46e229e125fcad239cba8f17058558563d",
+    "experiment_hash": "sha256:9eab67605b803de97acdacec3fbf1c1872f6ed2bf1a0019fbfa5c2510b44aa07",
+    "horizon": 128,
+    "milestones": [
+      {
+        "cell": 3,
+        "kind": "keeper_born",
+        "signal": null,
+        "spark": null,
+        "tick": 17
+      },
+      {
+        "cell": 6,
+        "kind": "reply_born",
+        "signal": null,
+        "spark": null,
+        "tick": 38
+      },
+      {
+        "cell": 1,
+        "kind": "crew_supplied",
+        "signal": null,
+        "spark": 6,
+        "tick": 106
+      },
+      {
+        "cell": 7,
+        "kind": "matching_reply",
+        "signal": 80,
+        "spark": 6,
+        "tick": 109
+      }
+    ],
+    "phase": "answered",
+    "result_hash": "sha256:3dde256dbb0427b95e6423f539b03a721b125b8627871d4c73d0d4695c9cd241",
+    "schema": "platonik-first-answer-v1",
+    "service_passed": true,
+    "tick": 128
+  },
+  "passed": true,
+  "result_hash": "sha256:3dde256dbb0427b95e6423f539b03a721b125b8627871d4c73d0d4695c9cd241",
+  "schema": "platonik-answer-fixture-attempt-v1",
+  "service_passed": true,
+  "status": "complete",
+  "verification_error": null,
+  "verified": true,
+  "work": 22456
+}

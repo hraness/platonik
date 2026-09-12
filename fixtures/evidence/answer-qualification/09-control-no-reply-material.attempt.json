@@ -1,0 +1,55 @@
+{
+  "answer_tick": null,
+  "attempt": 9,
+  "births": [
+    {
+      "cell": 3,
+      "material": 1001,
+      "tick": 17
+    }
+  ],
+  "engine_executions": 2,
+  "engine_executions_so_far": 18,
+  "error": null,
+  "expected_answer": false,
+  "expected_service": true,
+  "grading_error": null,
+  "id": "control-no-reply-material",
+  "input_hash": "sha256:c40e8c8f3cc67fd6b8d8c28d402f699686fec2522037aa59660984ff733e7aa5",
+  "journey": {
+    "answer": null,
+    "answered": false,
+    "evidence_hash": "sha256:b440a3325c377f202d6fbfb36cfe57b5210d5908a1a4a3a88fd0e7d3d7aa8dea",
+    "experiment_hash": "sha256:c40e8c8f3cc67fd6b8d8c28d402f699686fec2522037aa59660984ff733e7aa5",
+    "horizon": 128,
+    "milestones": [
+      {
+        "cell": 3,
+        "kind": "keeper_born",
+        "signal": null,
+        "spark": null,
+        "tick": 17
+      },
+      {
+        "cell": 1,
+        "kind": "crew_supplied",
+        "signal": null,
+        "spark": 6,
+        "tick": 106
+      }
+    ],
+    "phase": "finished_without_answer",
+    "result_hash": "sha256:6f618f814d2f8c249707c5f861cf02f643b30f76c0cffed9b3ff1b922652ddf7",
+    "schema": "platonik-first-answer-v1",
+    "service_passed": true,
+    "tick": 128
+  },
+  "passed": true,
+  "result_hash": "sha256:6f618f814d2f8c249707c5f861cf02f643b30f76c0cffed9b3ff1b922652ddf7",
+  "schema": "platonik-answer-fixture-attempt-v1",
+  "service_passed": true,
+  "status": "complete",
+  "verification_error": null,
+  "verified": true,
+  "work": 21575
+}

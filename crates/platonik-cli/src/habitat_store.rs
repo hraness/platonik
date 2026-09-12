@@ -82,6 +82,13 @@ pub struct Report {
     pub activation_limited: bool,
 }
 
+#[derive(Serialize)]
+pub struct JourneyReport {
+    pub schema: &'static str,
+    pub habitat: Report,
+    pub journey: platonik_core::first_answer::Journey,
+}
+
 #[derive(Clone)]
 struct Request {
     until: u32,
@@ -414,6 +421,20 @@ pub fn status(path: &Path) -> Result<Report, String> {
     report(read_snapshot(&store)?.1, None)
 }
 
+pub fn journey(path: &Path) -> Result<JourneyReport, String> {
+    let store = Store::open(path, JOURNAL_SCHEMA)?;
+    let snapshot = read_snapshot(&store)?.1;
+    // read_snapshot has already replayed this exact immutable input and prefix.
+    // A pending intent contributes no future frame or achievement.
+    let journey =
+        platonik_core::first_answer::grade_verified(&snapshot.experiment, &snapshot.result)?;
+    Ok(JourneyReport {
+        schema: "platonik-first-answer-report-v1",
+        habitat: report(snapshot, None)?,
+        journey,
+    })
+}
+
 fn finish(store: &Store, snapshot: Snapshot, id: &str) -> Result<Report, String> {
     let pending = snapshot
         .pending
@@ -622,12 +643,15 @@ pub fn cases() -> Vec<&'static str> {
     platonik_core::continuity_fixtures::case_ids()
         .iter()
         .chain(platonik_core::construction_fixtures::case_ids())
+        .chain(platonik_core::answer_fixtures::case_ids())
         .copied()
         .collect()
 }
 
 pub fn case(id: &str) -> Result<Experiment, String> {
-    if platonik_core::construction_fixtures::case_ids().contains(&id) {
+    if platonik_core::answer_fixtures::case_ids().contains(&id) {
+        platonik_core::answer_fixtures::experiment(id)
+    } else if platonik_core::construction_fixtures::case_ids().contains(&id) {
         platonik_core::construction_fixtures::experiment(id)
     } else {
         platonik_core::continuity_fixtures::experiment(id)
