@@ -45,6 +45,12 @@ export const documents = [
     question: "Can an old creature learn a more reliable habit?",
   },
   {
+    slug: "construction-evaluation",
+    title: "Build someone who can help",
+    description: "Finite material, copied bodies, useful offspring, and the measured cost of construction in one saved Rust habitat.",
+    question: "Can the crew build its next useful member?",
+  },
+  {
     slug: "rust-bridge",
     title: "Run the Rust bridge",
     description: "Real shared-habitat experiments, exact replay artifacts, and an agent-facing CLI for testing what composes.",

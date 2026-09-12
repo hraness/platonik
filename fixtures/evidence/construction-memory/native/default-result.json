@@ -1,0 +1,402 @@
+{
+  "schema": "platonik-zero-engine-rss-default-pair-v1",
+  "driver_sha256": "4a6b8a4a244667ad6f30d11f72f953e08306673dfc4b63cc98da93558ff1034f",
+  "original_result_sha256": "6058c27273109e8b0acce87d1a283e3de6461ecd2ed8d078128213be8953f0d1",
+  "binary_sha256": "f947e4972935410bef75f4ae7f60b50e39f45c1f6a4e57b41d2bef30e0df7143",
+  "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Homebrew)\nbinary: rustc\ncommit-hash: 8bab26f4f68e0e26f0bb7960be334d5b520ea452\ncommit-date: 2026-07-14\nhost: aarch64-apple-darwin\nrelease: 1.97.1\nLLVM version: 22.1.8",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.5.1\nBuildVersion:\t\t25F80",
+  "architecture": "arm64",
+  "parent_malloc_nano_zone": "0",
+  "child_malloc_nano_zone": null,
+  "other_environment": "Unchanged from the scheduled parent",
+  "modes": [
+    "growth-sampled",
+    "reserved-sampled"
+  ],
+  "iterations_per_length": 8,
+  "lengths": [
+    4399674,
+    5077003
+  ],
+  "engine_executions": 0,
+  "results": [
+    {
+      "mode": "growth-sampled",
+      "rows": [
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 1,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 8372224,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 2,
+          "capacity": 8388608,
+          "distinct_addresses": 2,
+          "rss_bytes": 12877824,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 3,
+          "capacity": 8388608,
+          "distinct_addresses": 3,
+          "rss_bytes": 17301504,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 4,
+          "capacity": 8388608,
+          "distinct_addresses": 4,
+          "rss_bytes": 21725184,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 5,
+          "capacity": 8388608,
+          "distinct_addresses": 5,
+          "rss_bytes": 26165248,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 6,
+          "capacity": 8388608,
+          "distinct_addresses": 6,
+          "rss_bytes": 32702464,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 7,
+          "capacity": 8388608,
+          "distinct_addresses": 7,
+          "rss_bytes": 37126144,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iteration": 8,
+          "capacity": 8388608,
+          "distinct_addresses": 8,
+          "rss_bytes": 43712512,
+          "buffer_retained": false
+        },
+        {
+          "kind": "batch",
+          "mode": "growth-sampled",
+          "length": 4399674,
+          "iterations": 8,
+          "rss_before_bytes": 1736704,
+          "rss_after_release_bytes": 43712512,
+          "distinct_addresses": 8
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 1,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 48840704,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 2,
+          "capacity": 8388608,
+          "distinct_addresses": 2,
+          "rss_bytes": 53936128,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 3,
+          "capacity": 8388608,
+          "distinct_addresses": 3,
+          "rss_bytes": 59031552,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 4,
+          "capacity": 8388608,
+          "distinct_addresses": 4,
+          "rss_bytes": 64126976,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 5,
+          "capacity": 8388608,
+          "distinct_addresses": 5,
+          "rss_bytes": 69222400,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 6,
+          "capacity": 8388608,
+          "distinct_addresses": 6,
+          "rss_bytes": 74317824,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 7,
+          "capacity": 8388608,
+          "distinct_addresses": 7,
+          "rss_bytes": 79413248,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iteration": 8,
+          "capacity": 8388608,
+          "distinct_addresses": 8,
+          "rss_bytes": 84508672,
+          "buffer_retained": false
+        },
+        {
+          "kind": "batch",
+          "mode": "growth-sampled",
+          "length": 5077003,
+          "iterations": 8,
+          "rss_before_bytes": 43712512,
+          "rss_after_release_bytes": 84508672,
+          "distinct_addresses": 8
+        },
+        {
+          "kind": "complete",
+          "mode": "growth-sampled",
+          "engine_executions": 0,
+          "elapsed_micros": 53030
+        }
+      ]
+    },
+    {
+      "mode": "reserved-sampled",
+      "rows": [
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 1,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6193152,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 2,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6225920,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 3,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6225920,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 4,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6225920,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 5,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6225920,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 6,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6225920,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 7,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6225920,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iteration": 8,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6242304,
+          "buffer_retained": false
+        },
+        {
+          "kind": "batch",
+          "mode": "reserved-sampled",
+          "length": 4399674,
+          "iterations": 8,
+          "rss_before_bytes": 1736704,
+          "rss_after_release_bytes": 6242304,
+          "distinct_addresses": 1
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 1,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 2,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 3,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 4,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 5,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 6,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 7,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "sample",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iteration": 8,
+          "capacity": 8388608,
+          "distinct_addresses": 1,
+          "rss_bytes": 6914048,
+          "buffer_retained": false
+        },
+        {
+          "kind": "batch",
+          "mode": "reserved-sampled",
+          "length": 5077003,
+          "iterations": 8,
+          "rss_before_bytes": 6242304,
+          "rss_after_release_bytes": 6914048,
+          "distinct_addresses": 1
+        },
+        {
+          "kind": "complete",
+          "mode": "reserved-sampled",
+          "engine_executions": 0,
+          "elapsed_micros": 50144
+        }
+      ]
+    }
+  ]
+}

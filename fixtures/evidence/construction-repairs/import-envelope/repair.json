@@ -1,0 +1,36 @@
+{
+  "schema": "platonik-construction-harness-repair-v1",
+  "reason": "Completed import preserves all authoritative fields and clears only the command-response request_id. Resume the existing imported save; no new candidate, replay prefix, or budget.",
+  "freeze_sha256": "68e9f3310aeae3c565fc86c350fb18da15d76883eb34e868230d23e9fcedacc3",
+  "interrupted_ledger_file": "fixtures/evidence/construction-repairs/import-envelope/interrupted-ledger.json",
+  "interrupted_ledger_sha256": "ea99b39c717087c7bc518746b068c8ff88c4c3051d49d8658c12c80e6c335c39",
+  "first_call": 104,
+  "after_call": 110,
+  "engine_executions": 166,
+  "retained_prefix_engine_executions": 62,
+  "remaining_engine_executions": 1882,
+  "resume_from": {
+    "replay": "keeper-born",
+    "tick": 8,
+    "next_tick": 16,
+    "save": "keeper-born/restored-8"
+  },
+  "script_file": "scripts/construction/repair-import-envelope.mjs",
+  "script_sha256": "b63c84c2a12571c96e791aa116e1573ab80e6a006c92505ae09d8f7a4af48728",
+  "changes": [
+    {
+      "file": "scripts/construction/common.mjs",
+      "before_file": "fixtures/evidence/construction-repairs/import-envelope/common.before.mjs",
+      "before_sha256": "2efc5ac6fbc326616e98cbe7225a2af53c95f4e3035fa8cde9d8e24079807e9c",
+      "after_file": "fixtures/evidence/construction-repairs/import-envelope/common.after.mjs",
+      "after_sha256": "5c3581f88364724563b6c699f7c4679e9d8f4029ee30389fc39c4181adbc4855"
+    },
+    {
+      "file": "scripts/construction/trajectory.mjs",
+      "before_file": "fixtures/evidence/construction-repairs/import-envelope/trajectory.before.mjs",
+      "before_sha256": "872d8d26757b5386154e66887139c38ff6016efbcf43f6f98da58a6baad20cbe",
+      "after_file": "fixtures/evidence/construction-repairs/import-envelope/trajectory.after.mjs",
+      "after_sha256": "a5ee73b08ba6d14c989d475a0d463eb78583709cf1b6c045562ad9371cc5ed9a"
+    }
+  ]
+}

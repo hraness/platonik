@@ -1,5 +1,5 @@
 use crate::model::*;
-use crate::policy;
+use crate::{construction, policy};
 use std::collections::BTreeSet;
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -24,6 +24,8 @@ pub(crate) enum Cat {
     Transfers,
     Checking,
     Draining,
+    Copying,
+    Construction,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum Stop {
@@ -60,6 +62,8 @@ impl Meter {
                 Cat::Transfers => &mut self.costs.transfers,
                 Cat::Checking => &mut self.costs.checking,
                 Cat::Draining => &mut self.costs.draining,
+                Cat::Copying => &mut self.costs.copying,
+                Cat::Construction => &mut self.costs.construction,
             };
             *counter += 1;
         }
@@ -86,6 +90,63 @@ fn valid_bit(source: &BitSource) -> bool {
         BitSource::Memory { slot } => *slot < 4,
         BitSource::Message { port } => *port < 4,
     }
+}
+pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Result<(), String> {
+    require(
+        !program.rules.is_empty() && program.rules.len() <= 32,
+        "Programs need 1–32 rules.",
+    )?;
+    for rule in &program.rules {
+        require(
+            rule.when.len() <= 8 && rule.remember.as_ref().is_none_or(|write| write.slot < 4),
+            "Condition or memory limits exceeded.",
+        )?;
+        for condition in &rule.when {
+            require(
+                match condition {
+                    Condition::Memory { slot, .. } => *slot < 4,
+                    Condition::HasMessage { port, .. } | Condition::MessageBit { port, .. } => {
+                        *port < 4
+                    }
+                    Condition::HasMaterial { .. } => experiment.version == CONSTRUCTION_VERSION,
+                    Condition::AssemblyStage { blueprint, .. } => {
+                        experiment.version == CONSTRUCTION_VERSION
+                            && experiment.construction.as_ref().is_some_and(|spec| {
+                                spec.blueprints.iter().any(|entry| entry.id == *blueprint)
+                            })
+                    }
+                    _ => true,
+                },
+                "Invalid condition memory slot or port.",
+            )?;
+        }
+        require(
+            match &rule.action {
+                Action::WriteMemory { slot, .. } => *slot < 4,
+                Action::TakeMessage { port, slot } => *port < 4 && *slot < 4,
+                Action::Send { port, bit } => *port < 4 && valid_bit(bit),
+                Action::Route { valve, bit } => {
+                    valid_bit(bit) && experiment.valves.iter().any(|entry| entry.id == *valve)
+                }
+                Action::GatherMaterial { stock } => {
+                    experiment.version == CONSTRUCTION_VERSION
+                        && experiment
+                            .construction
+                            .as_ref()
+                            .is_some_and(|spec| spec.stocks.iter().any(|entry| entry.id == *stock))
+                }
+                Action::Build { blueprint } | Action::Activate { blueprint } => {
+                    experiment.version == CONSTRUCTION_VERSION
+                        && experiment.construction.as_ref().is_some_and(|spec| {
+                            spec.blueprints.iter().any(|entry| entry.id == *blueprint)
+                        })
+                }
+                _ => true,
+            },
+            "Invalid action slot, port, or valve.",
+        )?;
+    }
+    Ok(())
 }
 pub fn parse_experiment(input: &str) -> Result<Experiment, String> {
     require(input.len() <= MAX_INPUT_BYTES, "Experiment exceeds 64 KiB.")?;
@@ -153,40 +214,7 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
             usable(cell.position) && positions.insert((cell.position.x, cell.position.y)),
             "Cells need distinct usable positions.",
         )?;
-        require(
-            !cell.program.rules.is_empty() && cell.program.rules.len() <= 32,
-            "Programs need 1–32 rules.",
-        )?;
-        for rule in &cell.program.rules {
-            require(
-                rule.when.len() <= 8 && rule.remember.as_ref().is_none_or(|write| write.slot < 4),
-                "Condition or memory limits exceeded.",
-            )?;
-            for condition in &rule.when {
-                require(
-                    match condition {
-                        Condition::Memory { slot, .. } => *slot < 4,
-                        Condition::HasMessage { port, .. } | Condition::MessageBit { port, .. } => {
-                            *port < 4
-                        }
-                        _ => true,
-                    },
-                    "Invalid condition memory slot or port.",
-                )?;
-            }
-            require(
-                match &rule.action {
-                    Action::WriteMemory { slot, .. } => *slot < 4,
-                    Action::TakeMessage { port, slot } => *port < 4 && *slot < 4,
-                    Action::Send { port, bit } => *port < 4 && valid_bit(bit),
-                    Action::Route { valve, bit } => {
-                        valid_bit(bit) && experiment.valves.iter().any(|entry| entry.id == *valve)
-                    }
-                    _ => true,
-                },
-                "Invalid action slot, port, or valve.",
-            )?;
-        }
+        validate_program(experiment, &cell.program)?;
     }
     let mut stations = BTreeSet::new();
     for point in experiment
@@ -305,7 +333,7 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
                     experiment.cells.iter().any(|entry| entry.id == cell)
                 }
                 EventKind::EdgeBlocked { edge, .. } => {
-                    experiment.version == HAZARD_VERSION
+                    experiment.version >= HAZARD_VERSION
                         && edge.is_canonical()
                         && usable(edge.a)
                         && usable(edge.b)
@@ -314,17 +342,44 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
             "Event target does not exist.",
         )?;
     }
+    construction::validate_spec(experiment)?;
     Ok(())
 }
 
 pub fn activation_order(experiment: &Experiment, tick: u32) -> Vec<u16> {
+    order_ids(
+        experiment,
+        tick,
+        experiment.cells.iter().map(|cell| cell.id).collect(),
+    )
+}
+pub fn active_order(experiment: &Experiment, state: &State, tick: u32) -> Vec<u16> {
+    order_ids(
+        experiment,
+        tick,
+        state
+            .cells
+            .iter()
+            .filter(|cell| {
+                state.construction.as_ref().is_none_or(|construction| {
+                    construction
+                        .births
+                        .iter()
+                        .find(|birth| birth.body.cell.id == cell.id)
+                        .is_none_or(|birth| birth.tick < tick)
+                })
+            })
+            .map(|cell| cell.id)
+            .collect(),
+    )
+}
+fn order_ids(experiment: &Experiment, tick: u32, mut ids: Vec<u16>) -> Vec<u16> {
     fn mix(mut value: u64) -> u64 {
         value = value.wrapping_add(0x9e3779b97f4a7c15);
         value = (value ^ (value >> 30)).wrapping_mul(0xbf58476d1ce4e5b9);
         value = (value ^ (value >> 27)).wrapping_mul(0x94d049bb133111eb);
         value ^ (value >> 31)
     }
-    let mut ids: Vec<_> = experiment.cells.iter().map(|cell| cell.id).collect();
     ids.sort_by_key(|id| {
         (
             mix(experiment.seed ^ ((tick as u64) << 32) ^ *id as u64),
@@ -363,8 +418,11 @@ pub(crate) fn emit(
     events: &mut Vec<SignalEvent>,
 ) -> Result<usize, Stop> {
     let mut accepted = 0;
-    for (index, link) in experiment
-        .links
+    let links: Vec<_> = construction::link_definitions(experiment, state)
+        .into_iter()
+        .cloned()
+        .collect();
+    for (index, link) in links
         .iter()
         .enumerate()
         .filter(|(_, link)| link.from == endpoint)
@@ -421,6 +479,7 @@ fn initial_state(experiment: &Experiment) -> State {
                 evidence: [None; 4],
                 cargo: None,
                 inbox: std::array::from_fn(|_| None),
+                material: None,
             })
             .collect(),
         sources: experiment
@@ -470,6 +529,10 @@ fn initial_state(experiment: &Experiment) -> State {
         delivered: Vec::new(),
         next_signal: 1,
         closed_edges: Vec::new(),
+        construction: experiment
+            .construction
+            .as_ref()
+            .map(construction::initial_state),
     }
 }
 fn outcome(experiment: &Experiment, state: &State, status: RunStatus, initial: u32) -> Outcome {
@@ -508,11 +571,12 @@ fn outcome(experiment: &Experiment, state: &State, status: RunStatus, initial: u
 }
 
 fn check_live_invariants(experiment: &Experiment, state: &State) -> Result<(), String> {
+    construction::check_state(experiment, state)?;
     require(
         state.closed_edges.len() <= experiment.events.len()
             && state.closed_edges.windows(2).all(|pair| pair[0] < pair[1])
             && state.closed_edges.iter().all(|edge| {
-                experiment.version == HAZARD_VERSION && edge.is_canonical()
+                experiment.version >= HAZARD_VERSION && edge.is_canonical()
                     && experiment.events.iter().any(|event| {
                         matches!(event.event, EventKind::EdgeBlocked { edge: declared, .. } if declared == *edge)
                     })
@@ -637,7 +701,11 @@ pub(crate) fn run_through(
                 + experiment.valves.len()
                 + experiment.links.len()
                 + experiment.events.len()) as u64
-                + initial_sparks as u64;
+                + initial_sparks as u64
+                + experiment
+                    .construction
+                    .as_ref()
+                    .map_or(0, construction::initial_checking);
             let loaded = meter
                 .charge(Cat::Loading, loading)
                 .and_then(|_| meter.charge(Cat::Checking, initial_checking))
@@ -660,6 +728,7 @@ pub(crate) fn run_through(
         };
     if frames.last().unwrap().complete {
         for tick in ticks_completed + 1..=through_tick {
+            let eligible = active_order(experiment, &state, tick);
             state.tick = tick;
             let mut frame = Frame {
                 tick,
@@ -776,7 +845,7 @@ pub(crate) fn run_through(
                         outcome: outcome.into(),
                     });
                 }
-                for id in activation_order(experiment, tick) {
+                for id in eligible {
                     let index = state.cells.iter().position(|cell| cell.id == id).unwrap();
                     let (activation, signals, limit) =
                         policy::activate(experiment, &mut state, index, &mut meter);
@@ -807,7 +876,8 @@ pub(crate) fn run_through(
                     state.cells.len() as u64
                         + state.beacons.len() as u64
                         + initial_sparks as u64
-                        + state.closed_edges.len() as u64,
+                        + state.closed_edges.len() as u64
+                        + construction::state_checking(&state),
                 )?;
                 Ok(())
             })();
@@ -918,6 +988,7 @@ mod tests {
             ticks: 4,
             fuel: MAX_FUEL,
             activation_fuel: 256,
+            construction: None,
         }
     }
     fn bridge(bit: bool) -> Experiment {

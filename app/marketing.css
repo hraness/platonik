@@ -93,7 +93,8 @@ body:has(.home[data-hraness-marketing-preset]) {
 .home .hero-links { margin-top: 1.75rem; }
 
 @media (max-width: 760px) {
-  .site-header { padding: .75rem 1.25rem; gap: .75rem; }
+  /* Wrapped navigation must not cover anchored content at enlarged text sizes. */
+  .site-header { position: static; padding: .75rem 1.25rem; gap: .75rem; }
   .site-header nav { gap: 1rem; font-size: .8125rem; }
   .home .hero { padding-block: 2.75rem 2rem; }
   .home .hero-description { font-size: 1rem; max-width: 34ch; }

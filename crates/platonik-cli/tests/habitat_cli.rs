@@ -609,5 +609,321 @@ fn prepare_uses_a_verified_frozen_pair_without_changing_its_collection() {
         cell["program"] = creation["program"].clone();
     }
     assert_eq!(prepared, expected);
+    let constructed = success(cli(
+        &["habitat", "prepare", "construction-one", text(&source)],
+        None,
+    ));
+    let courier = constructed["cells"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|cell| cell["id"] == 1)
+        .unwrap();
+    assert_eq!(
+        courier["program"],
+        expected["cells"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|cell| cell["id"] == 1)
+            .unwrap()["program"]
+    );
+    assert_eq!(
+        constructed["construction"]["blueprints"][0]["body"]["cell"]["program"],
+        expected["cells"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|cell| cell["id"] == 3)
+            .unwrap()["program"]
+    );
+    assert!(
+        constructed["cells"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|cell| cell["id"] != 3)
+    );
     assert_eq!(journal(&source), before);
+}
+
+#[test]
+fn construction_case_exports_preserve_the_inherited_programs_without_running_them() {
+    use platonik_core::construction_fixtures as construction;
+    let (listed, runs) = measured(&["habitat", "cases"], None);
+    assert_eq!(runs, 0);
+    for id in construction::case_ids() {
+        assert!(listed["examples"].as_array().unwrap().contains(&json!(id)));
+        let (exported, runs) = measured(&["habitat", "case", id], None);
+        assert_eq!(runs, 0);
+        let exp: Experiment = serde_json::from_value(exported).unwrap();
+        assert_eq!(exp, construction::experiment(id).unwrap());
+        assert_eq!(
+            exp.cells.iter().find(|cell| cell.id == 1).unwrap().program,
+            construction::courier_program()
+        );
+        assert_eq!(
+            exp.cells.iter().find(|cell| cell.id == 2).unwrap().program,
+            platonik_core::fixtures::relay_program()
+        );
+        assert!(exp.cells.iter().all(|cell| cell.id != construction::CHILD));
+        assert!(exp.links.iter().all(|link| link.id != 41));
+        assert_eq!(
+            exp.construction.as_ref().unwrap().blueprints[0]
+                .body
+                .cell
+                .program,
+            construction::child_program()
+        );
+    }
+    let (_, runs) = measured(&["habitat", "case", "changing-one"], None);
+    assert_eq!(runs, 0);
+}
+
+#[test]
+fn construction_partial_body_wiring_and_child_execution_survive_restoration() {
+    use platonik_core::construction_fixtures as construction;
+    let sandbox = Sandbox::new();
+    let source = sandbox.path("construction");
+    let restored = sandbox.path("restored");
+    let exp = construction::experiment("construction-one").unwrap();
+    let body = &exp.construction.as_ref().unwrap().blueprints[0].body;
+    let bytes = serde_json::to_vec(body).unwrap();
+    let copy_end = 1 + (bytes.len() as u32).div_ceil(32);
+    let wire_end = copy_end + body.links.len() as u32;
+    let birth_tick = wire_end + 1;
+    success(init(&source, &exp));
+    let genesis = journal(&source);
+    let mut path = source.clone();
+    let mut final_report = Value::Null;
+    for (index, tick) in [
+        1,
+        2,
+        6,
+        copy_end,
+        wire_end,
+        birth_tick,
+        birth_tick + 1,
+        exp.ticks,
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let report = success(advance(
+            &path,
+            tick,
+            (index * 2) as u64,
+            &format!("stage-{tick}"),
+        ));
+        let state = &report["current_state"];
+        let builder = state["cells"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|cell| cell["id"] == construction::BUILDER)
+            .unwrap();
+        let staged = &state["construction"];
+        assert!(staged["stocks"][0]["units"].as_array().unwrap().is_empty());
+        if tick == 1 {
+            assert_eq!(builder["material"], construction::MATERIAL);
+            assert!(staged["assemblies"].as_array().unwrap().is_empty());
+        } else if tick < birth_tick {
+            assert!(builder.get("material").is_none());
+            assert_eq!(staged["assemblies"][0]["material"], construction::MATERIAL);
+            let expected = if tick <= copy_end {
+                ((tick - 1) as usize * 32).min(bytes.len())
+            } else {
+                bytes.len()
+            };
+            assert_eq!(staged["assemblies"][0]["copied"], json!(&bytes[..expected]));
+            assert_eq!(
+                staged["assemblies"][0]["wired"].as_array().unwrap().len(),
+                usize::from(tick == wire_end)
+            );
+        } else {
+            assert!(staged["assemblies"].as_array().unwrap().is_empty());
+            assert_eq!(staged["births"].as_array().unwrap().len(), 1);
+            assert_eq!(staged["births"][0]["tick"], birth_tick);
+            assert_eq!(staged["births"][0]["parent"], construction::BUILDER);
+            assert_eq!(staged["births"][0]["material"], construction::MATERIAL);
+            assert_eq!(
+                staged["births"][0]["body"],
+                serde_json::to_value(body).unwrap()
+            );
+        }
+        assert_eq!(
+            state["cells"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|cell| cell["id"] == construction::CHILD),
+            tick >= birth_tick
+        );
+        assert_eq!(
+            state["links"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|link| link["id"] == 41),
+            tick >= birth_tick
+        );
+        assert_eq!(
+            report["remaining_fuel"].as_u64().unwrap()
+                + report["costs"]
+                    .as_object()
+                    .unwrap()
+                    .values()
+                    .map(|v| v.as_u64().unwrap())
+                    .sum::<u64>(),
+            exp.fuel
+        );
+        if tick == 6 {
+            let export = cli(&["habitat", "export", text(&source)], None);
+            assert!(export.status.success());
+            let mut forged: Bundle = serde_json::from_slice(&export.stdout).unwrap();
+            let old_hash = forged.entries.last().unwrap().event.event_hash.clone();
+            let mut event = forged.objects.remove(&old_hash).unwrap();
+            let Event::Completed { result } = &mut event else {
+                panic!("Expected partial construction completion");
+            };
+            let Advance::Paused(checkpoint) = result.as_mut() else {
+                panic!("Expected a paused assembly");
+            };
+            checkpoint
+                .frames
+                .last_mut()
+                .unwrap()
+                .state
+                .construction
+                .as_mut()
+                .unwrap()
+                .assemblies[0]
+                .copied[0] ^= 1;
+            checkpoint.prefix_hash = artifact_hash(&checkpoint.frames).unwrap();
+            let new_hash = artifact_hash(&event).unwrap();
+            forged.entries.last_mut().unwrap().event.event_hash = new_hash.clone();
+            forged.objects.insert(new_hash, event);
+            let rejected = sandbox.path("forged-copy");
+            let reject = cli(
+                &["habitat", "import", "-", text(&rejected)],
+                Some(&serde_json::to_vec(&forged).unwrap()),
+            );
+            assert_eq!(reject.status.code(), Some(2));
+            assert!(
+                !rejected.exists(),
+                "Rehashing a forged assembly cannot admit it into a new save"
+            );
+            let imported = success(cli(
+                &["habitat", "import", "-", text(&restored)],
+                Some(&export.stdout),
+            ));
+            assert_eq!(imported["current_state"], report["current_state"]);
+            assert_eq!(imported["costs"], report["costs"]);
+            assert_eq!(
+                cli(&["habitat", "export", text(&restored)], None).stdout,
+                export.stdout
+            );
+            path = restored.clone();
+        }
+        final_report = report;
+    }
+    assert_eq!(final_report["mission_passed"], true);
+    assert_eq!(final_report["revision"], 16);
+    let cold = success(cli(&["run", "-"], Some(&serde_json::to_vec(&exp).unwrap())));
+    assert_eq!(final_report["result_hash"], cold["result_hash"]);
+    assert_eq!(final_report["current_state"], cold["result"]["final_state"]);
+    let frames = cold["result"]["frames"].as_array().unwrap();
+    assert!(
+        frames[birth_tick as usize]["activations"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|a| a["cell"] != construction::CHILD)
+    );
+    assert!(
+        frames[birth_tick as usize + 1]["activations"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|a| a["cell"] == construction::CHILD)
+    );
+    assert!(
+        frames
+            .iter()
+            .flat_map(|f| f["activations"].as_array().unwrap())
+            .any(|a| a["cell"] == construction::CHILD
+                && a["action"]["kind"] == "route"
+                && a["success"] == true)
+    );
+    for (file, bytes) in genesis {
+        assert_eq!(fs::read(file).unwrap(), bytes);
+    }
+    assert_eq!(
+        success(cli(&["habitat", "status", text(&source)], None))["tick"],
+        6
+    );
+}
+
+#[test]
+fn construction_activation_recovery_and_retry_cannot_duplicate_the_child_or_material() {
+    use platonik_core::construction_fixtures as construction;
+    let sandbox = Sandbox::new();
+    let source = sandbox.path("source");
+    let recovered = sandbox.path("recovered");
+    let exp = construction::experiment("construction-one").unwrap();
+    let body = &exp.construction.as_ref().unwrap().blueprints[0].body;
+    let birth_tick =
+        2 + (serde_json::to_vec(body).unwrap().len() as u32).div_ceil(32) + body.links.len() as u32;
+    success(init(&source, &exp));
+    success(advance(&source, 2, 0, "first-copy"));
+    let original = success(advance(&source, birth_tick, 2, "birth"));
+    let exported = cli(&["habitat", "export", text(&source)], None);
+    assert!(exported.status.success());
+    let mut bundle: Bundle = serde_json::from_slice(&exported.stdout).unwrap();
+    let completion = bundle.entries.pop().unwrap();
+    bundle.objects.remove(&completion.event.event_hash).unwrap();
+    let pending = success(cli(
+        &["habitat", "import", "-", text(&recovered)],
+        Some(&serde_json::to_vec(&bundle).unwrap()),
+    ));
+    assert_eq!(pending["revision"], 3);
+    assert_eq!(pending["pending_request_id"], "birth");
+    assert_eq!(pending["tick"], 2);
+    let before = journal(&recovered);
+    let result = success(cli(
+        &[
+            "habitat",
+            "recover",
+            text(&recovered),
+            "--expect-revision",
+            "3",
+            "--request-id",
+            "birth",
+        ],
+        None,
+    ));
+    assert_eq!(result, original);
+    assert_eq!(
+        result["current_state"]["construction"]["births"]
+            .as_array()
+            .unwrap()
+            .len(),
+        1
+    );
+    success(advance(&recovered, birth_tick + 1, 4, "child-runs"));
+    assert_eq!(
+        success(advance(&recovered, birth_tick, 2, "birth")),
+        original
+    );
+    let intact = journal(&recovered);
+    assert_eq!(
+        advance(&recovered, birth_tick + 2, 2, "birth")
+            .status
+            .code(),
+        Some(2)
+    );
+    assert_eq!(journal(&recovered), intact);
+    for (file, bytes) in before {
+        assert_eq!(fs::read(file).unwrap(), bytes);
+    }
 }

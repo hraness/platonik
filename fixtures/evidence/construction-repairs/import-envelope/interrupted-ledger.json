@@ -1,0 +1,4529 @@
+{
+  "schema": "platonik-construction-ledger-v1",
+  "owner": "construction",
+  "source_digest": "sha256:08d77f6a4623c5ea584f879f402489182b0764f7e3c57807f3bf46a07799ab97",
+  "reference": [
+    {
+      "id": "reference-construction-one",
+      "first_call": 0,
+      "last_call": 1,
+      "experiment_hash": "sha256:c6ad41e43ae16666852b8e48c588a23688e59e063e6bdaf8870d5018b4fc7ea4",
+      "result_hash": "sha256:62019b722c74e37c14a23c6cda7eb1988ef2078e774207d2590a8bc18650407b",
+      "receipt": "reference-construction-one/receipt.json",
+      "receipt_sha256": "10455838fa80e9bb8872f3ad235bb5a131307d827752fd1231a38142ba138739",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16815,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-one",
+      "kind": "reference"
+    },
+    {
+      "id": "reference-construction-zero",
+      "first_call": 2,
+      "last_call": 3,
+      "experiment_hash": "sha256:01517644889cce55cdfd6ff72b6709e196535ee84d016de7e7289dc7aa5d03b4",
+      "result_hash": "sha256:83f291ed2d7c8a36f6e1dccf120ecf3456c87753de3c0f35b3ba5eef9a84e0f6",
+      "receipt": "reference-construction-zero/receipt.json",
+      "receipt_sha256": "dcc8c52e0e1f8d72268653e13df48dd4ed0d41ca832f0ac26740a4b9fa5f8137",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16863,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-zero",
+      "kind": "reference"
+    },
+    {
+      "id": "reference-construction-slow",
+      "first_call": 4,
+      "last_call": 5,
+      "experiment_hash": "sha256:f4aa72b5782c2878135ec0668b9e9d34979f87bd7eb8ec99b9d427cb75cd3d36",
+      "result_hash": "sha256:7d8aeb53c0e07f300b295a399240dfdc68285ae349e39d92dbf51ef435e33b2a",
+      "receipt": "reference-construction-slow/receipt.json",
+      "receipt_sha256": "359e70acdbee10dd3b8481b0bcd2b3edbbfdc08618019eaa1ad030dfd6c1d569",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16858,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        3,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-slow",
+      "kind": "reference"
+    },
+    {
+      "id": "reference-construction-crossing",
+      "first_call": 6,
+      "last_call": 7,
+      "experiment_hash": "sha256:3be767f3164e5a4ab723b611f1ee76a615f4978c0ed0c9056c6e3967d364dec6",
+      "result_hash": "sha256:821fa02647f91fe27777d57701694537f6ec26e3e4b0de65ed9b43d844749dd6",
+      "receipt": "reference-construction-crossing/receipt.json",
+      "receipt_sha256": "477dadaa4019625dade55cae6399fa136504ecbb3754567a4b0019f25cb789c6",
+      "status": "complete",
+      "ticks": 128,
+      "work": 17414,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        4,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-crossing",
+      "kind": "reference"
+    },
+    {
+      "id": "reference-construction-rotated-one",
+      "first_call": 8,
+      "last_call": 9,
+      "experiment_hash": "sha256:5cf1d6ba89687672e60704d55e7ab8f49c1c3559dfbd7b281de5cbe35f39cd90",
+      "result_hash": "sha256:1c10c3d0431d8603d7ba8321601dda83ea426a8fff92ec6ba77ba6b8b8e5a4f5",
+      "receipt": "reference-construction-rotated-one/receipt.json",
+      "receipt_sha256": "b6ae9a8be820707e6a566e1dea21f465731bf8bebc4598cad599b283cf2f1ef7",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16230,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-one",
+      "kind": "reference"
+    },
+    {
+      "id": "reference-construction-rotated-zero",
+      "first_call": 10,
+      "last_call": 11,
+      "experiment_hash": "sha256:f6a24bd3c02d9e3a6509f70a2ce48372ed75f0b2ddf2a75f9f1ef3350e144de1",
+      "result_hash": "sha256:ac6d11e08508a6f2bb7260d37e4efa40eab8eba6c878f40c7e0686a028af0c53",
+      "receipt": "reference-construction-rotated-zero/receipt.json",
+      "receipt_sha256": "a7461e4632e7379e129221a3a78e9af9dee6a019d6fa307dcee3a9309e1c3339",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16284,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-zero",
+      "kind": "reference"
+    },
+    {
+      "id": "reference-construction-rotated-slow",
+      "first_call": 12,
+      "last_call": 13,
+      "experiment_hash": "sha256:4d22c08474a905dcdb249ac340c94b209e5d8bcb9b4b520f018614e94a6b6898",
+      "result_hash": "sha256:3d72a51a2faeced4f95daf0ef74ba1124936fdc99f06248e474fdf29be3e289e",
+      "receipt": "reference-construction-rotated-slow/receipt.json",
+      "receipt_sha256": "3e5f1fdf58464e5494e7a634abb9c673e575ffcb320a497f420dcb88a1f9790d",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16284,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        3,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-slow",
+      "kind": "reference"
+    },
+    {
+      "id": "reference-construction-rotated-crossing",
+      "first_call": 14,
+      "last_call": 15,
+      "experiment_hash": "sha256:7b109342e7766111c14fa311b7f097cb989050fce698d58f7945514411b2cb0b",
+      "result_hash": "sha256:22b8a847f445d9dbaf464abde130c59c6bff5b3ad13bf717a2c618e5fc3be869",
+      "receipt": "reference-construction-rotated-crossing/receipt.json",
+      "receipt_sha256": "d4bf7f3d660bb9648debc587467733dd21b2ce3be39889188b9e9ea40b3ebcd4",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16862,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        4,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-crossing",
+      "kind": "reference"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "reference-builder",
+      "sequence": 1,
+      "admission": "completed",
+      "trials": [
+        {
+          "id": "c1-construction-one",
+          "first_call": 16,
+          "last_call": 17,
+          "experiment_hash": "sha256:c6ad41e43ae16666852b8e48c588a23688e59e063e6bdaf8870d5018b4fc7ea4",
+          "result_hash": "sha256:62019b722c74e37c14a23c6cda7eb1988ef2078e774207d2590a8bc18650407b",
+          "receipt": "c1-construction-one/receipt.json",
+          "receipt_sha256": "10455838fa80e9bb8872f3ad235bb5a131307d827752fd1231a38142ba138739",
+          "status": "complete",
+          "ticks": 128,
+          "work": 16815,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-one",
+          "kind": "candidate"
+        },
+        {
+          "id": "c1-construction-zero",
+          "first_call": 18,
+          "last_call": 19,
+          "experiment_hash": "sha256:01517644889cce55cdfd6ff72b6709e196535ee84d016de7e7289dc7aa5d03b4",
+          "result_hash": "sha256:83f291ed2d7c8a36f6e1dccf120ecf3456c87753de3c0f35b3ba5eef9a84e0f6",
+          "receipt": "c1-construction-zero/receipt.json",
+          "receipt_sha256": "dcc8c52e0e1f8d72268653e13df48dd4ed0d41ca832f0ac26740a4b9fa5f8137",
+          "status": "complete",
+          "ticks": 128,
+          "work": 16863,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-zero",
+          "kind": "candidate"
+        },
+        {
+          "id": "c1-construction-slow",
+          "first_call": 20,
+          "last_call": 21,
+          "experiment_hash": "sha256:f4aa72b5782c2878135ec0668b9e9d34979f87bd7eb8ec99b9d427cb75cd3d36",
+          "result_hash": "sha256:7d8aeb53c0e07f300b295a399240dfdc68285ae349e39d92dbf51ef435e33b2a",
+          "receipt": "c1-construction-slow/receipt.json",
+          "receipt_sha256": "359e70acdbee10dd3b8481b0bcd2b3edbbfdc08618019eaa1ad030dfd6c1d569",
+          "status": "complete",
+          "ticks": 128,
+          "work": 16858,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            1,
+            3,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-slow",
+          "kind": "candidate"
+        },
+        {
+          "id": "c1-construction-crossing",
+          "first_call": 22,
+          "last_call": 23,
+          "experiment_hash": "sha256:3be767f3164e5a4ab723b611f1ee76a615f4978c0ed0c9056c6e3967d364dec6",
+          "result_hash": "sha256:821fa02647f91fe27777d57701694537f6ec26e3e4b0de65ed9b43d844749dd6",
+          "receipt": "c1-construction-crossing/receipt.json",
+          "receipt_sha256": "477dadaa4019625dade55cae6399fa136504ecbb3754567a4b0019f25cb789c6",
+          "status": "complete",
+          "ticks": 128,
+          "work": 17414,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            2,
+            4,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-crossing",
+          "kind": "candidate"
+        }
+      ],
+      "passed": true,
+      "first_call": 16,
+      "source": "submission-1.json",
+      "source_sha256": "276a16cb8ee8b600a8e123721e637aa665f092d9afe76e2e15388052961a03be",
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "born"
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "ready"
+              }
+            ],
+            "action": {
+              "kind": "activate",
+              "blueprint": 50
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "absent"
+              },
+              {
+                "kind": "has_material",
+                "value": false
+              }
+            ],
+            "action": {
+              "kind": "gather_material",
+              "stock": 60
+            },
+            "remember": null
+          },
+          {
+            "when": [],
+            "action": {
+              "kind": "build",
+              "blueprint": 50
+            },
+            "remember": null
+          }
+        ]
+      },
+      "program_bytes": 486,
+      "work": 67950,
+      "after_call": 24
+    },
+    {
+      "id": "memory-builder",
+      "sequence": 2,
+      "admission": "completed",
+      "trials": [
+        {
+          "id": "c2-construction-one",
+          "first_call": 24,
+          "last_call": 25,
+          "experiment_hash": "sha256:4b6302949c82c2b9541c79d4bfabf55e46bb24c6e40f6ffbf926caca037e99a7",
+          "result_hash": "sha256:ea0b2810dd2588375d1fce8d90edacd6a7d94c6c06f8d72d9b3feb974483e55e",
+          "receipt": "c2-construction-one/receipt.json",
+          "receipt_sha256": "9056b32d549673fd50215c64471c3d83812eb1808bd643124bba0c30a68c2fc2",
+          "status": "complete",
+          "ticks": 128,
+          "work": 16753,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-one",
+          "kind": "candidate"
+        },
+        {
+          "id": "c2-construction-zero",
+          "first_call": 26,
+          "last_call": 27,
+          "experiment_hash": "sha256:b2cb511a024515c24ce10d56b239026d418fd1b188be7644bdc6cbfd88c5af06",
+          "result_hash": "sha256:81d34c5672f6767ed4cbdb7d577bea05c757cb75908755ceadd70d1752dc9fdc",
+          "receipt": "c2-construction-zero/receipt.json",
+          "receipt_sha256": "79eec98b70cc6bc49048fb70e3c3e37bb05bf043fb8b6d6b0fd089ffd61e2dc1",
+          "status": "complete",
+          "ticks": 128,
+          "work": 16801,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-zero",
+          "kind": "candidate"
+        },
+        {
+          "id": "c2-construction-slow",
+          "first_call": 28,
+          "last_call": 29,
+          "experiment_hash": "sha256:7bc729a2204566abff2c8ab83c73f01da4a447da897f5873bec42b8f9e10f689",
+          "result_hash": "sha256:ea381ac869370026b8d4aab2ed327d27f1b5cbd2fe47ed766caeaf0249d9f2de",
+          "receipt": "c2-construction-slow/receipt.json",
+          "receipt_sha256": "fea2d6b329cd45cfae300bf2dc27200c80b971a113bbeb72874ab0788da8d807",
+          "status": "complete",
+          "ticks": 128,
+          "work": 16796,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            1,
+            3,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-slow",
+          "kind": "candidate"
+        },
+        {
+          "id": "c2-construction-crossing",
+          "first_call": 30,
+          "last_call": 31,
+          "experiment_hash": "sha256:6f7a1dd49a6e0c1a8f781b10e08308fa7f1eebb7185022b01871fe2a9b612d37",
+          "result_hash": "sha256:3ff0e8f9b6c724df0cb1e24d03aa6d3598fa73974a329eb88da983858988d19f",
+          "receipt": "c2-construction-crossing/receipt.json",
+          "receipt_sha256": "69cf8eba5fc8cc7f7d794a985ccf7a5e7c6262a2e4b894a3ac8c27379d020a7b",
+          "status": "complete",
+          "ticks": 128,
+          "work": 17352,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 17,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            2,
+            4,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-crossing",
+          "kind": "candidate"
+        }
+      ],
+      "passed": true,
+      "first_call": 24,
+      "source": "submission-2.json",
+      "source_sha256": "79fa3d70e48471d3d8b9f393ff07bc3028884569ad3d00c2dcf569437e14b962",
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 2,
+                "value": 2
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "ready"
+              }
+            ],
+            "action": {
+              "kind": "activate",
+              "blueprint": 50
+            },
+            "remember": {
+              "slot": 2,
+              "value": 2
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 2,
+                "value": 1
+              }
+            ],
+            "action": {
+              "kind": "build",
+              "blueprint": 50
+            },
+            "remember": null
+          },
+          {
+            "when": [],
+            "action": {
+              "kind": "gather_material",
+              "stock": 60
+            },
+            "remember": {
+              "slot": 2,
+              "value": 1
+            }
+          }
+        ]
+      },
+      "program_bytes": 440,
+      "work": 67702,
+      "after_call": 32
+    },
+    {
+      "id": "delayed-builder",
+      "sequence": 3,
+      "admission": "completed",
+      "trials": [
+        {
+          "id": "c3-construction-one",
+          "first_call": 32,
+          "last_call": 33,
+          "experiment_hash": "sha256:ca4523c4d6c6c53145bf63c49edb1101102ec1a69e27139099931f8777ad3d53",
+          "result_hash": "sha256:c32f44aa172a9c5dba4efd67a5fd45f34741c99179c467a631cfd97438d07223",
+          "receipt": "c3-construction-one/receipt.json",
+          "receipt_sha256": "448336606284d6af6f3ba0817f1cd7ff0415b93d0ee3bde7cf6eec82d6083a36",
+          "status": "complete",
+          "ticks": 128,
+          "work": 17292,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 18,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-one",
+          "kind": "candidate"
+        },
+        {
+          "id": "c3-construction-zero",
+          "first_call": 34,
+          "last_call": 35,
+          "experiment_hash": "sha256:7d9400b3a52f01bb11a9f6a80fbcd79654c16f4554dc92a9557e844895236d15",
+          "result_hash": "sha256:2d31dcc2cf0f615767d8afaa6a229ab5f5dcbef2ccb5023258881300dcba0924",
+          "receipt": "c3-construction-zero/receipt.json",
+          "receipt_sha256": "a84d6d23307053d9060a0dc7ab9425d2fa84969664df572fc3f2d239c0fd7171",
+          "status": "complete",
+          "ticks": 128,
+          "work": 17334,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 18,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-zero",
+          "kind": "candidate"
+        },
+        {
+          "id": "c3-construction-slow",
+          "first_call": 36,
+          "last_call": 37,
+          "experiment_hash": "sha256:1d95251d4d3e9c37b45eefe8b53a6536b9f6702bcdb76b97401869ccf2e09d55",
+          "result_hash": "sha256:a2da62711d6e028c424d325a9f3a969f38eff460ab3fb50c55ab32b47f3b1819",
+          "receipt": "c3-construction-slow/receipt.json",
+          "receipt_sha256": "451c5cadc0112e555fe2bf19e9f921caba3f52caa69f0e2c234d5c1ff3f7d254",
+          "status": "complete",
+          "ticks": 128,
+          "work": 17335,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 18,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            1,
+            3,
+            5,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-slow",
+          "kind": "candidate"
+        },
+        {
+          "id": "c3-construction-crossing",
+          "first_call": 38,
+          "last_call": 39,
+          "experiment_hash": "sha256:b0a45bee6b64973bcfcf7dfb22c8976ab8477ac207ca830dba34af8ff3309fa6",
+          "result_hash": "sha256:d739aeb37409e51f00e8a9b7842f0cdb37b90fd66182efa8e4af56b636d24802",
+          "receipt": "c3-construction-crossing/receipt.json",
+          "receipt_sha256": "390ea252cad46d888c4d7f8daf567dda43976ba924ac07c1d131d3c3daea721f",
+          "status": "complete",
+          "ticks": 128,
+          "work": 18015,
+          "inactive_ready": false,
+          "passed": true,
+          "construction_passed": true,
+          "useful_child": true,
+          "report_used": true,
+          "milestone_passed": true,
+          "birth_tick": 18,
+          "delivered": 6,
+          "child_routed_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "report_guided_sparks": [
+            2,
+            4,
+            6
+          ],
+          "reported_and_read_sparks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "case_id": "construction-crossing",
+          "kind": "candidate"
+        }
+      ],
+      "passed": true,
+      "first_call": 32,
+      "source": "submission-3.json",
+      "source_sha256": "803fe1d1071807780b16e1720f8e94f586adf40cbcdbe20fbb190b2312d4a82b",
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 3,
+                "value": 0
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": {
+              "slot": 3,
+              "value": 1
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "born"
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "ready"
+              }
+            ],
+            "action": {
+              "kind": "activate",
+              "blueprint": 50
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "absent"
+              },
+              {
+                "kind": "has_material",
+                "value": false
+              }
+            ],
+            "action": {
+              "kind": "gather_material",
+              "stock": 60
+            },
+            "remember": null
+          },
+          {
+            "when": [],
+            "action": {
+              "kind": "build",
+              "blueprint": 50
+            },
+            "remember": null
+          }
+        ]
+      },
+      "program_bytes": 591,
+      "work": 69976,
+      "after_call": 40
+    }
+  ],
+  "selected": {
+    "id": "memory-builder",
+    "sequence": 2,
+    "program": {
+      "rules": [
+        {
+          "when": [
+            {
+              "kind": "memory",
+              "slot": 2,
+              "value": 2
+            }
+          ],
+          "action": {
+            "kind": "wait"
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "ready"
+            }
+          ],
+          "action": {
+            "kind": "activate",
+            "blueprint": 50
+          },
+          "remember": {
+            "slot": 2,
+            "value": 2
+          }
+        },
+        {
+          "when": [
+            {
+              "kind": "memory",
+              "slot": 2,
+              "value": 1
+            }
+          ],
+          "action": {
+            "kind": "build",
+            "blueprint": 50
+          },
+          "remember": null
+        },
+        {
+          "when": [],
+          "action": {
+            "kind": "gather_material",
+            "stock": 60
+          },
+          "remember": {
+            "slot": 2,
+            "value": 1
+          }
+        }
+      ]
+    },
+    "program_hash": "sha256:17347d04ae2bf4533101172ce3981328984869bb75ea971ff5e5d237a24b1a5e",
+    "training_work": 67702,
+    "after_call": 40
+  },
+  "confirmation": [
+    {
+      "id": "confirm-construction-rotated-one",
+      "first_call": 40,
+      "last_call": 41,
+      "experiment_hash": "sha256:a893cfeaf573bd846092de223cfe38d4db46b3b10f5af7944d6d95b8a58242cf",
+      "result_hash": "sha256:051685d6b69db52037975ed690062e3afa2013dcda8e0bff1633168fe8cceeb2",
+      "receipt": "confirm-construction-rotated-one/receipt.json",
+      "receipt_sha256": "deb73adb82c5c098adc5457cd71990811ea721d62d2cc415b1c7e755435015be",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16168,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-one",
+      "kind": "selected"
+    },
+    {
+      "id": "confirm-construction-rotated-zero",
+      "first_call": 42,
+      "last_call": 43,
+      "experiment_hash": "sha256:064db33ab9bb1c93f5875ea66024d94d4be6f60f8f450cbd347441a2d09705ff",
+      "result_hash": "sha256:9c2c697c353af8d3a4e6454eb0f32ce33045f8637bb1201721b1fde5e061fb20",
+      "receipt": "confirm-construction-rotated-zero/receipt.json",
+      "receipt_sha256": "2eee1c81a18da6bc6d623cfb02eaad7426aa54f45f641203107b222cbe756584",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16222,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-zero",
+      "kind": "selected"
+    },
+    {
+      "id": "confirm-construction-rotated-slow",
+      "first_call": 44,
+      "last_call": 45,
+      "experiment_hash": "sha256:491cb8ddef4e9773fe5a5104bf97b817fc0417486c5de740d31322bcc37f5d7f",
+      "result_hash": "sha256:55a93ec63576f8936c703717d86c06cb2a58561d8db874725d05b3cac553a8a5",
+      "receipt": "confirm-construction-rotated-slow/receipt.json",
+      "receipt_sha256": "3589697a513652fdedc9ed779aaa1325faa7c27e5ebd8ed9414e37d930c31da4",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16222,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        3,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-slow",
+      "kind": "selected"
+    },
+    {
+      "id": "confirm-construction-rotated-crossing",
+      "first_call": 46,
+      "last_call": 47,
+      "experiment_hash": "sha256:bd738a2977e2ffee561c42f3778ca29ca801369912677a48ac54fc8521fdb9de",
+      "result_hash": "sha256:2da223ac7779792f6d7f9b7149492eca2d600b1ad0ee600f09788aaa23711053",
+      "receipt": "confirm-construction-rotated-crossing/receipt.json",
+      "receipt_sha256": "bb7028a79e30e3585ce9fc9cd42a656bb7501ad4319074587145c1c9cd272545",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16800,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": true,
+      "birth_tick": 17,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        4,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-crossing",
+      "kind": "selected"
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "prebuilt-construction-one",
+      "first_call": 48,
+      "last_call": 49,
+      "experiment_hash": "sha256:379ad2f0987b595ef985464f444c7f9dc93f25469e4ca3ec5e60ad975225a5e3",
+      "result_hash": "sha256:9fd2781406c8b57376763e959133ef561fe900ba349a27dc1612adc072a54688",
+      "receipt": "prebuilt-construction-one/receipt.json",
+      "receipt_sha256": "8bf5657db071ed5d650fe16b1727f7f6e5fa721745967e19ab6fa51c9c2ec434",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15189,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-one",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "prebuilt-construction-zero",
+      "first_call": 50,
+      "last_call": 51,
+      "experiment_hash": "sha256:27ce92c8c67ba02c3813e3e516157dc32cfbd7f54f6519c55c7648917d9d335f",
+      "result_hash": "sha256:f710bc8350d6d1839a24d3d2a494e7d699f31b1804f8878903335dd485dfefca",
+      "receipt": "prebuilt-construction-zero/receipt.json",
+      "receipt_sha256": "354e02c2d51975f0f4097d1fb8e2bfad9db0601266a3c0c119365a3ad500395b",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15237,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-zero",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "prebuilt-construction-slow",
+      "first_call": 52,
+      "last_call": 53,
+      "experiment_hash": "sha256:5d74b78d878536f6d1c83b7bf40783876f0fab0edcd5d40d620d471225ce1557",
+      "result_hash": "sha256:16f521ceceaecd244424883711b09986e39091234e61c2c836e2a25f7ec777d6",
+      "receipt": "prebuilt-construction-slow/receipt.json",
+      "receipt_sha256": "145c984edbab01feef72798f55388fbe534683af0d3732c11b71e6e567d188fa",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15232,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        3,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-slow",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "prebuilt-construction-crossing",
+      "first_call": 54,
+      "last_call": 55,
+      "experiment_hash": "sha256:092371c108707c57345eb9255d8fadf4b46d3b13251eb6e81f763896f157cc60",
+      "result_hash": "sha256:e82cfcbc73d52a800fd50d38e59fa0c9108155e055e7d2b6d4666b37c275d8d4",
+      "receipt": "prebuilt-construction-crossing/receipt.json",
+      "receipt_sha256": "8a37e0df6ef119b02f01491bfe9e9960321d946324ee7462b56e3cd315349166",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15916,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        4,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-crossing",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "prebuilt-construction-rotated-one",
+      "first_call": 56,
+      "last_call": 57,
+      "experiment_hash": "sha256:d4b92010bf161b18047f46893f00ee110c6bfa3f9c859d837eb89e001352f104",
+      "result_hash": "sha256:f66f4a384804c5712955ca73f1c7c14d6caed23aadd79d80f60aa08f05612a44",
+      "receipt": "prebuilt-construction-rotated-one/receipt.json",
+      "receipt_sha256": "f75821a58776e80853d532c3540b9f56dc1c569f93224ba989dd9c6dc52f65c2",
+      "status": "complete",
+      "ticks": 128,
+      "work": 14604,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-one",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "prebuilt-construction-rotated-zero",
+      "first_call": 58,
+      "last_call": 59,
+      "experiment_hash": "sha256:5420df1feb490654512f2806a6c1e768fef6269aad2dcfbedafdd41fcb2f283b",
+      "result_hash": "sha256:97dd64bfc0f6a184994c3eac3a0b8f4593e0beb7d75e14a1b2d3fe6756fff694",
+      "receipt": "prebuilt-construction-rotated-zero/receipt.json",
+      "receipt_sha256": "2d245c060cc666bb2732a3df9063403ea1f5d10290752c6e9a9a5415ff8db897",
+      "status": "complete",
+      "ticks": 128,
+      "work": 14658,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-zero",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "prebuilt-construction-rotated-slow",
+      "first_call": 60,
+      "last_call": 61,
+      "experiment_hash": "sha256:e5fa6c59a3e9724cc21beea0a6a4db36938f947cc60955e7778b19cd853f22f5",
+      "result_hash": "sha256:0bb0b80de1b10be3d2f82cc1be985ba28a3be99a0cea055c1245d00204c844f0",
+      "receipt": "prebuilt-construction-rotated-slow/receipt.json",
+      "receipt_sha256": "a777bfe4aa494f9278d16cb11f68152f8466205642a2e3ac712e07d391185b41",
+      "status": "complete",
+      "ticks": 128,
+      "work": 14658,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        1,
+        3,
+        5,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-slow",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "prebuilt-construction-rotated-crossing",
+      "first_call": 62,
+      "last_call": 63,
+      "experiment_hash": "sha256:aad818964a7269d57d5937ce7564c0c5fe591915679020d1d3b2a3180894dbb0",
+      "result_hash": "sha256:76aaf32e03f101c88fa80ff0272e386476fd122d35bfa5d5b5b80ba38c0d12b3",
+      "receipt": "prebuilt-construction-rotated-crossing/receipt.json",
+      "receipt_sha256": "acc15d4fabf143dbea8cb06ce5326cb8cc2d4e7c536c66926659fa68e0c99a9b",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15248,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": false,
+      "useful_child": true,
+      "report_used": true,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [
+        2,
+        4,
+        6
+      ],
+      "reported_and_read_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "case_id": "construction-rotated-crossing",
+      "kind": "prebuilt"
+    },
+    {
+      "id": "blind-child-construction-one",
+      "first_call": 64,
+      "last_call": 65,
+      "experiment_hash": "sha256:650df1563e32d9513c923ea76fe292e134cda06b0c53beac4db17d7ccfcc9f78",
+      "result_hash": "sha256:b162c5d2399896bae68998d622e70a186cd45643bced002a0af535967c506b46",
+      "receipt": "blind-child-construction-one/receipt.json",
+      "receipt_sha256": "b49f5887aa70e97605ecfa3b08e0873c667b4c4d9560d6c93e37e5e22ff0eb50",
+      "status": "complete",
+      "ticks": 128,
+      "work": 17095,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-one",
+      "kind": "blind-child"
+    },
+    {
+      "id": "blind-child-construction-zero",
+      "first_call": 66,
+      "last_call": 67,
+      "experiment_hash": "sha256:f46faad2d6eef76cf620a359a75a0b804fe17ed45d7f95db296aa70228f59620",
+      "result_hash": "sha256:fb1d58af711e5919a76e88533fb770579c339033d8a07bb602c0897a4626adf6",
+      "receipt": "blind-child-construction-zero/receipt.json",
+      "receipt_sha256": "6ba8a671a3bdd8fd9b471142f1d88c82d0e4ba00d47c266e3412aa259f89cd23",
+      "status": "complete",
+      "ticks": 128,
+      "work": 17095,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-zero",
+      "kind": "blind-child"
+    },
+    {
+      "id": "blind-child-construction-slow",
+      "first_call": 68,
+      "last_call": 69,
+      "experiment_hash": "sha256:64e52aec63f411914b97ab2a97a6427c5de7c634619fc3b56fc11415dc67fbf7",
+      "result_hash": "sha256:321e63764869e250dd5d75a32891c799a64bc6bfa3fd13fe8ea14fd633aa7492",
+      "receipt": "blind-child-construction-slow/receipt.json",
+      "receipt_sha256": "ffacde141c239d98ff66813e4e3dbf5a16c8c1f4b639376f6920ccddc1f7f401",
+      "status": "complete",
+      "ticks": 128,
+      "work": 17090,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-slow",
+      "kind": "blind-child"
+    },
+    {
+      "id": "blind-child-construction-crossing",
+      "first_call": 70,
+      "last_call": 71,
+      "experiment_hash": "sha256:77b3223e64fe0ff64a5866280522220fdfdc6ab4c68329d4b2cd685862ee3dc8",
+      "result_hash": "sha256:c429fb3af2c9e5b4b4174ac722a796fb0ede273776d2fdf89cee4446d04ec6f4",
+      "receipt": "blind-child-construction-crossing/receipt.json",
+      "receipt_sha256": "5795182e868c602bc684602a3de950db50d85cc606737b2ca2b31d57b7022dda",
+      "status": "complete",
+      "ticks": 128,
+      "work": 17812,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-crossing",
+      "kind": "blind-child"
+    },
+    {
+      "id": "blind-child-construction-rotated-one",
+      "first_call": 72,
+      "last_call": 73,
+      "experiment_hash": "sha256:da8b0bcf64d80b03fe6dc7791632fde0c6460882c2107e3fde7c23f8c8c5a36f",
+      "result_hash": "sha256:f10a5e8efa4b4a25b336965527741467fff8a905df4bbe06424025b0448ce103",
+      "receipt": "blind-child-construction-rotated-one/receipt.json",
+      "receipt_sha256": "d4a785f1683f70ed7b4ca14d00064a826d40cc93c801f8c70c67d90b8e7247c5",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16516,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-rotated-one",
+      "kind": "blind-child"
+    },
+    {
+      "id": "blind-child-construction-rotated-zero",
+      "first_call": 74,
+      "last_call": 75,
+      "experiment_hash": "sha256:63f6c517d4cd85e7cc6f066956944a7f8c1d372c5522a08baa0368859757e5ec",
+      "result_hash": "sha256:bc3c9846150e214a31d96551dc610d6208a65418c271163eec44208ffff204b1",
+      "receipt": "blind-child-construction-rotated-zero/receipt.json",
+      "receipt_sha256": "f28eb0c66f3998d42f125d06b7fd47bc38aac11602155c4612e8d1d3769f5d92",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16528,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-rotated-zero",
+      "kind": "blind-child"
+    },
+    {
+      "id": "blind-child-construction-rotated-slow",
+      "first_call": 76,
+      "last_call": 77,
+      "experiment_hash": "sha256:7c6808306fa707ecdd931fd851268e77ff974a550625c8a5f43f2d9f4c5c0101",
+      "result_hash": "sha256:e5641e8b325fbb9a1e1da74bff33af772e57f9315dd74fb95038fcc77569fd6a",
+      "receipt": "blind-child-construction-rotated-slow/receipt.json",
+      "receipt_sha256": "ed2f30b8b2e1efc19934c7ab30ebb9477483223bde22ad5a853c7f08d9dc4ecf",
+      "status": "complete",
+      "ticks": 128,
+      "work": 16516,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-rotated-slow",
+      "kind": "blind-child"
+    },
+    {
+      "id": "blind-child-construction-rotated-crossing",
+      "first_call": 78,
+      "last_call": 79,
+      "experiment_hash": "sha256:4622007bcc0981c0306b42f724a4c26b518d87b7559da570e47803025773732a",
+      "result_hash": "sha256:64293b3870159484788b580dafd0c95ae3fabba849906ce43c631e9faa2b4a8d",
+      "receipt": "blind-child-construction-rotated-crossing/receipt.json",
+      "receipt_sha256": "5bcda311b42fed19c2b4842047f2dc5187a8fc394c3acc3830ed32c4d5d88da3",
+      "status": "complete",
+      "ticks": 128,
+      "work": 17301,
+      "inactive_ready": false,
+      "passed": true,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": true,
+      "birth_tick": 19,
+      "delivered": 6,
+      "child_routed_sparks": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-rotated-crossing",
+      "kind": "blind-child"
+    }
+  ],
+  "controls": [
+    {
+      "id": "no-stock-construction-one",
+      "first_call": 80,
+      "last_call": 81,
+      "experiment_hash": "sha256:d75dfd35bbc6880528f4f99213fc43c35821e9e2183b3bb8e1b307d63ccb99f7",
+      "result_hash": "sha256:9e2f8ee63c0de1cde81f30d101018347fbf878b3de9323591a07b2176f2f58cc",
+      "receipt": "no-stock-construction-one/receipt.json",
+      "receipt_sha256": "053e281d6c0e38d38400d12ef2f21dda35b8e3251c0dd4160104878426b3c298",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15131,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": false,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-one",
+      "kind": "no-stock"
+    },
+    {
+      "id": "no-stock-construction-zero",
+      "first_call": 82,
+      "last_call": 83,
+      "experiment_hash": "sha256:810f6eee784b7338b7d5f611d452508d1030036edc409a1e956abb97e14471ed",
+      "result_hash": "sha256:9416247dad7a13353594c757528d7fa4bc02a7834dba4bd9948f38a3529035fb",
+      "receipt": "no-stock-construction-zero/receipt.json",
+      "receipt_sha256": "0bb4b54467ed67821d2090a411e514b67f578f00724453f5e8593980acc53740",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15131,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": false,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-zero",
+      "kind": "no-stock"
+    },
+    {
+      "id": "no-acquisition-construction-one",
+      "first_call": 84,
+      "last_call": 85,
+      "experiment_hash": "sha256:0c77d7034dcdc1f42768c9aee39a5b9a8115a82acccf582fd66c1e1531b7a70f",
+      "result_hash": "sha256:f4641aa1c2601eb0c2722195699ac9ff44b9c1baff69410055bde29c42a0651c",
+      "receipt": "no-acquisition-construction-one/receipt.json",
+      "receipt_sha256": "683f351a3fb4fd2d8afe61289868d9b14bd5ba3ace8293b642b37bf21ce63bc0",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15224,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": false,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-one",
+      "kind": "no-acquisition"
+    },
+    {
+      "id": "no-acquisition-construction-zero",
+      "first_call": 86,
+      "last_call": 87,
+      "experiment_hash": "sha256:9925292699a2cd7a6fb7655b9df8505c3ff5c0912424a3e1e916d78611a79123",
+      "result_hash": "sha256:2ef9e9857a96e828242721d94cb2a059b9503c5886278b11d68377524c5820f7",
+      "receipt": "no-acquisition-construction-zero/receipt.json",
+      "receipt_sha256": "d8f3f448a9f449ec7a33907fafe0c0afc85fc4fd28f77517a542ca945e3984ea",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15224,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": false,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-zero",
+      "kind": "no-acquisition"
+    },
+    {
+      "id": "no-activation-construction-one",
+      "first_call": 88,
+      "last_call": 89,
+      "experiment_hash": "sha256:54915d4af5dbcc155a5783b0b481e20c93a9c616ea8933c0c70a86b8322e754c",
+      "result_hash": "sha256:a81e7917e2d7154b593aca897c49236c5aa5900c85e0666a3ca693a732029520",
+      "receipt": "no-activation-construction-one/receipt.json",
+      "receipt_sha256": "c8707acf2e2a8c7c091187909795a9942427100b1a31cf80282ddbbf59efd2d4",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15356,
+      "inactive_ready": true,
+      "passed": false,
+      "construction_passed": false,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-one",
+      "kind": "no-activation"
+    },
+    {
+      "id": "no-activation-construction-zero",
+      "first_call": 90,
+      "last_call": 91,
+      "experiment_hash": "sha256:1019ebb2e72a7d064a0f580128e43a9cd441059d5ed2abf2129ef9e753e9ffd5",
+      "result_hash": "sha256:7fb985b473e04d7b7e13fe58077d0de1b33100fc8fdaed1a93710197331d27ea",
+      "receipt": "no-activation-construction-zero/receipt.json",
+      "receipt_sha256": "519988101d182cb85da21e32c3fa3b09e1713cbb7cd03827970ac3a83fd71c0e",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15356,
+      "inactive_ready": true,
+      "passed": false,
+      "construction_passed": false,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": null,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-zero",
+      "kind": "no-activation"
+    },
+    {
+      "id": "idle-child-construction-one",
+      "first_call": 92,
+      "last_call": 93,
+      "experiment_hash": "sha256:63820a10b6f6ab562cb1dfe2044e3138f7817fb1b5133ae4d4d79ca9837fdc7a",
+      "result_hash": "sha256:e1d2c4dc3062d07a2c350ad6446a4e9728f534a7b75944c39cef11ff96c6c579",
+      "receipt": "idle-child-construction-one/receipt.json",
+      "receipt_sha256": "74086180c6676400c88d8ca7b29bd5493ca78b38d8bb03989146a1f36d440407",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15162,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": true,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": 12,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-one",
+      "kind": "idle-child"
+    },
+    {
+      "id": "idle-child-construction-zero",
+      "first_call": 94,
+      "last_call": 95,
+      "experiment_hash": "sha256:c1df5b2f48eaaece1a881d601ae4ee3e397e4226ccc78a6515b02d2fe2e177ce",
+      "result_hash": "sha256:5eec8da02605f34baeb3b193ce66050c6b222db6b187b32f655c1c90957eaef4",
+      "receipt": "idle-child-construction-zero/receipt.json",
+      "receipt_sha256": "fb7f45955b33663ae613d2362e2e0e99edd03b50f2c00f5fedcd5337e8c2aa8b",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15162,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": true,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": 12,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-zero",
+      "kind": "idle-child"
+    },
+    {
+      "id": "idle-courier-construction-one",
+      "first_call": 96,
+      "last_call": 97,
+      "experiment_hash": "sha256:588ccb9f0f422e3b70bf88d98e64424b75d278954f2c112077a699672ce3ed5f",
+      "result_hash": "sha256:605c5e0d0639959f2958d1b3b1ca862b11a065c6764897578f4135c8dffff5fd",
+      "receipt": "idle-courier-construction-one/receipt.json",
+      "receipt_sha256": "31cd2e3eee1458e53e5577575c29a24ceb04ceb3d3b59fce37472e887db30a20",
+      "status": "complete",
+      "ticks": 128,
+      "work": 9164,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": true,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": 17,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-one",
+      "kind": "idle-courier"
+    },
+    {
+      "id": "idle-courier-construction-zero",
+      "first_call": 98,
+      "last_call": 99,
+      "experiment_hash": "sha256:bc05de3b51a39ff74fe4113beaf346a93cafe29211705d779253069707e65450",
+      "result_hash": "sha256:a53f1c6a6a8cff759463a5f5a234834a1becebba06384a5bd02063752cf4aca4",
+      "receipt": "idle-courier-construction-zero/receipt.json",
+      "receipt_sha256": "71b0efa5458e34748ce91f20ab7bfe6f6edf912a85bcd1b212711ae24867f367",
+      "status": "complete",
+      "ticks": 128,
+      "work": 9164,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": true,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": 17,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-zero",
+      "kind": "idle-courier"
+    },
+    {
+      "id": "idle-relay-construction-one",
+      "first_call": 100,
+      "last_call": 101,
+      "experiment_hash": "sha256:b5db8f29ec4e6161cb24c6fc4a0560416e69b92d9f8c0b19ff88ca70076a0dcc",
+      "result_hash": "sha256:95d6501f88d7a5e2015c57eaea9b4fc8e99d2490e823de379afccb37d80c6ef9",
+      "receipt": "idle-relay-construction-one/receipt.json",
+      "receipt_sha256": "90c1e6376ecbe06293fb92d55a7433ec196abd411f6963d50f84778bf1ca0051",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15539,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": true,
+      "useful_child": false,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": 17,
+      "delivered": 0,
+      "child_routed_sparks": [],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-one",
+      "kind": "idle-relay"
+    },
+    {
+      "id": "idle-relay-construction-zero",
+      "first_call": 102,
+      "last_call": 103,
+      "experiment_hash": "sha256:b049ee3ea379c6b95115b60d52e4d22c65b4acd2c1926e348280ded77b5f0e10",
+      "result_hash": "sha256:18982d95d014bcfe8b6d97b9cbd1afa190387c11d81256ba716fdd6769227c09",
+      "receipt": "idle-relay-construction-zero/receipt.json",
+      "receipt_sha256": "0ac9b049e851fbda65611ee3118f5e378cf6b4f827091d75956e93ceeedebf89",
+      "status": "complete",
+      "ticks": 128,
+      "work": 15645,
+      "inactive_ready": false,
+      "passed": false,
+      "construction_passed": true,
+      "useful_child": true,
+      "report_used": false,
+      "milestone_passed": false,
+      "birth_tick": 17,
+      "delivered": 1,
+      "child_routed_sparks": [
+        1
+      ],
+      "report_guided_sparks": [],
+      "reported_and_read_sparks": [],
+      "case_id": "construction-zero",
+      "kind": "idle-relay"
+    }
+  ],
+  "replays": [],
+  "probes": [],
+  "pending_operation": "replays",
+  "maximum_engine_executions": 2048,
+  "engine_executions": 166,
+  "calls": [
+    {
+      "index": 0,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 12.187917,
+      "stdout": "0000.stdout.json",
+      "stderr": "0000.stderr.jsonl",
+      "stdout_sha256": "7f85ac46328d59b07118653e6a5705697a07b569fa206bd514bd84f8fd8bf82b",
+      "stderr_sha256": "420b2ae939aaf6e8610bcf0f0b8fc243c9295b8ec4c4f6e043144d04c5f1c172",
+      "metrics": {
+        "elapsed_micros": 7775,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 1,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 8.935333,
+      "stdout": "0001.stdout.json",
+      "stderr": "0001.stderr.jsonl",
+      "stdout_sha256": "2b7b0eb96eb8c38f0f2bf686c8c397db125515e6fd6e5b4b9f48850529005f67",
+      "stderr_sha256": "ec8fee79a629105aa3e9dba637c7bce4fc5c9e246882bf76a041dca1340371b5",
+      "metrics": {
+        "elapsed_micros": 5840,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 2,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 10.071625,
+      "stdout": "0002.stdout.json",
+      "stderr": "0002.stderr.jsonl",
+      "stdout_sha256": "c030ea36a7491add044d953afcc89702e26b1a51dd6b215a8e1b985ee244f4a6",
+      "stderr_sha256": "b9f43f249fa6cb16c412fd78e6243695086252df3837512161f8312e250208fa",
+      "metrics": {
+        "elapsed_micros": 6427,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 3,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 8.757958,
+      "stdout": "0003.stdout.json",
+      "stderr": "0003.stderr.jsonl",
+      "stdout_sha256": "b3dbd7d2ac768d1bcd06f26d7d8713f9fd1f0ea52b72a29458c50318e0608f52",
+      "stderr_sha256": "5fff20eeb696ad010a4830c94c311c5f8ed9c58d56443c46c03d24bd97941b55",
+      "metrics": {
+        "elapsed_micros": 5247,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 4,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 9.358459,
+      "stdout": "0004.stdout.json",
+      "stderr": "0004.stderr.jsonl",
+      "stdout_sha256": "d3ba85960be352348ebc285990f345c62c31a47c47e3773a3313c9a9543f7d18",
+      "stderr_sha256": "4325bfaf4dcb05cb26540dab1729709876fd0fda9cc58d08bbf2552653b5ae91",
+      "metrics": {
+        "elapsed_micros": 5834,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 5,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 8.3205,
+      "stdout": "0005.stdout.json",
+      "stderr": "0005.stderr.jsonl",
+      "stdout_sha256": "c1f4d869e24b26901b021d45c2529166f93eb9c4a8a5f6b75b233da536fff2d1",
+      "stderr_sha256": "970ab9759ca97c45d0fd6fd913f9486d33770b999d05faa9b0ae18512f8e5bfe",
+      "metrics": {
+        "elapsed_micros": 5038,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 6,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 9.820959,
+      "stdout": "0006.stdout.json",
+      "stderr": "0006.stderr.jsonl",
+      "stdout_sha256": "47fe8b4e70f01f3d43fb4095f3129231cc430d83b7be63c166f0ab45998fc543",
+      "stderr_sha256": "8bda3a6573c0cba989fb70f4513b034eb2e30564531d704ba648abb87099299c",
+      "metrics": {
+        "elapsed_micros": 6386,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 7,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 8.677209,
+      "stdout": "0007.stdout.json",
+      "stderr": "0007.stderr.jsonl",
+      "stdout_sha256": "686f9b2abaa08745e8f1016725c5d72b211ab4acb5529d328da5a84913253cb5",
+      "stderr_sha256": "43622dd17a39301214717302d89ffe6bac386cbe60b605a64088d37eaf6238cb",
+      "metrics": {
+        "elapsed_micros": 5341,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 8,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-rotated-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 10.312792,
+      "stdout": "0008.stdout.json",
+      "stderr": "0008.stderr.jsonl",
+      "stdout_sha256": "c68622ab52fed3b2346e591e5594ebfe93e20a13716e31ada77b966bba9d5216",
+      "stderr_sha256": "2e53633597c284007fb5d325bc344b77d172aa3bc70201ed564bde080e5a88e8",
+      "metrics": {
+        "elapsed_micros": 6364,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 9,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-rotated-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 8.69225,
+      "stdout": "0009.stdout.json",
+      "stderr": "0009.stderr.jsonl",
+      "stdout_sha256": "efc3e91dab4f8d9e0520e3cf27ccde688ce3ea976f23fec126c2650f0fac6b93",
+      "stderr_sha256": "4ccd4a10e3c55b4693ae9e095b8ef186b866161114c2d28a4992e3dc01620ee2",
+      "metrics": {
+        "elapsed_micros": 5236,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 10,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-rotated-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 9.430583,
+      "stdout": "0010.stdout.json",
+      "stderr": "0010.stderr.jsonl",
+      "stdout_sha256": "82b82c972504ac6376d76b507b69ee94a7321a8c3580b5e6cb5bb66bc84def16",
+      "stderr_sha256": "2b90afa39a265799060efff195fe60abf8b9f82d741b49946b85cbf2e6006b28",
+      "metrics": {
+        "elapsed_micros": 5830,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 11,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-rotated-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 9.1985,
+      "stdout": "0011.stdout.json",
+      "stderr": "0011.stderr.jsonl",
+      "stdout_sha256": "e80a0cdbb6b2412f693e58eb3512afa20f2f93320dcd6867151dbc48295e9695",
+      "stderr_sha256": "05b2d5c00a9f3cecba1f0f7866734d7a864d3079778c3eb8a1128bb0fdbd8afc",
+      "metrics": {
+        "elapsed_micros": 5964,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 12,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-rotated-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 9.469792,
+      "stdout": "0012.stdout.json",
+      "stderr": "0012.stderr.jsonl",
+      "stdout_sha256": "7db8f0d1f2466828199cc2ee4bb123fc8729ec84d9d97ffd4fa668f510424bcb",
+      "stderr_sha256": "8dfa00fd0e6073abde6b71b5e24c11262ca469580ac1f6f34d556a6adeb7ea42",
+      "metrics": {
+        "elapsed_micros": 6140,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 13,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-rotated-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 8.973208,
+      "stdout": "0013.stdout.json",
+      "stderr": "0013.stderr.jsonl",
+      "stdout_sha256": "b69f1f26e5169a75c65d848ff68f50fed5943f27149862dd6f0fa26865443239",
+      "stderr_sha256": "2ad41ab4506c40c53021f6b07dd0b4e6ded52cb8ffa3ce4b8ca496e4b2d5ab6b",
+      "metrics": {
+        "elapsed_micros": 5567,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 14,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "reference-construction-rotated-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 9.816291,
+      "stdout": "0014.stdout.json",
+      "stderr": "0014.stderr.jsonl",
+      "stdout_sha256": "04a82af460111a4cbb130e66a1c37d6239aff8a1ca58e64aa77e95f87873bc8f",
+      "stderr_sha256": "f2ae031eb9010ea65d171404a609681678d920d7b52992e1d82998ba2bc50f92",
+      "metrics": {
+        "elapsed_micros": 6024,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 15,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "reference-construction-rotated-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 8.719375,
+      "stdout": "0015.stdout.json",
+      "stderr": "0015.stderr.jsonl",
+      "stdout_sha256": "d325ca553e24df9191ac10150860eafcc481ec406bbdbf4cc03b7390fda9dde9",
+      "stderr_sha256": "8d75008f83988279d154f8ee15cccac7173fc9892bdb7d601a77a422e7f985ed",
+      "metrics": {
+        "elapsed_micros": 5270,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 16,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c1-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.033625,
+      "stdout": "0016.stdout.json",
+      "stderr": "0016.stderr.jsonl",
+      "stdout_sha256": "7f85ac46328d59b07118653e6a5705697a07b569fa206bd514bd84f8fd8bf82b",
+      "stderr_sha256": "b6dc08548971f1f0abc158b39179944f66ea8e295f338d535e39afa3100cffae",
+      "metrics": {
+        "elapsed_micros": 4129,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 17,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c1-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.05375,
+      "stdout": "0017.stdout.json",
+      "stderr": "0017.stderr.jsonl",
+      "stdout_sha256": "2b7b0eb96eb8c38f0f2bf686c8c397db125515e6fd6e5b4b9f48850529005f67",
+      "stderr_sha256": "fd189ab7939945cf2add737c925e7b64bef22c812c920cf323bb5f8ea290ba88",
+      "metrics": {
+        "elapsed_micros": 3595,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 18,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c1-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.516833,
+      "stdout": "0018.stdout.json",
+      "stderr": "0018.stderr.jsonl",
+      "stdout_sha256": "c030ea36a7491add044d953afcc89702e26b1a51dd6b215a8e1b985ee244f4a6",
+      "stderr_sha256": "166d500c597c2905c7734c83a97801959b32b776ab6607e61f83a7fe99e57001",
+      "metrics": {
+        "elapsed_micros": 4007,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 19,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c1-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.971542,
+      "stdout": "0019.stdout.json",
+      "stderr": "0019.stderr.jsonl",
+      "stdout_sha256": "b3dbd7d2ac768d1bcd06f26d7d8713f9fd1f0ea52b72a29458c50318e0608f52",
+      "stderr_sha256": "383153546964a292cfdb2de8acfda5dcc35b0c482ba6f74ade209b1ff9009a9e",
+      "metrics": {
+        "elapsed_micros": 3650,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 20,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c1-construction-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.567625,
+      "stdout": "0020.stdout.json",
+      "stderr": "0020.stderr.jsonl",
+      "stdout_sha256": "d3ba85960be352348ebc285990f345c62c31a47c47e3773a3313c9a9543f7d18",
+      "stderr_sha256": "6162fcf34ed3d7d3f9ed6b2c5c5864d280bc67838534345083859d2fa0f5e841",
+      "metrics": {
+        "elapsed_micros": 4103,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 21,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c1-construction-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.217083,
+      "stdout": "0021.stdout.json",
+      "stderr": "0021.stderr.jsonl",
+      "stdout_sha256": "c1f4d869e24b26901b021d45c2529166f93eb9c4a8a5f6b75b233da536fff2d1",
+      "stderr_sha256": "ed748f1c5ae7d733c63be481ace081581b5f37d42239ee73664f3f1388ac1be0",
+      "metrics": {
+        "elapsed_micros": 3741,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 22,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c1-construction-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.603583,
+      "stdout": "0022.stdout.json",
+      "stderr": "0022.stderr.jsonl",
+      "stdout_sha256": "47fe8b4e70f01f3d43fb4095f3129231cc430d83b7be63c166f0ab45998fc543",
+      "stderr_sha256": "572abfadf71c4b71196456c762b2379f88b83be7252bba8321179a15523a6749",
+      "metrics": {
+        "elapsed_micros": 4048,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 23,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c1-construction-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.339083,
+      "stdout": "0023.stdout.json",
+      "stderr": "0023.stderr.jsonl",
+      "stdout_sha256": "686f9b2abaa08745e8f1016725c5d72b211ab4acb5529d328da5a84913253cb5",
+      "stderr_sha256": "4725a1e1d2628a6723eb6f9694e1965e4eb090f31f70b110b287492cd8b2212f",
+      "metrics": {
+        "elapsed_micros": 3785,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 24,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c2-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.2075,
+      "stdout": "0024.stdout.json",
+      "stderr": "0024.stderr.jsonl",
+      "stdout_sha256": "b36b2eb0e8527425254d78f7ba691cff789ee0155601b06349228d9eb8320afa",
+      "stderr_sha256": "dd9ab88b45f62a2cea9f73def1e856f340c33bad455f8601f8c41679046007f9",
+      "metrics": {
+        "elapsed_micros": 4159,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 25,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c2-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.4225,
+      "stdout": "0025.stdout.json",
+      "stderr": "0025.stderr.jsonl",
+      "stdout_sha256": "3d387a4c612a54e2b0b9547a354345ae3de6b5974a1a0f4831986c46f2b30513",
+      "stderr_sha256": "3e263449554c0127e7ea8ccd13db660f4a1ffe80a9d90af3770db7bedacee6d2",
+      "metrics": {
+        "elapsed_micros": 3879,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 26,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c2-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.730417,
+      "stdout": "0026.stdout.json",
+      "stderr": "0026.stderr.jsonl",
+      "stdout_sha256": "94cde9e4a0b0d2e64f400dc2a47a41445078c1fbc7376c53deaca240c0b207fa",
+      "stderr_sha256": "f3bc57973c04ea8ad9e0dc7dabfef8cdd0c481a7cc1c012741a299a086d7a557",
+      "metrics": {
+        "elapsed_micros": 4285,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 27,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c2-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.218291,
+      "stdout": "0027.stdout.json",
+      "stderr": "0027.stderr.jsonl",
+      "stdout_sha256": "9fe56aaf3ae4218bd67420719214946eb92bba2dcae6f2dd6321c58280730391",
+      "stderr_sha256": "306859b1af53394eb3b9170dd0b5c85bab71c995832b76e14d9200267cb1ba35",
+      "metrics": {
+        "elapsed_micros": 3771,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 28,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c2-construction-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.632875,
+      "stdout": "0028.stdout.json",
+      "stderr": "0028.stderr.jsonl",
+      "stdout_sha256": "1012082afbf089059cbc801b87d2ff9c1d5d88f0c272e45484f05650cafd948e",
+      "stderr_sha256": "7888708484899eae15cfe7763dfd8e9015691d1d55677b5cbd2553dd43ad280b",
+      "metrics": {
+        "elapsed_micros": 4238,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 29,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c2-construction-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.264291,
+      "stdout": "0029.stdout.json",
+      "stderr": "0029.stderr.jsonl",
+      "stdout_sha256": "9ec4c3208c408977efcdb2ed0f843374a0080073622c09de62c489857902e3f4",
+      "stderr_sha256": "78735a74e9956023fb3ae21f74fee513cdf613c9a0fffbb59766603e394e436a",
+      "metrics": {
+        "elapsed_micros": 3863,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 30,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c2-construction-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.790792,
+      "stdout": "0030.stdout.json",
+      "stderr": "0030.stderr.jsonl",
+      "stdout_sha256": "da46565661824e21f2fc45e38c20abae060594c14d0778789b918fe2bafbfb4c",
+      "stderr_sha256": "780c6857a7d846576ab81d47a1060af1fa7ac58bb8590ed955604b28efd3c062",
+      "metrics": {
+        "elapsed_micros": 4475,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 31,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c2-construction-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.4975,
+      "stdout": "0031.stdout.json",
+      "stderr": "0031.stderr.jsonl",
+      "stdout_sha256": "541560205a7ce5ee537844637468357c6a4244e87dc6b2586478ecc7fd1b22ee",
+      "stderr_sha256": "8f5189b71dbdf42f82b5eec1608815f5bc880ef8d00f914ac24e9326da469966",
+      "metrics": {
+        "elapsed_micros": 3765,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 32,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c3-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.06925,
+      "stdout": "0032.stdout.json",
+      "stderr": "0032.stderr.jsonl",
+      "stdout_sha256": "06cf1e4d86af4e33e234a83c76b587cc177e0aa3c8c5587705910162674af204",
+      "stderr_sha256": "3e62fbc2abe490c3fbc63e73c6aeac74b003b4b8673dbe4a0828a0dccac04617",
+      "metrics": {
+        "elapsed_micros": 4039,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 33,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c3-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.209333,
+      "stdout": "0033.stdout.json",
+      "stderr": "0033.stderr.jsonl",
+      "stdout_sha256": "15eb41b06ce83b39bd2cc4edb4c3bafbe96b24175d83d35f2f16d2cf2ea633b6",
+      "stderr_sha256": "70405403b72a35b81aa0456b3cf4df6dfae6c178ea90f7a92e6d72432b283cd0",
+      "metrics": {
+        "elapsed_micros": 3849,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 34,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c3-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.887667,
+      "stdout": "0034.stdout.json",
+      "stderr": "0034.stderr.jsonl",
+      "stdout_sha256": "8cf6e711a79761bdc065f6f3fbb076ce5ec3797d2f8bbe641c4f19ed923057e5",
+      "stderr_sha256": "5eab4fd6dab25aca8b2b4b9616ffddb26cd332b4c91a2118f458e83d14b0f3e6",
+      "metrics": {
+        "elapsed_micros": 4456,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 35,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c3-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.321375,
+      "stdout": "0035.stdout.json",
+      "stderr": "0035.stderr.jsonl",
+      "stdout_sha256": "bec20e6fb1754460d329637977acd0ff8365df98ca5b0f077f79ec0c2608c845",
+      "stderr_sha256": "fe1264048775539c81423bfcf88577326d540bbc42963c2b766cefaad970def6",
+      "metrics": {
+        "elapsed_micros": 3775,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 36,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c3-construction-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.943375,
+      "stdout": "0036.stdout.json",
+      "stderr": "0036.stderr.jsonl",
+      "stdout_sha256": "7173d2c5d27f63bc032bbea7ca795cfae4396e09b83c8693b32d2149d1359d4c",
+      "stderr_sha256": "86d8e81a8e63b0fc89d7c83139fe57da60f7f29d66852777edb327e754a6bd8c",
+      "metrics": {
+        "elapsed_micros": 4341,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 37,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c3-construction-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.306917,
+      "stdout": "0037.stdout.json",
+      "stderr": "0037.stderr.jsonl",
+      "stdout_sha256": "35de227b9cb42d7ba22bf4845c709e6dc2181c9f5f0b5edd3f578bc0720a7419",
+      "stderr_sha256": "db97091973b54e952d7ac9c13f62075e567c08beeefb38e681afe473723ab3e2",
+      "metrics": {
+        "elapsed_micros": 3851,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 38,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "c3-construction-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.749292,
+      "stdout": "0038.stdout.json",
+      "stderr": "0038.stderr.jsonl",
+      "stdout_sha256": "e0a10ff40e96b2843586ebf040a73ebd44a0e7eb89dfd96baf9155aeaa8750f9",
+      "stderr_sha256": "e905f30643881ff7589830139ee8c8a8cc031052684237770e7273b0bd1e1ef4",
+      "metrics": {
+        "elapsed_micros": 4255,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 39,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "c3-construction-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.194625,
+      "stdout": "0039.stdout.json",
+      "stderr": "0039.stderr.jsonl",
+      "stdout_sha256": "e1b74ff4ce687559fe8eda47ea306b90e921b7eff00bc475b2ead488bb5de116",
+      "stderr_sha256": "0e7cf967a660f662c92d27ed525c6dc52a14daf357e995736673156ae52fef2b",
+      "metrics": {
+        "elapsed_micros": 3740,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 40,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "confirm-construction-rotated-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.410291,
+      "stdout": "0040.stdout.json",
+      "stderr": "0040.stderr.jsonl",
+      "stdout_sha256": "28d51621facb35c1baa197216acbbab66cb7d11d21ec824f413bde35b66a4a10",
+      "stderr_sha256": "eddf949742d50228b83d4d96b94fa30264856633199e348e9e6129a50d903859",
+      "metrics": {
+        "elapsed_micros": 4408,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 41,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "confirm-construction-rotated-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.300625,
+      "stdout": "0041.stdout.json",
+      "stderr": "0041.stderr.jsonl",
+      "stdout_sha256": "d2196b50dcea1912a0438bdf2ceb0e99ede59642e53a2877ef40873649f0c276",
+      "stderr_sha256": "94b33f81f454eb3456f24dfbc1d920cbc997193539fcf9131f9cc7faea6451f9",
+      "metrics": {
+        "elapsed_micros": 3831,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 42,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "confirm-construction-rotated-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.821667,
+      "stdout": "0042.stdout.json",
+      "stderr": "0042.stderr.jsonl",
+      "stdout_sha256": "9f1d732713ade421af57d757cec3e2f6d964c92be32fc677f2575f6370d8df79",
+      "stderr_sha256": "7a3a0ae65064d12a06dcc1c328974b8170211b620aa2ef789b321d3d7ee821a4",
+      "metrics": {
+        "elapsed_micros": 4281,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 43,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "confirm-construction-rotated-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.318708,
+      "stdout": "0043.stdout.json",
+      "stderr": "0043.stderr.jsonl",
+      "stdout_sha256": "7f10fbbca316c1c1bfe708334aec02f544aa174cbe6d603726abd813b48fc8dc",
+      "stderr_sha256": "d36deeffc28816722cacb0d49a545748cf7b57fa4478445d312aec24723446d4",
+      "metrics": {
+        "elapsed_micros": 3883,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 44,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "confirm-construction-rotated-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.913291,
+      "stdout": "0044.stdout.json",
+      "stderr": "0044.stderr.jsonl",
+      "stdout_sha256": "331441d00b87cdcb0a0fba27b04a83300a470e8f393156b5d771b551920f9770",
+      "stderr_sha256": "7e9741d93110e8254ad94590b34a69750f3cd457b2c5130de289a9ea920a0a28",
+      "metrics": {
+        "elapsed_micros": 4530,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 45,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "confirm-construction-rotated-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.288666,
+      "stdout": "0045.stdout.json",
+      "stderr": "0045.stderr.jsonl",
+      "stdout_sha256": "17e95adae9af575e71d37ccf2191a79af92955a137f8e234db04b000db3daf2e",
+      "stderr_sha256": "4112c2b01fc4546c43ea49ffe9f1264fc00944efd5bead8740e81f2d2b4bad37",
+      "metrics": {
+        "elapsed_micros": 3875,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 46,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "confirm-construction-rotated-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.72875,
+      "stdout": "0046.stdout.json",
+      "stderr": "0046.stderr.jsonl",
+      "stdout_sha256": "c77832a915284923558b36b14ea6c10281a1d9cf42c6e8bea15a4bbb62bf9652",
+      "stderr_sha256": "f3bc57973c04ea8ad9e0dc7dabfef8cdd0c481a7cc1c012741a299a086d7a557",
+      "metrics": {
+        "elapsed_micros": 4285,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 47,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "confirm-construction-rotated-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.174625,
+      "stdout": "0047.stdout.json",
+      "stderr": "0047.stderr.jsonl",
+      "stdout_sha256": "39791e0f8a461f09215a48e88787e062bf140460c6f3ffadf463d49a05454ea6",
+      "stderr_sha256": "4112c2b01fc4546c43ea49ffe9f1264fc00944efd5bead8740e81f2d2b4bad37",
+      "metrics": {
+        "elapsed_micros": 3875,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 48,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.420458,
+      "stdout": "0048.stdout.json",
+      "stderr": "0048.stderr.jsonl",
+      "stdout_sha256": "a28b2f94f179e41ea52d5070db8c38875619354c736deaaf57a5a0efddf85924",
+      "stderr_sha256": "52bfbf0df2ac602f2405fda2fd8924c1e3de143d543ac0dfdf7e8f203afb5fbd",
+      "metrics": {
+        "elapsed_micros": 3213,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 49,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.643,
+      "stdout": "0049.stdout.json",
+      "stderr": "0049.stderr.jsonl",
+      "stdout_sha256": "4fb897fe5656f2b93197ba8252f9ee74affffb2b306bae43a8d1f0867777b15d",
+      "stderr_sha256": "a831f94e06c768256e31826a3ef99a64528537b4b54bb698ceb45594e9b57cfa",
+      "metrics": {
+        "elapsed_micros": 2862,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 50,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.958,
+      "stdout": "0050.stdout.json",
+      "stderr": "0050.stderr.jsonl",
+      "stdout_sha256": "242a56e69885c4c3c839335eddb3907c6bfd4a8edbfb9943cc21781d138fb110",
+      "stderr_sha256": "c10e3026af8a333f593791cb4888273c99e4e28470b86b0b02ba11c65778f7db",
+      "metrics": {
+        "elapsed_micros": 3280,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 51,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.570708,
+      "stdout": "0051.stdout.json",
+      "stderr": "0051.stderr.jsonl",
+      "stdout_sha256": "2cd69ad8390536e82a08c248ec55c8a7d7f66253b58d9931358977a91784c865",
+      "stderr_sha256": "a38f7684bf726ffa1a341e7bd51c31339dd4167c934265750f4750432823c295",
+      "metrics": {
+        "elapsed_micros": 3131,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 52,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.804834,
+      "stdout": "0052.stdout.json",
+      "stderr": "0052.stderr.jsonl",
+      "stdout_sha256": "3a021a2ed577f359f7a8f5f105898f4c013536e6128b1c449a85dcfacfb4d2eb",
+      "stderr_sha256": "c856ab7ab3d1beb25bb010a18130614431bbad8804fb268186c8e0fbdd2ef976",
+      "metrics": {
+        "elapsed_micros": 3399,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 53,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.138875,
+      "stdout": "0053.stdout.json",
+      "stderr": "0053.stderr.jsonl",
+      "stdout_sha256": "e6a74133cc5fae2be5e160c83cc3234f7bfc2a7603953c9078b1ec9c49071ac9",
+      "stderr_sha256": "a0f984fd2cf06f9049d616e11632ce1d35a7dab0f737c12a4dc89872a5aa8d3d",
+      "metrics": {
+        "elapsed_micros": 3597,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 54,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.079125,
+      "stdout": "0054.stdout.json",
+      "stderr": "0054.stderr.jsonl",
+      "stdout_sha256": "8cdf8205060afbd40a15a3acf14cbf5cb77f0d52af9603b87e85beeb9d34aa4b",
+      "stderr_sha256": "599470ab733b9c0e5bc90217567d4099d58eda509deaa33a1e4f71dee333f5f8",
+      "metrics": {
+        "elapsed_micros": 3616,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 55,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.813083,
+      "stdout": "0055.stdout.json",
+      "stderr": "0055.stderr.jsonl",
+      "stdout_sha256": "501b5015705a103b19b87459c0ed21124febd8f0529d430bedee219908b57d8d",
+      "stderr_sha256": "b8b212cc32bb449c5477ebdacd0e244dbcbfeb2d45ec68697bdb399bf629d4a4",
+      "metrics": {
+        "elapsed_micros": 3116,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 56,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-rotated-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.17125,
+      "stdout": "0056.stdout.json",
+      "stderr": "0056.stderr.jsonl",
+      "stdout_sha256": "1078b8c4d8b9c5a6a11133bb6a16cfabeb9a031d41967c4bb2e3990631a5ea3d",
+      "stderr_sha256": "99b47e11777aa888a7ca81d4b706df688079d8fb723c2370094d3b75f81b6d8c",
+      "metrics": {
+        "elapsed_micros": 3294,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 57,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-rotated-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.435833,
+      "stdout": "0057.stdout.json",
+      "stderr": "0057.stderr.jsonl",
+      "stdout_sha256": "aa194fcea773b2996be05daf8acd04970772d2a5716bd3649a5e0ee1ac509dbd",
+      "stderr_sha256": "f857af0e557669230be0c4d1ba56f58439b4ea82fc304a8ebb99d96ffb64c59a",
+      "metrics": {
+        "elapsed_micros": 2980,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 58,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-rotated-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.942,
+      "stdout": "0058.stdout.json",
+      "stderr": "0058.stderr.jsonl",
+      "stdout_sha256": "d77ae839ce6fee3efb0f08dcb3cc59451a9f0066d2fd6c0dc914a3afff3c64da",
+      "stderr_sha256": "6fbff939dbdce82b8ede7e017fbc823869bbf1e9e802def90f3ca497d57a4141",
+      "metrics": {
+        "elapsed_micros": 3212,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 59,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-rotated-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.459541,
+      "stdout": "0059.stdout.json",
+      "stderr": "0059.stderr.jsonl",
+      "stdout_sha256": "c60b7dd8eaf32c94bfd04baf5c8cb85d4b9d15a06b2328500c55a9e9318f3962",
+      "stderr_sha256": "de27b3d5b63a3103be4be62f38a5a7d81cd7f184afca6820b04073b2cb4e86b9",
+      "metrics": {
+        "elapsed_micros": 3086,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 60,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-rotated-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.625583,
+      "stdout": "0060.stdout.json",
+      "stderr": "0060.stderr.jsonl",
+      "stdout_sha256": "defdd6e66ec7ed4e437435e7c235eced1113b058675a96e0acc73699d1618123",
+      "stderr_sha256": "06bf1441af43656c4d9dd2a71bf83d20a6a5715a09082375c0b50342b60655a1",
+      "metrics": {
+        "elapsed_micros": 3222,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 61,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-rotated-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.536208,
+      "stdout": "0061.stdout.json",
+      "stderr": "0061.stderr.jsonl",
+      "stdout_sha256": "540c79ac883ac1d4f5b4d61041d894c4e142c08b1db7d7ab8cbfbaf10467886e",
+      "stderr_sha256": "d3062c5d224d22ec8189cbdf445d8e7b3f96cbe7582956a130d04fcda6305be4",
+      "metrics": {
+        "elapsed_micros": 3175,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 62,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "prebuilt-construction-rotated-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.952083,
+      "stdout": "0062.stdout.json",
+      "stderr": "0062.stderr.jsonl",
+      "stdout_sha256": "9bb42f5ffa5a4854fb24eba09bc2b131a9c30023ea04ef694e826c9c2117a6ec",
+      "stderr_sha256": "150f436734e37757e3d040936c7ef818747725abca644a9b067e0369db2d34e7",
+      "metrics": {
+        "elapsed_micros": 3333,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 63,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "prebuilt-construction-rotated-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.210417,
+      "stdout": "0063.stdout.json",
+      "stderr": "0063.stderr.jsonl",
+      "stdout_sha256": "9f896827ae123f07c20627dc40935cdf60f9940325a193b5d00a967377f235f1",
+      "stderr_sha256": "e8567c5def68db9f41d0be909352c1fab6dbed929dcefe22b162fc7382744a08",
+      "metrics": {
+        "elapsed_micros": 3017,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 64,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.616625,
+      "stdout": "0064.stdout.json",
+      "stderr": "0064.stderr.jsonl",
+      "stdout_sha256": "975f5efdf9e130c199abb382958c07ab644454c998a79f4e83a37a7ae1bb4ae0",
+      "stderr_sha256": "4b2d2bddce847abf5520f3ed889ce7b0cf3f2076cc35e02151e7d5bff1df3be6",
+      "metrics": {
+        "elapsed_micros": 4311,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 65,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.608958,
+      "stdout": "0065.stdout.json",
+      "stderr": "0065.stderr.jsonl",
+      "stdout_sha256": "6a815f001ed69535c0ece53cf64501151c75c00c1e52aa12b58b8fde2e6a7a44",
+      "stderr_sha256": "fb430eaeb4c84da37cb688612977ba4ba8741e6625de339fb73daf6ba1f34763",
+      "metrics": {
+        "elapsed_micros": 4184,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 66,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.068375,
+      "stdout": "0066.stdout.json",
+      "stderr": "0066.stderr.jsonl",
+      "stdout_sha256": "9e5c638a0528c5202220acd52b17ae3969e682d61ddfa08f0d032c7cc5a4a917",
+      "stderr_sha256": "ad238246ea67bc6e8f8cd8dd197980b559d83fb99aecf1b6021d3210d19a14e6",
+      "metrics": {
+        "elapsed_micros": 4537,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 67,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.786834,
+      "stdout": "0067.stdout.json",
+      "stderr": "0067.stderr.jsonl",
+      "stdout_sha256": "4cacf1b57be4b3a7924c67a0603c4229dfb69a2b0ec0155a9ac3a23c92d707b7",
+      "stderr_sha256": "5fefbbf6037fcc2ee415319ac5f07f6e6b81460f20004f9c85db428cbb94607e",
+      "metrics": {
+        "elapsed_micros": 4205,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 68,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.6185,
+      "stdout": "0068.stdout.json",
+      "stderr": "0068.stderr.jsonl",
+      "stdout_sha256": "4ef10d38306e589c1be66b16b10873a099146c285314e734fcc1f52a3b023596",
+      "stderr_sha256": "28aefe7d468aec789ede17539ec4e034e60baa2ba504c048280847f678698abe",
+      "metrics": {
+        "elapsed_micros": 5006,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 69,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.292083,
+      "stdout": "0069.stdout.json",
+      "stderr": "0069.stderr.jsonl",
+      "stdout_sha256": "0bf9ccae08dad6f143b47bb9f09447bede1dc0e9322d21113d536de6b63fcb73",
+      "stderr_sha256": "77061150c48c05097f33d4a26e725f6e407970274ae4dde2d5970e6731cf734b",
+      "metrics": {
+        "elapsed_micros": 4044,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 70,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.914917,
+      "stdout": "0070.stdout.json",
+      "stderr": "0070.stderr.jsonl",
+      "stdout_sha256": "b0b3e4045b218e2f0da1dcefdf8356617f2fa8f09e4d25141e615e8094627304",
+      "stderr_sha256": "05c64ef97e9d449209fa985e7375f184b9f9da3759e36848c933e86497887e46",
+      "metrics": {
+        "elapsed_micros": 4734,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 71,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.709625,
+      "stdout": "0071.stdout.json",
+      "stderr": "0071.stderr.jsonl",
+      "stdout_sha256": "4f4abfac6087894777a90dee92a4491f9441b5f699247ba18d55fdadd4ea3bc0",
+      "stderr_sha256": "dabead77b27a890360eb95e3ab97e2f847a4182aa38dfa4f47a501a80f07595c",
+      "metrics": {
+        "elapsed_micros": 4592,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 72,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-rotated-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.989209,
+      "stdout": "0072.stdout.json",
+      "stderr": "0072.stderr.jsonl",
+      "stdout_sha256": "538bf60e9b5fff80e8a51f04dddd139a25b23b5d328b9f430fcc62d024c24d40",
+      "stderr_sha256": "1d920d5f18e807d85774e40e9b501fb6c072dfbcf334bd9131d7d2c2ba8b18e7",
+      "metrics": {
+        "elapsed_micros": 4394,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 73,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-rotated-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.5275,
+      "stdout": "0073.stdout.json",
+      "stderr": "0073.stderr.jsonl",
+      "stdout_sha256": "1e62f83e68e45e9c45d943eb25a9a306a2c46cdc9100b08213ae484f76d7f789",
+      "stderr_sha256": "eed478a8173c0857fcc0bc662a65101b3244699d7c7c8194de0c6e57b2c5c30c",
+      "metrics": {
+        "elapsed_micros": 3976,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 74,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-rotated-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.794708,
+      "stdout": "0074.stdout.json",
+      "stderr": "0074.stderr.jsonl",
+      "stdout_sha256": "62e4e5612fb6f9e968b8cc47cbf8583f5c9665f818b593e5234966cbd64e3807",
+      "stderr_sha256": "0be29452318badbc8fe8ca32cdcea85613001d7aedcc4d1e8de26b2a09704935",
+      "metrics": {
+        "elapsed_micros": 4348,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 75,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-rotated-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.735042,
+      "stdout": "0075.stdout.json",
+      "stderr": "0075.stderr.jsonl",
+      "stdout_sha256": "763237626f76ea8f8663292d8813b9a448eeebba4abae7761c9b20ada21caf16",
+      "stderr_sha256": "e8af6fb6cc85b1ab8193a282b7812dca80687c9d093ae3dc5f6e6229f88f3ccd",
+      "metrics": {
+        "elapsed_micros": 4230,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 76,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-rotated-slow/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 7.02825,
+      "stdout": "0076.stdout.json",
+      "stderr": "0076.stderr.jsonl",
+      "stdout_sha256": "5c4e9cbe7dc1608f099be4fd4e509d6fc951d68b4b7fe092c323f109f8a65e46",
+      "stderr_sha256": "e87279da0275146ba1f9c3b1362edeac42f1e70513d8ae52e6ee165172e8e923",
+      "metrics": {
+        "elapsed_micros": 4462,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 77,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-rotated-slow/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.360166,
+      "stdout": "0077.stdout.json",
+      "stderr": "0077.stderr.jsonl",
+      "stdout_sha256": "5f825627d1b32b56611e3a0abf40fa1a1a8576f363539629fd27810eb6c752e3",
+      "stderr_sha256": "fb39581448198c841722637a1d2e321c2359b9e3d9f2683edfd147313e745cb2",
+      "metrics": {
+        "elapsed_micros": 4072,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 78,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "blind-child-construction-rotated-crossing/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.833834,
+      "stdout": "0078.stdout.json",
+      "stderr": "0078.stderr.jsonl",
+      "stdout_sha256": "87afe83c831b441ae3e33cec0c44e6032935ce59501e6c1aa45110276986652f",
+      "stderr_sha256": "9daa8dc07d8944545e5926b686f9d30c4bf6532dfcff3d38b86f92d5af1dba45",
+      "metrics": {
+        "elapsed_micros": 4359,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 79,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "blind-child-construction-rotated-crossing/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.320084,
+      "stdout": "0079.stdout.json",
+      "stderr": "0079.stderr.jsonl",
+      "stdout_sha256": "e25d594ae0d511b5e6e13818fab0c413cea3513a96374da6ec233bb0cf901676",
+      "stderr_sha256": "d3b969dc7beea4676856689368f5809b6458631d081d96f2c2f18ef02c1329f6",
+      "metrics": {
+        "elapsed_micros": 3972,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 80,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "no-stock-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 5.737084,
+      "stdout": "0080.stdout.json",
+      "stderr": "0080.stderr.jsonl",
+      "stdout_sha256": "574abf0b74297617c35924ade1527a9c32901e150dc308cb1672876092b1e82b",
+      "stderr_sha256": "600590fb64dcb53d552d967fc85419564746f6a9defac9152b426a83158b3c9d",
+      "metrics": {
+        "elapsed_micros": 2764,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 81,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "no-stock-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 4.883416,
+      "stdout": "0081.stdout.json",
+      "stderr": "0081.stderr.jsonl",
+      "stdout_sha256": "cca551cec850fdb9aebc39e131ff4fe6acc4ba64a7c4822d235fa1f530413791",
+      "stderr_sha256": "e5eba9948c4c7fa3d0c4d9ff40f686fb1aec8286d03164b91dcdeb3a835f09f1",
+      "metrics": {
+        "elapsed_micros": 2548,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 82,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "no-stock-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 5.345458,
+      "stdout": "0082.stdout.json",
+      "stderr": "0082.stderr.jsonl",
+      "stdout_sha256": "139c573da8196648a34b0fa51ba124f91cb22ba2a4c69d3fd4d3d6ec3b70bdfe",
+      "stderr_sha256": "e8fd5f211e3ee1a8c446d96596e5d56ed31d99db3d62ee39e886b787392293b2",
+      "metrics": {
+        "elapsed_micros": 2817,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 83,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "no-stock-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.020166,
+      "stdout": "0083.stdout.json",
+      "stderr": "0083.stderr.jsonl",
+      "stdout_sha256": "b7d3d4776ee98db5d507ab7b3d26d32a092975540f6cb0607bd5e13e0f5e296e",
+      "stderr_sha256": "38ec25190849728d816a2da4edd6ad18f4d2a0b1ee0d06fef6e12f822c12d028",
+      "metrics": {
+        "elapsed_micros": 2515,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 84,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "no-acquisition-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 5.246167,
+      "stdout": "0084.stdout.json",
+      "stderr": "0084.stderr.jsonl",
+      "stdout_sha256": "9c177b68ffdf9d3a779ab1c77feb7bd4015e2b7d749c2c53306e3b8a31b347e8",
+      "stderr_sha256": "942e774dc90de72abdbfa4d6880cd4667dddfe45bb51c817bd5c910c3e58556d",
+      "metrics": {
+        "elapsed_micros": 2699,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 85,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "no-acquisition-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.053459,
+      "stdout": "0085.stdout.json",
+      "stderr": "0085.stderr.jsonl",
+      "stdout_sha256": "4f583fc0396e3b1ee4962749b079f4d936540f57bf97f545a1169373ba3f2ffb",
+      "stderr_sha256": "111cd52f446be57178374d3cf1b48e124b6840095607c9b633aaeaca3315f3c7",
+      "metrics": {
+        "elapsed_micros": 2433,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 86,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "no-acquisition-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 5.174792,
+      "stdout": "0086.stdout.json",
+      "stderr": "0086.stderr.jsonl",
+      "stdout_sha256": "d9ef6fca0726996bf3a804948d924199b55f44dee8a0b5ff80c42da97d800d8a",
+      "stderr_sha256": "e381de0665ceb8ebd42a03f3a50d871b45bc147d23d2eaf52ef04d4269b19076",
+      "metrics": {
+        "elapsed_micros": 2729,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 87,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "no-acquisition-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.255791,
+      "stdout": "0087.stdout.json",
+      "stderr": "0087.stderr.jsonl",
+      "stdout_sha256": "bb8b0912a6638f61e8272ae6f60cde98bda6d0b68cb51434afc030474f177480",
+      "stderr_sha256": "b3f6035282d4d114d9060cecf0d3686e06472c0ba0c8c40f3bf933ee596ef7a8",
+      "metrics": {
+        "elapsed_micros": 2505,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 88,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "no-activation-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 7.876333,
+      "stdout": "0088.stdout.json",
+      "stderr": "0088.stderr.jsonl",
+      "stdout_sha256": "04a1a30d6be61985227291aaf1b931b47e12eae9d80c0ce28c1d470f75210034",
+      "stderr_sha256": "e79315c82ab5e983a9eb07ff9c4215b1e1770aaa2e32dbe6659762e483c21ff2",
+      "metrics": {
+        "elapsed_micros": 5275,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 89,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "no-activation-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.558291,
+      "stdout": "0089.stdout.json",
+      "stderr": "0089.stderr.jsonl",
+      "stdout_sha256": "51776aa475e09d0bdfd102076d1021653917456f6cb16b4007160d0b0ea7ea34",
+      "stderr_sha256": "ac0d99bd02fee804c98b209679f0dc170078bd2beb5c0b1e7a57c0f4e130a0e5",
+      "metrics": {
+        "elapsed_micros": 4034,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 90,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "no-activation-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 8.149625,
+      "stdout": "0090.stdout.json",
+      "stderr": "0090.stderr.jsonl",
+      "stdout_sha256": "67a04dfe7e3a4772a138a4cddb3e030197e2fe73aa106fe110c706bac9399895",
+      "stderr_sha256": "bf4ded6e81bb3d5346feb22be9e0455a8167789d1f168acdcbc3a308e968fb1d",
+      "metrics": {
+        "elapsed_micros": 5349,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 91,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "no-activation-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.531583,
+      "stdout": "0091.stdout.json",
+      "stderr": "0091.stderr.jsonl",
+      "stdout_sha256": "ac1afc13535c00591e190bf9ad452d164e02ce8b658c31b606310461ad71dfe5",
+      "stderr_sha256": "b5d121211b2090c7cc47138fcfc826e6b0e3638b34127633623ad03d04ba87d2",
+      "metrics": {
+        "elapsed_micros": 4077,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 92,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "idle-child-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 6.06325,
+      "stdout": "0092.stdout.json",
+      "stderr": "0092.stderr.jsonl",
+      "stdout_sha256": "157e5b8f85f5ad1f49959230d2e09c01c471d3f2e73752d6de38968f60a83810",
+      "stderr_sha256": "bd25626705b3abe8aa41c5cb0e380da74110df4f937a82a0a1995a2cace83bfd",
+      "metrics": {
+        "elapsed_micros": 3677,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 93,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "idle-child-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.664583,
+      "stdout": "0093.stdout.json",
+      "stderr": "0093.stderr.jsonl",
+      "stdout_sha256": "4c0f07bfe2314ddef74339dc5b56e5c8a434386f6417b3eda53dfc2af86011e5",
+      "stderr_sha256": "2a55f54eced812c0a0fd0979ababb5ffa1d9dbd24a01c7f0f9772b2d5cd8cb4e",
+      "metrics": {
+        "elapsed_micros": 3276,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 94,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "idle-child-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 6.214542,
+      "stdout": "0094.stdout.json",
+      "stderr": "0094.stderr.jsonl",
+      "stdout_sha256": "b4bf552f19df6dd0c5217dee44a440a6b048128d215c5f5360f77cad7541750c",
+      "stderr_sha256": "2a166f1e35a3119442a258ab07c00b3ffed982697516c678acf3fedb409620f7",
+      "metrics": {
+        "elapsed_micros": 3695,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 95,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "idle-child-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 5.876416,
+      "stdout": "0095.stdout.json",
+      "stderr": "0095.stderr.jsonl",
+      "stdout_sha256": "3e4ce0891ac49d7c82a11dec9f725080407abe94d6645561fd8c08a65f4a6053",
+      "stderr_sha256": "5419d8849fbfeaa337647c93fd712eb4a4a9490374711361582df5e0574082fb",
+      "metrics": {
+        "elapsed_micros": 3301,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 96,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "idle-courier-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 6.591833,
+      "stdout": "0096.stdout.json",
+      "stderr": "0096.stderr.jsonl",
+      "stdout_sha256": "c4f6681c97ecb406c291c13efd573161b02154dd2b581155c533f7897ff75949",
+      "stderr_sha256": "ddd7f8e473eac2de596d7889cd7297377aaf0a6a06d917fdbf317fde3658649e",
+      "metrics": {
+        "elapsed_micros": 4109,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 97,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "idle-courier-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.051917,
+      "stdout": "0097.stdout.json",
+      "stderr": "0097.stderr.jsonl",
+      "stdout_sha256": "d6b25ed59572b723dcc3bbb9328a9fde94c18b21de8c189f846fd0b13d101a53",
+      "stderr_sha256": "b40463b07633539a796d22fd008366641805e034e69d5664268b600a7d16e409",
+      "metrics": {
+        "elapsed_micros": 3577,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 98,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "idle-courier-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 6.5205,
+      "stdout": "0098.stdout.json",
+      "stderr": "0098.stderr.jsonl",
+      "stdout_sha256": "21057c322eb76e2121dc99b77242b5a73c37bd2c46b8524884e7a26343b23d96",
+      "stderr_sha256": "3d92a4177c1e377ddee9703f68977fe83a26af2e172158cb9dc2b850ff1a53a4",
+      "metrics": {
+        "elapsed_micros": 3873,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 99,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "idle-courier-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.00525,
+      "stdout": "0099.stdout.json",
+      "stderr": "0099.stderr.jsonl",
+      "stdout_sha256": "85e123a303cccc497d0a3d16960a4aa7fbd1d817e47a88f17f0a6f8d5450023c",
+      "stderr_sha256": "ee00f392d091cee0689eea98b0e3fe77359a56ebb50d24a5738c4c50ea5a686e",
+      "metrics": {
+        "elapsed_micros": 3572,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 100,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "idle-relay-construction-one/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 6.375916,
+      "stdout": "0100.stdout.json",
+      "stderr": "0100.stderr.jsonl",
+      "stdout_sha256": "fb6a03a3b65fc1f29ef94a5813b8ce86a135d8684c5bc8e84377864f6455ecd5",
+      "stderr_sha256": "f8f1ba7c5b6bfa17bb61f33d945e45b5ddf0267f47a5cc706c872fe3e2c48932",
+      "metrics": {
+        "elapsed_micros": 3900,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 101,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "idle-relay-construction-one/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.035417,
+      "stdout": "0101.stdout.json",
+      "stderr": "0101.stderr.jsonl",
+      "stdout_sha256": "4ed0bc871fdc52bede34896a4479bc5073994dfd7687182350afa2835c5f6d74",
+      "stderr_sha256": "89349f2c87cc593bd2b99a7d77215115b90eb5fdc44feba7fd171124ddcc21cf",
+      "metrics": {
+        "elapsed_micros": 3569,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 102,
+      "executable": "target/release/platonik",
+      "args": [
+        "run",
+        "idle-relay-construction-zero/experiment.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 1,
+      "elapsed_ms": 6.4195,
+      "stdout": "0102.stdout.json",
+      "stderr": "0102.stderr.jsonl",
+      "stdout_sha256": "2b3f07252ee0600e62031ca67d42b0aac67f2ba5967bc52f1c216ba08aa417d4",
+      "stderr_sha256": "695d04e62d7b047c3173ba174d9f9985ad95ab6c250d335deddc17d28c0ab252",
+      "metrics": {
+        "elapsed_micros": 3985,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 103,
+      "executable": "target/release/platonik",
+      "args": [
+        "verify",
+        "idle-relay-construction-zero/receipt.json"
+      ],
+      "reserved_engine_executions": 2,
+      "exit_code": 0,
+      "elapsed_ms": 6.015458,
+      "stdout": "0103.stdout.json",
+      "stderr": "0103.stderr.jsonl",
+      "stdout_sha256": "049c8b6817fe5e58d8fefff205481e6b1186e973c8970701abf55f0d91e1d19c",
+      "stderr_sha256": "5293e6e2059f49d86455fa98f4fa90e2bcd08787bd563262a55c7173e1c00f85",
+      "metrics": {
+        "elapsed_micros": 3688,
+        "engine_executions": 1,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 104,
+      "executable": "target/release/platonik",
+      "args": [
+        "habitat",
+        "init",
+        "keeper-born/save",
+        "keeper-born/experiment.json"
+      ],
+      "reserved_engine_executions": 64,
+      "exit_code": 0,
+      "elapsed_ms": 52.847459,
+      "stdout": "0104.stdout.json",
+      "stderr": "0104.stderr.jsonl",
+      "stdout_sha256": "5fe13567d886244d883880401a5cf10b47efad7787983921d9dc6483630aa7dc",
+      "stderr_sha256": "c887cb8b5a4ff84a1e7bb3dc7d91f4e2f7e8903a6afffc4219c80e8d2572f0c2",
+      "metrics": {
+        "elapsed_micros": 49550,
+        "engine_executions": 2,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 105,
+      "executable": "target/release/platonik",
+      "args": [
+        "habitat",
+        "advance",
+        "keeper-born/save",
+        "--until",
+        "1",
+        "--expect-revision",
+        "0",
+        "--request-id",
+        "leg-1"
+      ],
+      "reserved_engine_executions": 64,
+      "exit_code": 0,
+      "elapsed_ms": 52.847292,
+      "stdout": "0105.stdout.json",
+      "stderr": "0105.stderr.jsonl",
+      "stdout_sha256": "1ef62c8fb402ef893dd7e83015a85dbc346d65f2d72e24dbc7291b08f58f8e65",
+      "stderr_sha256": "1d27c8c8d3fe673ff1b2d66493fb1ff34fe78c2327e57d115c0d5efc4939df4a",
+      "metrics": {
+        "elapsed_micros": 50277,
+        "engine_executions": 7,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 106,
+      "executable": "target/release/platonik",
+      "args": [
+        "habitat",
+        "advance",
+        "keeper-born/save",
+        "--until",
+        "2",
+        "--expect-revision",
+        "2",
+        "--request-id",
+        "leg-2"
+      ],
+      "reserved_engine_executions": 64,
+      "exit_code": 0,
+      "elapsed_ms": 56.398208,
+      "stdout": "0106.stdout.json",
+      "stderr": "0106.stderr.jsonl",
+      "stdout_sha256": "e5a085e76da617e1207a3820bf3b2785348fafd59a0c6fcfa163d21f7c24ba31",
+      "stderr_sha256": "ce04e691a51e5636cf9fdaad251bb55b13ed656d454924a46a5ac0fee25b67dc",
+      "metrics": {
+        "elapsed_micros": 53783,
+        "engine_executions": 13,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 107,
+      "executable": "target/release/platonik",
+      "args": [
+        "habitat",
+        "advance",
+        "keeper-born/save",
+        "--until",
+        "8",
+        "--expect-revision",
+        "4",
+        "--request-id",
+        "leg-8"
+      ],
+      "reserved_engine_executions": 64,
+      "exit_code": 0,
+      "elapsed_ms": 57.773541,
+      "stdout": "0107.stdout.json",
+      "stderr": "0107.stderr.jsonl",
+      "stdout_sha256": "6c2ac25e761b86c379e97068f0979e6e3c0387678071eba7834d154ea3343c1d",
+      "stderr_sha256": "83308373fb6e7a0756f799c0a894252a92b386647a1dc586c52ecb5b470858d4",
+      "metrics": {
+        "elapsed_micros": 55162,
+        "engine_executions": 19,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 108,
+      "executable": "target/release/platonik",
+      "args": [
+        "habitat",
+        "export",
+        "keeper-born/save"
+      ],
+      "reserved_engine_executions": 64,
+      "exit_code": 0,
+      "elapsed_ms": 6.456791,
+      "stdout": "0108.stdout.json",
+      "stderr": "0108.stderr.jsonl",
+      "stdout_sha256": "175cca52134eb611325696fb05d37b5f50048084cde62369c4ced83a675ca2f4",
+      "stderr_sha256": "ea677ad0a3ff543001675bff6317264f0ff9ce950d12c45ca7ffca94815fbdfb",
+      "metrics": {
+        "elapsed_micros": 3931,
+        "engine_executions": 7,
+        "schema": "platonik-process-metrics-v1"
+      }
+    },
+    {
+      "index": 109,
+      "executable": "target/release/platonik",
+      "args": [
+        "habitat",
+        "import",
+        "keeper-born/at-8.bundle.json",
+        "keeper-born/restored-8"
+      ],
+      "reserved_engine_executions": 64,
+      "exit_code": 0,
+      "elapsed_ms": 196.005667,
+      "stdout": "0109.stdout.json",
+      "stderr": "0109.stderr.jsonl",
+      "stdout_sha256": "941eca0c599a007ac58707a3d276ed97d157735be803e0b76b0ae03985fdf4f0",
+      "stderr_sha256": "9c267936f0eca8ae2decf7b1e8621772c3eac60d4d12abac1bbaa24b01c1d99d",
+      "metrics": {
+        "elapsed_micros": 193602,
+        "engine_executions": 14,
+        "schema": "platonik-process-metrics-v1"
+      }
+    }
+  ],
+  "pending_call": null,
+  "stopped": null
+}

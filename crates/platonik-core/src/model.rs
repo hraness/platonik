@@ -4,10 +4,15 @@ pub const MODEL_VERSION: u32 = 1;
 pub const PROTOCOL: &str = "platonik-habitat-v1";
 pub const HAZARD_VERSION: u32 = 2;
 pub const HAZARD_PROTOCOL: &str = "platonik-habitat-v2";
+pub const CONSTRUCTION_VERSION: u32 = 3;
+pub const CONSTRUCTION_PROTOCOL: &str = "platonik-habitat-v3";
+pub const COPY_BYTES: usize = 32;
+pub const MAX_BLUEPRINT_BYTES: usize = 4096;
 pub fn protocol_for_version(version: u32) -> Option<&'static str> {
     match version {
         MODEL_VERSION => Some(PROTOCOL),
         HAZARD_VERSION => Some(HAZARD_PROTOCOL),
+        CONSTRUCTION_VERSION => Some(CONSTRUCTION_PROTOCOL),
         _ => None,
     }
 }
@@ -68,16 +73,47 @@ pub enum Relative {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Condition {
-    Carrying { value: bool },
-    AtSource { value: bool },
-    AtDepot { value: bool },
-    AtBeacon { value: bool },
-    AtReceiver { value: bool },
-    Blocked { direction: Relative, value: bool },
-    HasMessage { port: u8, value: bool },
-    MessageBit { port: u8, value: bool },
-    Memory { slot: u8, value: u8 },
-    Heading { direction: Direction },
+    Carrying {
+        value: bool,
+    },
+    AtSource {
+        value: bool,
+    },
+    AtDepot {
+        value: bool,
+    },
+    AtBeacon {
+        value: bool,
+    },
+    AtReceiver {
+        value: bool,
+    },
+    Blocked {
+        direction: Relative,
+        value: bool,
+    },
+    HasMessage {
+        port: u8,
+        value: bool,
+    },
+    MessageBit {
+        port: u8,
+        value: bool,
+    },
+    Memory {
+        slot: u8,
+        value: u8,
+    },
+    Heading {
+        direction: Direction,
+    },
+    HasMaterial {
+        value: bool,
+    },
+    AssemblyStage {
+        blueprint: u16,
+        stage: AssemblyStage,
+    },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
@@ -98,6 +134,9 @@ pub enum Action {
     TakeMessage { port: u8, slot: u8 },
     Send { port: u8, bit: BitSource },
     Route { valve: u16, bit: BitSource },
+    GatherMaterial { stock: u16 },
+    Build { blueprint: u16 },
+    Activate { blueprint: u16 },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -185,6 +224,71 @@ pub struct Link {
     pub delay: u32,
     pub enabled: bool,
 }
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum AssemblyStage {
+    Absent,
+    Copying,
+    Wiring,
+    Ready,
+    Born,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MaterialStock {
+    pub id: u16,
+    pub position: Point,
+    pub units: Vec<u32>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BlueprintBody {
+    pub cell: Cell,
+    pub links: Vec<Link>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Blueprint {
+    pub id: u16,
+    pub body: BlueprintBody,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConstructionSpec {
+    pub stocks: Vec<MaterialStock>,
+    pub blueprints: Vec<Blueprint>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MaterialStockState {
+    pub id: u16,
+    pub units: Vec<u32>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Assembly {
+    pub blueprint: u16,
+    pub parent: u16,
+    pub material: u32,
+    pub copied: Vec<u8>,
+    pub wired: Vec<Link>,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Birth {
+    pub blueprint: u16,
+    pub parent: u16,
+    pub material: u32,
+    pub tick: u32,
+    pub body: BlueprintBody,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConstructionState {
+    pub stocks: Vec<MaterialStockState>,
+    pub assemblies: Vec<Assembly>,
+    pub births: Vec<Birth>,
+}
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum EventKind {
@@ -217,6 +321,8 @@ pub struct Experiment {
     pub ticks: u32,
     pub fuel: u64,
     pub activation_fuel: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub construction: Option<ConstructionSpec>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -233,6 +339,13 @@ pub struct Costs {
     pub transfers: u64,
     pub checking: u64,
     pub draining: u64,
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub copying: u64,
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub construction: u64,
+}
+fn is_zero(value: &u64) -> bool {
+    *value == 0
 }
 impl Costs {
     pub fn total(&self) -> u64 {
@@ -247,6 +360,8 @@ impl Costs {
             + self.transfers
             + self.checking
             + self.draining
+            + self.copying
+            + self.construction
     }
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -272,6 +387,8 @@ pub struct CellState {
     pub evidence: [Option<u32>; 4],
     pub cargo: Option<Spark>,
     pub inbox: [Option<Signal>; 4],
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub material: Option<u32>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -323,6 +440,8 @@ pub struct State {
     /// Omitted in legacy receipts so habitat-v1 bytes and identities stay unchanged.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub closed_edges: Vec<Edge>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub construction: Option<ConstructionState>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

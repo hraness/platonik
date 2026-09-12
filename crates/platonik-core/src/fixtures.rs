@@ -236,6 +236,7 @@ fn world(resilient: bool, wounded: bool, bit: bool, count: u32) -> Experiment {
         ticks: 44,
         fuel: 20_000,
         activation_fuel: 128,
+        construction: None,
     }
 }
 

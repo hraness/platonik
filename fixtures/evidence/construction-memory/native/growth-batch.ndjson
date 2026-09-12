@@ -1,0 +1,3 @@
+{"kind":"batch","mode":"growth-batch","length":4399674,"iterations":8,"rss_before_bytes":1720320,"rss_after_release_bytes":39403520,"distinct_addresses":8}
+{"kind":"batch","mode":"growth-batch","length":5077003,"iterations":8,"rss_before_bytes":39436288,"rss_after_release_bytes":80216064,"distinct_addresses":8}
+{"kind":"complete","mode":"growth-batch","engine_executions":0,"elapsed_micros":12760}

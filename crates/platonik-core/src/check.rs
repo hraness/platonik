@@ -1,5 +1,8 @@
 //! Receipt identity and a checker independent of the simulator's success predicate.
 //! Hashes identify the parsed artifacts; verification also executes their pinned model.
+#[path = "check_construction.rs"]
+mod construction;
+
 use crate::model::*;
 use crate::sim::{run, validate_experiment};
 use serde::{Deserialize, Serialize};
@@ -114,7 +117,7 @@ fn ensure(condition: bool, message: &str) -> Result<(), String> {
     }
 }
 
-fn counters(costs: &Costs) -> [u64; 11] {
+fn counters(costs: &Costs) -> [u64; 13] {
     [
         costs.loading,
         costs.scheduling,
@@ -127,6 +130,8 @@ fn counters(costs: &Costs) -> [u64; 11] {
         costs.transfers,
         costs.checking,
         costs.draining,
+        costs.copying,
+        costs.construction,
     ]
 }
 
@@ -151,6 +156,7 @@ fn validate_state(
     complete: bool,
     initial: &BTreeMap<u32, bool>,
 ) -> Result<(), String> {
+    construction::validate_state(experiment, state)?;
     ensure(
         state.tick <= experiment.ticks,
         "A state exceeds the declared tick horizon.",
@@ -159,7 +165,7 @@ fn validate_state(
         state.closed_edges.len() <= experiment.events.len()
             && state.closed_edges.windows(2).all(|pair| pair[0] < pair[1])
             && state.closed_edges.iter().all(|edge| {
-                experiment.version == HAZARD_VERSION && edge.is_canonical()
+                matches!(experiment.version, HAZARD_VERSION | CONSTRUCTION_VERSION) && edge.is_canonical()
                     && experiment.events.iter().any(|event| {
                         matches!(event.event, EventKind::EdgeBlocked { edge: declared, .. } if declared == *edge)
                     })
@@ -168,7 +174,13 @@ fn validate_state(
     )?;
     ensure(
         ids_match(
-            experiment.cells.iter().map(|cell| cell.id),
+            experiment.cells.iter().map(|cell| cell.id).chain(
+                state
+                    .construction
+                    .iter()
+                    .flat_map(|construction| &construction.births)
+                    .map(|birth| birth.body.cell.id),
+            ),
             state.cells.iter().map(|cell| cell.id),
         ),
         "Cell identities changed or duplicated.",
@@ -203,7 +215,9 @@ fn validate_state(
     )?;
     ensure(
         ids_match(
-            experiment.links.iter().map(|link| link.id),
+            construction::links(experiment, state)
+                .iter()
+                .map(|link| link.id),
             state.links.iter().map(|link| link.id),
         ),
         "Link identities changed or duplicated.",
@@ -221,11 +235,8 @@ fn validate_state(
             occupied.insert((cell.position.x, cell.position.y)),
             "Two cells occupy one position.",
         )?;
-        let definition = experiment
-            .cells
-            .iter()
-            .find(|definition| definition.id == cell.id)
-            .unwrap();
+        let definition = construction::definition(experiment, state, cell.id)
+            .ok_or("A cell has no admitted definition.")?;
         ensure(
             definition.mobile || cell.position == definition.position,
             "A stationary cell moved.",
@@ -326,7 +337,7 @@ fn validate_state(
     )?;
     let mut signal_ids = BTreeSet::new();
     for signal in &state.pending {
-        validate_signal(experiment, signal, initial)?;
+        validate_signal(experiment, state, signal, initial)?;
         ensure(
             !complete || signal.deliver_tick > state.tick,
             "A due signal remains after a completed tick.",
@@ -343,7 +354,7 @@ fn validate_state(
             .enumerate()
             .filter_map(|(port, signal)| signal.as_ref().map(|signal| (port, signal)))
         {
-            validate_signal(experiment, signal, initial)?;
+            validate_signal(experiment, state, signal, initial)?;
             ensure(
                 signal.to_cell == cell.id
                     && usize::from(signal.to_port) == port
@@ -364,14 +375,26 @@ fn validate_state(
 
 fn validate_signal(
     experiment: &Experiment,
+    state: &State,
     signal: &Signal,
     initial: &BTreeMap<u32, bool>,
 ) -> Result<(), String> {
-    let link = experiment
-        .links
+    let definitions = construction::links(experiment, state);
+    let link = definitions
         .iter()
         .find(|link| link.id == signal.link)
-        .ok_or("Signal uses an unknown link.")?;
+        .ok_or("Signal uses an unknown or inactive link.")?;
+    if let Some(birth) = state
+        .construction
+        .iter()
+        .flat_map(|construction| &construction.births)
+        .find(|birth| birth.body.links.iter().any(|link| link.id == signal.link))
+    {
+        ensure(
+            signal.sent_tick >= birth.tick,
+            "A signal used wiring before its installation.",
+        )?;
+    }
     ensure(
         signal.from == link.from
             && signal.to_cell == link.to_cell
@@ -425,7 +448,7 @@ fn validate_frames(experiment: &Experiment, frames: &[Frame]) -> Result<PrefixSu
             "Initial spark identities are duplicated.",
         )?;
     }
-    let mut previous_costs = [0u64; 11];
+    let mut previous_costs = [0u64; 13];
     let mut previous_frame: Option<&Frame> = None;
     for (index, frame) in frames.iter().enumerate() {
         ensure(
@@ -433,6 +456,11 @@ fn validate_frames(experiment: &Experiment, frames: &[Frame]) -> Result<PrefixSu
             "Frame ticks are not contiguous.",
         )?;
         validate_state(experiment, &frame.state, frame.complete, &initial)?;
+        ensure(
+            experiment.version == CONSTRUCTION_VERSION
+                || (frame.costs.copying == 0 && frame.costs.construction == 0),
+            "Older protocols contain construction costs.",
+        )?;
         let work = checked_work(&frame.costs)?;
         ensure(
             work <= experiment.fuel,
@@ -534,6 +562,7 @@ pub fn validate_result(experiment: &Experiment, result: &RunResult) -> Result<()
 }
 
 fn validate_initial(experiment: &Experiment, frame: &Frame) -> Result<(), String> {
+    construction::validate_initial(experiment, &frame.state)?;
     ensure(
         frame.activations.is_empty()
             && frame.events.is_empty()
@@ -623,7 +652,7 @@ fn validate_initial(experiment: &Experiment, frame: &Frame) -> Result<(), String
     Ok(())
 }
 
-fn expected_activation_order(experiment: &Experiment, tick: u32) -> Vec<u16> {
+fn expected_activation_order(experiment: &Experiment, state: &State, tick: u32) -> Vec<u16> {
     let priority = |id: u16| {
         let mut word = (experiment.seed ^ (u64::from(tick) << 32) ^ u64::from(id))
             .wrapping_add(0x9e3779b97f4a7c15);
@@ -631,7 +660,7 @@ fn expected_activation_order(experiment: &Experiment, tick: u32) -> Vec<u16> {
         word = (word ^ (word >> 27)).wrapping_mul(0x94d049bb133111eb);
         (word ^ (word >> 31), id)
     };
-    let mut ids: Vec<_> = experiment.cells.iter().map(|cell| cell.id).collect();
+    let mut ids: Vec<_> = state.cells.iter().map(|cell| cell.id).collect();
     ids.sort_by_key(|id| priority(*id));
     ids
 }
@@ -692,6 +721,17 @@ fn validate_transition(
             }
         }
     }
+    for birth in frame
+        .state
+        .construction
+        .iter()
+        .flat_map(|construction| &construction.births)
+        .filter(|birth| birth.tick == frame.tick)
+    {
+        for link in &birth.body.links {
+            links.insert(link.id, link.enabled);
+        }
+    }
     ensure(
         frame.state.closed_edges == closed_edges.into_iter().collect::<Vec<_>>(),
         "Movement edges changed outside their declared intervention prefix.",
@@ -716,7 +756,7 @@ fn validate_transition(
         .map(|cell| (cell.id, cell.position))
         .collect();
     let mut activated = BTreeSet::new();
-    let expected_order = expected_activation_order(experiment, frame.tick);
+    let expected_order = expected_activation_order(experiment, &previous.state, frame.tick);
     let observed_order: Vec<_> = frame
         .activations
         .iter()
@@ -728,11 +768,8 @@ fn validate_transition(
     )?;
     let mut activation_work = checked_work(&previous.costs)?;
     for activation in &frame.activations {
-        let definition = experiment
-            .cells
-            .iter()
-            .find(|cell| cell.id == activation.cell)
-            .ok_or("An unknown cell activated.")?;
+        let definition = construction::definition(experiment, &previous.state, activation.cell)
+            .ok_or("An unknown or not-yet-eligible cell activated.")?;
         ensure(
             activated.insert(activation.cell),
             "A cell activated more than once in a tick.",
@@ -772,6 +809,29 @@ fn validate_transition(
             "A movement crossed into an occupied cell.",
         )?;
         positions.insert(activation.cell, activation.position_after);
+        if activation.success
+            && let Action::Activate { blueprint } = activation.action
+        {
+            let birth = frame
+                .state
+                .construction
+                .iter()
+                .flat_map(|construction| &construction.births)
+                .find(|birth| {
+                    birth.blueprint == blueprint
+                        && birth.parent == activation.cell
+                        && birth.tick == frame.tick
+                })
+                .ok_or("Successful activation has no matching birth.")?;
+            ensure(
+                !positions.contains_key(&birth.body.cell.id)
+                    && !positions
+                        .values()
+                        .any(|point| *point == birth.body.cell.position),
+                "Birth overwrites an existing cell or position.",
+            )?;
+            positions.insert(birth.body.cell.id, birth.body.cell.position);
+        }
         if let Some(rule) = activation.rule {
             ensure(
                 definition
@@ -789,7 +849,7 @@ fn validate_transition(
         }
     }
     ensure(
-        !frame.complete || activated.len() == experiment.cells.len(),
+        !frame.complete || activated.len() == expected_order.len(),
         "A completed tick skipped a cell activation.",
     )?;
     ensure(
@@ -801,8 +861,31 @@ fn validate_transition(
         "Final positions disagree with the activation trace.",
     )?;
     validate_action_effects(experiment, previous, frame)?;
+    let copied_bytes = |state: &State| -> Result<u64, String> {
+        let Some(construction) = &state.construction else {
+            return Ok(0);
+        };
+        let staged: usize = construction
+            .assemblies
+            .iter()
+            .map(|assembly| assembly.copied.len())
+            .sum();
+        let born = construction.births.iter().try_fold(0usize, |sum, birth| {
+            serde_json::to_vec(&birth.body)
+                .map(|bytes| sum + bytes.len())
+                .map_err(|error| error.to_string())
+        })?;
+        Ok((staged + born) as u64)
+    };
+    let committed_copying = copied_bytes(&frame.state)?
+        .checked_sub(copied_bytes(&previous.state)?)
+        .ok_or("Copied construction history went backwards.")?;
+    ensure(
+        frame.costs.copying - previous.costs.copying >= committed_copying,
+        "Committed copied bytes were not charged.",
+    )?;
     for signal_event in &frame.signals {
-        validate_signal(experiment, &signal_event.signal, initial)?;
+        validate_signal(experiment, &frame.state, &signal_event.signal, initial)?;
         match signal_event.outcome.as_str() {
             "queued" => ensure(
                 signal_event.signal.sent_tick == frame.tick,
@@ -926,6 +1009,14 @@ fn validate_action_effects(
         cell.inbox = [None, None, None, None];
     }
     for event in &frame.events {
+        if let EventKind::LinkEnabled { id, enabled } = event {
+            expected
+                .links
+                .iter_mut()
+                .find(|link| link.id == *id)
+                .ok_or("Unknown link intervention.")?
+                .enabled = *enabled;
+        }
         if let EventKind::ClearMemory { cell } = event {
             let cell = expected
                 .cells
@@ -988,7 +1079,8 @@ fn validate_action_effects(
                         !expected
                             .cells
                             .iter()
-                            .any(|cell| cell.id != activation.cell && cell.position == destination),
+                            .any(|cell| cell.id != activation.cell && cell.position == destination)
+                            && !construction::reserved(experiment, &expected, destination),
                         "A move enters an occupied tile.",
                     )?;
                     expected.cells[index].position = destination;
@@ -1130,6 +1222,15 @@ fn validate_action_effects(
                         beacon: beacon_id,
                     });
                 }
+                Action::GatherMaterial { .. } | Action::Build { .. } | Action::Activate { .. } => {
+                    construction::apply(
+                        experiment,
+                        &mut expected,
+                        index,
+                        &activation.action,
+                        frame.tick,
+                    )?;
+                }
                 Action::Wait | Action::Send { .. } => {}
             }
         } else {
@@ -1140,14 +1241,12 @@ fn validate_action_effects(
         }
         if !interrupted
             && let Some(rule) = activation.rule
-            && let Some(write) = &experiment
-                .cells
-                .iter()
-                .find(|cell| cell.id == activation.cell)
-                .unwrap()
-                .program
-                .rules[rule]
-                .remember
+            && let Some(write) =
+                &construction::definition(experiment, &previous.state, activation.cell)
+                    .ok_or("No admitted actor definition.")?
+                    .program
+                    .rules[rule]
+                    .remember
         {
             expected.cells[index].memory[usize::from(write.slot)] = write.value;
             expected.cells[index].evidence[usize::from(write.slot)] = None;
@@ -1163,6 +1262,12 @@ fn validate_action_effects(
             && expected.delivered == frame.state.delivered,
         "Recorded actions do not explain the stock or delivery transition.",
     )?;
+    ensure(
+        expected.construction == frame.state.construction
+            && expected.links == frame.state.links
+            && expected.cells.len() == frame.state.cells.len(),
+        "Recorded actions do not explain construction, identities, or wiring.",
+    )?;
     for expected in &expected.cells {
         let actual = frame
             .state
@@ -1172,6 +1277,7 @@ fn validate_action_effects(
             .unwrap();
         ensure(
             expected.cargo == actual.cargo
+                && expected.material == actual.material
                 && expected.position == actual.position
                 && expected.heading == actual.heading
                 && expected.memory == actual.memory

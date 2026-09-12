@@ -1,6 +1,6 @@
 # Carry one world through the journey
 
-Implemented bounded Rust habitat, September 2026. A courier, relay, and keeper service changing reports in one physical world. Save while a spark is in hand or a report is in flight, then resume the same state. Construction, a traveling ark, and the complete Long Trail remain proposals.
+Implemented bounded Rust habitat, September 2026. A courier, relay, and keeper service changing reports in one physical world. Save while a spark is in hand or a report is in flight, then resume the same state. V3 adds [material-dependent construction](construction-evaluation.md) in this same save format. A traveling ark and the complete Long Trail remain proposals.
 
 ## Start with the crew you already know
 
@@ -57,7 +57,7 @@ The field expedition's earlier report family held one bit constant throughout ea
 
 Your agent may propose a keeper that records both reports, or a simpler method that tries both service routes. Wrong attempts retain stock and consume work. A lawful blind strategy is part of the comparison. The game does not disqualify it for being less elaborate. The [evaluation report](continuity-evaluation.md) records which methods actually worked and what they cost.
 
-Programs stay fixed after launch. Ask the agent to preserve the original experiment, edit a copy, and create another habitat to compare a different design. The current habitat has no mid-journey refit, fuel purchase, clock jump, or in-world construction operation.
+Programs stay fixed after launch. Ask the agent to preserve the original experiment, edit a copy, and create another habitat to compare a different design. The current habitat has no mid-journey refit, fuel purchase, or clock jump. In v3, a parent can acquire material, copy a declared blueprint, and activate its child through ordinary metered actions; the supplied experiment remains immutable. See [construction](construction-evaluation.md) for its separate material ledger and bounds.
 
 ## Pause, retry, and recover
 

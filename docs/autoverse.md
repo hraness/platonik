@@ -32,7 +32,7 @@ This follows the proposed beacon engine's activation order while adding explicit
 | `memory/1` | Read or write bounded registers and finite addressable storage | Initialization, access, copying, and persistence are charged; bit widths and overflow behavior are fixed |
 | `construction/1` | Read a finite blueprint, place a permitted part, connect compatible ports, and request activation of a valid assembly | Each placement, connection, copied byte, and activation pays; parts consume declared stock and space |
 
-Early assembly happens through player or agent setup, with parts, initialization, and loading charged at admission. `construction/1` later moves placement into the running world. It uses a finite catalog and validated templates, never native code. Partial assemblies remain inactive. A failed placement consumes work and leaves stock and occupancy unchanged; successful placement transfers stock into an accounted part without overwriting another organism.
+The earlier browser workbench assembles parts during player or agent setup, with initialization and loading charged at admission. The bounded [v3 Rust constructor](construction-evaluation.md) now moves prescribed single-cell assembly into the running world; broader multi-part construction remains proposed. It uses a finite catalog and validated templates, never native code. Partial assemblies remain inactive. A failed placement consumes work and leaves stock and occupancy unchanged; successful placement transfers stock into an accounted part without overwriting another organism.
 
 Boolean gates, latches, adders, controllers, protocols, and search procedures are **compositions** of permitted rules and parts. They are not free high-level operations. A fractional-signal module would need separate precision, update-order, noise, and metering contracts; the truth garden does not silently add analog abilities to digital ports.
 
@@ -81,10 +81,10 @@ Activate bounded regions, pause other regions explicitly, and declare how transf
 | Courier portraits, one-courier journeys, local collection, truth maps, browser budget sample | Implemented browser demonstrations; see the [observatory guide](observatory.md) |
 | Digital relay, gate, memory, arithmetic, and finite blueprint assembly | Bounded [Autoverse bench](https://platonik.space/lab#autoverse) prototypes in this website update; each identifies its actual model and tested scope |
 | Shared spatial transport, signals, memory, and service routing | Implemented in the bounded [Rust bridge](rust-bridge.md); finite public fixtures, not the complete campaign protocol |
-| In-world construction within that same runtime | Proposed; the separate browser assembler does not implement it |
+| In-world construction within that same runtime | [V3 finite constructor](construction-evaluation.md): acquire material, copy a declared body and links, activate it, and execute its ordinary policy. Multi-part machinery and endogenous design remain proposed |
 | Full stored-program computer, autonomous candidate search, self-construction | Proposed achievements; an adder or prescribed assembler does not establish them |
 | Persistent collection, local save and ancestry, closing-route field expedition | Implemented in the [field expedition](field-expedition.md), with separate bounded trials and frozen confirmation |
-| Continuous physical state between visits | Implemented in the [continuous habitat](continuous-habitat.md): checked absolute-time advances preserve one bounded world; moving arks and construction remain unimplemented |
+| Continuous physical state between visits | Implemented in the [continuous habitat](continuous-habitat.md): checked absolute-time advances preserve one bounded world; partial construction is preserved too; moving arks remain unimplemented |
 | Rust campaign, living arks, distributed settlements, integrated finale | Proposed; no complete campaign or large ecology has been demonstrated |
 
 The campaign has a finite ending. Continuing mastery comes from better designs, new reviewed habitats, larger admitted limits, and useful exported results. It depends on [research evidence](research.md#what-the-game-can-honestly-produce), not a promise that complexity must keep increasing.

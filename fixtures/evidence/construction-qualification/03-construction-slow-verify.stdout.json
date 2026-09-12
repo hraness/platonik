@@ -1,0 +1,10 @@
+{
+  "schema": "platonik-verification-v1",
+  "verified": true,
+  "passed": true,
+  "protocol": "platonik-habitat-v3",
+  "experiment_hash": "sha256:f4aa72b5782c2878135ec0668b9e9d34979f87bd7eb8ec99b9d427cb75cd3d36",
+  "result_hash": "sha256:7d8aeb53c0e07f300b295a399240dfdc68285ae349e39d92dbf51ef435e33b2a",
+  "ticks_completed": 128,
+  "work": 16858
+}

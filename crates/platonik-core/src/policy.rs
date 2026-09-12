@@ -1,3 +1,4 @@
+use crate::construction;
 use crate::model::*;
 use crate::sim::{Cat, Meter, Stop, emit};
 
@@ -46,6 +47,7 @@ pub fn blocked(experiment: &Experiment, state: &State, cell: usize, direction: R
                 || state
                     .closed_edges
                     .contains(&Edge::new(actor.position, point))
+                || construction::reserved(experiment, state, point)
                 || state
                     .cells
                     .iter()
@@ -111,11 +113,15 @@ fn check_condition(
             .as_ref()
             .is_some_and(|signal| signal.bit == *value),
         Condition::Heading { direction } => cell.heading == *direction,
+        Condition::HasMaterial { value } => cell.material.is_some() == *value,
+        Condition::AssemblyStage { blueprint, stage } => {
+            construction::stage(experiment, state, index, *blueprint) == Some(*stage)
+        }
         Condition::Memory { .. } => unreachable!(),
     })
 }
 
-enum Fault {
+pub(crate) enum Fault {
     Limit(Stop),
     Action(&'static str),
 }
@@ -179,11 +185,18 @@ fn execute(
 ) -> Result<(), Fault> {
     meter.charge(Cat::Actions, 1)?;
     match action {
+        Action::GatherMaterial { .. } | Action::Build { .. } | Action::Activate { .. } => {
+            construction::execute(action, experiment, state, index, meter)?
+        }
         Action::Wait => {}
         Action::Move { direction } => {
             meter.charge(Cat::Checking, 1)?;
             meter.charge(Cat::Checking, state.closed_edges.len() as u64)?;
-            if !experiment.cells[index].mobile || blocked(experiment, state, index, *direction) {
+            if !construction::cell_definition(experiment, state, state.cells[index].id)
+                .unwrap()
+                .mobile
+                || blocked(experiment, state, index, *direction)
+            {
                 return Err(Fault::Action("movement_blocked"));
             }
             meter.charge(Cat::Transfers, 1)?;
@@ -359,7 +372,14 @@ pub(crate) fn activate(
     let result = (|| -> Result<(), Fault> {
         meter.charge(Cat::Scheduling, 1)?;
         let mut selected = None;
-        for (rule_index, rule) in experiment.cells[index].program.rules.iter().enumerate() {
+        for (rule_index, rule) in
+            construction::cell_definition(experiment, state, state.cells[index].id)
+                .unwrap()
+                .program
+                .rules
+                .iter()
+                .enumerate()
+        {
             meter.charge(Cat::Checking, 1)?;
             let mut matches = true;
             for condition in &rule.when {
