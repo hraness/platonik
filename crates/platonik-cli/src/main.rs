@@ -77,7 +77,9 @@ const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
   platonik habitat import <bundle.json|-> <new-dir>\n\n\
 Init loads an immutable experiment at tick zero and revision zero. Advance to\n\
 an absolute later tick, preserving the actual physical state, queues, memories,\n\
-event clock, spent work, and original fuel cap. At most eight advances and 128\n\
+materials, partial assemblies, event clock, spent work, and original fuel cap.\n\
+Construction cases use v3 parent actions; no CLI command injects a child.\n\
+At most eight advances and 128\n\
 total ticks are admitted. Paused is not mission success. A finished failed run\n\
 cannot be refueled or continued; its evidence remains available.\n\n\
 Each advance commits intent before execution and completion afterward, using\n\
@@ -87,7 +89,8 @@ Reports show current state/costs and artifact identities; full traces are in\n\
 exported bundles. Verify/import replay the journal, never trust a caller State.\n\n\
 Prepare verifies an expedition's frozen pair and prints a case Experiment with\n\
 those courier/controller programs. It does not modify that separate collection\n\
-or authenticate ownership. Use a new filename for redirected output.\n\n\
+or authenticate ownership. A missing controller is supplied in its child\n\
+blueprint and must still be built. Use a new filename for redirected output.\n\n\
 Exit 1 means init/advance/recover finished with a valid mission failure; a valid\n\
 failed habitat can status/verify/import with exit 0. Exit 2 is invalid input,\n\
 stale revision, corruption, or an operational error. Prefix --metrics to count\n\

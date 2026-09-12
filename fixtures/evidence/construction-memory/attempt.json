@@ -1,0 +1,38 @@
+{
+  "schema": "platonik-construction-buffered-attempt-v1",
+  "freeze_sha256": "0f97f0c6f4973081aadca78ea6a19f97f25bba02c6b51439f1777eea1ee809d8",
+  "args": [
+    "--measure-buffered"
+  ],
+  "reserved_engine_executions": 124,
+  "maximum_engine_executions": 256,
+  "environment": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "release": "25.5.0",
+    "cpu": "Apple M5 Max",
+    "malloc_nano_zone": "0"
+  },
+  "pending": false,
+  "elapsed_ms": 8288.746791,
+  "stdout": {
+    "file": "fixtures/evidence/construction-memory/measurement.json",
+    "sha256": "e87fd80f7eaf1a1334a16fbc63b5636b61f889fb5acc8687a3a4195eec92e6be",
+    "bytes": 63278
+  },
+  "stderr": {
+    "file": "fixtures/evidence/construction-memory/measurement.stderr.txt",
+    "sha256": "6f15149586936259b45df6503f6dcd968e953d90b5328761922fa95bde0cc645",
+    "bytes": 867
+  },
+  "exit_code": 0,
+  "launch_error": null,
+  "metrics": {
+    "elapsed_micros": 7948241,
+    "engine_executions": 124,
+    "schema": "platonik-process-metrics-v1"
+  },
+  "engine_executions": 124,
+  "accounting_unknown": false,
+  "peak_rss_bytes": 18612224
+}

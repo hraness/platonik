@@ -297,6 +297,7 @@ fn dense_world() -> Experiment {
         ticks: 128,
         fuel: MAX_FUEL,
         activation_fuel: 128,
+        construction: None,
     }
 }
 

@@ -7,7 +7,7 @@ const receipt = () => JSON.parse(readFileSync("public/habitat/remember-both.rece
 describe("recorded habitat display admission", () => {
   test("accepts every published continuous and navigation receipt, including failed missions", () => {
     let count = 0;
-    for (const directory of ["public/habitat", "public/navigation"]) {
+    for (const directory of ["public/habitat", "public/navigation", "public/construction"]) {
       if (!existsSync(directory)) continue;
       for (const file of readdirSync(directory).filter(name => name.endsWith(".receipt.json"))) {
         expect(isContinuityReceipt(JSON.parse(readFileSync(`${directory}/${file}`, "utf8")))).toBe(true);

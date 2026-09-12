@@ -1,6 +1,6 @@
 ---
 name: platonik-play
-description: Drive the local Platonik Rust habitat prototype through its CLI when a player wants to inspect, change, compare, resume, or replay an algorithmic creature. Use for continuous habitats, persistent field expeditions, and standalone bridge experiments; do not invent the full campaign, automatic breeding, market, or ranking commands.
+description: Drive the local Platonik Rust habitat prototype through its CLI when a player wants to inspect, change, compare, resume, or replay an algorithmic creature. Use for continuous habitats, bounded v3 construction, persistent field expeditions, and standalone bridge experiments; do not invent the full campaign, automatic breeding, market, or ranking commands.
 ---
 
 # Drive a Platonik habitat
@@ -19,7 +19,13 @@ Use `docs/continuous-habitat.md` and `platonik habitat help` for the complete co
 4. Preserve failures. A terminal fuel failure cannot resume. After interruption, inspect status and finish its pending intent with `habitat recover` using the reported pending request and current revision. Exact retries use the original request ID, expected revision, and target. Never edit journal objects to repair a run.
 5. Export a paused bundle and import it to a new directory when testing preservation. The original stays paused. Status, verification, exporting, and real-world waiting do not move simulated time, although integrity replay consumes actual CPU.
 6. Count every `--metrics` engine execution separately from modeled work. Reserve 64 executions before each ordinary habitat command; 8-cut completion and restoration require hundreds of verification executions. For a default two-candidate/eight-case comparison, declare at least 3,072 actual executions, retain all failures, and stop before the allowance runs out. Source and discovery effort remain public and separately accounted.
-7. For a new policy, preserve the original input and edit a copy before initializing another habitat. Compare identical cases, budgets, and pauses. Include the previous two-rule report controller and a blind alternating controller when relevant: richer communication is not automatically more efficient. This bounded habitat does not yet support construction, refitting a living world, or a moving ark.
+7. For a new policy, preserve the original input and edit a copy before initializing another habitat. Compare identical cases, budgets, and pauses. Include the previous two-rule report controller and a blind alternating controller when relevant: richer communication is not automatically more efficient. V3 supports prescribed material-dependent construction; refitting existing bodies and a moving ark remain unimplemented.
+
+## Build a useful member of the crew
+
+For v3 construction, read `docs/construction-evaluation.md` and start from `habitat case construction-one`. The same init/advance/status/recover/export/import commands preserve partial construction; there is no CLI spawn command. A builder gathers finite material, copies at most 32 body bytes per Build, stages links, and explicitly activates the child. The child first becomes eligible on the next tick, within the original time and fuel limits. Programs and blueprint targets are fixed at initialization.
+
+Plan pauses using the actual blueprint size and observed state; the older 96-tick walkthrough is not a construction schedule. Preserve material in caches, hands, assembly escrow, or embodied children, plus copied prefixes and inactive wiring. Distinguish valid assembly, useful child work, and full beacon-service success. Cite actual report evidence when claiming that communication helped: default or remembered bits can route some stock without a fresh report. Compare a prebuilt body or blind controller when appropriate; they may win. A supplied blueprint is reuse, not autonomous discovery or self-reproduction.
 
 ## Keep a collection across trials
 
@@ -56,4 +62,4 @@ For these standalone experiment commands, use fresh filenames and caller-owned r
 
 ## Limits of this prototype
 
-The CLI supports the standalone commands above and `expedition` initialization, actions, recovery, verification, export, and import. It has no in-world construction, automatic breeding, hosted leaderboard, publication, or market. Persistent program ancestry and separate bounded physical trials are implemented. The complete campaign, large-world capacity, human enjoyment, and scientific novelty remain unvalidated. See `docs/rust-bridge.md` and `docs/field-expedition.md` for exact mechanics and evidence boundaries. Human playtesting follows the remaining agent and campaign evaluations; do not recruit players as part of an ordinary agent session.
+The CLI supports the standalone commands above and `expedition` initialization, actions, recovery, verification, export, and import. V3 adds finite in-world assembly of supplied single-cell blueprints and their links. It has no automatic breeding, hosted leaderboard, publication, or market. Persistent program ancestry and separate bounded physical trials are implemented. The complete campaign, large-world capacity, human enjoyment, and scientific novelty remain unvalidated. See `docs/rust-bridge.md` and `docs/field-expedition.md` for exact mechanics and evidence boundaries. Human playtesting follows the remaining agent and campaign evaluations; do not recruit players as part of an ordinary agent session.

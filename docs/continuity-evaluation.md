@@ -1,6 +1,6 @@
 # What survives the next supply?
 
-Evaluation proposal and bounded Rust evidence, 11 September 2026. The [continuous habitat](continuous-habitat.md) keeps one physical world across saved advances. It tests whether the first crew remains useful when reports change, and whether its history can be checked without resetting its resources. Construction, a traveling ark, and the complete campaign remain unimplemented.
+Evaluation proposal and bounded Rust evidence, 11 September 2026. The [continuous habitat](continuous-habitat.md) keeps one physical world across saved advances. It tests whether the first crew remains useful when reports change, and whether its history can be checked without resetting its resources. This v2 evaluation contains no construction; the later [v3 diagnostic](construction-evaluation.md) adds prescribed assembly. A traveling ark and the complete campaign remain unimplemented.
 
 ## A real specialization meets a different job
 

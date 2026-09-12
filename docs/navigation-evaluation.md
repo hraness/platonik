@@ -105,6 +105,6 @@ The second [protocol](https://github.com/hraness/platonik/blob/main/fixtures/evi
 
 ## What comes after navigation
 
-This repaired courier keeps an earlier crew useful through changed journeys. It does not construct anything. The next capability requires an organism to obtain finite material, build executable components inside the same Rust world, and show that the generated continuation does useful work. Material accounting, unsuccessful construction attempts, interruptions, and simpler comparisons must be checked before adding another campaign claim.
+This repaired courier keeps an earlier crew useful through changed journeys. The following [construction diagnostic](construction-evaluation.md) reuses it while requiring another organism to obtain finite material, build a supplied executable keeper inside the same Rust world, and show that the child does useful work. Material accounting, unsuccessful construction attempts, interruptions, and simpler comparisons have their own checks. The navigation result itself establishes no construction or complete campaign claim.
 
 The [automated campaign path](design-validation.md#the-automated-path-before-people-play) still ends with human playtesting after construction, continuation, the compressed Long Trail, and measured operating limits. Agent success cannot establish attachment or enjoyment.

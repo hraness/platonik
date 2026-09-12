@@ -1,0 +1,19 @@
+{"elapsed_micros":7948241,"engine_executions":124,"schema":"platonik-process-metrics-v1"}
+        8.28 real         7.39 user         0.25 sys
+            18612224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               11654  page reclaims
+                  75  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                  85  messages sent
+                   0  messages received
+                   0  signals received
+                  28  voluntary context switches
+               31778  involuntary context switches
+        117752467520  instructions retired
+         24513231461  cycles elapsed
+            17269096  peak memory footprint

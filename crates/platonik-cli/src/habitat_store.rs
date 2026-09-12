@@ -619,11 +619,19 @@ pub fn import(bundle: Bundle, path: &Path) -> Result<Report, String> {
 }
 
 pub fn cases() -> Vec<&'static str> {
-    platonik_core::continuity_fixtures::case_ids().to_vec()
+    platonik_core::continuity_fixtures::case_ids()
+        .iter()
+        .chain(platonik_core::construction_fixtures::case_ids())
+        .copied()
+        .collect()
 }
 
 pub fn case(id: &str) -> Result<Experiment, String> {
-    platonik_core::continuity_fixtures::experiment(id)
+    if platonik_core::construction_fixtures::case_ids().contains(&id) {
+        platonik_core::construction_fixtures::experiment(id)
+    } else {
+        platonik_core::continuity_fixtures::experiment(id)
+    }
 }
 
 pub fn prepare(id: &str, source: &Path) -> Result<Experiment, String> {
@@ -639,11 +647,21 @@ pub fn prepare(id: &str, source: &Path) -> Result<Experiment, String> {
             .iter()
             .find(|creation| creation.id == *creation_id)
             .ok_or("Frozen creation is missing.")?;
-        let cell = experiment
-            .cells
-            .iter_mut()
-            .find(|cell| cell.id == cell_id)
-            .ok_or("Habitat case does not contain the required role.")?;
+        let cell = if let Some(cell) = experiment.cells.iter_mut().find(|cell| cell.id == cell_id) {
+            cell
+        } else {
+            &mut experiment
+                .construction
+                .as_mut()
+                .and_then(|spec| {
+                    spec.blueprints
+                        .iter_mut()
+                        .find(|blueprint| blueprint.body.cell.id == cell_id)
+                })
+                .ok_or("Habitat case does not contain the required role or child blueprint.")?
+                .body
+                .cell
+        };
         cell.program = creation.program.clone();
     }
     platonik_core::validate_experiment(&experiment)?;

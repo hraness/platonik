@@ -10,7 +10,7 @@ const work = (costs: Record<string, number>) => Object.values(costs).reduce((sum
 
 export function ContinuityLab({ index, artifactDirectory = "habitat" }: {
   index: ContinuityIndex;
-  artifactDirectory?: "habitat" | "navigation";
+  artifactDirectory?: "habitat" | "navigation" | "construction";
 }) {
   const [selected, setSelected] = useState(index.cases[0]?.id ?? "");
   const [loaded, setLoaded] = useState<{ path: string; receipt: Receipt } | null>(null);
@@ -44,13 +44,26 @@ export function ContinuityLab({ index, artifactDirectory = "habitat" }: {
     <p className="continuity-detail">{chosen.detail}</p>
     {error ? <div className="lab-result"><p role="alert">{error}</p><button className="lab-button" onClick={() => setRetry(value => value + 1)}>Retry loading</button></div> : !receipt || !frame ? <p role="status">Loading the recorded habitat…</p> : <>
       <section className="bridge-replay" aria-label="Recorded continuous habitat">
-        <div><figure><RecordedHabitat receipt={receipt} frame={frame} /><figcaption>S: source · D: depot · V: valve · B: beacon. Numbered cells are the crew; amber cells carry a spark. Crosses close a route. Dashed signal links are disabled.</figcaption></figure>
+        <div><figure><RecordedHabitat receipt={receipt} frame={frame} /><figcaption>S: source · D: depot · V: valve · B: beacon. Numbered cells are the crew; amber cells carry {receipt.experiment.construction ? "a spark or material" : "a spark"}. Crosses close a route. Dashed signal links are disabled.{receipt.experiment.construction && " M marks remaining material stock; a dashed A marks an inactive assembly. A child becomes a numbered circle when activated."}</figcaption></figure>
           <label htmlFor="habitat-tick">Recorded tick {frame.tick}{!frame.complete ? " · unfinished" : ""}</label><input id="habitat-tick" type="range" min="0" max={receipt.result.frames.length - 1} value={at} onChange={event => setAt(Number(event.target.value))} />
           <div className="lab-actions"><button className="lab-button secondary" disabled={at === 0} onClick={() => setAt(value => value - 1)}>Previous tick</button><button className="lab-button secondary" disabled={at >= receipt.result.frames.length - 1} onClick={() => setAt(value => value + 1)}>Next tick</button><button className="lab-text-button" onClick={() => setAt(receipt.result.frames.length - 1)}>Jump to outcome</button></div>
           <p className="lab-note">{number(work(frame.costs))} modeled work. {frame.state.pending.length} reports in flight. {frame.state.delivered.length} sparks delivered to services.</p>
         </div>
         <div className="bridge-observations"><h2>What the crew carries forward</h2>
-          <ul aria-label="Carried state">{frame.state.cells.map(cell => <li key={cell.id}>Cell {cell.id}: {cell.cargo ? `carrying spark ${cell.cargo.id}, report ${Number(cell.cargo.bit)}` : "hands empty"}; memory [{cell.memory.join(", ")}].{cell.evidence.some(value => value !== null) && ` Memory evidence: spark ${cell.evidence.filter(value => value !== null).join(", ")}.`}</li>)}{frame.state.beacons.map(beacon => <li key={`beacon-${beacon.id}`}>Beacon {beacon.id}: {beacon.charge} charge, {beacon.delivered} deliveries{beacon.exhausted ? "; exhausted during the journey" : ""}.</li>)}</ul>
+          <ul aria-label="Carried state">{frame.state.cells.map(cell => <li key={cell.id}>Cell {cell.id}: {cell.cargo ? `carrying spark ${cell.cargo.id}, report ${Number(cell.cargo.bit)}` : receipt.experiment.construction ? "no spark cargo" : "hands empty"}; memory [{cell.memory.join(", ")}].{cell.material !== undefined && ` Carrying material ${cell.material}.`}{cell.evidence.some(value => value !== null) && ` Memory evidence: spark ${cell.evidence.filter(value => value !== null).join(", ")}.`}</li>)}{frame.state.beacons.map(beacon => <li key={`beacon-${beacon.id}`}>Beacon {beacon.id}: {beacon.charge} charge, {beacon.delivered} deliveries{beacon.exhausted ? "; exhausted during the journey" : ""}.</li>)}</ul>
+          {frame.state.construction && <div data-testid="construction-state"><h3>Building a crewmate</h3>
+            <ul>{frame.state.construction.stocks.map(stock => <li key={`stock-${stock.id}`}>Stock {stock.id}: {stock.units.length ? `material ${stock.units.join(", ")} available` : "empty"}.</li>)}
+              {frame.state.construction.assemblies.map(assembly => {
+                const blueprint = receipt.experiment.construction?.blueprints.find(item => item.id === assembly.blueprint);
+                const total = blueprint ? new TextEncoder().encode(JSON.stringify(blueprint.body)).byteLength : undefined;
+                const ready = blueprint && assembly.copied.length === total && assembly.wired.length === blueprint.body.links.length;
+                return <li key={`assembly-${assembly.blueprint}`}>Blueprint {assembly.blueprint}: {assembly.copied.length}{total !== undefined && ` / ${total}`} body bytes copied; {assembly.wired.length}{blueprint && ` / ${blueprint.body.links.length}`} links wired. Material {assembly.material} reserved by parent {assembly.parent}. {ready ? "Ready to activate." : "Still inactive."}</li>;
+              })}
+              {frame.state.construction.births.map(birth => <li key={`birth-${birth.blueprint}`}>Cell {birth.body.cell.id}: parent {birth.parent} activated blueprint {birth.blueprint} at tick {birth.tick}, using material {birth.material}. {frame.tick === birth.tick ? `First eligible activation: tick ${birth.tick + 1}.` : `Scheduled from tick ${birth.tick + 1}.`}</li>)}
+            </ul>
+            {!frame.state.construction.assemblies.length && !frame.state.construction.births.length && <p>No assembly has started.</p>}
+            <p>{number(frame.costs.copying ?? 0)} copying work; {number(frame.costs.construction ?? 0)} construction work. These costs are included in total modeled work.</p>
+          </div>}
           <h3>Reports in flight</h3>{frame.state.pending.length ? <ul>{frame.state.pending.map(signal => <li key={signal.id}>Report {signal.id}: {Number(signal.bit)}, sent at {signal.sent_tick}, due at {signal.deliver_tick}{signal.receipt_spark !== null ? `, from spark ${signal.receipt_spark}` : ""}.</li>)}</ul> : <p>No reports are in transit at this tick.</p>}
           <p data-testid="habitat-outcome"><strong>Final mission: {chosen.passed ? "passed" : "failed"}.</strong> {chosen.ticks} completed ticks; {number(chosen.work)} modeled work.</p>
         </div>

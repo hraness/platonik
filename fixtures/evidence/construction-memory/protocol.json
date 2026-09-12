@@ -1,0 +1,32 @@
+{
+  "schema": "platonik-construction-buffered-protocol-v1",
+  "baseline_study": "fixtures/evidence/construction-study.json",
+  "baseline_capacity": "fixtures/evidence/construction-capacity.json",
+  "mode": "--measure-buffered",
+  "maximum_engine_executions": 256,
+  "expected_engine_executions": 124,
+  "workloads": [
+    "four-near-cap-partial",
+    "four-born-sixteen-live"
+  ],
+  "warmups_per_workload": 1,
+  "samples_per_workload": 30,
+  "buffer_capacity_bytes": 8388608,
+  "buffer_retained_during_rss": true,
+  "native_probe_files": [
+    "fixtures/evidence/construction-memory/native/probe.rs",
+    "fixtures/evidence/construction-memory/native/run.mjs",
+    "fixtures/evidence/construction-memory/native/default-run.mjs",
+    "fixtures/evidence/construction-memory/native/result.json",
+    "fixtures/evidence/construction-memory/native/default-result.json",
+    "fixtures/evidence/construction-memory/native/growth-sampled.ndjson",
+    "fixtures/evidence/construction-memory/native/reserved-sampled.ndjson",
+    "fixtures/evidence/construction-memory/native/exact-sampled.ndjson",
+    "fixtures/evidence/construction-memory/native/reuse-sampled.ndjson",
+    "fixtures/evidence/construction-memory/native/growth-batch.ndjson",
+    "fixtures/evidence/construction-memory/native/default-growth-sampled.ndjson",
+    "fixtures/evidence/construction-memory/native/default-reserved-sampled.ndjson"
+  ],
+  "scope": "One repeated release process, same inputs and run/check/serialize/verify work as the preserved baseline. A fixed reusable serialization buffer remains allocated during RSS observations. Additional byte-identity checking is reported separately. No original study, saved history, optimizer, or runtime semantics are rerun or changed.",
+  "baseline_allocator_environment": "Not recorded by the original benchmark; do not infer environment-wide conclusions from this comparison."
+}
