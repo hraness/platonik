@@ -89,6 +89,13 @@ pub struct JourneyReport {
     pub journey: platonik_core::first_answer::Journey,
 }
 
+#[derive(Serialize)]
+pub struct ArkReport {
+    pub schema: &'static str,
+    pub habitat: Report,
+    pub ark: platonik_core::ark_control::ArkGrade,
+}
+
 #[derive(Clone)]
 struct Request {
     until: u32,
@@ -435,6 +442,18 @@ pub fn journey(path: &Path) -> Result<JourneyReport, String> {
     })
 }
 
+pub fn ark(path: &Path) -> Result<ArkReport, String> {
+    let store = Store::open(path, JOURNAL_SCHEMA)?;
+    let snapshot = read_snapshot(&store)?.1;
+    // Reuse the exact freshly replayed snapshot; pending intent adds no output.
+    let ark = platonik_core::ark_control::grade_verified(&snapshot.experiment, &snapshot.result)?;
+    Ok(ArkReport {
+        schema: "platonik-ark-report-v1",
+        habitat: report(snapshot, None)?,
+        ark,
+    })
+}
+
 fn finish(store: &Store, snapshot: Snapshot, id: &str) -> Result<Report, String> {
     let pending = snapshot
         .pending
@@ -644,12 +663,15 @@ pub fn cases() -> Vec<&'static str> {
         .iter()
         .chain(platonik_core::construction_fixtures::case_ids())
         .chain(platonik_core::answer_fixtures::case_ids())
+        .chain(platonik_core::ark_fixtures::case_ids())
         .copied()
         .collect()
 }
 
 pub fn case(id: &str) -> Result<Experiment, String> {
-    if platonik_core::answer_fixtures::case_ids().contains(&id) {
+    if platonik_core::ark_fixtures::case_ids().contains(&id) {
+        platonik_core::ark_fixtures::experiment(id)
+    } else if platonik_core::answer_fixtures::case_ids().contains(&id) {
         platonik_core::answer_fixtures::experiment(id)
     } else if platonik_core::construction_fixtures::case_ids().contains(&id) {
         platonik_core::construction_fixtures::experiment(id)

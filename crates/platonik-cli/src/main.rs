@@ -70,6 +70,9 @@ const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
   platonik habitat verify <dir>\n\
   platonik habitat journey <dir>\n\
   platonik habitat answer <receipt.json|->\n\
+  platonik habitat ark <dir>\n\
+  platonik habitat ark-check <receipt.json|->\n\
+  platonik habitat arithmetic-case <a> <b> <tap>\n\
   platonik habitat cases\n\
   platonik habitat case <id>\n\
   platonik habitat prepare <case-id> <expedition-dir>\n\
@@ -94,6 +97,12 @@ freshly verifies a standalone receipt and prints the same journey grade. Both\n\
 return exit 0 for valid evidence, including an unfinished or failed journey;\n\
 inspect answered and service_passed separately. The authored ending requires\n\
 the complete successful horizon. These commands do not run the full campaign.\n\n\
+Ark reads checked arithmetic and service progress without changing the save.\n\
+Ark-check freshly verifies a standalone ark receipt. Both return exit 0 for\n\
+valid evidence, including failed control; inspect arithmetic_passed,\n\
+service_passed, and control_passed separately. Arithmetic-case prints an\n\
+experiment without running it: operands a/b are 0..15; tap is 0 (sum LSB) or\n\
+4 (carry). This is one four-bit addition, not a stored-program computer.\n\n\
 Prepare verifies an expedition's frozen pair and prints a case Experiment with\n\
 those courier/controller programs. It does not modify that separate collection\n\
 or authenticate ownership. A missing controller is supplied in its child\n\
@@ -414,6 +423,32 @@ fn execute_habitat(args: &[String]) -> Result<u8, Failure> {
         [command, input] if command == "answer" => {
             let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
             print_json(&platonik_core::first_answer::grade_receipt(&receipt).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, dir] if command == "ark" => {
+            print_json(&habitat_store::ark(Path::new(dir)).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, input] if command == "ark-check" => {
+            let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
+            print_json(&platonik_core::ark_control::grade_receipt(&receipt).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, a, b, tap] if command == "arithmetic-case" => {
+            let parse = |value: &str| -> Result<u8, Failure> {
+                if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+                    return Err(error(
+                        "Arithmetic operands and tap must be decimal integers.".into(),
+                    ));
+                }
+                value
+                    .parse()
+                    .map_err(|_| error("Arithmetic operands and tap exceed their bounds.".into()))
+            };
+            let experiment =
+                platonik_core::ark_fixtures::arithmetic_case(parse(a)?, parse(b)?, parse(tap)?)
+                    .map_err(error)?;
+            print_json(&experiment)?;
             Ok(0)
         }
         [command] if command == "cases" => {

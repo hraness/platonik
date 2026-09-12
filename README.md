@@ -40,6 +40,8 @@ The [construction diagnostic](docs/construction-evaluation.md) adds finite mater
 
 For a short adventure with a local ending, [bring a signal home](docs/first-answer.md). **The First Answer** combines the familiar courier, two constructed crew members, continuing service, and a returned report traced to the final delivered spark. The [recorded journey](https://platonik.space/lab/answer) reveals checked milestones and the authored ending. It is one construction-to-contact adventure; the complete six-chapter campaign remains a proposal.
 
+Next, [give home a plan](docs/ark-control.md). The [ark control replay](https://platonik.space/lab/ark) connects a physically carried number to four-bit addition with a five-bit result, a selectable service plan, and the familiar Keeper's memory. One computed bit decides where a separate payload goes after contact ends. Read the [arithmetic and control evaluation](docs/ark-evaluation.md) for complete input coverage, frozen agent comparisons, saved replay, and measured costs. This is one calculation inside a fixed habitat; a moving ark and repeated computation remain later work.
+
 ## Run the website
 
 Use Node.js 24 and Bun 1.3.14. No credentials, database, or paid API is required to run the website locally.

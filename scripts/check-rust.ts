@@ -15,6 +15,7 @@ run("cargo", ["clippy", "--workspace", "--all-targets", "--locked", "--", "-D", 
 run("cargo", ["test", "--workspace", "--locked"]);
 run("cargo", ["test", "-p", "platonik-core", "--example", "construction_capacity", "--locked"]);
 run("cargo", ["test", "-p", "platonik-core", "--example", "answer_capacity", "--locked"]);
+run("cargo", ["test", "-p", "platonik-core", "--example", "ark_capacity", "--locked"]);
 run("bun", ["scripts/record-bridge.ts", "--check"]);
 run("node", ["scripts/check-expedition-evidence.mjs"]);
 run("node", ["scripts/check-continuity-evidence.mjs"]);
@@ -23,3 +24,4 @@ run("node", ["scripts/check-navigation-repair-evidence.mjs"]);
 run("node", ["scripts/check-construction-evidence.mjs"]);
 run("node", ["scripts/check-construction-buffered-evidence.mjs"]);
 run("node", ["scripts/check-answer-evidence.mjs"]);
+run("node", ["scripts/check-ark-evidence.mjs"]);

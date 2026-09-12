@@ -1101,3 +1101,191 @@ fn construction_activation_recovery_and_retry_cannot_duplicate_the_child_or_mate
         assert_eq!(fs::read(file).unwrap(), bytes);
     }
 }
+
+#[test]
+fn ark_exports_are_zero_execution_and_enforce_public_arithmetic_bounds() {
+    use platonik_core::ark_fixtures as ark;
+    let (listed, runs) = measured(&["habitat", "cases"], None);
+    assert_eq!(runs, 0);
+    for id in ark::case_ids() {
+        assert!(listed["examples"].as_array().unwrap().contains(&json!(id)));
+        let (exported, runs) = measured(&["habitat", "case", id], None);
+        assert_eq!(runs, 0);
+        assert_eq!(
+            serde_json::from_value::<Experiment>(exported).unwrap(),
+            ark::experiment(id).unwrap()
+        );
+    }
+    for (a, b, tap) in [(0, 0, 0), (15, 15, 4), (9, 7, 0)] {
+        let (exported, runs) = measured(
+            &[
+                "habitat",
+                "arithmetic-case",
+                &a.to_string(),
+                &b.to_string(),
+                &tap.to_string(),
+            ],
+            None,
+        );
+        assert_eq!(runs, 0);
+        assert_eq!(
+            serde_json::from_value::<Experiment>(exported).unwrap(),
+            ark::arithmetic_case(a, b, tap).unwrap()
+        );
+    }
+    for args in [
+        ["16", "0", "0"],
+        ["0", "16", "4"],
+        ["0", "0", "1"],
+        ["-1", "0", "0"],
+        ["+1", "0", "0"],
+        ["1.0", "0", "0"],
+        ["256", "0", "0"],
+        ["", "0", "0"],
+    ] {
+        let output = cli(
+            &["habitat", "arithmetic-case", args[0], args[1], args[2]],
+            None,
+        );
+        assert_eq!(output.status.code(), Some(2));
+        assert!(output.stdout.is_empty());
+        assert!(serde_json::from_slice::<Value>(&output.stderr).unwrap()["error"].is_object());
+    }
+}
+
+#[test]
+fn ark_readonly_progress_preserves_partial_arithmetic_and_recovers_exactly_once() {
+    let sandbox = Sandbox::new();
+    let source = sandbox.path("ark");
+    let restored = sandbox.path("restored-ark");
+    let pending = sandbox.path("pending-ark");
+    let exp = platonik_core::ark_fixtures::experiment("ark-reserve-16").unwrap();
+    success(init(&source, &exp));
+    let genesis = journal(&source);
+    let (status, status_runs) = measured(&["habitat", "status", text(&source)], None);
+    let (loaded, grade_runs) = measured(&["habitat", "ark", text(&source)], None);
+    assert_eq!(loaded["schema"], "platonik-ark-report-v1");
+    assert_eq!(loaded["habitat"], status);
+    assert_eq!(
+        grade_runs, status_runs,
+        "Grading reuses the exact verified snapshot"
+    );
+    assert!(
+        status.get("ark").is_none(),
+        "Legacy status remains unchanged"
+    );
+    assert_eq!(loaded["ark"]["phase"], "in_progress");
+    assert_eq!(loaded["ark"]["outputs"], json!([]));
+    assert_eq!(loaded["ark"]["control_passed"], false);
+    assert_eq!(journal(&source), genesis);
+
+    let cold = cli(&["run", "-"], Some(&serde_json::to_vec(&exp).unwrap()));
+    assert!(cold.status.success());
+    let (grade, runs) = measured(&["habitat", "ark-check", "-"], Some(&cold.stdout));
+    assert_eq!(runs, 1, "Cold grading freshly replays exactly once");
+    assert_eq!(grade["control_passed"], true);
+    assert_eq!(grade["outputs"].as_array().unwrap().len(), 5);
+    let cut = grade["outputs"][2]["tick"].as_u64().unwrap() as u32;
+    let saved = success(advance(&source, cut, 0, "three-bits"));
+    let prefix = success(cli(&["habitat", "ark", text(&source)], None));
+    assert_eq!(
+        prefix["ark"]["outputs"],
+        json!(&grade["outputs"].as_array().unwrap()[..3])
+    );
+    assert_eq!(prefix["ark"]["phase"], "in_progress");
+    assert_eq!(prefix["ark"]["observed_sum"], Value::Null);
+    assert_eq!(prefix["ark"]["decision"], Value::Null);
+    let exported = cli(&["habitat", "export", text(&source)], None);
+    assert!(exported.status.success());
+    let imported = success(cli(
+        &["habitat", "import", "-", text(&restored)],
+        Some(&exported.stdout),
+    ));
+    assert_eq!(imported["current_state"], saved["current_state"]);
+    assert_eq!(imported["costs"], saved["costs"]);
+    assert_eq!(
+        success(cli(&["habitat", "ark", text(&restored)], None))["ark"],
+        prefix["ark"]
+    );
+    let completed = success(advance(&restored, 128, 2, "service"));
+    let final_grade = success(cli(&["habitat", "ark", text(&restored)], None));
+    assert_eq!(
+        final_grade["ark"], grade,
+        "Saved and cold evidence identities agree"
+    );
+
+    // Import the exact committed intent prefix: a read cannot reveal the result
+    // of the pending advance. Recovery must reproduce it without a second debit.
+    let output = cli(&["habitat", "export", text(&restored)], None);
+    assert!(output.status.success());
+    let mut bundle: Bundle = serde_json::from_slice(&output.stdout).unwrap();
+    let completion = bundle.entries.pop().unwrap();
+    bundle.objects.remove(&completion.event.event_hash).unwrap();
+    success(cli(
+        &["habitat", "import", "-", text(&pending)],
+        Some(&serde_json::to_vec(&bundle).unwrap()),
+    ));
+    let history = journal(&pending);
+    let read = success(cli(&["habitat", "ark", text(&pending)], None));
+    assert_eq!(read["ark"], prefix["ark"]);
+    assert_eq!(read["habitat"]["pending_request_id"], "service");
+    assert_eq!(read["habitat"]["revision"], 3);
+    assert_eq!(journal(&pending), history);
+    let recovered = success(cli(
+        &[
+            "habitat",
+            "recover",
+            text(&pending),
+            "--expect-revision",
+            "3",
+            "--request-id",
+            "service",
+        ],
+        None,
+    ));
+    assert_eq!(recovered, completed);
+    assert_eq!(
+        success(cli(&["habitat", "ark", text(&pending)], None)),
+        final_grade
+    );
+    let settled = journal(&pending);
+    assert_eq!(success(advance(&pending, 128, 2, "service")), completed);
+    assert_eq!(journal(&pending), settled);
+    for (file, bytes) in genesis {
+        assert_eq!(fs::read(file).unwrap(), bytes);
+    }
+}
+
+#[test]
+fn ark_failed_evidence_is_readable_but_tampered_receipts_are_rejected() {
+    let sandbox = Sandbox::new();
+    let path = sandbox.path("no-fuel-ark");
+    let mut exp = platonik_core::ark_fixtures::experiment("ark-reserve-16").unwrap();
+    exp.fuel = 0;
+    assert_eq!(init(&path, &exp).status.code(), Some(1));
+    let read = success(cli(&["habitat", "ark", text(&path)], None));
+    assert_eq!(read["ark"]["phase"], "failed");
+    assert_eq!(read["ark"]["control_passed"], false);
+    assert_eq!(read["ark"]["arithmetic_passed"], false);
+    let failed = cli(&["run", "-"], Some(&serde_json::to_vec(&exp).unwrap()));
+    assert_eq!(failed.status.code(), Some(1));
+    let (grade, runs) = measured(&["habitat", "ark-check", "-"], Some(&failed.stdout));
+    assert_eq!(runs, 1);
+    assert_eq!(grade, read["ark"]);
+    let receipt_path = sandbox.path("failed.receipt.json");
+    fs::write(&receipt_path, &failed.stdout).unwrap();
+    assert_eq!(
+        success(cli(&["habitat", "ark-check", text(&receipt_path)], None)),
+        grade
+    );
+    assert_eq!(fs::read(&receipt_path).unwrap(), failed.stdout);
+    let mut forged = value(&failed);
+    forged["result"]["costs"]["loading"] = json!(1);
+    let bad = cli(
+        &["habitat", "ark-check", "-"],
+        Some(&serde_json::to_vec(&forged).unwrap()),
+    );
+    assert_eq!(bad.status.code(), Some(2));
+    assert!(bad.stdout.is_empty());
+    assert!(serde_json::from_slice::<Value>(&bad.stderr).unwrap()["error"].is_object());
+}

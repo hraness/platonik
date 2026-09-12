@@ -1,4 +1,6 @@
 pub mod answer_fixtures;
+pub mod ark_control;
+pub mod ark_fixtures;
 pub mod check;
 pub mod construction;
 pub mod construction_fixtures;

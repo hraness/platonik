@@ -1,6 +1,6 @@
 # The Long Trail
 
-Campaign proposal, 11 September 2026. A hopeful space western about a herd becoming an alien civilization. The characters, settings, discoveries, and scenes here are fiction for an unbuilt campaign. The [observatory](observatory.md) contains bounded browser experiments; it has not demonstrated this full journey. The [Rust integration slice](rust-bridge.md) connects courier delivery, signals, memory, and beacon control. [The First Answer](first-answer.md) now supplies a short construction-to-contact adventure with a checked local ending. It does not implement every chapter contract below.
+Campaign proposal, 12 September 2026. A hopeful space western about a herd becoming an alien civilization. The characters, settings, discoveries, and scenes here are fiction for an unbuilt campaign. The [observatory](observatory.md) contains bounded browser experiments; it has not demonstrated this full journey. [The First Answer](first-answer.md) supplies a short construction-to-contact adventure with a checked local ending. The [ark control experiment](ark-control.md) connects arithmetic to a supplied service plan. These bounded Rust habitats do not implement every chapter contract below.
 
 ## One companion, a distant light
 
@@ -71,6 +71,8 @@ The ark also changes what can live along the trail. A small colony keeps a wayst
 - **Success contract:** demonstrate the declared arithmetic interface, including carry, on its complete bounded input set; then run two supplied service plans through the same admitted control interface. During each voyage case, keep every required service within its published bounds and fulfill its delivery commitments without external instructions.
 - **Allowance and alternatives:** code, live nodes, state, ports, activation work, and finite supplies share one voyage budget. A table-driven controller, composed state machines, or a processor can qualify. Reference logic and arithmetic blueprints expand into charged parts. Building a full stored-program computer is an optional [Autoverse achievement](autoverse.md#what-counts-as-a-computer), not a required hand-wiring lesson.
 - **What travels onward:** this complete service assembly becomes a port's working body. The descendant carrying light through the moving garden must be visible in its real transport trace.
+
+The [recorded ark experiment](https://platonik.space/lab/ark) tests the arithmetic-to-control dependency inside a fixed habitat: a physical number becomes a calculated decision that Keeper remembers through an outage. Reserve and Staggered plans use the same selector interface. It is one calculation with a finite service commitment, not the moving garden described here. Repeated regulation and integration with the construction journey remain part of earning this complete chapter.
 
 ## The free ports
 
