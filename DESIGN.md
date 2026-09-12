@@ -125,6 +125,16 @@ components:
 
 # Design System: Platonik
 
+## Shared marketing surface
+
+The homepage now uses Hraness's approved Peopleblade marketing treatment: Instrument Serif 400 display headings, Nebula Sans body text, a restrained continuous gradient with faint grain and cell seams, and more open spacing. The shared preset and its font, texture, license, and validation files live in `vendor/hraness-marketing`; keep that immutable bundle intact and adapt through `app/marketing.css`.
+
+This is a Persuade surface. Keep the existing product claims, proposal labels, concept diagram, conversation, and routes. The homepage title uses the shared 44–64px scale, section titles use 38.4–52px, and supporting copy remains 16–17px. The gradient belongs behind the opening story, with an opaque surface beneath the labeled concept diagram.
+
+The public header uses compact Nebula Sans, a 72px minimum height, and the shared blur with an opaque accessibility fallback. Skip-link stacking, document anchor clearance, and sidebar offsets account for this sticky header. Documentation and the observatory retain the reading and operating styles recorded below; their controls, evidence, and diagrams do not inherit homepage display styling.
+
+The following original design record continues to describe those documentation and laboratory surfaces. Its homepage-specific values are superseded by this shared marketing scope.
+
 ## Overview
 
 **Creative North Star: "Minimal styling"**
