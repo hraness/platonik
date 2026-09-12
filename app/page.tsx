@@ -15,18 +15,19 @@ const chapters = [
 export default function HomePage() {
   return (
     <main id="main" className="home" data-hraness-marketing-preset="editorial">
-      <div className="hraness-marketing-field">
+      <div className="hraness-material-wall">
         <section className="hero" aria-labelledby="hero-title">
           <h1 id="hero-title">Make a creature.<br />See what it becomes.</h1>
           <p className="hero-description">An engineering adventure about growing strange little creatures with your AI—and the civilization they could become.</p>
           <p className="hero-detail">Start with a companion and a flickering light. Gather a herd. Grow a home that can travel among the stars. Somewhere beyond the charted trails, another beacon is answering.</p>
-          <div className="hero-links"><Link className="primary-link" href="/lab">Enter the observatory <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Explore the game design</Link></div>
+          <div className="hero-links"><Link className="primary-link hraness-material-control" href="/lab">Enter the observatory <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Explore the game design</Link></div>
           <p className="status-note">A game in design, with browser experiments and saved Rust habitats where your crew builds companions, brings a signal home, uses arithmetic to choose what happens next, and keeps finite delivery promises. <Link href="/lab/ports">Follow a promise through a lost reply.</Link></p>
         </section>
+      </div>
 
         <section className="home-section first-world" aria-labelledby="first-world-title">
           <div className="section-intro"><h2 id="first-world-title">Keep the little light alive.</h2><p>Your first creature carries sparks to a beacon. Then the short way closes. Can you help it find another?</p></div>
-          <figure className="habitat-figure">
+          <figure className="habitat-figure hraness-material-pane">
             <svg className="habitat-map" viewBox="0 0 420 230" role="img" aria-labelledby="habitat-title habitat-description">
               <title id="habitat-title">A spark route with a way around</title>
               <desc id="habitat-description">Concept map: the spring is on the left and the beacon on the right. A cross blocks the short upper path. Three courier cells approach it. One courier is on the longer lower path, which remains open. This is an illustration, not a simulation result.</desc>
@@ -54,8 +55,6 @@ export default function HomePage() {
           <p>The light waits while you think. A failed expedition leaves your creature’s lineage intact. There is always another idea to try.</p>
           <Link className="text-link" href="/docs/game-design#the-first-fifteen-minutes-the-wound">Imagine your first expedition <span aria-hidden="true">↗</span></Link>
         </section>
-
-      </div>
 
       <section className="home-section conversation-section" aria-labelledby="conversation-title">
         <div className="section-intro"><h2 id="conversation-title">Start with “what if.”</h2><p>If you’ve ever asked an AI to build something and felt the thrill of seeing it work, you know where this begins.</p></div>
