@@ -1,0 +1,780 @@
+{
+  "schema": "platonik-bloom-agent-study-v1",
+  "protocol_sha256": "sha256:68c234dbca11972359933a09985facda629b2553287e5ed555bfedfaead76533",
+  "freeze_sha256": "sha256:8378e1d35e14a27eae8140223812f168b233bb75080a668d7b5cce8ef0b493d5",
+  "source_digest": "sha256:eaaf371b86b52ed65d180746a71a285193e896d1ef6d84d7bd1f2831806f21c3",
+  "scope": "Two bounded author arms, three retained candidate slots, four training worlds, and four unchanged transfer worlds.",
+  "arms": {
+    "keep": {
+      "owner": "keep",
+      "engine_executions": 24,
+      "selected": {
+        "id": "mirror-courier",
+        "sequence": 1,
+        "program_hash": "sha256:0d44cba64bbe3642a537381d496874758009ad4e0dfeca40bbfc2d0685e30d74",
+        "training_work": 210633
+      },
+      "candidates": [
+        {
+          "sequence": 1,
+          "id": "mirror-courier",
+          "label": "Mirror courier",
+          "admission": "completed",
+          "bloomed": true,
+          "work": 210633,
+          "program_bytes": 3326,
+          "source_sha256": "5d3ffd8188ea19068902faf99a69271d4b875b350db152c89097b185dbb7c1d1",
+          "trials": [
+            {
+              "case_id": "bloom-left",
+              "bloomed": true,
+              "work": 52436,
+              "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5"
+            },
+            {
+              "case_id": "bloom-right",
+              "bloomed": true,
+              "work": 52831,
+              "result_hash": "sha256:d9cd1dd30750413dac7d59f2584781b35e096ee6907297281e60b671ee7ad382"
+            },
+            {
+              "case_id": "bloom-left-delay",
+              "bloomed": true,
+              "work": 52486,
+              "result_hash": "sha256:bc0a032f0294826b5bf95a2b7224ca0d44971547fd3d04f1dfe97b2003011e24"
+            },
+            {
+              "case_id": "bloom-right-delay",
+              "bloomed": true,
+              "work": 52880,
+              "result_hash": "sha256:38589375bb0900ef42c5df30e41ff24401f58b550d1d4e30e06014a97cf70399"
+            }
+          ]
+        },
+        {
+          "sequence": 2,
+          "id": "seed-courier",
+          "label": "Seed courier",
+          "admission": "completed",
+          "bloomed": true,
+          "work": 210633,
+          "program_bytes": 3326,
+          "source_sha256": "4a9e0a745977439250eb74cdffb1a4832bec78aa584d238c8e1f83a9373b663f",
+          "trials": [
+            {
+              "case_id": "bloom-left",
+              "bloomed": true,
+              "work": 52436,
+              "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5"
+            },
+            {
+              "case_id": "bloom-right",
+              "bloomed": true,
+              "work": 52831,
+              "result_hash": "sha256:d9cd1dd30750413dac7d59f2584781b35e096ee6907297281e60b671ee7ad382"
+            },
+            {
+              "case_id": "bloom-left-delay",
+              "bloomed": true,
+              "work": 52486,
+              "result_hash": "sha256:bc0a032f0294826b5bf95a2b7224ca0d44971547fd3d04f1dfe97b2003011e24"
+            },
+            {
+              "case_id": "bloom-right-delay",
+              "bloomed": true,
+              "work": 52880,
+              "result_hash": "sha256:38589375bb0900ef42c5df30e41ff24401f58b550d1d4e30e06014a97cf70399"
+            }
+          ]
+        },
+        {
+          "sequence": 3,
+          "id": null,
+          "label": null,
+          "admission": "rejected",
+          "bloomed": false,
+          "work": null,
+          "program_bytes": null,
+          "source_sha256": "76fe807db5e460eb44706ef9a700f46e9bca6dffa935186a2872a0c3e0a3fc84",
+          "trials": []
+        }
+      ],
+      "transfer": [
+        {
+          "case_id": "bloom-rotated-left",
+          "bloomed": true,
+          "work": 52546,
+          "result_hash": "sha256:3e186141fe9339227a6fe69bbfdb10b11bbf4e95ee87e9a0954c62fd6357eb3d"
+        },
+        {
+          "case_id": "bloom-rotated-right",
+          "bloomed": true,
+          "work": 52919,
+          "result_hash": "sha256:0d4c0c59f6b3f4cf88c63510def7922e5d72c001edf6f8b66a08503fe5f4e535"
+        },
+        {
+          "case_id": "bloom-crossing-left",
+          "bloomed": true,
+          "work": 53126,
+          "result_hash": "sha256:b962125a2bd86ee82efbb3de3a1661ce5437187367b015c43c25a3b3bd7d9899"
+        },
+        {
+          "case_id": "bloom-crossing-right",
+          "bloomed": true,
+          "work": 53490,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628"
+        }
+      ],
+      "finished": {
+        "bloomed": true,
+        "all_inputs_retained": true,
+        "logical_cold_runs": 12
+      },
+      "process_metrics": [
+        {
+          "index": 0,
+          "args": [
+            "run",
+            "c1-bloom-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26177
+        },
+        {
+          "index": 1,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0000.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33191
+        },
+        {
+          "index": 2,
+          "args": [
+            "run",
+            "c1-bloom-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 27130
+        },
+        {
+          "index": 3,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0002.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 36404
+        },
+        {
+          "index": 4,
+          "args": [
+            "run",
+            "c1-bloom-left-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26576
+        },
+        {
+          "index": 5,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0004.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33774
+        },
+        {
+          "index": 6,
+          "args": [
+            "run",
+            "c1-bloom-right-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 25628
+        },
+        {
+          "index": 7,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0006.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33880
+        },
+        {
+          "index": 8,
+          "args": [
+            "run",
+            "c2-bloom-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 27724
+        },
+        {
+          "index": 9,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0008.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 35681
+        },
+        {
+          "index": 10,
+          "args": [
+            "run",
+            "c2-bloom-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 30080
+        },
+        {
+          "index": 11,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0010.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 35347
+        },
+        {
+          "index": 12,
+          "args": [
+            "run",
+            "c2-bloom-left-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 24653
+        },
+        {
+          "index": 13,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0012.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33835
+        },
+        {
+          "index": 14,
+          "args": [
+            "run",
+            "c2-bloom-right-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26881
+        },
+        {
+          "index": 15,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0014.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 37497
+        },
+        {
+          "index": 16,
+          "args": [
+            "run",
+            "transfer-bloom-rotated-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 25069
+        },
+        {
+          "index": 17,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0016.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 32447
+        },
+        {
+          "index": 18,
+          "args": [
+            "run",
+            "transfer-bloom-rotated-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 23952
+        },
+        {
+          "index": 19,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0018.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 32174
+        },
+        {
+          "index": 20,
+          "args": [
+            "run",
+            "transfer-bloom-crossing-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 24081
+        },
+        {
+          "index": 21,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0020.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 31831
+        },
+        {
+          "index": 22,
+          "args": [
+            "run",
+            "transfer-bloom-crossing-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 23938
+        },
+        {
+          "index": 23,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0022.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 31019
+        }
+      ],
+      "raw_ledger_sha256": "sha256:da2a804344ff5d2616883cf9290e6785a4245169d6f7c911836a880a46c22f94"
+    },
+    "frugal": {
+      "owner": "frugal",
+      "engine_executions": 24,
+      "selected": {
+        "id": "mirror-courier",
+        "sequence": 1,
+        "program_hash": "sha256:0d44cba64bbe3642a537381d496874758009ad4e0dfeca40bbfc2d0685e30d74",
+        "training_work": 210633
+      },
+      "candidates": [
+        {
+          "sequence": 1,
+          "id": "mirror-courier",
+          "label": "Mirror courier",
+          "admission": "completed",
+          "bloomed": true,
+          "work": 210633,
+          "program_bytes": 3326,
+          "source_sha256": "5d3ffd8188ea19068902faf99a69271d4b875b350db152c89097b185dbb7c1d1",
+          "trials": [
+            {
+              "case_id": "bloom-left",
+              "bloomed": true,
+              "work": 52436,
+              "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5"
+            },
+            {
+              "case_id": "bloom-right",
+              "bloomed": true,
+              "work": 52831,
+              "result_hash": "sha256:d9cd1dd30750413dac7d59f2584781b35e096ee6907297281e60b671ee7ad382"
+            },
+            {
+              "case_id": "bloom-left-delay",
+              "bloomed": true,
+              "work": 52486,
+              "result_hash": "sha256:bc0a032f0294826b5bf95a2b7224ca0d44971547fd3d04f1dfe97b2003011e24"
+            },
+            {
+              "case_id": "bloom-right-delay",
+              "bloomed": true,
+              "work": 52880,
+              "result_hash": "sha256:38589375bb0900ef42c5df30e41ff24401f58b550d1d4e30e06014a97cf70399"
+            }
+          ]
+        },
+        {
+          "sequence": 2,
+          "id": "seed-courier",
+          "label": "Seed courier",
+          "admission": "completed",
+          "bloomed": true,
+          "work": 210633,
+          "program_bytes": 3326,
+          "source_sha256": "4a9e0a745977439250eb74cdffb1a4832bec78aa584d238c8e1f83a9373b663f",
+          "trials": [
+            {
+              "case_id": "bloom-left",
+              "bloomed": true,
+              "work": 52436,
+              "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5"
+            },
+            {
+              "case_id": "bloom-right",
+              "bloomed": true,
+              "work": 52831,
+              "result_hash": "sha256:d9cd1dd30750413dac7d59f2584781b35e096ee6907297281e60b671ee7ad382"
+            },
+            {
+              "case_id": "bloom-left-delay",
+              "bloomed": true,
+              "work": 52486,
+              "result_hash": "sha256:bc0a032f0294826b5bf95a2b7224ca0d44971547fd3d04f1dfe97b2003011e24"
+            },
+            {
+              "case_id": "bloom-right-delay",
+              "bloomed": true,
+              "work": 52880,
+              "result_hash": "sha256:38589375bb0900ef42c5df30e41ff24401f58b550d1d4e30e06014a97cf70399"
+            }
+          ]
+        },
+        {
+          "sequence": 3,
+          "id": null,
+          "label": null,
+          "admission": "rejected",
+          "bloomed": false,
+          "work": null,
+          "program_bytes": null,
+          "source_sha256": "76fe807db5e460eb44706ef9a700f46e9bca6dffa935186a2872a0c3e0a3fc84",
+          "trials": []
+        }
+      ],
+      "transfer": [
+        {
+          "case_id": "bloom-rotated-left",
+          "bloomed": true,
+          "work": 52546,
+          "result_hash": "sha256:3e186141fe9339227a6fe69bbfdb10b11bbf4e95ee87e9a0954c62fd6357eb3d"
+        },
+        {
+          "case_id": "bloom-rotated-right",
+          "bloomed": true,
+          "work": 52919,
+          "result_hash": "sha256:0d4c0c59f6b3f4cf88c63510def7922e5d72c001edf6f8b66a08503fe5f4e535"
+        },
+        {
+          "case_id": "bloom-crossing-left",
+          "bloomed": true,
+          "work": 53126,
+          "result_hash": "sha256:b962125a2bd86ee82efbb3de3a1661ce5437187367b015c43c25a3b3bd7d9899"
+        },
+        {
+          "case_id": "bloom-crossing-right",
+          "bloomed": true,
+          "work": 53490,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628"
+        }
+      ],
+      "finished": {
+        "bloomed": true,
+        "all_inputs_retained": true,
+        "logical_cold_runs": 12
+      },
+      "process_metrics": [
+        {
+          "index": 0,
+          "args": [
+            "run",
+            "c1-bloom-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26826
+        },
+        {
+          "index": 1,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0000.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 35122
+        },
+        {
+          "index": 2,
+          "args": [
+            "run",
+            "c1-bloom-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26990
+        },
+        {
+          "index": 3,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0002.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 34377
+        },
+        {
+          "index": 4,
+          "args": [
+            "run",
+            "c1-bloom-left-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 25292
+        },
+        {
+          "index": 5,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0004.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 32884
+        },
+        {
+          "index": 6,
+          "args": [
+            "run",
+            "c1-bloom-right-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 23907
+        },
+        {
+          "index": 7,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0006.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 31964
+        },
+        {
+          "index": 8,
+          "args": [
+            "run",
+            "c2-bloom-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26974
+        },
+        {
+          "index": 9,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0008.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33651
+        },
+        {
+          "index": 10,
+          "args": [
+            "run",
+            "c2-bloom-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26516
+        },
+        {
+          "index": 11,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0010.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 36120
+        },
+        {
+          "index": 12,
+          "args": [
+            "run",
+            "c2-bloom-left-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 27160
+        },
+        {
+          "index": 13,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0012.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33928
+        },
+        {
+          "index": 14,
+          "args": [
+            "run",
+            "c2-bloom-right-delay.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 26106
+        },
+        {
+          "index": 15,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0014.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33109
+        },
+        {
+          "index": 16,
+          "args": [
+            "run",
+            "transfer-bloom-rotated-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 24113
+        },
+        {
+          "index": 17,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0016.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 32238
+        },
+        {
+          "index": 18,
+          "args": [
+            "run",
+            "transfer-bloom-rotated-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 24823
+        },
+        {
+          "index": 19,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0018.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 33042
+        },
+        {
+          "index": 20,
+          "args": [
+            "run",
+            "transfer-bloom-crossing-left.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 24244
+        },
+        {
+          "index": 21,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0020.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 32156
+        },
+        {
+          "index": 22,
+          "args": [
+            "run",
+            "transfer-bloom-crossing-right.experiment.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 23649
+        },
+        {
+          "index": 23,
+          "args": [
+            "habitat",
+            "bloom-check",
+            "0022.stdout.json"
+          ],
+          "exit_code": 0,
+          "engine_executions": 1,
+          "elapsed_micros": 31522
+        }
+      ],
+      "raw_ledger_sha256": "sha256:50cecf91772849bab5f1c59d7ef696bc46376b5d8d8f561c5f56b7555c8e5233"
+    }
+  },
+  "finished": {
+    "arms_passed": true,
+    "training_worlds": 4,
+    "transfer_worlds": 4,
+    "total_engine_executions": 48,
+    "logical_cold_runs": 24,
+    "malformed_slots_retained": 2,
+    "reasoning_tokens": null
+  }
+}

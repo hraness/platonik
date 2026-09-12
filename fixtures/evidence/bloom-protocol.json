@@ -1,0 +1,85 @@
+{
+  "schema": "platonik-bloom-agent-protocol-v1",
+  "scope": "Bounded agent study of endogenous variation in eight fixed v4 Bloom habitats. Candidates submit only typed programs; worlds, selectors, and checker rules remain fixed.",
+  "training": [
+    "bloom-left",
+    "bloom-right",
+    "bloom-left-delay",
+    "bloom-right-delay"
+  ],
+  "transfer": [
+    "bloom-rotated-left",
+    "bloom-rotated-right",
+    "bloom-crossing-left",
+    "bloom-crossing-right"
+  ],
+  "cases": [
+    {
+      "id": "bloom-left",
+      "file": "fixtures/evidence/bloom-cases/bloom-left.json",
+      "sha256": "1bc8a6a6b556c248ec9cbe35e3577c400912cc0984fe5ac43049a1abc4df7107"
+    },
+    {
+      "id": "bloom-right",
+      "file": "fixtures/evidence/bloom-cases/bloom-right.json",
+      "sha256": "b6cd06531582b574a3a906b300cc718316ff42214167acc0ef02e49d80adcdae"
+    },
+    {
+      "id": "bloom-left-delay",
+      "file": "fixtures/evidence/bloom-cases/bloom-left-delay.json",
+      "sha256": "6bf31a9497abea4cacc7adb4c855ab27b48d11af038a21bc65f753991442c627"
+    },
+    {
+      "id": "bloom-right-delay",
+      "file": "fixtures/evidence/bloom-cases/bloom-right-delay.json",
+      "sha256": "b8db8f86c0b2c5022711cab6cff286327bcab97395e6c278804955260fe714ff"
+    },
+    {
+      "id": "bloom-rotated-left",
+      "file": "fixtures/evidence/bloom-cases/bloom-rotated-left.json",
+      "sha256": "91443ab6d15f6f556813a9d1b60ca1ac6f28b99a6e1120c6535549140daa60cb"
+    },
+    {
+      "id": "bloom-rotated-right",
+      "file": "fixtures/evidence/bloom-cases/bloom-rotated-right.json",
+      "sha256": "f304433b0ca4f226e3c6b7ec3d187142baa20657a456e889454f9dc58b808257"
+    },
+    {
+      "id": "bloom-crossing-left",
+      "file": "fixtures/evidence/bloom-cases/bloom-crossing-left.json",
+      "sha256": "2e92dcbfb53099286fcd68c4582235a16921c80f869b57ab603109a4ba907989"
+    },
+    {
+      "id": "bloom-crossing-right",
+      "file": "fixtures/evidence/bloom-cases/bloom-crossing-right.json",
+      "sha256": "132223dcb96e92080e6d347e31755efdb51bf9019d094e0b4e86e0f62098773e"
+    }
+  ],
+  "roles": {
+    "builder_a": 1,
+    "builder_b": 2,
+    "selector": 5
+  },
+  "budget": {
+    "each_agent": 64,
+    "candidate_slots": 3,
+    "training_worlds": 4,
+    "transfer_worlds": 4
+  },
+  "selection": [
+    "all four checked training worlds bloom",
+    "least total modeled work",
+    "least canonical program bytes",
+    "earliest submitted slot"
+  ],
+  "submission": {
+    "shape": "{id,label,programs:{builder_a,builder_b,selector}}",
+    "maximum_bytes": 65536,
+    "normalized_field": "Rule.remember omitted values become null"
+  },
+  "arms": {
+    "keep": "Builders retain the exact qualified Bloom builders; the selector may vary.",
+    "frugal": "All three role programs may vary within the typed v4 program envelope."
+  },
+  "boundaries": "This study measures transfer across the declared worlds. It does not claim arbitrary synthesis, unbounded evolution, scientific novelty, P-versus-NP progress, or optimality."
+}

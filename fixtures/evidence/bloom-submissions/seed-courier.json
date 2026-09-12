@@ -1,0 +1,386 @@
+{
+  "id": "seed-courier",
+  "label": "Seed courier",
+  "programs": {
+    "builder_a": {
+      "rules": [
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            }
+          ],
+          "action": {
+            "kind": "wait"
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "ready"
+            },
+            {
+              "kind": "memory",
+              "slot": 1,
+              "value": 0
+            }
+          ],
+          "action": {
+            "kind": "write_memory",
+            "slot": 1,
+            "value": 1
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "ready"
+            },
+            {
+              "kind": "assembly_edits",
+              "blueprint": 50,
+              "count": 0
+            }
+          ],
+          "action": {
+            "kind": "edit_direction",
+            "blueprint": 50,
+            "rule": 0,
+            "slot": 1
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "ready"
+            },
+            {
+              "kind": "assembly_edits",
+              "blueprint": 50,
+              "count": 1
+            }
+          ],
+          "action": {
+            "kind": "edit_direction",
+            "blueprint": 50,
+            "rule": 1,
+            "slot": 1
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "ready"
+            },
+            {
+              "kind": "assembly_edits",
+              "blueprint": 50,
+              "count": 2
+            }
+          ],
+          "action": {
+            "kind": "activate",
+            "blueprint": 50
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "absent"
+            },
+            {
+              "kind": "has_material",
+              "value": false
+            }
+          ],
+          "action": {
+            "kind": "gather_material",
+            "stock": 60
+          },
+          "remember": null
+        },
+        {
+          "when": [],
+          "action": {
+            "kind": "build",
+            "blueprint": 50
+          },
+          "remember": null
+        }
+      ]
+    },
+    "builder_b": {
+      "rules": [
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "born"
+            }
+          ],
+          "action": {
+            "kind": "wait"
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "ready"
+            },
+            {
+              "kind": "memory",
+              "slot": 1,
+              "value": 0
+            }
+          ],
+          "action": {
+            "kind": "write_memory",
+            "slot": 1,
+            "value": 2
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "ready"
+            },
+            {
+              "kind": "assembly_edits",
+              "blueprint": 51,
+              "count": 0
+            }
+          ],
+          "action": {
+            "kind": "edit_direction",
+            "blueprint": 51,
+            "rule": 0,
+            "slot": 1
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "ready"
+            },
+            {
+              "kind": "assembly_edits",
+              "blueprint": 51,
+              "count": 1
+            }
+          ],
+          "action": {
+            "kind": "edit_direction",
+            "blueprint": 51,
+            "rule": 1,
+            "slot": 1
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "ready"
+            },
+            {
+              "kind": "assembly_edits",
+              "blueprint": 51,
+              "count": 2
+            }
+          ],
+          "action": {
+            "kind": "activate",
+            "blueprint": 51
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "absent"
+            },
+            {
+              "kind": "has_material",
+              "value": false
+            }
+          ],
+          "action": {
+            "kind": "gather_material",
+            "stock": 61
+          },
+          "remember": null
+        },
+        {
+          "when": [],
+          "action": {
+            "kind": "build",
+            "blueprint": 51
+          },
+          "remember": null
+        }
+      ]
+    },
+    "selector": {
+      "rules": [
+        {
+          "when": [
+            {
+              "kind": "memory",
+              "slot": 2,
+              "value": 1
+            },
+            {
+              "kind": "has_message",
+              "port": 2,
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "send",
+            "port": 0,
+            "bit": {
+              "kind": "constant",
+              "value": true
+            }
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "memory",
+              "slot": 2,
+              "value": 1
+            }
+          ],
+          "action": {
+            "kind": "wait"
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "memory",
+              "slot": 2,
+              "value": 2
+            },
+            {
+              "kind": "has_message",
+              "port": 2,
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "send",
+            "port": 1,
+            "bit": {
+              "kind": "constant",
+              "value": true
+            }
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "memory",
+              "slot": 2,
+              "value": 2
+            }
+          ],
+          "action": {
+            "kind": "wait"
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            },
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "born"
+            },
+            {
+              "kind": "has_message",
+              "port": 0,
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "take_message",
+            "port": 0,
+            "slot": 1
+          },
+          "remember": {
+            "slot": 2,
+            "value": 1
+          }
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            },
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "born"
+            },
+            {
+              "kind": "has_message",
+              "port": 1,
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "take_message",
+            "port": 1,
+            "slot": 1
+          },
+          "remember": {
+            "slot": 2,
+            "value": 2
+          }
+        }
+      ]
+    }
+  }
+}

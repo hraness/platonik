@@ -1,0 +1,1686 @@
+{
+  "version": 4,
+  "seed": 0,
+  "width": 11,
+  "height": 9,
+  "walls": [
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 1,
+      "y": 0
+    },
+    {
+      "x": 2,
+      "y": 0
+    },
+    {
+      "x": 3,
+      "y": 0
+    },
+    {
+      "x": 4,
+      "y": 0
+    },
+    {
+      "x": 5,
+      "y": 0
+    },
+    {
+      "x": 6,
+      "y": 0
+    },
+    {
+      "x": 7,
+      "y": 0
+    },
+    {
+      "x": 8,
+      "y": 0
+    },
+    {
+      "x": 9,
+      "y": 0
+    },
+    {
+      "x": 10,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 1
+    },
+    {
+      "x": 1,
+      "y": 1
+    },
+    {
+      "x": 2,
+      "y": 1
+    },
+    {
+      "x": 3,
+      "y": 1
+    },
+    {
+      "x": 4,
+      "y": 1
+    },
+    {
+      "x": 5,
+      "y": 1
+    },
+    {
+      "x": 6,
+      "y": 1
+    },
+    {
+      "x": 7,
+      "y": 1
+    },
+    {
+      "x": 8,
+      "y": 1
+    },
+    {
+      "x": 9,
+      "y": 1
+    },
+    {
+      "x": 10,
+      "y": 1
+    },
+    {
+      "x": 0,
+      "y": 2
+    },
+    {
+      "x": 1,
+      "y": 2
+    },
+    {
+      "x": 2,
+      "y": 2
+    },
+    {
+      "x": 3,
+      "y": 2
+    },
+    {
+      "x": 4,
+      "y": 2
+    },
+    {
+      "x": 6,
+      "y": 2
+    },
+    {
+      "x": 8,
+      "y": 2
+    },
+    {
+      "x": 9,
+      "y": 2
+    },
+    {
+      "x": 10,
+      "y": 2
+    },
+    {
+      "x": 0,
+      "y": 3
+    },
+    {
+      "x": 1,
+      "y": 3
+    },
+    {
+      "x": 2,
+      "y": 3
+    },
+    {
+      "x": 3,
+      "y": 3
+    },
+    {
+      "x": 8,
+      "y": 3
+    },
+    {
+      "x": 9,
+      "y": 3
+    },
+    {
+      "x": 10,
+      "y": 3
+    },
+    {
+      "x": 0,
+      "y": 4
+    },
+    {
+      "x": 1,
+      "y": 4
+    },
+    {
+      "x": 2,
+      "y": 4
+    },
+    {
+      "x": 3,
+      "y": 4
+    },
+    {
+      "x": 8,
+      "y": 4
+    },
+    {
+      "x": 9,
+      "y": 4
+    },
+    {
+      "x": 10,
+      "y": 4
+    },
+    {
+      "x": 0,
+      "y": 5
+    },
+    {
+      "x": 1,
+      "y": 5
+    },
+    {
+      "x": 2,
+      "y": 5
+    },
+    {
+      "x": 3,
+      "y": 5
+    },
+    {
+      "x": 8,
+      "y": 5
+    },
+    {
+      "x": 9,
+      "y": 5
+    },
+    {
+      "x": 10,
+      "y": 5
+    },
+    {
+      "x": 0,
+      "y": 6
+    },
+    {
+      "x": 1,
+      "y": 6
+    },
+    {
+      "x": 2,
+      "y": 6
+    },
+    {
+      "x": 3,
+      "y": 6
+    },
+    {
+      "x": 4,
+      "y": 6
+    },
+    {
+      "x": 6,
+      "y": 6
+    },
+    {
+      "x": 8,
+      "y": 6
+    },
+    {
+      "x": 9,
+      "y": 6
+    },
+    {
+      "x": 10,
+      "y": 6
+    },
+    {
+      "x": 0,
+      "y": 7
+    },
+    {
+      "x": 1,
+      "y": 7
+    },
+    {
+      "x": 2,
+      "y": 7
+    },
+    {
+      "x": 3,
+      "y": 7
+    },
+    {
+      "x": 4,
+      "y": 7
+    },
+    {
+      "x": 5,
+      "y": 7
+    },
+    {
+      "x": 6,
+      "y": 7
+    },
+    {
+      "x": 7,
+      "y": 7
+    },
+    {
+      "x": 8,
+      "y": 7
+    },
+    {
+      "x": 9,
+      "y": 7
+    },
+    {
+      "x": 10,
+      "y": 7
+    },
+    {
+      "x": 0,
+      "y": 8
+    },
+    {
+      "x": 1,
+      "y": 8
+    },
+    {
+      "x": 2,
+      "y": 8
+    },
+    {
+      "x": 3,
+      "y": 8
+    },
+    {
+      "x": 4,
+      "y": 8
+    },
+    {
+      "x": 5,
+      "y": 8
+    },
+    {
+      "x": 6,
+      "y": 8
+    },
+    {
+      "x": 7,
+      "y": 8
+    },
+    {
+      "x": 8,
+      "y": 8
+    },
+    {
+      "x": 9,
+      "y": 8
+    },
+    {
+      "x": 10,
+      "y": 8
+    }
+  ],
+  "sources": [
+    {
+      "id": 10,
+      "position": {
+        "x": 5,
+        "y": 3
+      },
+      "sparks": [
+        {
+          "id": 100,
+          "bit": false
+        },
+        {
+          "id": 101,
+          "bit": false
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "position": {
+        "x": 5,
+        "y": 5
+      },
+      "sparks": [
+        {
+          "id": 200,
+          "bit": false
+        },
+        {
+          "id": 201,
+          "bit": false
+        }
+      ]
+    }
+  ],
+  "depots": [
+    {
+      "id": 11,
+      "position": {
+        "x": 6,
+        "y": 3
+      },
+      "capacity": 2
+    },
+    {
+      "id": 13,
+      "position": {
+        "x": 6,
+        "y": 5
+      },
+      "capacity": 2
+    }
+  ],
+  "beacons": [
+    {
+      "id": 20,
+      "position": {
+        "x": 7,
+        "y": 4
+      },
+      "accepts": false,
+      "initial_charge": 64,
+      "drain_every": 4,
+      "drain_amount": 1,
+      "spark_charge": 8,
+      "required_deliveries": 2
+    },
+    {
+      "id": 21,
+      "position": {
+        "x": 7,
+        "y": 2
+      },
+      "accepts": true,
+      "initial_charge": 64,
+      "drain_every": 4,
+      "drain_amount": 1,
+      "spark_charge": 8,
+      "required_deliveries": 0
+    },
+    {
+      "id": 22,
+      "position": {
+        "x": 7,
+        "y": 6
+      },
+      "accepts": true,
+      "initial_charge": 64,
+      "drain_every": 4,
+      "drain_amount": 1,
+      "spark_charge": 8,
+      "required_deliveries": 0
+    }
+  ],
+  "valves": [
+    {
+      "id": 30,
+      "position": {
+        "x": 7,
+        "y": 3
+      },
+      "depot": 11,
+      "beacon_zero": 20,
+      "beacon_one": 21,
+      "enabled": true
+    },
+    {
+      "id": 31,
+      "position": {
+        "x": 7,
+        "y": 5
+      },
+      "depot": 13,
+      "beacon_zero": 20,
+      "beacon_one": 22,
+      "enabled": true
+    }
+  ],
+  "cells": [
+    {
+      "id": 5,
+      "position": {
+        "x": 5,
+        "y": 4
+      },
+      "heading": "north",
+      "mobile": false,
+      "memory": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 2,
+                "value": 1
+              },
+              {
+                "kind": "has_message",
+                "port": 2,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "send",
+              "port": 0,
+              "bit": {
+                "kind": "constant",
+                "value": true
+              }
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 2,
+                "value": 1
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 2,
+                "value": 2
+              },
+              {
+                "kind": "has_message",
+                "port": 2,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "send",
+              "port": 1,
+              "bit": {
+                "kind": "constant",
+                "value": true
+              }
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 2,
+                "value": 2
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "born"
+              },
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "born"
+              },
+              {
+                "kind": "has_message",
+                "port": 0,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "take_message",
+              "port": 0,
+              "slot": 1
+            },
+            "remember": {
+              "slot": 2,
+              "value": 1
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "born"
+              },
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "born"
+              },
+              {
+                "kind": "has_message",
+                "port": 1,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "take_message",
+              "port": 1,
+              "slot": 1
+            },
+            "remember": {
+              "slot": 2,
+              "value": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "position": {
+        "x": 6,
+        "y": 4
+      },
+      "heading": "north",
+      "mobile": false,
+      "memory": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 0,
+                "value": 1
+              }
+            ],
+            "action": {
+              "kind": "send",
+              "port": 0,
+              "bit": {
+                "kind": "memory",
+                "slot": 1
+              }
+            },
+            "remember": {
+              "slot": 0,
+              "value": 0
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 0,
+                "value": 2
+              }
+            ],
+            "action": {
+              "kind": "send",
+              "port": 1,
+              "bit": {
+                "kind": "memory",
+                "slot": 1
+              }
+            },
+            "remember": {
+              "slot": 0,
+              "value": 0
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "has_message",
+                "port": 0,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "take_message",
+              "port": 0,
+              "slot": 1
+            },
+            "remember": {
+              "slot": 0,
+              "value": 1
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "has_message",
+                "port": 1,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "take_message",
+              "port": 1,
+              "slot": 1
+            },
+            "remember": {
+              "slot": 0,
+              "value": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "position": {
+        "x": 7,
+        "y": 4
+      },
+      "heading": "north",
+      "mobile": false,
+      "memory": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 0,
+                "value": 1
+              }
+            ],
+            "action": {
+              "kind": "take_message",
+              "port": 0,
+              "slot": 1
+            },
+            "remember": {
+              "slot": 0,
+              "value": 0
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "memory",
+                "slot": 0,
+                "value": 2
+              }
+            ],
+            "action": {
+              "kind": "take_message",
+              "port": 1,
+              "slot": 1
+            },
+            "remember": {
+              "slot": 0,
+              "value": 0
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "has_message",
+                "port": 0,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "route",
+              "valve": 30,
+              "bit": {
+                "kind": "message",
+                "port": 0
+              }
+            },
+            "remember": {
+              "slot": 0,
+              "value": 1
+            }
+          },
+          {
+            "when": [
+              {
+                "kind": "has_message",
+                "port": 1,
+                "value": true
+              }
+            ],
+            "action": {
+              "kind": "route",
+              "valve": 31,
+              "bit": {
+                "kind": "message",
+                "port": 1
+              }
+            },
+            "remember": {
+              "slot": 0,
+              "value": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "position": {
+        "x": 4,
+        "y": 4
+      },
+      "heading": "north",
+      "mobile": false,
+      "memory": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": {
+        "rules": [
+          {
+            "when": [],
+            "action": {
+              "kind": "send",
+              "port": 0,
+              "bit": {
+                "kind": "constant",
+                "value": true
+              }
+            },
+            "remember": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "position": {
+        "x": 5,
+        "y": 2
+      },
+      "heading": "north",
+      "mobile": false,
+      "memory": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "born"
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "ready"
+              },
+              {
+                "kind": "memory",
+                "slot": 1,
+                "value": 0
+              }
+            ],
+            "action": {
+              "kind": "write_memory",
+              "slot": 1,
+              "value": 1
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "ready"
+              },
+              {
+                "kind": "assembly_edits",
+                "blueprint": 50,
+                "count": 0
+              }
+            ],
+            "action": {
+              "kind": "edit_direction",
+              "blueprint": 50,
+              "rule": 0,
+              "slot": 1
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "ready"
+              },
+              {
+                "kind": "assembly_edits",
+                "blueprint": 50,
+                "count": 1
+              }
+            ],
+            "action": {
+              "kind": "edit_direction",
+              "blueprint": 50,
+              "rule": 1,
+              "slot": 1
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "ready"
+              },
+              {
+                "kind": "assembly_edits",
+                "blueprint": 50,
+                "count": 2
+              }
+            ],
+            "action": {
+              "kind": "activate",
+              "blueprint": 50
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 50,
+                "stage": "absent"
+              },
+              {
+                "kind": "has_material",
+                "value": false
+              }
+            ],
+            "action": {
+              "kind": "gather_material",
+              "stock": 60
+            },
+            "remember": null
+          },
+          {
+            "when": [],
+            "action": {
+              "kind": "build",
+              "blueprint": 50
+            },
+            "remember": null
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "position": {
+        "x": 5,
+        "y": 6
+      },
+      "heading": "north",
+      "mobile": false,
+      "memory": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "program": {
+        "rules": [
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "born"
+              }
+            ],
+            "action": {
+              "kind": "wait"
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "ready"
+              },
+              {
+                "kind": "memory",
+                "slot": 1,
+                "value": 0
+              }
+            ],
+            "action": {
+              "kind": "write_memory",
+              "slot": 1,
+              "value": 2
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "ready"
+              },
+              {
+                "kind": "assembly_edits",
+                "blueprint": 51,
+                "count": 0
+              }
+            ],
+            "action": {
+              "kind": "edit_direction",
+              "blueprint": 51,
+              "rule": 0,
+              "slot": 1
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "ready"
+              },
+              {
+                "kind": "assembly_edits",
+                "blueprint": 51,
+                "count": 1
+              }
+            ],
+            "action": {
+              "kind": "edit_direction",
+              "blueprint": 51,
+              "rule": 1,
+              "slot": 1
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "ready"
+              },
+              {
+                "kind": "assembly_edits",
+                "blueprint": 51,
+                "count": 2
+              }
+            ],
+            "action": {
+              "kind": "activate",
+              "blueprint": 51
+            },
+            "remember": null
+          },
+          {
+            "when": [
+              {
+                "kind": "assembly_stage",
+                "blueprint": 51,
+                "stage": "absent"
+              },
+              {
+                "kind": "has_material",
+                "value": false
+              }
+            ],
+            "action": {
+              "kind": "gather_material",
+              "stock": 61
+            },
+            "remember": null
+          },
+          {
+            "when": [],
+            "action": {
+              "kind": "build",
+              "blueprint": 51
+            },
+            "remember": null
+          }
+        ]
+      }
+    }
+  ],
+  "links": [
+    {
+      "id": 40,
+      "from": {
+        "kind": "depot",
+        "id": 11
+      },
+      "to_cell": 6,
+      "to_port": 0,
+      "delay": 1,
+      "enabled": true
+    },
+    {
+      "id": 42,
+      "from": {
+        "kind": "cell",
+        "id": 6,
+        "port": 0
+      },
+      "to_cell": 5,
+      "to_port": 0,
+      "delay": 1,
+      "enabled": true
+    },
+    {
+      "id": 43,
+      "from": {
+        "kind": "cell",
+        "id": 6,
+        "port": 0
+      },
+      "to_cell": 7,
+      "to_port": 0,
+      "delay": 1,
+      "enabled": true
+    },
+    {
+      "id": 41,
+      "from": {
+        "kind": "depot",
+        "id": 13
+      },
+      "to_cell": 6,
+      "to_port": 1,
+      "delay": 1,
+      "enabled": true
+    },
+    {
+      "id": 44,
+      "from": {
+        "kind": "cell",
+        "id": 6,
+        "port": 1
+      },
+      "to_cell": 5,
+      "to_port": 1,
+      "delay": 1,
+      "enabled": true
+    },
+    {
+      "id": 45,
+      "from": {
+        "kind": "cell",
+        "id": 6,
+        "port": 1
+      },
+      "to_cell": 7,
+      "to_port": 1,
+      "delay": 1,
+      "enabled": true
+    },
+    {
+      "id": 48,
+      "from": {
+        "kind": "cell",
+        "id": 8,
+        "port": 0
+      },
+      "to_cell": 5,
+      "to_port": 2,
+      "delay": 1,
+      "enabled": false
+    }
+  ],
+  "events": [
+    {
+      "tick": 96,
+      "event": {
+        "kind": "link_enabled",
+        "id": 48,
+        "enabled": true
+      }
+    }
+  ],
+  "ticks": 128,
+  "fuel": 200000,
+  "activation_fuel": 8192,
+  "construction": {
+    "stocks": [
+      {
+        "id": 60,
+        "position": {
+          "x": 5,
+          "y": 2
+        },
+        "units": [
+          1001
+        ]
+      },
+      {
+        "id": 61,
+        "position": {
+          "x": 5,
+          "y": 6
+        },
+        "units": [
+          1002
+        ]
+      }
+    ],
+    "blueprints": [
+      {
+        "id": 50,
+        "body": {
+          "cell": {
+            "id": 3,
+            "position": {
+              "x": 5,
+              "y": 3
+            },
+            "heading": "north",
+            "mobile": true,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "program": {
+              "rules": [
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 1
+                    }
+                  ],
+                  "action": {
+                    "kind": "turn",
+                    "direction": "forward"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 2
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 4
+                    }
+                  ],
+                  "action": {
+                    "kind": "turn",
+                    "direction": "forward"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 5
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 0
+                    },
+                    {
+                      "kind": "carrying",
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "write_memory",
+                    "slot": 0,
+                    "value": 1
+                  },
+                  "remember": null
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 0
+                    },
+                    {
+                      "kind": "at_source",
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "pickup"
+                  },
+                  "remember": null
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 2
+                    },
+                    {
+                      "kind": "blocked",
+                      "direction": "forward",
+                      "value": false
+                    }
+                  ],
+                  "action": {
+                    "kind": "move",
+                    "direction": "forward"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 3
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 3
+                    },
+                    {
+                      "kind": "at_depot",
+                      "value": true
+                    },
+                    {
+                      "kind": "carrying",
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "drop"
+                  },
+                  "remember": null
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 3
+                    },
+                    {
+                      "kind": "at_depot",
+                      "value": false
+                    },
+                    {
+                      "kind": "blocked",
+                      "direction": "back",
+                      "value": false
+                    }
+                  ],
+                  "action": {
+                    "kind": "move",
+                    "direction": "back"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 4
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 3
+                    },
+                    {
+                      "kind": "carrying",
+                      "value": false
+                    },
+                    {
+                      "kind": "blocked",
+                      "direction": "back",
+                      "value": false
+                    }
+                  ],
+                  "action": {
+                    "kind": "move",
+                    "direction": "back"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 4
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 5
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  }
+                }
+              ]
+            }
+          },
+          "links": [
+            {
+              "id": 46,
+              "from": {
+                "kind": "cell",
+                "id": 5,
+                "port": 0
+              },
+              "to_cell": 3,
+              "to_port": 0,
+              "delay": 1,
+              "enabled": true
+            }
+          ]
+        }
+      },
+      {
+        "id": 51,
+        "body": {
+          "cell": {
+            "id": 4,
+            "position": {
+              "x": 5,
+              "y": 5
+            },
+            "heading": "north",
+            "mobile": true,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "program": {
+              "rules": [
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 1
+                    }
+                  ],
+                  "action": {
+                    "kind": "turn",
+                    "direction": "forward"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 2
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 4
+                    }
+                  ],
+                  "action": {
+                    "kind": "turn",
+                    "direction": "forward"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 5
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 0
+                    },
+                    {
+                      "kind": "carrying",
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "write_memory",
+                    "slot": 0,
+                    "value": 1
+                  },
+                  "remember": null
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 0
+                    },
+                    {
+                      "kind": "at_source",
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "pickup"
+                  },
+                  "remember": null
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 2
+                    },
+                    {
+                      "kind": "blocked",
+                      "direction": "forward",
+                      "value": false
+                    }
+                  ],
+                  "action": {
+                    "kind": "move",
+                    "direction": "forward"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 3
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 3
+                    },
+                    {
+                      "kind": "at_depot",
+                      "value": true
+                    },
+                    {
+                      "kind": "carrying",
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "drop"
+                  },
+                  "remember": null
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 3
+                    },
+                    {
+                      "kind": "at_depot",
+                      "value": false
+                    },
+                    {
+                      "kind": "blocked",
+                      "direction": "back",
+                      "value": false
+                    }
+                  ],
+                  "action": {
+                    "kind": "move",
+                    "direction": "back"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 4
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 3
+                    },
+                    {
+                      "kind": "carrying",
+                      "value": false
+                    },
+                    {
+                      "kind": "blocked",
+                      "direction": "back",
+                      "value": false
+                    }
+                  ],
+                  "action": {
+                    "kind": "move",
+                    "direction": "back"
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 4
+                  }
+                },
+                {
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 5
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ],
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  }
+                }
+              ]
+            }
+          },
+          "links": [
+            {
+              "id": 47,
+              "from": {
+                "kind": "cell",
+                "id": 5,
+                "port": 1
+              },
+              "to_cell": 4,
+              "to_port": 0,
+              "delay": 1,
+              "enabled": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
