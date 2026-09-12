@@ -34,3 +34,19 @@ for (const item of index.cases) {
   }
 }
 console.log(`Checked Bloom evidence: ${index.cases.length} public references, generated variants, causal selection, and confirmation.`);
+
+const study = read("fixtures/evidence/bloom-study.json");
+assert.equal(study.schema, "platonik-bloom-agent-study-v1");
+assert.equal(study.protocol_sha256, `sha256:${crypto.createHash("sha256").update(fs.readFileSync("fixtures/evidence/bloom-protocol.json")).digest("hex")}`);
+assert.equal(study.freeze_sha256, `sha256:${crypto.createHash("sha256").update(fs.readFileSync("fixtures/evidence/bloom-freeze.json")).digest("hex")}`);
+assert.deepEqual(Object.keys(study.arms).sort(), ["frugal", "keep"]);
+for (const arm of Object.values(study.arms)) {
+  assert.equal(arm.engine_executions, 24);
+  assert.equal(arm.candidates.length, 3);
+  assert.equal(arm.candidates.filter(candidate => candidate.admission === "rejected").length, 1);
+  assert.equal(arm.transfer.length, 4);
+  assert(arm.finished.bloomed && arm.finished.all_inputs_retained);
+}
+assert.deepEqual(study.finished, { arms_passed: true, training_worlds: 4, transfer_worlds: 4, total_engine_executions: 48, logical_cold_runs: 24, malformed_slots_retained: 2, reasoning_tokens: null });
+for (const arm of ["keep", "frugal"]) assert(fs.existsSync(`fixtures/evidence/bloom-study/${arm}.tar.gz`));
+console.log(`Checked Bloom agent study: two bounded arms, 48 engine executions, transfer, and retained malformed slots.`);
