@@ -1,0 +1,5769 @@
+{
+  "buffer_capacity_bytes": 8388608,
+  "buffer_retained_during_rss": true,
+  "buffer_strategy": "fixed reusable Vec with bounded Write",
+  "engine_executions": 124,
+  "percentile_method": "nearest rank over 30 measured samples; warmup excluded",
+  "samples_per_workload": 30,
+  "schema": "platonik-bloom-capacity-v1",
+  "scope": "Only the two exact eight-cell v4 Bloom worlds; no larger-world or integrated-campaign admission.",
+  "warmups_per_workload": 1,
+  "workloads": [
+    {
+      "experiment": {
+        "activation_fuel": 8192,
+        "beacons": [
+          {
+            "accepts": false,
+            "drain_amount": 1,
+            "drain_every": 4,
+            "id": 20,
+            "initial_charge": 64,
+            "position": {
+              "x": 3,
+              "y": 4
+            },
+            "required_deliveries": 2,
+            "spark_charge": 8
+          },
+          {
+            "accepts": true,
+            "drain_amount": 1,
+            "drain_every": 4,
+            "id": 21,
+            "initial_charge": 64,
+            "position": {
+              "x": 3,
+              "y": 2
+            },
+            "required_deliveries": 0,
+            "spark_charge": 8
+          },
+          {
+            "accepts": true,
+            "drain_amount": 1,
+            "drain_every": 4,
+            "id": 22,
+            "initial_charge": 64,
+            "position": {
+              "x": 3,
+              "y": 6
+            },
+            "required_deliveries": 0,
+            "spark_charge": 8
+          }
+        ],
+        "cells": [
+          {
+            "heading": "north",
+            "id": 5,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 5,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "constant",
+                      "value": true
+                    },
+                    "kind": "send",
+                    "port": 0
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 1
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 2,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "constant",
+                      "value": true
+                    },
+                    "kind": "send",
+                    "port": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 2
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 2,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 2
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 2,
+                    "value": 1
+                  },
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 1,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 2,
+                    "value": 2
+                  },
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 1,
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "heading": "north",
+            "id": 6,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 4,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "memory",
+                      "slot": 1
+                    },
+                    "kind": "send",
+                    "port": 0
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "memory",
+                      "slot": 1
+                    },
+                    "kind": "send",
+                    "port": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 2
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 1
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 1,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 2
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 1,
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "heading": "north",
+            "id": 7,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 3,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 1,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 2
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "message",
+                      "port": 0
+                    },
+                    "kind": "route",
+                    "valve": 30
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 1
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "message",
+                      "port": 1
+                    },
+                    "kind": "route",
+                    "valve": 31
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 2
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 1,
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "heading": "north",
+            "id": 8,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 6,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "constant",
+                      "value": true
+                    },
+                    "kind": "send",
+                    "port": 0
+                  },
+                  "remember": null,
+                  "when": []
+                }
+              ]
+            }
+          },
+          {
+            "heading": "north",
+            "id": 1,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 5,
+              "y": 2
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "write_memory",
+                    "slot": 1,
+                    "value": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "kind": "memory",
+                      "slot": 1,
+                      "value": 0
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "edit_direction",
+                    "rule": 0,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 50,
+                      "count": 0,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "edit_direction",
+                    "rule": 1,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 50,
+                      "count": 1,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "activate"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 50,
+                      "count": 2,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "gather_material",
+                    "stock": 60
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "absent"
+                    },
+                    {
+                      "kind": "has_material",
+                      "value": false
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "build"
+                  },
+                  "remember": null,
+                  "when": []
+                }
+              ]
+            }
+          },
+          {
+            "heading": "north",
+            "id": 2,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 5,
+              "y": 6
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "write_memory",
+                    "slot": 1,
+                    "value": 2
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "kind": "memory",
+                      "slot": 1,
+                      "value": 0
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "edit_direction",
+                    "rule": 0,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 51,
+                      "count": 0,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "edit_direction",
+                    "rule": 1,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 51,
+                      "count": 1,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "activate"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 51,
+                      "count": 2,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "gather_material",
+                    "stock": 61
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "absent"
+                    },
+                    {
+                      "kind": "has_material",
+                      "value": false
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "build"
+                  },
+                  "remember": null,
+                  "when": []
+                }
+              ]
+            }
+          }
+        ],
+        "construction": {
+          "blueprints": [
+            {
+              "body": {
+                "cell": {
+                  "heading": "north",
+                  "id": 3,
+                  "memory": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mobile": true,
+                  "position": {
+                    "x": 5,
+                    "y": 3
+                  },
+                  "program": {
+                    "rules": [
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 2
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 1
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 5
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 4
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "write_memory",
+                          "slot": 0,
+                          "value": 1
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "pickup"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "at_source",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 3
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 2
+                          },
+                          {
+                            "direction": "forward",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "drop"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": true
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "take_message",
+                          "port": 0,
+                          "slot": 1
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 0
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 5
+                          },
+                          {
+                            "kind": "has_message",
+                            "port": 0,
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "links": [
+                  {
+                    "delay": 1,
+                    "enabled": true,
+                    "from": {
+                      "id": 5,
+                      "kind": "cell",
+                      "port": 0
+                    },
+                    "id": 46,
+                    "to_cell": 3,
+                    "to_port": 0
+                  }
+                ]
+              },
+              "id": 50
+            },
+            {
+              "body": {
+                "cell": {
+                  "heading": "north",
+                  "id": 4,
+                  "memory": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mobile": true,
+                  "position": {
+                    "x": 5,
+                    "y": 5
+                  },
+                  "program": {
+                    "rules": [
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 2
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 1
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 5
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 4
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "write_memory",
+                          "slot": 0,
+                          "value": 1
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "pickup"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "at_source",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 3
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 2
+                          },
+                          {
+                            "direction": "forward",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "drop"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": true
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "take_message",
+                          "port": 0,
+                          "slot": 1
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 0
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 5
+                          },
+                          {
+                            "kind": "has_message",
+                            "port": 0,
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "links": [
+                  {
+                    "delay": 1,
+                    "enabled": true,
+                    "from": {
+                      "id": 5,
+                      "kind": "cell",
+                      "port": 1
+                    },
+                    "id": 47,
+                    "to_cell": 4,
+                    "to_port": 0
+                  }
+                ]
+              },
+              "id": 51
+            }
+          ],
+          "stocks": [
+            {
+              "id": 60,
+              "position": {
+                "x": 5,
+                "y": 2
+              },
+              "units": [
+                1001
+              ]
+            },
+            {
+              "id": 61,
+              "position": {
+                "x": 5,
+                "y": 6
+              },
+              "units": [
+                1002
+              ]
+            }
+          ]
+        },
+        "depots": [
+          {
+            "capacity": 2,
+            "id": 11,
+            "position": {
+              "x": 4,
+              "y": 3
+            }
+          },
+          {
+            "capacity": 2,
+            "id": 13,
+            "position": {
+              "x": 4,
+              "y": 5
+            }
+          }
+        ],
+        "events": [
+          {
+            "event": {
+              "enabled": true,
+              "id": 48,
+              "kind": "link_enabled"
+            },
+            "tick": 96
+          }
+        ],
+        "fuel": 200000,
+        "height": 9,
+        "links": [
+          {
+            "delay": 1,
+            "enabled": true,
+            "from": {
+              "id": 11,
+              "kind": "depot"
+            },
+            "id": 40,
+            "to_cell": 6,
+            "to_port": 0
+          },
+          {
+            "delay": 1,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 0
+            },
+            "id": 42,
+            "to_cell": 5,
+            "to_port": 0
+          },
+          {
+            "delay": 1,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 0
+            },
+            "id": 43,
+            "to_cell": 7,
+            "to_port": 0
+          },
+          {
+            "delay": 1,
+            "enabled": true,
+            "from": {
+              "id": 13,
+              "kind": "depot"
+            },
+            "id": 41,
+            "to_cell": 6,
+            "to_port": 1
+          },
+          {
+            "delay": 1,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 1
+            },
+            "id": 44,
+            "to_cell": 5,
+            "to_port": 1
+          },
+          {
+            "delay": 1,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 1
+            },
+            "id": 45,
+            "to_cell": 7,
+            "to_port": 1
+          },
+          {
+            "delay": 1,
+            "enabled": false,
+            "from": {
+              "id": 8,
+              "kind": "cell",
+              "port": 0
+            },
+            "id": 48,
+            "to_cell": 5,
+            "to_port": 2
+          }
+        ],
+        "seed": 0,
+        "sources": [
+          {
+            "id": 10,
+            "position": {
+              "x": 5,
+              "y": 3
+            },
+            "sparks": [
+              {
+                "bit": false,
+                "id": 100
+              },
+              {
+                "bit": false,
+                "id": 101
+              }
+            ]
+          },
+          {
+            "id": 12,
+            "position": {
+              "x": 5,
+              "y": 5
+            },
+            "sparks": [
+              {
+                "bit": false,
+                "id": 200
+              },
+              {
+                "bit": false,
+                "id": 201
+              }
+            ]
+          }
+        ],
+        "ticks": 128,
+        "valves": [
+          {
+            "beacon_one": 21,
+            "beacon_zero": 20,
+            "depot": 11,
+            "enabled": true,
+            "id": 30,
+            "position": {
+              "x": 3,
+              "y": 3
+            }
+          },
+          {
+            "beacon_one": 22,
+            "beacon_zero": 20,
+            "depot": 13,
+            "enabled": true,
+            "id": 31,
+            "position": {
+              "x": 3,
+              "y": 5
+            }
+          }
+        ],
+        "version": 4,
+        "walls": [
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 0
+          },
+          {
+            "x": 7,
+            "y": 0
+          },
+          {
+            "x": 8,
+            "y": 0
+          },
+          {
+            "x": 9,
+            "y": 0
+          },
+          {
+            "x": 10,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": 4,
+            "y": 1
+          },
+          {
+            "x": 5,
+            "y": 1
+          },
+          {
+            "x": 6,
+            "y": 1
+          },
+          {
+            "x": 7,
+            "y": 1
+          },
+          {
+            "x": 8,
+            "y": 1
+          },
+          {
+            "x": 9,
+            "y": 1
+          },
+          {
+            "x": 10,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 6,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 2
+          },
+          {
+            "x": 8,
+            "y": 2
+          },
+          {
+            "x": 9,
+            "y": 2
+          },
+          {
+            "x": 10,
+            "y": 2
+          },
+          {
+            "x": 0,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": 3
+          },
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 7,
+            "y": 3
+          },
+          {
+            "x": 8,
+            "y": 3
+          },
+          {
+            "x": 9,
+            "y": 3
+          },
+          {
+            "x": 10,
+            "y": 3
+          },
+          {
+            "x": 0,
+            "y": 4
+          },
+          {
+            "x": 1,
+            "y": 4
+          },
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 7,
+            "y": 4
+          },
+          {
+            "x": 8,
+            "y": 4
+          },
+          {
+            "x": 9,
+            "y": 4
+          },
+          {
+            "x": 10,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 5
+          },
+          {
+            "x": 1,
+            "y": 5
+          },
+          {
+            "x": 2,
+            "y": 5
+          },
+          {
+            "x": 7,
+            "y": 5
+          },
+          {
+            "x": 8,
+            "y": 5
+          },
+          {
+            "x": 9,
+            "y": 5
+          },
+          {
+            "x": 10,
+            "y": 5
+          },
+          {
+            "x": 0,
+            "y": 6
+          },
+          {
+            "x": 1,
+            "y": 6
+          },
+          {
+            "x": 2,
+            "y": 6
+          },
+          {
+            "x": 4,
+            "y": 6
+          },
+          {
+            "x": 6,
+            "y": 6
+          },
+          {
+            "x": 7,
+            "y": 6
+          },
+          {
+            "x": 8,
+            "y": 6
+          },
+          {
+            "x": 9,
+            "y": 6
+          },
+          {
+            "x": 10,
+            "y": 6
+          },
+          {
+            "x": 0,
+            "y": 7
+          },
+          {
+            "x": 1,
+            "y": 7
+          },
+          {
+            "x": 2,
+            "y": 7
+          },
+          {
+            "x": 3,
+            "y": 7
+          },
+          {
+            "x": 4,
+            "y": 7
+          },
+          {
+            "x": 5,
+            "y": 7
+          },
+          {
+            "x": 6,
+            "y": 7
+          },
+          {
+            "x": 7,
+            "y": 7
+          },
+          {
+            "x": 8,
+            "y": 7
+          },
+          {
+            "x": 9,
+            "y": 7
+          },
+          {
+            "x": 10,
+            "y": 7
+          },
+          {
+            "x": 0,
+            "y": 8
+          },
+          {
+            "x": 1,
+            "y": 8
+          },
+          {
+            "x": 2,
+            "y": 8
+          },
+          {
+            "x": 3,
+            "y": 8
+          },
+          {
+            "x": 4,
+            "y": 8
+          },
+          {
+            "x": 5,
+            "y": 8
+          },
+          {
+            "x": 6,
+            "y": 8
+          },
+          {
+            "x": 7,
+            "y": 8
+          },
+          {
+            "x": 8,
+            "y": 8
+          },
+          {
+            "x": 9,
+            "y": 8
+          },
+          {
+            "x": 10,
+            "y": 8
+          }
+        ],
+        "width": 11
+      },
+      "experiment_hash": "sha256:e7161669c7c26f98e70fb0651fa00e62f139f5482e8c0dfb5db6846e54f81c8a",
+      "id": "bloom-left",
+      "p50_ms": 44.468084,
+      "p95_ms": 54.600625,
+      "samples": [
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.550584,
+          "identity_check_ms": 6.882917,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.625249999999998,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6701056,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.760042,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.622792000000004,
+          "verify_ms": 25.23725
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.535083,
+          "identity_check_ms": 7.268958,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.611208,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6733824,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.8490410000000002,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 45.217833,
+          "verify_ms": 25.757375
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 73.997625,
+          "identity_check_ms": 10.473459,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 22.182667,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6897664,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.680375,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 63.433541999999996,
+          "verify_ms": 38.570417000000006
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 62.059416,
+          "identity_check_ms": 7.399083,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 24.632166,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6963200,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.813292,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 54.600625,
+          "verify_ms": 28.155083
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 54.124459,
+          "identity_check_ms": 6.988917,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 18.379541999999997,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6963200,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.902042,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 47.088375,
+          "verify_ms": 26.806625
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.075625,
+          "identity_check_ms": 7.130916999999999,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.562292,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6963200,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.959292,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.882208999999996,
+          "verify_ms": 25.360542
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.99575,
+          "identity_check_ms": 7.073166,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.675375,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6963200,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9538749999999998,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.877583,
+          "verify_ms": 25.24825
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.2885,
+          "identity_check_ms": 6.9745,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.505833,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6963200,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.740958,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.271666,
+          "verify_ms": 25.024833
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.961167,
+          "identity_check_ms": 7.304042,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 16.823375000000002,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 6995968,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.879541,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 45.610458,
+          "verify_ms": 26.907417
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.441834,
+          "identity_check_ms": 7.143875,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.4255,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7045120,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.815375,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.252334,
+          "verify_ms": 25.011374999999997
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.859041000000005,
+          "identity_check_ms": 7.105167,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.503332999999998,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7045120,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9307910000000001,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.707708,
+          "verify_ms": 25.273459000000003
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.385459000000004,
+          "identity_check_ms": 7.092708,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.149459,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7045120,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.796,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.247125,
+          "verify_ms": 25.3015
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.108250000000005,
+          "identity_check_ms": 7.047083,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.669708,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7045120,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9876669999999999,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 45.012,
+          "verify_ms": 25.354499999999998
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.162958,
+          "identity_check_ms": 6.771041,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.057541999999998,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7045120,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.870583,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.348749999999995,
+          "verify_ms": 24.420458
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.1625,
+          "identity_check_ms": 7.441541,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.054042,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7045120,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9648750000000001,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.674375000000005,
+          "verify_ms": 25.655292
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.864042,
+          "identity_check_ms": 7.04875,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.078625,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7045120,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.72325,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.766084,
+          "verify_ms": 24.964083000000002
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.991707999999996,
+          "identity_check_ms": 7.3555,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.166332999999998,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7061504,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.906125,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.583583000000004,
+          "verify_ms": 24.511042
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.828084000000004,
+          "identity_check_ms": 7.313666,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.2485,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7094272,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.732583,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.468084,
+          "verify_ms": 25.486959
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.023042,
+          "identity_check_ms": 6.743375,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 18.644208,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7094272,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.230334,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 45.239583,
+          "verify_ms": 24.364792
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.888875,
+          "identity_check_ms": 7.1463339999999995,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 16.590708,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7094272,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.8870829999999998,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.69475,
+          "verify_ms": 25.216833
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.190916,
+          "identity_check_ms": 7.1525419999999995,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.59075,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7127040,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.730792,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.989625,
+          "verify_ms": 24.667958
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.67925,
+          "identity_check_ms": 7.065583999999999,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.126541,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7127040,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.864792,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.571042,
+          "verify_ms": 24.579667
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.331083,
+          "identity_check_ms": 7.251125,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.364458,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7143424,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.891083,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.029917000000005,
+          "verify_ms": 24.774250000000002
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.8835,
+          "identity_check_ms": 6.919042,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.439083,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7143424,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.945583,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.920833,
+          "verify_ms": 24.536042000000002
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.989792,
+          "identity_check_ms": 7.090833,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 16.984583,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7143424,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.713417,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.853125,
+          "verify_ms": 25.155
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.936375,
+          "identity_check_ms": 7.023833,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.488583,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7159808,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.952958,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.863375,
+          "verify_ms": 25.421708000000002
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.699374999999996,
+          "identity_check_ms": 7.151417,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.185333,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7159808,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.0053750000000004,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.502708,
+          "verify_ms": 25.311917
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.125042,
+          "identity_check_ms": 6.851375,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.423375,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7159808,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.794875,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 44.228,
+          "verify_ms": 25.009666
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.941208,
+          "identity_check_ms": 7.109291,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 16.98525,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7159808,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.918541,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 43.784791000000006,
+          "verify_ms": 24.880917
+        },
+        {
+          "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+          "bloomed": true,
+          "costs": {
+            "actions": 907,
+            "checking": 20950,
+            "conditions": 3643,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 11694,
+            "memory_reads": 1912,
+            "memory_writes": 33,
+            "messages": 297,
+            "scheduling": 1034,
+            "sensors": 1746,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.217167,
+          "identity_check_ms": 7.110041,
+          "modeled_work": 52436,
+          "receipt_bytes": 1246362,
+          "receipt_ms": 17.5215,
+          "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+          "rss_after_release": {
+            "bytes": 7176192,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.01825,
+          "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+          "total_ms": 45.062083,
+          "verify_ms": 25.522125
+        }
+      ],
+      "warmup": {
+        "bloom_hash": "sha256:51689ed90e1ed46eace2f550c98569df006a1188a108fb3512e30588c02e2882",
+        "bloomed": true,
+        "costs": {
+          "actions": 907,
+          "checking": 20950,
+          "conditions": 3643,
+          "construction": 10,
+          "copying": 10089,
+          "draining": 96,
+          "loading": 11694,
+          "memory_reads": 1912,
+          "memory_writes": 33,
+          "messages": 297,
+          "scheduling": 1034,
+          "sensors": 1746,
+          "transfers": 25
+        },
+        "engine_executions": 2,
+        "full_sample_ms": 52.120833,
+        "identity_check_ms": 7.0347919999999995,
+        "modeled_work": 52436,
+        "receipt_bytes": 1246362,
+        "receipt_ms": 17.593708,
+        "result_hash": "sha256:32dcec59290c94f5b047e364b858a5e2394dd32d8463bf70b0385051b07735e5",
+        "rss_after_release": {
+          "bytes": 6586368,
+          "error": null,
+          "platform": "macos",
+          "source": "ps RSS in KiB"
+        },
+        "serialization_capacity_bytes": 8388608,
+        "serialize_ms": 2.00975,
+        "serialized_receipt_sha256": "sha256:0da9fb955ccc0a98106312ec23e31037ee02f45026749c2702099c8f741a49c8",
+        "total_ms": 45.034541999999995,
+        "verify_ms": 25.430958
+      }
+    },
+    {
+      "experiment": {
+        "activation_fuel": 8192,
+        "beacons": [
+          {
+            "accepts": false,
+            "drain_amount": 1,
+            "drain_every": 4,
+            "id": 20,
+            "initial_charge": 64,
+            "position": {
+              "x": 3,
+              "y": 4
+            },
+            "required_deliveries": 2,
+            "spark_charge": 8
+          },
+          {
+            "accepts": true,
+            "drain_amount": 1,
+            "drain_every": 4,
+            "id": 21,
+            "initial_charge": 64,
+            "position": {
+              "x": 3,
+              "y": 6
+            },
+            "required_deliveries": 0,
+            "spark_charge": 8
+          },
+          {
+            "accepts": true,
+            "drain_amount": 1,
+            "drain_every": 4,
+            "id": 22,
+            "initial_charge": 64,
+            "position": {
+              "x": 3,
+              "y": 2
+            },
+            "required_deliveries": 0,
+            "spark_charge": 8
+          }
+        ],
+        "cells": [
+          {
+            "heading": "south",
+            "id": 5,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 5,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "constant",
+                      "value": true
+                    },
+                    "kind": "send",
+                    "port": 0
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 1
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 2,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "constant",
+                      "value": true
+                    },
+                    "kind": "send",
+                    "port": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 2
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 2,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 2,
+                      "value": 2
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 2,
+                    "value": 1
+                  },
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 1,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 2,
+                    "value": 2
+                  },
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    },
+                    {
+                      "kind": "has_message",
+                      "port": 1,
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "heading": "south",
+            "id": 6,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 4,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "memory",
+                      "slot": 1
+                    },
+                    "kind": "send",
+                    "port": 0
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "memory",
+                      "slot": 1
+                    },
+                    "kind": "send",
+                    "port": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 2
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 1
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 1,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 2
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 1,
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "heading": "south",
+            "id": 7,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 3,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 0,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 1
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "take_message",
+                    "port": 1,
+                    "slot": 1
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 0
+                  },
+                  "when": [
+                    {
+                      "kind": "memory",
+                      "slot": 0,
+                      "value": 2
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "message",
+                      "port": 0
+                    },
+                    "kind": "route",
+                    "valve": 30
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 1
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 0,
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "message",
+                      "port": 1
+                    },
+                    "kind": "route",
+                    "valve": 31
+                  },
+                  "remember": {
+                    "slot": 0,
+                    "value": 2
+                  },
+                  "when": [
+                    {
+                      "kind": "has_message",
+                      "port": 1,
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "heading": "south",
+            "id": 8,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 6,
+              "y": 4
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "bit": {
+                      "kind": "constant",
+                      "value": true
+                    },
+                    "kind": "send",
+                    "port": 0
+                  },
+                  "remember": null,
+                  "when": []
+                }
+              ]
+            }
+          },
+          {
+            "heading": "south",
+            "id": 1,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 5,
+              "y": 6
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "write_memory",
+                    "slot": 1,
+                    "value": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "kind": "memory",
+                      "slot": 1,
+                      "value": 0
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "edit_direction",
+                    "rule": 0,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 50,
+                      "count": 0,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "edit_direction",
+                    "rule": 1,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 50,
+                      "count": 1,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "activate"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 50,
+                      "count": 2,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "gather_material",
+                    "stock": 60
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 50,
+                      "kind": "assembly_stage",
+                      "stage": "absent"
+                    },
+                    {
+                      "kind": "has_material",
+                      "value": false
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 50,
+                    "kind": "build"
+                  },
+                  "remember": null,
+                  "when": []
+                }
+              ]
+            }
+          },
+          {
+            "heading": "south",
+            "id": 2,
+            "memory": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "mobile": false,
+            "position": {
+              "x": 5,
+              "y": 2
+            },
+            "program": {
+              "rules": [
+                {
+                  "action": {
+                    "kind": "wait"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "born"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "write_memory",
+                    "slot": 1,
+                    "value": 2
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "kind": "memory",
+                      "slot": 1,
+                      "value": 0
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "edit_direction",
+                    "rule": 0,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 51,
+                      "count": 0,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "edit_direction",
+                    "rule": 1,
+                    "slot": 1
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 51,
+                      "count": 1,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "activate"
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "ready"
+                    },
+                    {
+                      "blueprint": 51,
+                      "count": 2,
+                      "kind": "assembly_edits"
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "kind": "gather_material",
+                    "stock": 61
+                  },
+                  "remember": null,
+                  "when": [
+                    {
+                      "blueprint": 51,
+                      "kind": "assembly_stage",
+                      "stage": "absent"
+                    },
+                    {
+                      "kind": "has_material",
+                      "value": false
+                    }
+                  ]
+                },
+                {
+                  "action": {
+                    "blueprint": 51,
+                    "kind": "build"
+                  },
+                  "remember": null,
+                  "when": []
+                }
+              ]
+            }
+          }
+        ],
+        "construction": {
+          "blueprints": [
+            {
+              "body": {
+                "cell": {
+                  "heading": "south",
+                  "id": 3,
+                  "memory": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mobile": true,
+                  "position": {
+                    "x": 5,
+                    "y": 5
+                  },
+                  "program": {
+                    "rules": [
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 2
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 1
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 5
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 4
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "write_memory",
+                          "slot": 0,
+                          "value": 1
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "pickup"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "at_source",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 3
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 2
+                          },
+                          {
+                            "direction": "forward",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "drop"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": true
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "take_message",
+                          "port": 0,
+                          "slot": 1
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 0
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 5
+                          },
+                          {
+                            "kind": "has_message",
+                            "port": 0,
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "links": [
+                  {
+                    "delay": 3,
+                    "enabled": true,
+                    "from": {
+                      "id": 5,
+                      "kind": "cell",
+                      "port": 0
+                    },
+                    "id": 46,
+                    "to_cell": 3,
+                    "to_port": 0
+                  }
+                ]
+              },
+              "id": 50
+            },
+            {
+              "body": {
+                "cell": {
+                  "heading": "south",
+                  "id": 4,
+                  "memory": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mobile": true,
+                  "position": {
+                    "x": 5,
+                    "y": 3
+                  },
+                  "program": {
+                    "rules": [
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 2
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 1
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "turn"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 5
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 4
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "write_memory",
+                          "slot": 0,
+                          "value": 1
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "pickup"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 0
+                          },
+                          {
+                            "kind": "at_source",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "forward",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 3
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 2
+                          },
+                          {
+                            "direction": "forward",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "drop"
+                        },
+                        "remember": null,
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": true
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": true
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "at_depot",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "direction": "back",
+                          "kind": "move"
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 4
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 3
+                          },
+                          {
+                            "kind": "carrying",
+                            "value": false
+                          },
+                          {
+                            "direction": "back",
+                            "kind": "blocked",
+                            "value": false
+                          }
+                        ]
+                      },
+                      {
+                        "action": {
+                          "kind": "take_message",
+                          "port": 0,
+                          "slot": 1
+                        },
+                        "remember": {
+                          "slot": 0,
+                          "value": 0
+                        },
+                        "when": [
+                          {
+                            "kind": "memory",
+                            "slot": 0,
+                            "value": 5
+                          },
+                          {
+                            "kind": "has_message",
+                            "port": 0,
+                            "value": true
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "links": [
+                  {
+                    "delay": 3,
+                    "enabled": true,
+                    "from": {
+                      "id": 5,
+                      "kind": "cell",
+                      "port": 1
+                    },
+                    "id": 47,
+                    "to_cell": 4,
+                    "to_port": 0
+                  }
+                ]
+              },
+              "id": 51
+            }
+          ],
+          "stocks": [
+            {
+              "id": 60,
+              "position": {
+                "x": 5,
+                "y": 6
+              },
+              "units": [
+                1001
+              ]
+            },
+            {
+              "id": 61,
+              "position": {
+                "x": 5,
+                "y": 2
+              },
+              "units": [
+                1002
+              ]
+            }
+          ]
+        },
+        "depots": [
+          {
+            "capacity": 2,
+            "id": 11,
+            "position": {
+              "x": 4,
+              "y": 5
+            }
+          },
+          {
+            "capacity": 2,
+            "id": 13,
+            "position": {
+              "x": 4,
+              "y": 3
+            }
+          }
+        ],
+        "events": [
+          {
+            "event": {
+              "blocked": true,
+              "edge": {
+                "a": {
+                  "x": 4,
+                  "y": 5
+                },
+                "b": {
+                  "x": 5,
+                  "y": 5
+                }
+              },
+              "kind": "edge_blocked"
+            },
+            "tick": 96
+          },
+          {
+            "event": {
+              "blocked": true,
+              "edge": {
+                "a": {
+                  "x": 4,
+                  "y": 3
+                },
+                "b": {
+                  "x": 5,
+                  "y": 3
+                }
+              },
+              "kind": "edge_blocked"
+            },
+            "tick": 96
+          },
+          {
+            "event": {
+              "enabled": true,
+              "id": 48,
+              "kind": "link_enabled"
+            },
+            "tick": 96
+          },
+          {
+            "event": {
+              "blocked": false,
+              "edge": {
+                "a": {
+                  "x": 4,
+                  "y": 5
+                },
+                "b": {
+                  "x": 5,
+                  "y": 5
+                }
+              },
+              "kind": "edge_blocked"
+            },
+            "tick": 112
+          },
+          {
+            "event": {
+              "blocked": false,
+              "edge": {
+                "a": {
+                  "x": 4,
+                  "y": 3
+                },
+                "b": {
+                  "x": 5,
+                  "y": 3
+                }
+              },
+              "kind": "edge_blocked"
+            },
+            "tick": 112
+          }
+        ],
+        "fuel": 200000,
+        "height": 9,
+        "links": [
+          {
+            "delay": 3,
+            "enabled": true,
+            "from": {
+              "id": 11,
+              "kind": "depot"
+            },
+            "id": 40,
+            "to_cell": 6,
+            "to_port": 0
+          },
+          {
+            "delay": 3,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 0
+            },
+            "id": 42,
+            "to_cell": 5,
+            "to_port": 0
+          },
+          {
+            "delay": 3,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 0
+            },
+            "id": 43,
+            "to_cell": 7,
+            "to_port": 0
+          },
+          {
+            "delay": 3,
+            "enabled": true,
+            "from": {
+              "id": 13,
+              "kind": "depot"
+            },
+            "id": 41,
+            "to_cell": 6,
+            "to_port": 1
+          },
+          {
+            "delay": 3,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 1
+            },
+            "id": 44,
+            "to_cell": 5,
+            "to_port": 1
+          },
+          {
+            "delay": 3,
+            "enabled": true,
+            "from": {
+              "id": 6,
+              "kind": "cell",
+              "port": 1
+            },
+            "id": 45,
+            "to_cell": 7,
+            "to_port": 1
+          },
+          {
+            "delay": 1,
+            "enabled": false,
+            "from": {
+              "id": 8,
+              "kind": "cell",
+              "port": 0
+            },
+            "id": 48,
+            "to_cell": 5,
+            "to_port": 2
+          }
+        ],
+        "seed": 29,
+        "sources": [
+          {
+            "id": 10,
+            "position": {
+              "x": 5,
+              "y": 5
+            },
+            "sparks": [
+              {
+                "bit": false,
+                "id": 100
+              },
+              {
+                "bit": false,
+                "id": 101
+              }
+            ]
+          },
+          {
+            "id": 12,
+            "position": {
+              "x": 5,
+              "y": 3
+            },
+            "sparks": [
+              {
+                "bit": false,
+                "id": 200
+              },
+              {
+                "bit": false,
+                "id": 201
+              }
+            ]
+          }
+        ],
+        "ticks": 128,
+        "valves": [
+          {
+            "beacon_one": 21,
+            "beacon_zero": 20,
+            "depot": 11,
+            "enabled": true,
+            "id": 30,
+            "position": {
+              "x": 3,
+              "y": 5
+            }
+          },
+          {
+            "beacon_one": 22,
+            "beacon_zero": 20,
+            "depot": 13,
+            "enabled": true,
+            "id": 31,
+            "position": {
+              "x": 3,
+              "y": 3
+            }
+          }
+        ],
+        "version": 4,
+        "walls": [
+          {
+            "x": 10,
+            "y": 8
+          },
+          {
+            "x": 9,
+            "y": 8
+          },
+          {
+            "x": 8,
+            "y": 8
+          },
+          {
+            "x": 7,
+            "y": 8
+          },
+          {
+            "x": 6,
+            "y": 8
+          },
+          {
+            "x": 5,
+            "y": 8
+          },
+          {
+            "x": 4,
+            "y": 8
+          },
+          {
+            "x": 3,
+            "y": 8
+          },
+          {
+            "x": 2,
+            "y": 8
+          },
+          {
+            "x": 1,
+            "y": 8
+          },
+          {
+            "x": 0,
+            "y": 8
+          },
+          {
+            "x": 10,
+            "y": 7
+          },
+          {
+            "x": 9,
+            "y": 7
+          },
+          {
+            "x": 8,
+            "y": 7
+          },
+          {
+            "x": 7,
+            "y": 7
+          },
+          {
+            "x": 6,
+            "y": 7
+          },
+          {
+            "x": 5,
+            "y": 7
+          },
+          {
+            "x": 4,
+            "y": 7
+          },
+          {
+            "x": 3,
+            "y": 7
+          },
+          {
+            "x": 2,
+            "y": 7
+          },
+          {
+            "x": 1,
+            "y": 7
+          },
+          {
+            "x": 0,
+            "y": 7
+          },
+          {
+            "x": 10,
+            "y": 6
+          },
+          {
+            "x": 9,
+            "y": 6
+          },
+          {
+            "x": 8,
+            "y": 6
+          },
+          {
+            "x": 7,
+            "y": 6
+          },
+          {
+            "x": 6,
+            "y": 6
+          },
+          {
+            "x": 4,
+            "y": 6
+          },
+          {
+            "x": 2,
+            "y": 6
+          },
+          {
+            "x": 1,
+            "y": 6
+          },
+          {
+            "x": 0,
+            "y": 6
+          },
+          {
+            "x": 10,
+            "y": 5
+          },
+          {
+            "x": 9,
+            "y": 5
+          },
+          {
+            "x": 8,
+            "y": 5
+          },
+          {
+            "x": 7,
+            "y": 5
+          },
+          {
+            "x": 2,
+            "y": 5
+          },
+          {
+            "x": 1,
+            "y": 5
+          },
+          {
+            "x": 0,
+            "y": 5
+          },
+          {
+            "x": 10,
+            "y": 4
+          },
+          {
+            "x": 9,
+            "y": 4
+          },
+          {
+            "x": 8,
+            "y": 4
+          },
+          {
+            "x": 7,
+            "y": 4
+          },
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 1,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 4
+          },
+          {
+            "x": 10,
+            "y": 3
+          },
+          {
+            "x": 9,
+            "y": 3
+          },
+          {
+            "x": 8,
+            "y": 3
+          },
+          {
+            "x": 7,
+            "y": 3
+          },
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": 3
+          },
+          {
+            "x": 0,
+            "y": 3
+          },
+          {
+            "x": 10,
+            "y": 2
+          },
+          {
+            "x": 9,
+            "y": 2
+          },
+          {
+            "x": 8,
+            "y": 2
+          },
+          {
+            "x": 7,
+            "y": 2
+          },
+          {
+            "x": 6,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 2,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 2
+          },
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 10,
+            "y": 1
+          },
+          {
+            "x": 9,
+            "y": 1
+          },
+          {
+            "x": 8,
+            "y": 1
+          },
+          {
+            "x": 7,
+            "y": 1
+          },
+          {
+            "x": 6,
+            "y": 1
+          },
+          {
+            "x": 5,
+            "y": 1
+          },
+          {
+            "x": 4,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 10,
+            "y": 0
+          },
+          {
+            "x": 9,
+            "y": 0
+          },
+          {
+            "x": 8,
+            "y": 0
+          },
+          {
+            "x": 7,
+            "y": 0
+          },
+          {
+            "x": 6,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 0
+          },
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 2,
+            "y": 0
+          },
+          {
+            "x": 1,
+            "y": 0
+          },
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "width": 11
+      },
+      "experiment_hash": "sha256:db55ebd526b1faa7cb982588af3c2b41b653b709179076c9c1b6d657a9355fa7",
+      "id": "bloom-crossing-right",
+      "p50_ms": 45.33025,
+      "p95_ms": 47.304792,
+      "samples": [
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.8385,
+          "identity_check_ms": 6.878792,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.232457999999998,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7536640,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.939,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 43.91175,
+          "verify_ms": 24.740125000000003
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.584625,
+          "identity_check_ms": 7.171208999999999,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.400875,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7536640,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.012125,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.37,
+          "verify_ms": 25.956833
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 53.92475,
+          "identity_check_ms": 7.235125,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 18.336583,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7536640,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.0460000000000003,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 46.641166999999996,
+          "verify_ms": 26.258332999999997
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.764291,
+          "identity_check_ms": 7.146583,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.503917,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.861,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.573375,
+          "verify_ms": 25.208292
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.305625,
+          "identity_check_ms": 7.004209,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.726708000000002,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.8010000000000002,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.256334,
+          "verify_ms": 25.728292
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 53.655708000000004,
+          "identity_check_ms": 7.449083,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.931584,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.8834170000000001,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 46.149750000000004,
+          "verify_ms": 26.334583000000002
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 55.14979099999999,
+          "identity_check_ms": 7.515875,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 19.008125,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.923541,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 47.583291,
+          "verify_ms": 26.651417
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 53.98975,
+          "identity_check_ms": 7.387833,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 18.146708,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.0353749999999997,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 46.557208,
+          "verify_ms": 26.375083
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.457375,
+          "identity_check_ms": 7.441833,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.761667,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.802042,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.967292,
+          "verify_ms": 25.403458
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.731708000000005,
+          "identity_check_ms": 7.2575,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.793125,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9715000000000003,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.427,
+          "verify_ms": 25.662208
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 50.85658299999999,
+          "identity_check_ms": 6.842292,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.35625,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.92975,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 43.968792,
+          "verify_ms": 24.682541999999998
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.864,
+          "identity_check_ms": 6.980333,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.579166999999998,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.964459,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.827082999999995,
+          "verify_ms": 25.283292
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.396041000000004,
+          "identity_check_ms": 6.995042,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.409125,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9927920000000001,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.356416,
+          "verify_ms": 24.954333
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 54.5255,
+          "identity_check_ms": 7.4247499999999995,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 18.564667,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.039875,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 47.051667,
+          "verify_ms": 26.446958
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 54.900709,
+          "identity_check_ms": 7.547625,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 18.647292,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7553024,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.1159999999999997,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 47.304792,
+          "verify_ms": 26.541291
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.329042,
+          "identity_check_ms": 7.186332999999999,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.773833,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7569408,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.838791,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.097458,
+          "verify_ms": 25.484666999999998
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.604791999999996,
+          "identity_check_ms": 7.509,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.540708,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7569408,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9845829999999998,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.039875,
+          "verify_ms": 25.514459
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 51.662333999999994,
+          "identity_check_ms": 6.836209,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.899209,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7569408,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.00225,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.782000000000004,
+          "verify_ms": 24.880291999999997
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 53.139582999999995,
+          "identity_check_ms": 7.536875,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.202208,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7569408,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9569159999999999,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.5495,
+          "verify_ms": 26.390166999999998
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.445499999999996,
+          "identity_check_ms": 7.0685,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.652333,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.9854999999999998,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.33025,
+          "verify_ms": 25.69225
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.06125,
+          "identity_check_ms": 7.294875,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.188875,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.800708,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.721792,
+          "verify_ms": 25.732042
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.248416,
+          "identity_check_ms": 7.250833,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.311291,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.978916,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.952458,
+          "verify_ms": 25.662042
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 53.685375,
+          "identity_check_ms": 7.243333,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 18.635416,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.0088329999999996,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 46.395916,
+          "verify_ms": 25.7515
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.152625,
+          "identity_check_ms": 7.002875,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.659833,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.893208,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.104875,
+          "verify_ms": 25.551792
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.102916,
+          "identity_check_ms": 7.117041,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.703416,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.034792,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 44.941041,
+          "verify_ms": 25.202749999999998
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.635542,
+          "identity_check_ms": 7.159333999999999,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.7755,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.798041,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.432292,
+          "verify_ms": 25.858583
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 53.178542,
+          "identity_check_ms": 7.262084000000001,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.751666,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.859542,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.872583,
+          "verify_ms": 26.261291999999997
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.703917000000004,
+          "identity_check_ms": 7.171208999999999,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.670749999999998,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7585792,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.005,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.485208,
+          "verify_ms": 25.809208
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.647583,
+          "identity_check_ms": 7.1725,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.170916000000002,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7602176,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 1.859042,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.429125,
+          "verify_ms": 26.398999999999997
+        },
+        {
+          "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+          "bloomed": true,
+          "costs": {
+            "actions": 911,
+            "checking": 21192,
+            "conditions": 3838,
+            "construction": 10,
+            "copying": 10089,
+            "draining": 96,
+            "loading": 12115,
+            "memory_reads": 2093,
+            "memory_writes": 33,
+            "messages": 294,
+            "scheduling": 1034,
+            "sensors": 1760,
+            "transfers": 25
+          },
+          "engine_executions": 2,
+          "full_sample_ms": 52.57175,
+          "identity_check_ms": 7.177208,
+          "modeled_work": 53490,
+          "receipt_bytes": 1258144,
+          "receipt_ms": 17.794833999999998,
+          "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+          "rss_after_release": {
+            "bytes": 7602176,
+            "error": null,
+            "platform": "macos",
+            "source": "ps RSS in KiB"
+          },
+          "serialization_capacity_bytes": 8388608,
+          "serialize_ms": 2.0324169999999997,
+          "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+          "total_ms": 45.34975,
+          "verify_ms": 25.522334
+        }
+      ],
+      "warmup": {
+        "bloom_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+        "bloomed": true,
+        "costs": {
+          "actions": 911,
+          "checking": 21192,
+          "conditions": 3838,
+          "construction": 10,
+          "copying": 10089,
+          "draining": 96,
+          "loading": 12115,
+          "memory_reads": 2093,
+          "memory_writes": 33,
+          "messages": 294,
+          "scheduling": 1034,
+          "sensors": 1760,
+          "transfers": 25
+        },
+        "engine_executions": 2,
+        "full_sample_ms": 52.409290999999996,
+        "identity_check_ms": 7.129791,
+        "modeled_work": 53490,
+        "receipt_bytes": 1258144,
+        "receipt_ms": 17.581417,
+        "result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+        "rss_after_release": {
+          "bytes": 7536640,
+          "error": null,
+          "platform": "macos",
+          "source": "ps RSS in KiB"
+        },
+        "serialization_capacity_bytes": 8388608,
+        "serialize_ms": 1.984667,
+        "serialized_receipt_sha256": "sha256:a5c0588e3587cd89d6b1761536961bc690ce18868cedd39588e41692d6fa4e22",
+        "total_ms": 45.234958,
+        "verify_ms": 25.668708
+      }
+    }
+  ],
+  "measured_at": "2026-09-12T23:38:26.179Z",
+  "benchmark_binary_sha256": "sha256:e4103952ce0285df0933bc51854fa3b06f173b3fd55978674b357c32c76ce2c4",
+  "workload_files": {
+    "left": "fixtures/evidence/bloom-cases/bloom-left.json",
+    "crossing_right": "fixtures/evidence/bloom-cases/bloom-crossing-right.json"
+  }
+}
