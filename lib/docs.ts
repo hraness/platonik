@@ -57,6 +57,18 @@ export const documents = [
     question: "Can my crew complete a short adventure?",
   },
   {
+    slug: "ark-control",
+    title: "Give home a plan",
+    description: "Carry a number, compute a result, and keep a service decision through a communications gap in one saved world.",
+    question: "Can home follow a plan of its own?",
+  },
+  {
+    slug: "ark-evaluation",
+    title: "When home can choose",
+    description: "Complete four-bit arithmetic, two supplied service plans, bounded agent comparisons, and the cost of saved control.",
+    question: "Does the arithmetic change a real decision?",
+  },
+  {
     slug: "answer-evaluation",
     title: "What earned the answer",
     description: "Frozen agent comparisons, physical signal provenance, restored journeys, and the measured cost of the complete local adventure.",

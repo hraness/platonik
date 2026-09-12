@@ -92,7 +92,7 @@ The complete Long Trail still has additional contracts:
 
 | Campaign dependency | Remaining evidence |
 | --- | --- |
-| Programmable ark control | Arithmetic, including carry, checked on its bounded input set and used by the same supplied crew under two service plans |
+| Programmable ark control | The subsequent [ark diagnostic](ark-evaluation.md) checks one addition and two service plans in a fixed habitat; repeated regulation and integration with construction remain |
 | Connected settlements | Physical commitments under declared message loss, delays, and duplicates, with single custody and no duplicate credit |
 | Endogenous search | An in-world process generates a changed candidate, pays for every evaluation, and selects a result that passes frozen confirmation |
 | Complete campaign | A fresh save traverses every chapter transition with prior creations doing useful work, followed by capacity qualification for that actual journey |

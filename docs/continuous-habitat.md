@@ -86,6 +86,9 @@ A fuel-exhausted partial tick is terminal. Resuming it would need a separately d
 | `habitat status <dir>` / `habitat verify <dir>` | Reconstruct and check saved state, history, and progress |
 | `habitat journey <dir>` | Check a First Answer save and report its service, construction, contact, and local ending |
 | `habitat answer <receipt.json\|->` | Freshly verify a standalone First Answer receipt and report the same local objective |
+| `habitat ark <dir>` | Check a saved ark's arithmetic, retained plan, and physical service |
+| `habitat ark-check <receipt.json\|->` | Freshly verify a standalone ark receipt and report its control objective |
+| `habitat arithmetic-case <a> <b> <tap>` | Export one four-bit addition world; operands 0–15, plan tap 0 or 4; no engine execution |
 | `habitat recover <dir> --expect-revision <n> --request-id <id>` | Finish the exact committed pending intent |
 | `habitat export <dir>` | Print a checked bundle containing the original world and checkpoint history |
 | `habitat import <bundle.json\|-> <new-dir>` | Verify the bundle before creating a separate restored habitat |
@@ -97,5 +100,7 @@ These checkpoints contain full frame prefixes. Parsing, replay, hashing, and dup
 The store derives state from a checked original experiment. Imported state cannot change its fuel, future event schedule, memory, stock, or programs while claiming the same genesis. Hashes identify content; they do not authenticate a player or prevent an owner from starting a different lawful local world. Public competition needs a separately authoritative task contract.
 
 For a complete local construction-to-contact adventure, follow [Bring a signal home](first-answer.md). It uses this same save format and adds a separately checked local ending.
+
+For computation that changes a physical delivery, [give home a plan](ark-control.md). This 128-tick habitat carries a number, emits its five-bit sum, and retains one selected bit after contact ends. It uses the same checked save format, with separate arithmetic and service grades.
 
 No account, game server, external model call, or background world simulation is required by these CLI commands. The external agent reasons outside the habitat. Human playtesting follows the remaining [automated campaign gates](design-validation.md#the-automated-path-before-people-play).

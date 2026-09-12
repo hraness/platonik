@@ -1,8 +1,8 @@
 # The Autoverse design contract
 
-Proposal, 11 September 2026. Platonik's campaign needs one programmable medium whose creations remain useful as the story grows. This page defines that proposed medium and the evidence required for its milestones. The browser experiments are separate, bounded models; they do not implement this complete protocol or a shared spatial world.
+Proposal, 12 September 2026. Platonik's campaign needs one programmable medium whose creations remain useful as the story grows. This page defines that proposed medium and the evidence required for its milestones. The browser experiments are separate, bounded models; they do not implement this complete protocol or a shared spatial world.
 
-The current [First Answer journey](first-answer.md) carries a familiar courier through construction and a matching returned report, with a local ending checked by Rust. The broader arithmetic, distributed-commitment, endogenous-search, and complete campaign contracts below remain separate gates.
+The [First Answer journey](first-answer.md) carries a familiar courier through construction and a matching returned report, with a local ending checked by Rust. The next [ark control experiment](ark-control.md) uses the same local-program medium to connect one four-bit addition to two supplied service plans. Its [evaluation](ark-evaluation.md) separates arithmetic, retained control, and physical service. Repeated computation, distributed commitments, endogenous search, and the complete campaign remain separate gates.
 
 ## One organism, several roles
 
@@ -56,6 +56,8 @@ An adder combines input numbers. A latch retains a bit. Neither alone is a store
 
 The campaign requires **programmable control** at the ark: an assembly must run different admitted service plans and react to local feedback through its declared inputs. A table-driven controller, composed state machines, or a processor can qualify. Plans and controller programs are real supplied information whose loading and execution count.
 
+The current bounded [ark control contract](ark-evaluation.md) gives this a small executable form. The same selector program reads either a low-bit or carry plan from supplied memory. A courier physically supplies one operand; local cells add the other and send the selected result to Keeper. After contact ends, that remembered bit controls a separate delivery. This is one calculation and one routing opportunity per saved world. Repeating the process, regulating a moving habitat, and integrating construction remain additional work.
+
 An optional **computer-builder achievement** has a stricter contract: construct instruction storage, an instruction pointer, fetch and decode logic, working memory, control flow, and an output interface from admitted parts. Show the same assembled machine loading and executing multiple supplied instruction streams, including a data-dependent branch, then halting and resetting correctly. Publish its instruction semantics and complete bounded tests. A reference processor blueprint can teach this construction; its internals and costs remain visible.
 
 Finite memory and episode limits still apply. This achievement demonstrates the stated bounded machine. A claim of universal computation needs an additional mathematical argument about a defined extensible model; no campaign badge supplies one.
@@ -84,6 +86,7 @@ Activate bounded regions, pause other regions explicitly, and declare how transf
 | Digital relay, gate, memory, arithmetic, and finite blueprint assembly | Bounded [Autoverse bench](https://platonik.space/lab#autoverse) prototypes in this website update; each identifies its actual model and tested scope |
 | Shared spatial transport, signals, memory, and service routing | Implemented in the bounded [Rust bridge](rust-bridge.md); finite public fixtures, not the complete campaign protocol |
 | In-world construction within that same runtime | [V3 finite constructor](construction-evaluation.md): acquire material, copy a declared body and links, activate it, and execute its ordinary policy. Multi-part machinery and endogenous design remain proposed |
+| Arithmetic used by a supplied service plan | [Ark control](ark-evaluation.md): physical input, all five sum bits, two plans through one selector interface, and retained control of a separate payload; one calculation per fixed habitat |
 | Full stored-program computer, autonomous candidate search, self-construction | Proposed achievements; an adder or prescribed assembler does not establish them |
 | Persistent collection, local save and ancestry, closing-route field expedition | Implemented in the [field expedition](field-expedition.md), with separate bounded trials and frozen confirmation |
 | Continuous physical state between visits | Implemented in the [continuous habitat](continuous-habitat.md): checked absolute-time advances preserve one bounded world; partial construction is preserved too; moving arks remain unimplemented |

@@ -1,0 +1,277 @@
+{
+  "id": "two-plan-selector",
+  "clock_courier": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "carrying",
+            "value": true
+          },
+          {
+            "kind": "at_depot",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "drop"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "carrying",
+            "value": false
+          },
+          {
+            "kind": "at_source",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "pickup"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "carrying",
+            "value": true
+          },
+          {
+            "kind": "heading",
+            "direction": "west"
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "back"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "carrying",
+            "value": false
+          },
+          {
+            "kind": "heading",
+            "direction": "east"
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "back"
+        },
+        "remember": null
+      },
+      {
+        "when": [],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      }
+    ]
+  },
+  "payload_courier": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 1
+          }
+        ],
+        "action": {
+          "kind": "wait"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "at_depot",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "drop"
+        },
+        "remember": {
+          "slot": 0,
+          "value": 1
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "carrying",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "pickup"
+        },
+        "remember": null
+      },
+      {
+        "when": [],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      }
+    ]
+  },
+  "selector": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "has_message",
+            "port": 0,
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "wait"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 5
+          }
+        ],
+        "action": {
+          "kind": "wait"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 2,
+            "value": 0
+          }
+        ],
+        "action": {
+          "kind": "send",
+          "port": 0,
+          "bit": {
+            "kind": "message",
+            "port": 0
+          }
+        },
+        "remember": {
+          "slot": 0,
+          "value": 5
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 4
+          }
+        ],
+        "action": {
+          "kind": "send",
+          "port": 0,
+          "bit": {
+            "kind": "message",
+            "port": 0
+          }
+        },
+        "remember": {
+          "slot": 0,
+          "value": 5
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 0
+          }
+        ],
+        "action": {
+          "kind": "take_message",
+          "port": 0,
+          "slot": 1
+        },
+        "remember": {
+          "slot": 0,
+          "value": 1
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 1
+          }
+        ],
+        "action": {
+          "kind": "take_message",
+          "port": 0,
+          "slot": 1
+        },
+        "remember": {
+          "slot": 0,
+          "value": 2
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 2
+          }
+        ],
+        "action": {
+          "kind": "take_message",
+          "port": 0,
+          "slot": 1
+        },
+        "remember": {
+          "slot": 0,
+          "value": 3
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 3
+          }
+        ],
+        "action": {
+          "kind": "take_message",
+          "port": 0,
+          "slot": 1
+        },
+        "remember": {
+          "slot": 0,
+          "value": 4
+        }
+      }
+    ]
+  }
+}

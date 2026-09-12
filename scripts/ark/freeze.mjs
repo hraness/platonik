@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import {read,write,sha,identity,protocol,sourceIdentity,freezeFile} from "./common.mjs";
+import fs from "node:fs";
+const plan=protocol(),qualification=read(plan.qualification_file),calibration=read("fixtures/evidence/ark-calibration.json");
+assert(qualification.engine_executions<=1536&&!qualification.pending_attempt&&!qualification.pending_call);
+assert(calibration.finished&&!calibration.stopped&&!calibration.pending_call&&!calibration.pending_operation&&!calibration.accounting_incomplete);
+assert(calibration.engine_executions<=360);assert(qualification.finished.arithmetic_passed&&qualification.finished.pairs===256);
+assert.deepEqual(calibration.source,sourceIdentity(),"Calibrate and freeze the same source and binaries");
+const truth=qualification.batches.find(batch=>batch.operation==='truth');assert(truth?.completed);
+for(const [file,digest] of Object.entries(truth.source.files))assert.equal(sha(fs.readFileSync(file)),digest,'Freeze the qualified arithmetic/runtime source');
+assert.equal(calibration.source.release_binary_sha256,truth.source.binary_sha256,'Qualify and freeze the same CLI binary');
+assert(calibration.replay.restored_equal&&calibration.replay.uninterrupted_equal&&calibration.replay.control_passed);
+for(const row of plan.cases)assert.equal(sha(fs.readFileSync(row.file)),row.sha256);
+write(freezeFile,{schema:"platonik-ark-freeze-v1",source:sourceIdentity(),qualification_sha256:sha(fs.readFileSync(plan.qualification_file)),calibration_sha256:sha(fs.readFileSync("fixtures/evidence/ark-calibration.json"))});
+console.log("First Ark source, cases, protocol and executable frozen; no optimizer execution.");

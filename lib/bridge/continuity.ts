@@ -1,5 +1,6 @@
 import type { Receipt } from "./types";
 import type { FirstAnswerJourney } from "./journey";
+import type { ArkGrade } from "./ark";
 
 export type ContinuityCase = {
   id: string;
@@ -12,6 +13,7 @@ export type ContinuityCase = {
   uninterrupted_equal: boolean;
   restored_equal: boolean;
   journey?: FirstAnswerJourney;
+  ark?: ArkGrade;
   cuts: { tick: number; label: string; detail: string; state_hash: string; costs_hash: string }[];
 };
 
