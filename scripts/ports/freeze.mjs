@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import {read,write,sha,identity,protocol,sourceIdentity,freezeFile} from "./common.mjs";
+import fs from "node:fs";
+const plan=protocol(),qualification=read(plan.qualification_file),calibration=read("fixtures/evidence/ports-calibration.json");
+assert(qualification.engine_executions<=128&&!qualification.pending_attempt&&!qualification.pending_call);
+assert(calibration.finished&&!calibration.stopped&&!calibration.pending_call&&!calibration.pending_operation&&!calibration.accounting_incomplete);
+assert(calibration.engine_executions<=256);assert(qualification.finished.commitments_passed&&qualification.finished.reused_references===8);
+assert.deepEqual(calibration.source,sourceIdentity(),"Calibrate and freeze the same source and binaries");
+const reference=qualification.batches[qualification.finished.reference_batch];assert(reference?.completed);
+for(const[file,digest]of Object.entries(reference.source.files))assert.equal(sha(fs.readFileSync(file)),digest,"Freeze the qualified source");
+assert.equal(calibration.source.release_binary_sha256,reference.source.binary_sha256);
+assert(calibration.replay.restored_equal&&calibration.replay.uninterrupted_equal&&calibration.replay.commitments_passed);
+for(const row of plan.cases)assert.equal(sha(fs.readFileSync(row.file)),row.sha256);
+write(freezeFile,{schema:"platonik-ports-freeze-v1",source:sourceIdentity(),qualification_sha256:sha(fs.readFileSync(plan.qualification_file)),calibration_sha256:sha(fs.readFileSync("fixtures/evidence/ports-calibration.json"))});
+console.log("First Ports source, cases, protocol and executable frozen; no optimizer execution.");

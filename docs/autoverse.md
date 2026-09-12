@@ -2,7 +2,7 @@
 
 Proposal, 12 September 2026. Platonik's campaign needs one programmable medium whose creations remain useful as the story grows. This page defines that proposed medium and the evidence required for its milestones. The browser experiments are separate, bounded models; they do not implement this complete protocol or a shared spatial world.
 
-The [First Answer journey](first-answer.md) carries a familiar courier through construction and a matching returned report, with a local ending checked by Rust. The next [ark control experiment](ark-control.md) uses the same local-program medium to connect one four-bit addition to two supplied service plans. Its [evaluation](ark-evaluation.md) separates arithmetic, retained control, and physical service. Repeated computation, distributed commitments, endogenous search, and the complete campaign remain separate gates.
+The [First Answer journey](first-answer.md) carries a familiar courier through construction and a matching returned report, with a local ending checked by Rust. The next [ark control experiment](ark-control.md) uses the same local-program medium to connect one four-bit addition to two supplied service plans. Its [evaluation](ark-evaluation.md) separates arithmetic, retained control, and physical service. The [port commitments](port-commitments.md) add two one-shot custody obligations with separately checked acknowledgments and service. Repeated computation and exchange sessions, endogenous search, and the complete campaign remain separate gates.
 
 ## One organism, several roles
 

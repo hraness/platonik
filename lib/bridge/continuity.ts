@@ -1,6 +1,7 @@
 import type { Receipt } from "./types";
 import type { FirstAnswerJourney } from "./journey";
 import type { ArkGrade } from "./ark";
+import type { PortsGrade } from "./ports";
 
 export type ContinuityCase = {
   id: string;
@@ -14,6 +15,7 @@ export type ContinuityCase = {
   restored_equal: boolean;
   journey?: FirstAnswerJourney;
   ark?: ArkGrade;
+  ports?: PortsGrade;
   cuts: { tick: number; label: string; detail: string; state_hash: string; costs_hash: string }[];
 };
 

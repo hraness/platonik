@@ -12,6 +12,8 @@ pub mod first_answer;
 pub mod fixtures;
 pub mod model;
 pub mod policy;
+pub mod port_commitments;
+pub mod port_fixtures;
 pub mod sim;
 pub mod suite;
 pub use model::{Experiment, PROTOCOL, RunResult};
