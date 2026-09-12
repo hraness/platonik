@@ -109,10 +109,12 @@ describe("recorded port commitments display", () => {
     for (const item of index.cases) {
       const receipt = JSON.parse(readFileSync(`public/ports/${item.id}.receipt.json`, "utf8"));
       expect(isContinuityReceipt(receipt)).toBe(true);
-      expect(isPortsGrade(item.ports, receipt)).toBe(true);
+      const grade = item.ports;
+      expect(isPortsGrade(grade, receipt)).toBe(true);
+      if (!grade) throw new Error(`Missing ports grade for ${item.id}`);
       expect(item.result_hash).toBe(receipt.result_hash);
-      expect(item.passed).toBe(item.ports?.service_passed);
-      expect(portsAt(item.ports!, receipt.result.frames.at(-1).tick).final).toBe(true);
+      expect(item.passed).toBe(grade.service_passed);
+      expect(portsAt(grade, receipt.result.frames.at(-1).tick).final).toBe(true);
     }
   });
 });
