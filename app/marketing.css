@@ -4,6 +4,15 @@ html { scroll-padding-top: 6.5rem; }
 .skip-link { z-index: 20; }
 .docs-sidebar { top: 6.5rem; }
 
+/* Bind material to this site's existing palette, including its light reading
+ * pages. The homepage retains its established system-aware color scheme. */
+body[data-hraness-material="lantern"] {
+  --background: var(--paper);
+  --surface: var(--paper);
+  --foreground: var(--ink);
+  --focus: var(--accent);
+}
+
 body:has(.home[data-hraness-marketing-preset]) {
   color-scheme: light dark;
   --paper: light-dark(#f9f9f6, #191c1a);
@@ -18,10 +27,10 @@ body:has(.home[data-hraness-marketing-preset]) {
 .site-header {
   --background: var(--paper);
   --font-text: "Nebula Sans", ui-sans-serif, system-ui, sans-serif;
-  -webkit-backdrop-filter: var(--hraness-marketing-header-backdrop, none);
-  backdrop-filter: var(--hraness-marketing-header-backdrop, none);
-  background: var(--hraness-marketing-header-background, var(--paper));
-  border-bottom: 1px solid var(--line);
+  -webkit-backdrop-filter: var(--hraness-material-chrome-blur, none);
+  backdrop-filter: var(--hraness-material-chrome-blur, none);
+  background: var(--hraness-material-chrome-paint, var(--paper));
+  border-bottom: 1px solid var(--hraness-material-seam, var(--line));
   font-family: var(--font-text);
   min-height: 4.5rem;
   max-width: none;
@@ -83,8 +92,7 @@ body:has(.home[data-hraness-marketing-preset]) {
 .home .hero-detail { max-width: 60ch; }
 .home .status-note { max-width: 72ch; line-height: 1.6; }
 .home .first-world { border-top: 0; padding-top: 2rem; }
-.home .hraness-marketing-field { --muted: var(--hraness-marketing-field-muted); }
-.home .habitat-figure { background: var(--wash); padding: 2rem; border-radius: .625rem; max-width: 44rem; }
+.home .habitat-figure { background-color: var(--hraness-material-plane); padding: 2rem; border-radius: .625rem; max-width: 44rem; }
 .home .habitat-map { margin-inline: auto; }
 .home .habitat-figure figcaption { text-align: center; }
 .home .split-section { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 5rem; }
