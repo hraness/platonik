@@ -50,3 +50,17 @@ for (const arm of Object.values(study.arms)) {
 assert.deepEqual(study.finished, { arms_passed: true, training_worlds: 4, transfer_worlds: 4, total_engine_executions: 48, logical_cold_runs: 24, malformed_slots_retained: 2, reasoning_tokens: null });
 for (const arm of ["keep", "frugal"]) assert(fs.existsSync(`fixtures/evidence/bloom-study/${arm}.tar.gz`));
 console.log(`Checked Bloom agent study: two bounded arms, 48 engine executions, transfer, and retained malformed slots.`);
+
+const capacity = read("fixtures/evidence/bloom-capacity.json");
+assert.equal(capacity.schema, "platonik-bloom-capacity-v1");
+assert.equal(capacity.engine_executions, 124);
+assert.equal(capacity.samples_per_workload, 30);
+assert.equal(capacity.warmups_per_workload, 1);
+assert.equal(capacity.workloads.length, 2);
+assert.equal(capacity.buffer_capacity_bytes, 8 * 1024 * 1024);
+for (const workload of capacity.workloads) {
+  assert.equal(workload.samples.length, 30);
+  assert(workload.samples.every(sample => sample.bloomed && sample.engine_executions === 2));
+  assert(workload.samples.every(sample => sample.receipt_bytes <= capacity.buffer_capacity_bytes));
+}
+console.log(`Checked Bloom capacity: two fixed workloads, 124 engine executions, bounded receipts, and reusable serialization buffer.`);
