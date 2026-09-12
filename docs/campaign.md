@@ -98,6 +98,8 @@ The [recorded port experiment](https://platonik.space/lab/ports) isolates two on
 
 Until now, you and your agent have designed the next creature. A later settlement acquires a bounded process that proposes and tests new organisms itself. Your task becomes choosing the questions, habitats, and resource allowances under which those discoveries can grow.
 
+The first implemented slice is the [Bloom habitat](bloom.md) and its [evaluation](bloom-evaluation.md): two builders edit copies of one seed, children run physical trials, and a selector earns a later confirmation from a real depot report. It is one generation with two direction loci, a concrete bridge toward this chapter's larger arc.
+
 This is the singularity moment: **your creations begin creating**. It must be demonstrated by an actual generated candidate, a visible change from its ancestors, and a checked result. A scripted announcement that “intelligence increased” cannot substitute for the new capability. Search, copying, testing, and communication still cost compute; expansion never grants permission for unbounded background spending.
 
 Power becomes tangible: living ships carry other living ships, ports maintain routes without a central dispatcher, and a civilization can prepare an expedition you could not have assembled creature by creature. You still choose its ambitions and constraints. You can still visit the original homestead.

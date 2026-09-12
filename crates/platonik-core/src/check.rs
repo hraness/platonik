@@ -165,7 +165,7 @@ fn validate_state(
         state.closed_edges.len() <= experiment.events.len()
             && state.closed_edges.windows(2).all(|pair| pair[0] < pair[1])
             && state.closed_edges.iter().all(|edge| {
-                matches!(experiment.version, HAZARD_VERSION | CONSTRUCTION_VERSION) && edge.is_canonical()
+                matches!(experiment.version, HAZARD_VERSION | CONSTRUCTION_VERSION | VARIATION_VERSION) && edge.is_canonical()
                     && experiment.events.iter().any(|event| {
                         matches!(event.event, EventKind::EdgeBlocked { edge: declared, .. } if declared == *edge)
                     })
@@ -457,7 +457,7 @@ fn validate_frames(experiment: &Experiment, frames: &[Frame]) -> Result<PrefixSu
         )?;
         validate_state(experiment, &frame.state, frame.complete, &initial)?;
         ensure(
-            experiment.version == CONSTRUCTION_VERSION
+            matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
                 || (frame.costs.copying == 0 && frame.costs.construction == 0),
             "Older protocols contain construction costs.",
         )?;
@@ -877,13 +877,30 @@ fn validate_transition(
         })?;
         Ok((staged + born) as u64)
     };
-    let committed_copying = copied_bytes(&frame.state)?
-        .checked_sub(copied_bytes(&previous.state)?)
+    let copying_work = |state: &State| {
+        if experiment.version == VARIATION_VERSION {
+            construction::copying_work(experiment, state)
+        } else {
+            copied_bytes(state)
+        }
+    };
+    let committed_copying = copying_work(&frame.state)?
+        .checked_sub(copying_work(&previous.state)?)
         .ok_or("Copied construction history went backwards.")?;
     ensure(
         frame.costs.copying - previous.costs.copying >= committed_copying,
         "Committed copied bytes were not charged.",
     )?;
+    if experiment.version == VARIATION_VERSION {
+        let (checking, count) = construction::edit_charges(experiment, &frame.state, frame.tick)?;
+        ensure(
+            frame.costs.checking - previous.costs.checking >= checking
+                && frame.costs.memory_reads - previous.costs.memory_reads >= count
+                && frame.costs.construction - previous.costs.construction >= count
+                && frame.costs.actions - previous.costs.actions >= count,
+            "Committed program editing was not charged.",
+        )?;
+    }
     for signal_event in &frame.signals {
         validate_signal(experiment, &frame.state, &signal_event.signal, initial)?;
         match signal_event.outcome.as_str() {
@@ -1222,7 +1239,10 @@ fn validate_action_effects(
                         beacon: beacon_id,
                     });
                 }
-                Action::GatherMaterial { .. } | Action::Build { .. } | Action::Activate { .. } => {
+                Action::GatherMaterial { .. }
+                | Action::Build { .. }
+                | Action::Activate { .. }
+                | Action::EditDirection { .. } => {
                     construction::apply(
                         experiment,
                         &mut expected,

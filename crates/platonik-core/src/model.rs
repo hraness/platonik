@@ -6,6 +6,10 @@ pub const HAZARD_VERSION: u32 = 2;
 pub const HAZARD_PROTOCOL: &str = "platonik-habitat-v2";
 pub const CONSTRUCTION_VERSION: u32 = 3;
 pub const CONSTRUCTION_PROTOCOL: &str = "platonik-habitat-v3";
+pub const VARIATION_VERSION: u32 = 4;
+pub const VARIATION_PROTOCOL: &str = "platonik-habitat-v4";
+pub const MAX_PROGRAM_EDITS: usize = 8;
+pub const MAX_VARIATION_ACTIVATION_FUEL: u32 = 16_384;
 pub const COPY_BYTES: usize = 32;
 pub const MAX_BLUEPRINT_BYTES: usize = 4096;
 pub fn protocol_for_version(version: u32) -> Option<&'static str> {
@@ -13,6 +17,7 @@ pub fn protocol_for_version(version: u32) -> Option<&'static str> {
         MODEL_VERSION => Some(PROTOCOL),
         HAZARD_VERSION => Some(HAZARD_PROTOCOL),
         CONSTRUCTION_VERSION => Some(CONSTRUCTION_PROTOCOL),
+        VARIATION_VERSION => Some(VARIATION_PROTOCOL),
         _ => None,
     }
 }
@@ -114,6 +119,10 @@ pub enum Condition {
         blueprint: u16,
         stage: AssemblyStage,
     },
+    AssemblyEdits {
+        blueprint: u16,
+        count: u8,
+    },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
@@ -137,6 +146,7 @@ pub enum Action {
     GatherMaterial { stock: u16 },
     Build { blueprint: u16 },
     Activate { blueprint: u16 },
+    EditDirection { blueprint: u16, rule: u8, slot: u8 },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -266,12 +276,26 @@ pub struct MaterialStockState {
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct DirectionEdit {
+    pub tick: u32,
+    pub actor: u16,
+    pub rule: u8,
+    pub slot: u8,
+    pub value: u8,
+    pub before_hash: String,
+    pub after_hash: String,
+    pub bytes_written: u32,
+}
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Assembly {
     pub blueprint: u16,
     pub parent: u16,
     pub material: u32,
     pub copied: Vec<u8>,
     pub wired: Vec<Link>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub edits: Vec<DirectionEdit>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -281,6 +305,8 @@ pub struct Birth {
     pub material: u32,
     pub tick: u32,
     pub body: BlueprintBody,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub edits: Vec<DirectionEdit>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

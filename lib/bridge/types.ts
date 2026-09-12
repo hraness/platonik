@@ -9,10 +9,14 @@ export type BlueprintBody = {
   links: ConstructionLink[];
 };
 export type ConstructionSpec = { stocks: { id: number; position: Point; units: number[] }[]; blueprints: { id: number; body: BlueprintBody }[] };
+export type DirectionEdit = {
+  tick: number; actor: number; rule: number; slot: number; value: number;
+  before_hash: string; after_hash: string; bytes_written: number;
+};
 export type ConstructionState = {
   stocks: { id: number; units: number[] }[];
-  assemblies: { blueprint: number; parent: number; material: number; copied: number[]; wired: ConstructionLink[] }[];
-  births: { blueprint: number; parent: number; material: number; tick: number; body: BlueprintBody }[];
+  assemblies: { blueprint: number; parent: number; material: number; copied: number[]; wired: ConstructionLink[]; edits?: DirectionEdit[] }[];
+  births: { blueprint: number; parent: number; material: number; tick: number; body: BlueprintBody; edits?: DirectionEdit[] }[];
 };
 export type State = {
   tick: number; cells: CellState[];

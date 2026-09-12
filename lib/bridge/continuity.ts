@@ -2,6 +2,7 @@ import type { Receipt } from "./types";
 import type { FirstAnswerJourney } from "./journey";
 import type { ArkGrade } from "./ark";
 import type { PortsGrade } from "./ports";
+import { isDirectionEdit, type BloomGrade } from "./bloom";
 
 export type ContinuityCase = {
   id: string;
@@ -16,6 +17,7 @@ export type ContinuityCase = {
   journey?: FirstAnswerJourney;
   ark?: ArkGrade;
   ports?: PortsGrade;
+  bloom?: BloomGrade;
   cuts: { tick: number; label: string; detail: string; state_hash: string; costs_hash: string }[];
 };
 
@@ -62,7 +64,7 @@ function bit(value: unknown): boolean {
   if (value.kind === "memory") return fields(value, ["kind", "slot"]) && port(value.slot);
   return value.kind === "message" && fields(value, ["kind", "port"]) && port(value.port);
 }
-function condition(value: unknown): boolean {
+function condition(value: unknown, variation: boolean): boolean {
   if (!record(value) || typeof value.kind !== "string") return false;
   if (["carrying", "at_source", "at_depot", "at_beacon", "at_receiver", "has_material"].includes(String(value.kind)))
     return fields(value, ["kind", "value"]) && typeof value.value === "boolean";
@@ -71,10 +73,11 @@ function condition(value: unknown): boolean {
   if (value.kind === "blocked") return fields(value, ["kind", "direction", "value"]) && relative(value.direction) && typeof value.value === "boolean";
   if (value.kind === "memory") return fields(value, ["kind", "slot", "value"]) && port(value.slot) && integer(value.value, 255);
   if (value.kind === "heading") return fields(value, ["kind", "direction"]) && heading(value.direction);
+  if (value.kind === "assembly_edits") return variation && fields(value, ["kind", "blueprint", "count"]) && id(value.blueprint) && integer(value.count, 8);
   return value.kind === "assembly_stage" && fields(value, ["kind", "blueprint", "stage"]) && id(value.blueprint)
     && typeof value.stage === "string" && ["absent", "copying", "wiring", "ready", "born"].includes(value.stage);
 }
-function action(value: unknown): boolean {
+function action(value: unknown, variation: boolean): boolean {
   if (!record(value) || typeof value.kind !== "string") return false;
   if (["pickup", "drop", "wait"].includes(String(value.kind))) return fields(value, ["kind"]);
   if (["move", "turn"].includes(String(value.kind))) return fields(value, ["kind", "direction"]) && relative(value.direction);
@@ -83,10 +86,11 @@ function action(value: unknown): boolean {
   if (value.kind === "send") return fields(value, ["kind", "port", "bit"]) && port(value.port) && bit(value.bit);
   if (value.kind === "route") return fields(value, ["kind", "valve", "bit"]) && id(value.valve) && bit(value.bit);
   if (value.kind === "gather_material") return fields(value, ["kind", "stock"]) && id(value.stock);
+  if (value.kind === "edit_direction") return variation && fields(value, ["kind", "blueprint", "rule", "slot"]) && id(value.blueprint) && integer(value.rule, 31) && port(value.slot);
   return ["build", "activate"].includes(String(value.kind)) && fields(value, ["kind", "blueprint"]) && id(value.blueprint);
 }
-const program = (value: unknown) => fields(value, ["rules"]) && list(value.rules, 32, rule =>
-  fields(rule, ["when", "action", "remember"]) && list(rule.when, 8, condition) && action(rule.action)
+const program = (value: unknown, variation: boolean) => fields(value, ["rules"]) && list(value.rules, 32, rule =>
+  fields(rule, ["when", "action", "remember"]) && list(rule.when, 8, value => condition(value, variation)) && action(rule.action, variation)
   && nullable(rule.remember, write => fields(write, ["slot", "value"]) && port(write.slot) && integer(write.value, 255)), 1);
 const constructionLink = (value: unknown) => fields(value, ["id", "from", "to_cell", "to_port", "delay", "enabled"])
   && id(value.id) && id(value.to_cell) && port(value.to_port) && integer(value.delay, 16, 1) && typeof value.enabled === "boolean"
@@ -98,34 +102,37 @@ const constructionLink = (value: unknown) => fields(value, ["id", "from", "to_ce
 // program execution, conservation, signal causality, or cryptographic identity;
 // the authoritative Rust receipt checker remains responsible for those claims.
 export function isContinuityReceipt(value: unknown): value is Receipt {
-  if (!record(value) || value.schema !== "platonik-receipt-v1" || typeof value.protocol !== "string" || !["platonik-habitat-v2", "platonik-habitat-v3"].includes(value.protocol)
+  if (!record(value) || value.schema !== "platonik-receipt-v1" || typeof value.protocol !== "string" || !["platonik-habitat-v2", "platonik-habitat-v3", "platonik-habitat-v4"].includes(value.protocol)
     || !hash(value.experiment_hash) || !hash(value.result_hash)) return false;
-  const v3 = value.protocol === "platonik-habitat-v3";
+  const v4 = value.protocol === "platonik-habitat-v4";
+  const construction = v4 || value.protocol === "platonik-habitat-v3";
   const world = value.experiment, result = value.result;
-  if (!record(world) || !record(result) || world.version !== (v3 ? 3 : 2) || result.protocol !== value.protocol
+  if (!record(world) || !record(result) || world.version !== (v4 ? 4 : construction ? 3 : 2) || result.protocol !== value.protocol
     || !integer(world.width, 32, 3) || !integer(world.height, 32, 3)
     || !integer(world.ticks, 128, 1) || !integer(world.fuel, 2_000_000)
-    || !integer(world.activation_fuel, 1024, 1)) return false;
+    || !integer(world.activation_fuel, v4 ? 16_384 : 1024, 1)) return false;
   const width = world.width, height = world.height;
   const point = (item: unknown) => record(item) && integer(item.x, width - 1) && integer(item.y, height - 1);
   const located = (item: unknown): item is RecordValue => identified(item) && point(item.position);
   const body = (item: unknown) => fields(item, ["cell", "links"])
     && fields(item.cell, ["id", "position", "heading", "mobile", "memory", "program"])
     && located(item.cell) && heading(item.cell.heading) && typeof item.cell.mobile === "boolean"
-    && list(item.cell.memory, 4, byte => integer(byte, 255), 4) && program(item.cell.program)
+    && list(item.cell.memory, 4, byte => integer(byte, 255), 4) && program(item.cell.program, v4)
     && list(item.links, 32, constructionLink)
     && new TextEncoder().encode(JSON.stringify(item)).byteLength <= 4096;
   const spec = (item: unknown) => fields(item, ["stocks", "blueprints"])
     && list(item.stocks, 4, stock => fields(stock, ["id", "position", "units"]) && located(stock) && list(stock.units, 32, token))
     && list(item.blueprints, 4, blueprint => fields(blueprint, ["id", "body"]) && id(blueprint.id) && body(blueprint.body), 1);
+  const editedFields = (item: unknown, names: string[]): item is RecordValue => fields(item, names)
+    || (v4 && fields(item, [...names, "edits"]) && list(item.edits, 8, edit => isDirectionEdit(edit), 1));
   const constructionState = (item: unknown) => fields(item, ["stocks", "assemblies", "births"])
     && list(item.stocks, 4, stock => fields(stock, ["id", "units"]) && id(stock.id) && list(stock.units, 32, token))
-    && list(item.assemblies, 4, assembly => fields(assembly, ["blueprint", "parent", "material", "copied", "wired"])
+    && list(item.assemblies, 4, assembly => editedFields(assembly, ["blueprint", "parent", "material", "copied", "wired"])
       && id(assembly.blueprint) && id(assembly.parent) && token(assembly.material)
       && list(assembly.copied, 4096, byte => integer(byte, 255)) && list(assembly.wired, 32, constructionLink))
-    && list(item.births, 4, birth => fields(birth, ["blueprint", "parent", "material", "tick", "body"])
+    && list(item.births, 4, birth => editedFields(birth, ["blueprint", "parent", "material", "tick", "body"])
       && id(birth.blueprint) && id(birth.parent) && token(birth.material) && integer(birth.tick, 128) && body(birth.body));
-  if (world.construction !== undefined && (!v3 || !spec(world.construction))) return false;
+  if (world.construction !== undefined && (!construction || !spec(world.construction))) return false;
   if (!list(world.walls, 512, point) || !list(world.cells, 16, item => located(item)
       && heading(item.heading) && typeof item.mobile === "boolean", 1)
     || !list(world.sources, 8, located) || !list(world.depots, 8, located) || !list(world.valves, 8, located)
@@ -138,7 +145,7 @@ export function isContinuityReceipt(value: unknown): value is Receipt {
       && list(cell.memory, 4, byte => integer(byte, 255), 4)
       && list(cell.evidence, 4, evidence => nullable(evidence, id => integer(id, 0xffff_ffff)), 4)
       && nullable(cell.cargo, spark) && list(cell.inbox, 4, message => nullable(message, signal), 4)
-      && (cell.material === undefined || (v3 && token(cell.material))), 1)
+      && (cell.material === undefined || (construction && token(cell.material))), 1)
     && list(item.sources, 8, source => identified(source) && list(source.sparks, 128, spark))
     && list(item.depots, 8, depot => identified(depot) && list(depot.sparks, 128, spark))
     && list(item.beacons, 8, beacon => identified(beacon) && integer(beacon.charge, 0xffff_ffff)
@@ -149,9 +156,9 @@ export function isContinuityReceipt(value: unknown): value is Receipt {
       && spark(delivery.spark) && integer(delivery.beacon, 65_535))
     && (item.closed_edges === undefined || list(item.closed_edges, 64,
       edge => record(edge) && point(edge.a) && point(edge.b)))
-    && (world.construction === undefined ? item.construction === undefined : v3 && constructionState(item.construction));
+    && (world.construction === undefined ? item.construction === undefined : construction && constructionState(item.construction));
   const frame = (item: unknown) => record(item) && integer(item.tick, 128) && typeof item.complete === "boolean"
-    && state(item.state) && costs(item.costs, v3)
+    && state(item.state) && costs(item.costs, construction)
     && list(item.events, 64, event => record(event) && text(event.kind))
     && list(item.signals, 1024, event => record(event) && signal(event.signal) && text(event.outcome))
     && list(item.activations, 16, action => record(action) && integer(action.cell, 65_535)
@@ -159,7 +166,7 @@ export function isContinuityReceipt(value: unknown): value is Receipt {
       && nullable(action.error, error => text(error, 256)) && integer(action.work_before, 2_000_000)
       && integer(action.work_after, 2_000_000));
   return text(result.status) && ["complete", "activation_limit", "fuel_exhausted"].includes(result.status)
-    && integer(result.ticks_completed, 128) && costs(result.costs, v3)
+    && integer(result.ticks_completed, 128) && costs(result.costs, construction)
     && record(result.outcome) && typeof result.outcome.passed === "boolean"
     && list(result.frames, 129, frame, 1) && state(result.final_state);
 }

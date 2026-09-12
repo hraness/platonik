@@ -27,3 +27,4 @@ run("node", ["scripts/check-construction-buffered-evidence.mjs"]);
 run("node", ["scripts/check-answer-evidence.mjs"]);
 run("node", ["scripts/check-ark-evidence.mjs"]);
 run("node", ["scripts/check-ports-evidence.mjs"]);
+run("node", ["scripts/check-bloom-evidence.mjs"]);

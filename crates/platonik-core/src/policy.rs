@@ -117,6 +117,9 @@ fn check_condition(
         Condition::AssemblyStage { blueprint, stage } => {
             construction::stage(experiment, state, index, *blueprint) == Some(*stage)
         }
+        Condition::AssemblyEdits { blueprint, count } => {
+            construction::edit_count(experiment, state, index, *blueprint) == Some(*count)
+        }
         Condition::Memory { .. } => unreachable!(),
     })
 }
@@ -185,7 +188,10 @@ fn execute(
 ) -> Result<(), Fault> {
     meter.charge(Cat::Actions, 1)?;
     match action {
-        Action::GatherMaterial { .. } | Action::Build { .. } | Action::Activate { .. } => {
+        Action::GatherMaterial { .. }
+        | Action::Build { .. }
+        | Action::Activate { .. }
+        | Action::EditDirection { .. } => {
             construction::execute(action, experiment, state, index, meter)?
         }
         Action::Wait => {}
