@@ -4,6 +4,7 @@ import { site } from "@/lib/site";
 import "@fontsource/newsreader/latin-400.css";
 import "@hraness/design-kit/fonts.css";
 import "../vendor/hraness-marketing/product-marketing-preset.css";
+import "../vendor/hraness-lantern/lantern-material.css";
 import "./globals.css";
 import "./marketing.css";
 
@@ -18,9 +19,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
+      <body data-hraness-material="lantern">
         <a href="#main" className="skip-link">Skip to content</a>
-        <header className="site-header hraness-marketing-header-surface" data-hraness-marketing-preset="minimal">
+        <header className="site-header hraness-material-chrome" data-hraness-marketing-preset="minimal">
           <Link href="/" className="wordmark" aria-label="Platonik home">platonik<span aria-hidden="true">.</span></Link>
           <nav aria-label="Main navigation">
             <Link href="/lab">Observatory</Link>
