@@ -2,6 +2,8 @@
 
 Proposal, 11 September 2026. Platonik's campaign needs one programmable medium whose creations remain useful as the story grows. This page defines that proposed medium and the evidence required for its milestones. The browser experiments are separate, bounded models; they do not implement this complete protocol or a shared spatial world.
 
+The current [First Answer journey](first-answer.md) carries a familiar courier through construction and a matching returned report, with a local ending checked by Rust. The broader arithmetic, distributed-commitment, endogenous-search, and complete campaign contracts below remain separate gates.
+
 ## One organism, several roles
 
 An organism is a finite body graph, bounded local policies assigned to its nodes, mutable state, and a lineage record. A courier, relay, memory, controller, and builder are roles those parts perform. They are not different species of executable code with unrelated score systems.

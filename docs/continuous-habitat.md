@@ -84,6 +84,8 @@ A fuel-exhausted partial tick is terminal. Resuming it would need a separately d
 | `habitat init <new-dir> <experiment.json\|->` | Admit one immutable original world and record its initial loading result |
 | `habitat advance <dir> --until <tick> --expect-revision <n> --request-id <id>` | Record intent, continue the same world, and commit the result |
 | `habitat status <dir>` / `habitat verify <dir>` | Reconstruct and check saved state, history, and progress |
+| `habitat journey <dir>` | Check a First Answer save and report its service, construction, contact, and local ending |
+| `habitat answer <receipt.json\|->` | Freshly verify a standalone First Answer receipt and report the same local objective |
 | `habitat recover <dir> --expect-revision <n> --request-id <id>` | Finish the exact committed pending intent |
 | `habitat export <dir>` | Print a checked bundle containing the original world and checkpoint history |
 | `habitat import <bundle.json\|-> <new-dir>` | Verify the bundle before creating a separate restored habitat |
@@ -93,5 +95,7 @@ The runtime still admits at most 16 cells and 128 ticks in one world. This fixtu
 These checkpoints contain full frame prefixes. Parsing, replay, hashing, and duplicated storage have real costs. Use `platonik --metrics habitat ...` to count engine executions as well as modeled work. The evaluator records verification overhead and measures actual save sizes; a paused world is not a claim of cheap unlimited history.
 
 The store derives state from a checked original experiment. Imported state cannot change its fuel, future event schedule, memory, stock, or programs while claiming the same genesis. Hashes identify content; they do not authenticate a player or prevent an owner from starting a different lawful local world. Public competition needs a separately authoritative task contract.
+
+For a complete local construction-to-contact adventure, follow [Bring a signal home](first-answer.md). It uses this same save format and adds a separately checked local ending.
 
 No account, game server, external model call, or background world simulation is required by these CLI commands. The external agent reasons outside the habitat. Human playtesting follows the remaining [automated campaign gates](design-validation.md#the-automated-path-before-people-play).

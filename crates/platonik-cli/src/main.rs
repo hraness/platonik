@@ -68,6 +68,8 @@ const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
   platonik habitat init <new-dir> <experiment.json|->\n\
   platonik habitat status <dir>\n\
   platonik habitat verify <dir>\n\
+  platonik habitat journey <dir>\n\
+  platonik habitat answer <receipt.json|->\n\
   platonik habitat cases\n\
   platonik habitat case <id>\n\
   platonik habitat prepare <case-id> <expedition-dir>\n\
@@ -87,6 +89,11 @@ two revisions. Retry with the same request ID, until, and original expected\n\
 revision. Recover uses pending_request_id and the current revision from status.\n\
 Reports show current state/costs and artifact identities; full traces are in\n\
 exported bundles. Verify/import replay the journal, never trust a caller State.\n\n\
+Journey reads checked First Answer progress without changing the save. Answer\n\
+freshly verifies a standalone receipt and prints the same journey grade. Both\n\
+return exit 0 for valid evidence, including an unfinished or failed journey;\n\
+inspect answered and service_passed separately. The authored ending requires\n\
+the complete successful horizon. These commands do not run the full campaign.\n\n\
 Prepare verifies an expedition's frozen pair and prints a case Experiment with\n\
 those courier/controller programs. It does not modify that separate collection\n\
 or authenticate ownership. A missing controller is supplied in its child\n\
@@ -399,6 +406,15 @@ fn execute_habitat(args: &[String]) -> Result<u8, Failure> {
         }
         [command, dir] if command == "status" || command == "verify" => {
             emit(habitat_store::status(Path::new(dir)).map_err(error)?, false)
+        }
+        [command, dir] if command == "journey" => {
+            print_json(&habitat_store::journey(Path::new(dir)).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, input] if command == "answer" => {
+            let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
+            print_json(&platonik_core::first_answer::grade_receipt(&receipt).map_err(error)?)?;
+            Ok(0)
         }
         [command] if command == "cases" => {
             print_json(&Examples {

@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { RecordedHabitat } from "@/components/recorded-habitat";
+import { RecordedJourney } from "@/components/recorded-journey";
 import type { Receipt } from "@/lib/bridge/types";
 import { isContinuityReceipt, type ContinuityIndex } from "@/lib/bridge/continuity";
+import { isFirstAnswerJourney } from "@/lib/bridge/journey";
 
 const number = (value: number) => value.toLocaleString("en-US");
 const work = (costs: Record<string, number>) => Object.values(costs).reduce((sum, value) => sum + value, 0);
 
 export function ContinuityLab({ index, artifactDirectory = "habitat" }: {
   index: ContinuityIndex;
-  artifactDirectory?: "habitat" | "navigation" | "construction";
+  artifactDirectory?: "habitat" | "navigation" | "construction" | "answer";
 }) {
   const [selected, setSelected] = useState(index.cases[0]?.id ?? "");
   const [loaded, setLoaded] = useState<{ path: string; receipt: Receipt } | null>(null);
@@ -28,10 +30,11 @@ export function ContinuityLab({ index, artifactDirectory = "habitat" }: {
         if (!response.ok) throw new Error("The recorded habitat could not be loaded.");
         const data: unknown = await response.json();
         if (!isContinuityReceipt(data) || data.result_hash !== chosen.result_hash) throw new Error("The record does not match this comparison. Reload it to try again.");
+        if ((artifactDirectory === "answer" || chosen.journey !== undefined) && !isFirstAnswerJourney(chosen.journey, data)) throw new Error("The journey grade does not match this record. Reload it to try again.");
         if (!controller.signal.aborted) setLoaded({ path: artifactPath, receipt: data });
       }).catch(cause => { if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "The recorded habitat could not be loaded."); });
     return () => controller.abort();
-  }, [artifactPath, chosen, retry]);
+  }, [artifactDirectory, artifactPath, chosen, retry]);
   if (!chosen) return <p role="status">No continuous-habitat records have been published.</p>;
   const receipt = loaded?.path === artifactPath ? loaded.receipt : null;
   const frame = receipt?.result.frames[Math.min(at, receipt.result.frames.length - 1)];
@@ -40,7 +43,7 @@ export function ContinuityLab({ index, artifactDirectory = "habitat" }: {
     setSelected(id); setAt(0); setError("");
   }
   return <>
-    <div className="lab-field bridge-picker"><label htmlFor="habitat-case">Crew to follow</label><select id="habitat-case" value={selected} onChange={event => select(event.target.value)}>{index.cases.map(item => <option key={item.id} value={item.id}>{item.label} · {item.passed ? "mission passed" : "mission failed"}</option>)}</select></div>
+    <div className="lab-field bridge-picker"><label htmlFor="habitat-case">Crew to follow</label><select id="habitat-case" value={selected} onChange={event => select(event.target.value)}>{index.cases.map(item => <option key={item.id} value={item.id}>{item.label} · {artifactDirectory === "answer" ? `${item.journey?.answered ? "answer earned" : "no answer"} · ${item.passed ? "service passed" : "service failed"}` : item.passed ? "mission passed" : "mission failed"}</option>)}</select></div>
     <p className="continuity-detail">{chosen.detail}</p>
     {error ? <div className="lab-result"><p role="alert">{error}</p><button className="lab-button" onClick={() => setRetry(value => value + 1)}>Retry loading</button></div> : !receipt || !frame ? <p role="status">Loading the recorded habitat…</p> : <>
       <section className="bridge-replay" aria-label="Recorded continuous habitat">
@@ -65,14 +68,15 @@ export function ContinuityLab({ index, artifactDirectory = "habitat" }: {
             <p>{number(frame.costs.copying ?? 0)} copying work; {number(frame.costs.construction ?? 0)} construction work. These costs are included in total modeled work.</p>
           </div>}
           <h3>Reports in flight</h3>{frame.state.pending.length ? <ul>{frame.state.pending.map(signal => <li key={signal.id}>Report {signal.id}: {Number(signal.bit)}, sent at {signal.sent_tick}, due at {signal.deliver_tick}{signal.receipt_spark !== null ? `, from spark ${signal.receipt_spark}` : ""}.</li>)}</ul> : <p>No reports are in transit at this tick.</p>}
-          <p data-testid="habitat-outcome"><strong>Final mission: {chosen.passed ? "passed" : "failed"}.</strong> {chosen.ticks} completed ticks; {number(chosen.work)} modeled work.</p>
+          <p data-testid="habitat-outcome"><strong>Final {artifactDirectory === "answer" ? "service" : "mission"}: {chosen.passed ? "passed" : "failed"}.</strong> {chosen.ticks} completed ticks; {number(chosen.work)} modeled work.</p>
         </div>
       </section>
+      {chosen.journey && <RecordedJourney journey={chosen.journey} tick={frame.tick} />}
       <section className="continuity-stops" aria-labelledby="habitat-stops"><h2 id="habitat-stops">Leave at a real moment. Return to the same world.</h2><p>These buttons visit checkpoints saved by the Rust CLI. Scrubbing this replay displays recorded frames; it does not advance the simulation or spend modeled fuel.</p>
         <ol>{chosen.cuts.map(cut => <li key={cut.tick}><button className="lab-text-button" onClick={() => { setAt(cut.tick); document.getElementById("habitat-tick")?.focus(); }}>{cut.label} · tick {cut.tick}</button><p>{cut.detail}</p></li>)}</ol>
         <p data-testid="habitat-continuity">Resumed result equals uninterrupted result: <strong>{chosen.uninterrupted_equal ? "yes" : "no"}</strong>. Exported and restored result equals the original: <strong>{chosen.restored_equal ? "yes" : "no"}</strong>. Equality includes every frame, pending report, resource, cost, and outcome.</p>
       </section>
-      <section className="bridge-artifacts"><h2>Give this world to your agent.</h2><div className="lab-actions"><a className="lab-button secondary" href={`${artifactPath}.experiment.json`} download>Download experiment</a><a className="lab-button secondary" href={`${artifactPath}.receipt.json`} download>Download receipt</a><a className="lab-button secondary" href={`${artifactPath}.bundle.json`} download>Download saved habitat</a></div><pre tabIndex={0}><code>{`./target/release/platonik habitat init my-habitat ${selected}.experiment.json\n./target/release/platonik habitat advance my-habitat --until 9 --expect-revision 0 --request-id first-leg\n./target/release/platonik habitat status my-habitat`}</code></pre><details className="lab-details"><summary>Record identity and limits</summary><p>{receipt.protocol}; {receipt.experiment.ticks} ticks; {number(receipt.experiment.fuel)} total modeled work; {receipt.experiment.activation_fuel} work per activation.</p><p className="bridge-hash">Experiment: <code>{receipt.experiment_hash}</code><br />Result: <code>{receipt.result_hash}</code></p></details></section>
+      <section className="bridge-artifacts"><h2>Give this world to your agent.</h2><div className="lab-actions"><a className="lab-button secondary" href={`${artifactPath}.experiment.json`} download>Download experiment</a><a className="lab-button secondary" href={`${artifactPath}.receipt.json`} download>Download receipt</a><a className="lab-button secondary" href={`${artifactPath}.bundle.json`} download>Download saved habitat</a></div><pre tabIndex={0}><code>{`./target/release/platonik habitat init my-habitat ${selected}.experiment.json\n./target/release/platonik habitat advance my-habitat --until 9 --expect-revision 0 --request-id first-leg\n./target/release/platonik habitat ${artifactDirectory === "answer" ? "journey" : "status"} my-habitat`}</code></pre><details className="lab-details"><summary>Record identity and limits</summary><p>{receipt.protocol}; {receipt.experiment.ticks} ticks; {number(receipt.experiment.fuel)} total modeled work; {receipt.experiment.activation_fuel} work per activation.</p><p className="bridge-hash">Experiment: <code>{receipt.experiment_hash}</code><br />Result: <code>{receipt.result_hash}</code></p></details></section>
     </>}
   </>;
 }

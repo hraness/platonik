@@ -1,0 +1,12 @@
+import assert from "node:assert/strict";
+import {read,write,sha,identity,protocol,sourceIdentity,freezeFile} from "./common.mjs";
+import fs from "node:fs";
+const plan=protocol(),qualification=read(plan.qualification_file),calibration=read("fixtures/evidence/answer-calibration.json");
+assert(qualification.engine_executions<=24&&!qualification.pending);
+assert(calibration.finished&&!calibration.stopped&&!calibration.pending_call&&!calibration.pending_operation&&!calibration.accounting_incomplete);
+assert(calibration.engine_executions<=360);assert(qualification.engine_executions+calibration.engine_executions<=384);
+assert.deepEqual(calibration.source,sourceIdentity(),"Calibrate and freeze the same source and binaries");
+assert(calibration.replay.restored_equal&&calibration.replay.uninterrupted_equal&&calibration.replay.answered);
+for(const row of plan.cases)assert.equal(sha(fs.readFileSync(row.file)),row.sha256);
+write(freezeFile,{schema:"platonik-answer-freeze-v1",source:sourceIdentity(),qualification_sha256:sha(fs.readFileSync(plan.qualification_file)),calibration_sha256:sha(fs.readFileSync("fixtures/evidence/answer-calibration.json"))});
+console.log("First Answer source, cases, protocol and executable frozen; no optimizer execution.");
