@@ -1,5 +1,5 @@
-//! A finite blueprint assembler. Copying a declared body does not discover a
-//! program, confer native execution, or constitute autonomous reproduction.
+//! Finite material assembly with opt-in v4 local direction edits. A changed
+//! child runs the same bounded interpreter; no host evaluator is invoked.
 use crate::model::*;
 use crate::policy::Fault;
 use crate::sim::{Cat, Meter};
@@ -7,6 +7,103 @@ use std::collections::BTreeSet;
 
 pub fn payload(blueprint: &Blueprint) -> Result<Vec<u8>, String> {
     serde_json::to_vec(&blueprint.body).map_err(|error| error.to_string())
+}
+
+fn direction(value: u8) -> Result<Relative, &'static str> {
+    match value {
+        0 => Ok(Relative::Forward),
+        1 => Ok(Relative::Left),
+        2 => Ok(Relative::Right),
+        3 => Ok(Relative::Back),
+        _ => Err("invalid_edit_value"),
+    }
+}
+
+fn edit_body(body: &mut BlueprintBody, rule: u8, value: u8) -> Result<(), &'static str> {
+    let replacement = direction(value)?;
+    let Some(rule) = body.cell.program.rules.get_mut(usize::from(rule)) else {
+        return Err("invalid_edit_locus");
+    };
+    let (Action::Move { direction } | Action::Turn { direction }) = &mut rule.action else {
+        return Err("invalid_edit_locus");
+    };
+    if *direction == replacement {
+        return Err("same_direction");
+    }
+    *direction = replacement;
+    Ok(())
+}
+
+/// Reconstruct the finite edit chain. The receipt checker has its own derivation.
+fn derived_body(
+    experiment: &Experiment,
+    blueprint: &Blueprint,
+    edits: &[DirectionEdit],
+) -> Result<BlueprintBody, String> {
+    if edits.len() > MAX_PROGRAM_EDITS
+        || (!edits.is_empty() && experiment.version != VARIATION_VERSION)
+    {
+        return Err("Invalid program edit version or count.".into());
+    }
+    let mut body = blueprint.body.clone();
+    let mut previous_tick = 0;
+    for edit in edits {
+        if edit.tick <= previous_tick
+            || edit.slot >= 4
+            || edit.before_hash != crate::check::artifact_hash(&body)?
+        {
+            return Err("Invalid edit time, register, or source body hash.".into());
+        }
+        edit_body(&mut body, edit.rule, edit.value).map_err(str::to_string)?;
+        crate::sim::validate_program(experiment, &body.cell.program)?;
+        let bytes = serde_json::to_vec(&body).map_err(|error| error.to_string())?;
+        if bytes.len() > MAX_BLUEPRINT_BYTES
+            || edit.bytes_written as usize != bytes.len()
+            || edit.after_hash != crate::check::artifact_hash(&body)?
+        {
+            return Err("Invalid edited body size, hash, or copied byte count.".into());
+        }
+        previous_tick = edit.tick;
+    }
+    Ok(body)
+}
+
+/// A local owned count, including zero before this adjacent slot is assembled.
+pub fn edit_count(
+    experiment: &Experiment,
+    state: &State,
+    actor: usize,
+    blueprint_id: u16,
+) -> Option<u8> {
+    if experiment.version != VARIATION_VERSION {
+        return None;
+    }
+    let actor = state.cells.get(actor)?;
+    let blueprint = experiment
+        .construction
+        .as_ref()?
+        .blueprints
+        .iter()
+        .find(|blueprint| blueprint.id == blueprint_id)?;
+    if actor.position.distance(blueprint.body.cell.position) != 1 {
+        return None;
+    }
+    let construction = state.construction.as_ref()?;
+    if let Some(assembly) = construction
+        .assemblies
+        .iter()
+        .find(|assembly| assembly.blueprint == blueprint_id)
+    {
+        return (assembly.parent == actor.id).then_some(assembly.edits.len() as u8);
+    }
+    if let Some(birth) = construction
+        .births
+        .iter()
+        .find(|birth| birth.blueprint == blueprint_id)
+    {
+        return (birth.parent == actor.id).then_some(birth.edits.len() as u8);
+    }
+    Some(0)
 }
 
 /// Initial definitions and the actual decoded bodies of previously born cells.
@@ -111,7 +208,8 @@ pub fn stage(
     else {
         return Some(AssemblyStage::Absent);
     };
-    let bytes = payload(blueprint).ok()?;
+    let body = derived_body(experiment, blueprint, &assembly.edits).ok()?;
+    let bytes = serde_json::to_vec(&body).ok()?;
     Some(if assembly.copied.len() < bytes.len() {
         AssemblyStage::Copying
     } else if assembly.wired.len() < blueprint.body.links.len() {
@@ -125,8 +223,8 @@ pub(crate) fn validate_spec(experiment: &Experiment) -> Result<(), String> {
     let Some(spec) = &experiment.construction else {
         return Ok(());
     };
-    if experiment.version != CONSTRUCTION_VERSION {
-        return Err("Construction requires habitat-v3.".into());
+    if !matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION) {
+        return Err("Construction requires habitat-v3 or habitat-v4.".into());
     }
     if spec.stocks.len() > 4
         || spec.blueprints.is_empty()
@@ -269,7 +367,9 @@ pub(crate) fn execute(
         return Ok(());
     }
     let id = match action {
-        Action::Build { blueprint } | Action::Activate { blueprint } => *blueprint,
+        Action::Build { blueprint }
+        | Action::Activate { blueprint }
+        | Action::EditDirection { blueprint, .. } => *blueprint,
         _ => unreachable!(),
     };
     let blueprint = spec
@@ -301,7 +401,63 @@ pub(crate) fn execute(
     if state.cells.iter().any(|cell| cell.position == position) {
         return Err(Fault::Action("construction_target_occupied"));
     }
-    let bytes = payload(blueprint).expect("validated blueprint serialization");
+    let edits = assembly_index
+        .map(|index| construction.assemblies[index].edits.as_slice())
+        .unwrap_or(&[]);
+    let expected_body = derived_body(experiment, blueprint, edits)
+        .map_err(|_| Fault::Action("invalid_edit_history"))?;
+    let bytes = serde_json::to_vec(&expected_body).expect("validated blueprint serialization");
+    if let Action::EditDirection { rule, slot, .. } = action {
+        if experiment.version != VARIATION_VERSION {
+            return Err(Fault::Action("variation_unavailable"));
+        }
+        let index = assembly_index.ok_or(Fault::Action("assembly_missing"))?;
+        let assembly = &state.construction.as_ref().unwrap().assemblies[index];
+        if assembly.copied != bytes || assembly.wired != blueprint.body.links {
+            return Err(Fault::Action("assembly_incomplete"));
+        }
+        if assembly.edits.len() >= MAX_PROGRAM_EDITS {
+            return Err(Fault::Action("edit_limit"));
+        }
+        meter.charge(Cat::MemoryReads, 1)?;
+        let value = *state.cells[actor]
+            .memory
+            .get(usize::from(*slot))
+            .ok_or(Fault::Action("invalid_edit_slot"))?;
+        direction(value).map_err(Fault::Action)?;
+        meter.charge(Cat::Checking, bytes.len() as u64)?;
+        let mut body: BlueprintBody = serde_json::from_slice(&assembly.copied)
+            .map_err(|_| Fault::Action("invalid_copied_body"))?;
+        let before_hash =
+            crate::check::artifact_hash(&body).map_err(|_| Fault::Action("invalid_copied_body"))?;
+        edit_body(&mut body, *rule, value).map_err(Fault::Action)?;
+        let rewritten =
+            serde_json::to_vec(&body).map_err(|_| Fault::Action("invalid_edited_body"))?;
+        if rewritten.len() > MAX_BLUEPRINT_BYTES {
+            return Err(Fault::Action("edited_body_too_large"));
+        }
+        meter.charge(Cat::Checking, rewritten.len() as u64)?;
+        crate::sim::validate_program(experiment, &body.cell.program)
+            .map_err(|_| Fault::Action("invalid_edited_body"))?;
+        let after_hash =
+            crate::check::artifact_hash(&body).map_err(|_| Fault::Action("invalid_edited_body"))?;
+        meter.charge(Cat::Copying, rewritten.len() as u64)?;
+        meter.charge(Cat::Construction, 1)?;
+        let edit = DirectionEdit {
+            tick: state.tick,
+            actor: state.cells[actor].id,
+            rule: *rule,
+            slot: *slot,
+            value,
+            before_hash,
+            after_hash,
+            bytes_written: rewritten.len() as u32,
+        };
+        let assembly = &mut state.construction.as_mut().unwrap().assemblies[index];
+        assembly.copied = rewritten;
+        assembly.edits.push(edit);
+        return Ok(());
+    }
     if matches!(action, Action::Build { .. }) {
         let index = match assembly_index {
             Some(index) => index,
@@ -318,6 +474,7 @@ pub(crate) fn execute(
                     material,
                     copied: Vec::new(),
                     wired: Vec::new(),
+                    edits: Vec::new(),
                 });
                 state.cells[actor].material = None;
                 construction.assemblies.len() - 1
@@ -347,7 +504,7 @@ pub(crate) fn execute(
     }
     let body: BlueprintBody = serde_json::from_slice(&assembly.copied)
         .map_err(|_| Fault::Action("invalid_copied_body"))?;
-    if body != blueprint.body {
+    if body != expected_body {
         return Err(Fault::Action("invalid_copied_body"));
     }
     for link in &body.links {
@@ -415,6 +572,7 @@ pub(crate) fn execute(
         material: assembly.material,
         tick: state.tick,
         body,
+        edits: assembly.edits,
     });
     Ok(())
 }
@@ -478,8 +636,15 @@ pub(crate) fn check_state(experiment: &Experiment, state: &State) -> Result<(), 
             .iter()
             .find(|blueprint| blueprint.id == assembly.blueprint)
             .ok_or("Unknown assembly.")?;
-        let bytes = payload(blueprint)?;
-        if !used.insert(assembly.blueprint)
+        let body = derived_body(experiment, blueprint, &assembly.edits)?;
+        let bytes = serde_json::to_vec(&body).map_err(|error| error.to_string())?;
+        if assembly
+            .edits
+            .iter()
+            .any(|edit| edit.actor != assembly.parent || edit.tick > state.tick)
+            || (!assembly.edits.is_empty()
+                && (assembly.copied != bytes || assembly.wired != body.links))
+            || !used.insert(assembly.blueprint)
             || !bytes.starts_with(&assembly.copied)
             || !blueprint.body.links.starts_with(&assembly.wired)
             || (!assembly.wired.is_empty() && assembly.copied != bytes)
@@ -500,7 +665,11 @@ pub(crate) fn check_state(experiment: &Experiment, state: &State) -> Result<(), 
             .find(|blueprint| blueprint.id == birth.blueprint)
             .ok_or("Unknown birth.")?;
         if !used.insert(birth.blueprint)
-            || birth.body != blueprint.body
+            || birth.body != derived_body(experiment, blueprint, &birth.edits)?
+            || birth
+                .edits
+                .iter()
+                .any(|edit| edit.actor != birth.parent || edit.tick >= birth.tick)
             || birth.tick == 0
             || birth.tick > state.tick
             || !state.cells.iter().any(|cell| cell.id == birth.parent)
@@ -565,6 +734,16 @@ pub(crate) fn state_checking(state: &State) -> u64 {
                 .filter(|cell| cell.material.is_some())
                 .count()
             + construction.assemblies.len()
-            + construction.births.len()) as u64
+            + construction.births.len()
+            + construction
+                .assemblies
+                .iter()
+                .map(|assembly| assembly.edits.len())
+                .sum::<usize>()
+            + construction
+                .births
+                .iter()
+                .map(|birth| birth.edits.len())
+                .sum::<usize>()) as u64
     })
 }

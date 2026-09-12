@@ -74,6 +74,8 @@ const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
   platonik habitat ark-check <receipt.json|->\n\
   platonik habitat ports <dir>\n\
   platonik habitat ports-check <receipt.json|->\n\
+  platonik habitat bloom <dir>\n\
+  platonik habitat bloom-check <receipt.json|->\n\
   platonik habitat arithmetic-case <a> <b> <tap>\n\
   platonik habitat cases\n\
   platonik habitat case <id>\n\
@@ -110,6 +112,12 @@ changing the save. Ports-check freshly verifies a standalone ports receipt.\n\
 Both return exit 0 for valid evidence, including failed commitments; inspect\n\
 custody_passed, acknowledgments_passed, safety_passed, service_passed, and\n\
 commitments_passed separately. These are two finite one-shot commitments.\n\n\
+Bloom reads checked variation, physical trials, selection, and confirmation\n\
+without changing the save. Bloom-check freshly verifies a standalone receipt.\n\
+Both return exit 0 for valid evidence, including unfinished or failed blooms;\n\
+inspect generated_passed, trials_passed, selection_passed, confirmation_passed,\n\
+service_passed, and bloomed separately. This is bounded in-world variation.\n\
+\n\
 Prepare verifies an expedition's frozen pair and prints a case Experiment with\n\
 those courier/controller programs. It does not modify that separate collection\n\
 or authenticate ownership. A missing controller is supplied in its child\n\
@@ -448,6 +456,15 @@ fn execute_habitat(args: &[String]) -> Result<u8, Failure> {
         [command, input] if command == "ports-check" => {
             let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
             print_json(&platonik_core::port_commitments::grade_receipt(&receipt).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, dir] if command == "bloom" => {
+            print_json(&habitat_store::bloom(Path::new(dir)).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, input] if command == "bloom-check" => {
+            let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
+            print_json(&platonik_core::bloom::grade_receipt(&receipt).map_err(error)?)?;
             Ok(0)
         }
         [command, a, b, tap] if command == "arithmetic-case" => {

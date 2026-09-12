@@ -75,6 +75,18 @@ export const documents = [
     question: "Can two homes rely on their couriers?",
   },
   {
+    slug: "bloom",
+    title: "Let the Bloom begin",
+    description: "Derive two bounded courier variants, test them in the world, and let a physical report earn the next trip.",
+    question: "Can a creation help choose what comes next?",
+  },
+  {
+    slug: "bloom-evaluation",
+    title: "What the Bloom established",
+    description: "Reference habitats, causal-selection controls, replay evidence, and the next automated gate.",
+    question: "Did the world learn from its own trial?",
+  },
+  {
     slug: "ports-evaluation",
     title: "What kept the promise",
     description: "Finite custody obligations, duplicate reports, agent comparisons, and the measured cost of reliable handoffs.",

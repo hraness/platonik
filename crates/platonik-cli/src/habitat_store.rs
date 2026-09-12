@@ -103,6 +103,13 @@ pub struct PortsReport {
     pub ports: platonik_core::port_commitments::PortsGrade,
 }
 
+#[derive(Serialize)]
+pub struct BloomReport {
+    pub schema: &'static str,
+    pub habitat: Report,
+    pub bloom: platonik_core::bloom::BloomGrade,
+}
+
 #[derive(Clone)]
 struct Request {
     until: u32,
@@ -474,6 +481,18 @@ pub fn ports(path: &Path) -> Result<PortsReport, String> {
     })
 }
 
+pub fn bloom(path: &Path) -> Result<BloomReport, String> {
+    let store = Store::open(path, JOURNAL_SCHEMA)?;
+    let snapshot = read_snapshot(&store)?.1;
+    // Grade the exact freshly replayed prefix; an uncommitted intent adds no future.
+    let bloom = platonik_core::bloom::grade_verified(&snapshot.experiment, &snapshot.result)?;
+    Ok(BloomReport {
+        schema: "platonik-bloom-report-v1",
+        habitat: report(snapshot, None)?,
+        bloom,
+    })
+}
+
 fn finish(store: &Store, snapshot: Snapshot, id: &str) -> Result<Report, String> {
     let pending = snapshot
         .pending
@@ -685,12 +704,15 @@ pub fn cases() -> Vec<&'static str> {
         .chain(platonik_core::answer_fixtures::case_ids())
         .chain(platonik_core::ark_fixtures::case_ids())
         .chain(platonik_core::port_fixtures::case_ids())
+        .chain(platonik_core::bloom_fixtures::case_ids())
         .copied()
         .collect()
 }
 
 pub fn case(id: &str) -> Result<Experiment, String> {
-    if platonik_core::port_fixtures::case_ids().contains(&id) {
+    if platonik_core::bloom_fixtures::case_ids().contains(&id) {
+        platonik_core::bloom_fixtures::experiment(id)
+    } else if platonik_core::port_fixtures::case_ids().contains(&id) {
         platonik_core::port_fixtures::experiment(id)
     } else if platonik_core::ark_fixtures::case_ids().contains(&id) {
         platonik_core::ark_fixtures::experiment(id)

@@ -108,9 +108,18 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     Condition::HasMessage { port, .. } | Condition::MessageBit { port, .. } => {
                         *port < 4
                     }
-                    Condition::HasMaterial { .. } => experiment.version == CONSTRUCTION_VERSION,
+                    Condition::HasMaterial { .. } => {
+                        matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
+                    }
                     Condition::AssemblyStage { blueprint, .. } => {
-                        experiment.version == CONSTRUCTION_VERSION
+                        matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
+                            && experiment.construction.as_ref().is_some_and(|spec| {
+                                spec.blueprints.iter().any(|entry| entry.id == *blueprint)
+                            })
+                    }
+                    Condition::AssemblyEdits { blueprint, count } => {
+                        experiment.version == VARIATION_VERSION
+                            && usize::from(*count) <= MAX_PROGRAM_EDITS
                             && experiment.construction.as_ref().is_some_and(|spec| {
                                 spec.blueprints.iter().any(|entry| entry.id == *blueprint)
                             })
@@ -129,14 +138,26 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     valid_bit(bit) && experiment.valves.iter().any(|entry| entry.id == *valve)
                 }
                 Action::GatherMaterial { stock } => {
-                    experiment.version == CONSTRUCTION_VERSION
+                    matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
                         && experiment
                             .construction
                             .as_ref()
                             .is_some_and(|spec| spec.stocks.iter().any(|entry| entry.id == *stock))
                 }
                 Action::Build { blueprint } | Action::Activate { blueprint } => {
-                    experiment.version == CONSTRUCTION_VERSION
+                    matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
+                        && experiment.construction.as_ref().is_some_and(|spec| {
+                            spec.blueprints.iter().any(|entry| entry.id == *blueprint)
+                        })
+                }
+                Action::EditDirection {
+                    blueprint,
+                    rule,
+                    slot,
+                } => {
+                    experiment.version == VARIATION_VERSION
+                        && *rule < 32
+                        && *slot < 4
                         && experiment.construction.as_ref().is_some_and(|spec| {
                             spec.blueprints.iter().any(|entry| entry.id == *blueprint)
                         })
@@ -167,7 +188,12 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
     require(
         (1..=MAX_TICKS).contains(&experiment.ticks)
             && experiment.fuel <= MAX_FUEL
-            && (1..=1024).contains(&experiment.activation_fuel),
+            && (1..=if experiment.version == VARIATION_VERSION {
+                MAX_VARIATION_ACTIVATION_FUEL
+            } else {
+                1024
+            })
+                .contains(&experiment.activation_fuel),
         "Invalid tick, fuel, or activation budget.",
     )?;
     require(

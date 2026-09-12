@@ -42,7 +42,7 @@ For a short adventure with a local ending, [bring a signal home](docs/first-answ
 
 Next, [give home a plan](docs/ark-control.md). The [ark control replay](https://platonik.space/lab/ark) connects a physically carried number to four-bit addition with a five-bit result, a selectable service plan, and the familiar Keeper's memory. One computed bit decides where a separate payload goes after contact ends. Read the [arithmetic and control evaluation](docs/ark-evaluation.md) for complete input coverage, frozen agent comparisons, saved replay, and measured costs. This is one calculation inside a fixed habitat; a moving ark and repeated computation remain later work.
 
-The [port commitments](https://platonik.space/lab/ports) connect two finite courier handoffs to separately checked acknowledgments and beacon service. The [guide](docs/port-commitments.md) covers lost replies and saved restoration; the [evaluation](docs/ports-evaluation.md) retains candidate comparisons, failures, and costs. These are two one-shot local obligations, with repeated sessions and the complete campaign still ahead.
+The [port commitments](https://platonik.space/lab/ports) connect two finite courier handoffs to separately checked acknowledgments and beacon service. The [guide](docs/port-commitments.md) covers lost replies and saved restoration; the [evaluation](docs/ports-evaluation.md) retains candidate comparisons, failures, and costs. The [Bloom](https://platonik.space/lab/bloom) now adds a bounded v4 variation: two builders edit copies of one seed, children make physical trials, and a selector earns a later confirmation from a causal report. These are finite local obligations, with repeated sessions and the complete campaign still ahead.
 
 ## Run the website
 

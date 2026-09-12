@@ -1,6 +1,6 @@
-//! Independent v3 material and recorded construction-effect checker.
+//! Independent material, construction, and v4 program-edit effect checker.
 //! No interpreter or construction executor is called here.
-use super::{ensure, ids_match};
+use super::{artifact_hash, ensure, ids_match};
 use crate::model::*;
 use std::collections::BTreeSet;
 
@@ -46,6 +46,136 @@ fn blueprint(experiment: &Experiment, id: u16) -> Result<&Blueprint, String> {
         .ok_or_else(|| "Unknown construction blueprint.".into())
 }
 
+fn changed_body(body: &BlueprintBody, rule: u8, value: u8) -> Result<BlueprintBody, String> {
+    let direction = match value {
+        0 => Relative::Forward,
+        1 => Relative::Left,
+        2 => Relative::Right,
+        3 => Relative::Back,
+        _ => return Err("A direction edit reads an invalid register value.".into()),
+    };
+    let mut next = body.clone();
+    let action = &mut next
+        .cell
+        .program
+        .rules
+        .get_mut(usize::from(rule))
+        .ok_or("A direction edit names an absent rule.")?
+        .action;
+    let (Action::Move { direction: current } | Action::Turn { direction: current }) = action else {
+        return Err("A direction edit changes a non-direction action.".into());
+    };
+    ensure(*current != direction, "A direction edit makes no change.")?;
+    *current = direction;
+    Ok(next)
+}
+
+/// Reconstruct from the immutable seed, never from the executable's edit helper.
+fn edited_body(
+    experiment: &Experiment,
+    declared: &Blueprint,
+    edits: &[DirectionEdit],
+    parent: u16,
+    through: u32,
+) -> Result<BlueprintBody, String> {
+    ensure(
+        edits.len() <= MAX_PROGRAM_EDITS
+            && (edits.is_empty() || experiment.version == VARIATION_VERSION),
+        "Program edits exceed their limit or belong to an older protocol.",
+    )?;
+    let mut body = declared.body.clone();
+    let mut previous_tick = 0;
+    for edit in edits {
+        ensure(
+            edit.actor == parent
+                && edit.slot < 4
+                && edit.tick > previous_tick
+                && edit.tick <= through
+                && edit.before_hash == artifact_hash(&body)?,
+            "Program edit provenance, order, or parent body is invalid.",
+        )?;
+        body = changed_body(&body, edit.rule, edit.value)?;
+        let bytes = serde_json::to_vec(&body).map_err(|error| error.to_string())?;
+        ensure(
+            bytes.len() <= MAX_BLUEPRINT_BYTES
+                && edit.bytes_written as usize == bytes.len()
+                && edit.after_hash == artifact_hash(&body)?,
+            "Program edit body, charged length, or result identity is invalid.",
+        )?;
+        previous_tick = edit.tick;
+    }
+    Ok(body)
+}
+
+/// Cumulative committed copying includes the seed and every complete rewrite.
+/// Looking only at live byte length would erase work when an operand gets shorter.
+pub(super) fn copying_work(experiment: &Experiment, state: &State) -> Result<u64, String> {
+    let mut total = 0u64;
+    if let Some(construction) = &state.construction {
+        for assembly in &construction.assemblies {
+            let declared = blueprint(experiment, assembly.blueprint)?;
+            let seed = serde_json::to_vec(&declared.body).map_err(|error| error.to_string())?;
+            total += if assembly.edits.is_empty() {
+                assembly.copied.len()
+            } else {
+                seed.len()
+            } as u64;
+            total += assembly
+                .edits
+                .iter()
+                .map(|edit| u64::from(edit.bytes_written))
+                .sum::<u64>();
+        }
+        for birth in &construction.births {
+            let declared = blueprint(experiment, birth.blueprint)?;
+            total += serde_json::to_vec(&declared.body)
+                .map_err(|error| error.to_string())?
+                .len() as u64;
+            total += birth
+                .edits
+                .iter()
+                .map(|edit| u64::from(edit.bytes_written))
+                .sum::<u64>();
+        }
+    }
+    Ok(total)
+}
+
+pub(super) fn edit_charges(
+    experiment: &Experiment,
+    state: &State,
+    tick: u32,
+) -> Result<(u64, u64), String> {
+    let mut checking = 0;
+    let mut count = 0;
+    if let Some(construction) = &state.construction {
+        let histories = construction
+            .assemblies
+            .iter()
+            .map(|entry| (entry.blueprint, &entry.edits))
+            .chain(
+                construction
+                    .births
+                    .iter()
+                    .map(|entry| (entry.blueprint, &entry.edits)),
+            );
+        for (id, edits) in histories {
+            let mut body = blueprint(experiment, id)?.body.clone();
+            for edit in edits {
+                let old_len = serde_json::to_vec(&body)
+                    .map_err(|error| error.to_string())?
+                    .len();
+                body = changed_body(&body, edit.rule, edit.value)?;
+                if edit.tick == tick {
+                    checking += 1 + old_len as u64 + u64::from(edit.bytes_written);
+                    count += 1;
+                }
+            }
+        }
+    }
+    Ok((checking, count))
+}
+
 pub(super) fn reserved(experiment: &Experiment, state: &State, point: Point) -> bool {
     state
         .construction
@@ -65,8 +195,8 @@ pub(super) fn validate_state(experiment: &Experiment, state: &State) -> Result<(
         );
     };
     ensure(
-        experiment.version == CONSTRUCTION_VERSION,
-        "Construction requires v3.",
+        matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION),
+        "Construction requires v3 or v4.",
     )?;
     let construction = state
         .construction
@@ -123,9 +253,19 @@ pub(super) fn validate_state(experiment: &Experiment, state: &State) -> Result<(
             state.cells.iter().any(|cell| cell.id == assembly.parent),
             "An assembly has an unknown parent.",
         )?;
-        let bytes = serde_json::to_vec(&declared.body).map_err(|error| error.to_string())?;
+        let body = edited_body(
+            experiment,
+            declared,
+            &assembly.edits,
+            assembly.parent,
+            state.tick,
+        )?;
+        let bytes = serde_json::to_vec(&body).map_err(|error| error.to_string())?;
         ensure(
-            !assembly.copied.is_empty() && bytes.starts_with(&assembly.copied),
+            !assembly.copied.is_empty()
+                && bytes.starts_with(&assembly.copied)
+                && (assembly.edits.is_empty()
+                    || (assembly.copied == bytes && assembly.wired == body.links)),
             "Assembly bytes are not a genuine declared prefix.",
         )?;
         ensure(
@@ -145,8 +285,15 @@ pub(super) fn validate_state(experiment: &Experiment, state: &State) -> Result<(
             used.insert(birth.blueprint),
             "A blueprint is both staged and born, or born twice.",
         )?;
+        let body = edited_body(
+            experiment,
+            declared,
+            &birth.edits,
+            birth.parent,
+            birth.tick.saturating_sub(1),
+        )?;
         ensure(
-            birth.tick > 0 && birth.tick <= state.tick && birth.body == declared.body,
+            birth.tick > 0 && birth.tick <= state.tick && birth.body == body,
             "A birth has an impossible time or altered body.",
         )?;
         ensure(
@@ -229,7 +376,9 @@ pub(super) fn apply(
             )?;
             state.cells[index].material = Some(source.units.remove(0));
         }
-        Action::Build { blueprint: id } | Action::Activate { blueprint: id } => {
+        Action::Build { blueprint: id }
+        | Action::Activate { blueprint: id }
+        | Action::EditDirection { blueprint: id, .. } => {
             let declared = blueprint(experiment, *id)?;
             let destination = declared.body.cell.position;
             ensure(
@@ -259,11 +408,58 @@ pub(super) fn apply(
                 }),
                 "Construction overwrites another reservation.",
             )?;
-            let bytes = serde_json::to_vec(&declared.body).map_err(|error| error.to_string())?;
             let assembly_index = construction
                 .assemblies
                 .iter()
                 .position(|assembly| assembly.blueprint == *id);
+            let body = if let Some(assembly_index) = assembly_index {
+                let assembly = &construction.assemblies[assembly_index];
+                edited_body(
+                    experiment,
+                    declared,
+                    &assembly.edits,
+                    assembly.parent,
+                    tick.saturating_sub(1),
+                )?
+            } else {
+                declared.body.clone()
+            };
+            let bytes = serde_json::to_vec(&body).map_err(|error| error.to_string())?;
+            if let Action::EditDirection { rule, slot, .. } = action {
+                ensure(
+                    experiment.version == VARIATION_VERSION && *slot < 4,
+                    "Direction editing requires v4 and a local register.",
+                )?;
+                let assembly = &mut construction.assemblies
+                    [assembly_index.ok_or("Editing has no completed assembly.")?];
+                ensure(
+                    assembly.parent == parent
+                        && assembly.copied == bytes
+                        && assembly.wired == body.links
+                        && assembly.edits.len() < MAX_PROGRAM_EDITS,
+                    "Editing precedes complete owned construction or exceeds its limit.",
+                )?;
+                let value = state.cells[index].memory[usize::from(*slot)];
+                let changed = changed_body(&body, *rule, value)?;
+                let changed_bytes =
+                    serde_json::to_vec(&changed).map_err(|error| error.to_string())?;
+                ensure(
+                    changed_bytes.len() <= MAX_BLUEPRINT_BYTES,
+                    "Edited body exceeds the byte limit.",
+                )?;
+                assembly.edits.push(DirectionEdit {
+                    tick,
+                    actor: parent,
+                    rule: *rule,
+                    slot: *slot,
+                    value,
+                    before_hash: artifact_hash(&body)?,
+                    after_hash: artifact_hash(&changed)?,
+                    bytes_written: changed_bytes.len() as u32,
+                });
+                assembly.copied = changed_bytes;
+                return Ok(());
+            }
             if matches!(action, Action::Build { .. }) {
                 let assembly_index = if let Some(index) = assembly_index {
                     index
@@ -278,6 +474,7 @@ pub(super) fn apply(
                         material,
                         copied: Vec::new(),
                         wired: Vec::new(),
+                        edits: Vec::new(),
                     });
                     construction.assemblies.len() - 1
                 };
@@ -360,6 +557,7 @@ pub(super) fn apply(
                     material: assembly.material,
                     tick,
                     body,
+                    edits: assembly.edits,
                 });
             }
         }
