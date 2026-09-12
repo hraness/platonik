@@ -1,0 +1,249 @@
+{
+  "id": "minimal-receipt-loop",
+  "requester": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "has_message",
+            "port": 0,
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "take_message",
+          "port": 0,
+          "slot": 0
+        },
+        "remember": null
+      },
+      {
+        "when": [],
+        "action": {
+          "kind": "send",
+          "port": 0,
+          "bit": {
+            "kind": "memory",
+            "slot": 2
+          }
+        },
+        "remember": null
+      }
+    ]
+  },
+  "courier": {
+    "rules": [
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 5
+          }
+        ],
+        "action": {
+          "kind": "send",
+          "port": 0,
+          "bit": {
+            "kind": "memory",
+            "slot": 2
+          }
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 4
+          },
+          {
+            "kind": "has_message",
+            "port": 1,
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "take_message",
+          "port": 1,
+          "slot": 2
+        },
+        "remember": {
+          "slot": 0,
+          "value": 5
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 4
+          }
+        ],
+        "action": {
+          "kind": "wait"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 3
+          },
+          {
+            "kind": "at_depot",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "drop"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 3
+          },
+          {
+            "kind": "at_depot",
+            "value": true
+          },
+          {
+            "kind": "carrying",
+            "value": false
+          }
+        ],
+        "action": {
+          "kind": "write_memory",
+          "slot": 0,
+          "value": 4
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 3
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 2
+          },
+          {
+            "kind": "carrying",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "turn",
+          "direction": "back"
+        },
+        "remember": {
+          "slot": 0,
+          "value": 3
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 2
+          },
+          {
+            "kind": "at_source",
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "pickup"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 2
+          }
+        ],
+        "action": {
+          "kind": "move",
+          "direction": "forward"
+        },
+        "remember": null
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 1
+          }
+        ],
+        "action": {
+          "kind": "turn",
+          "direction": "back"
+        },
+        "remember": {
+          "slot": 0,
+          "value": 2
+        }
+      },
+      {
+        "when": [
+          {
+            "kind": "memory",
+            "slot": 0,
+            "value": 0
+          },
+          {
+            "kind": "has_message",
+            "port": 0,
+            "value": true
+          }
+        ],
+        "action": {
+          "kind": "take_message",
+          "port": 0,
+          "slot": 1
+        },
+        "remember": {
+          "slot": 0,
+          "value": 1
+        }
+      },
+      {
+        "when": [],
+        "action": {
+          "kind": "wait"
+        },
+        "remember": null
+      }
+    ]
+  }
+}

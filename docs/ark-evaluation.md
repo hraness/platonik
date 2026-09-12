@@ -101,6 +101,6 @@ Qualification used 558 executions and calibration used 354; the study's combined
 
 ## Scope of the next dependency
 
-This step qualifies the declared arithmetic and two supplied binary service plans if its automated gates pass. Repeated requests and reset, richer local feedback, continuous numerical regulation, and physical movement of an ark remain separate capabilities. The next campaign dependency is distributed commitments: independent endpoints must honor finite obligations under delays, loss, and duplicate reports without creating duplicate delivery credit.
+This step qualifies the declared arithmetic and two supplied binary service plans if its automated gates pass. Repeated requests and reset, richer local feedback, continuous numerical regulation, and physical movement of an ark remain separate capabilities. The subsequent [port commitments experiment](ports-evaluation.md) tests two one-shot obligations under delayed, lost, and duplicate reports without creating duplicate physical delivery credit.
 
 Endogenous candidate generation and the complete sequence of chapter transitions remain after that. Capacity must be measured for the actual integrated campaign before [human playtesting](design-validation.md#human-playtesting-comes-after-agent-evaluation). Reachability, correct arithmetic, and cheaper programs cannot establish enjoyment or scientific novelty.

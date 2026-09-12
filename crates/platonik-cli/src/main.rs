@@ -72,6 +72,8 @@ const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
   platonik habitat answer <receipt.json|->\n\
   platonik habitat ark <dir>\n\
   platonik habitat ark-check <receipt.json|->\n\
+  platonik habitat ports <dir>\n\
+  platonik habitat ports-check <receipt.json|->\n\
   platonik habitat arithmetic-case <a> <b> <tap>\n\
   platonik habitat cases\n\
   platonik habitat case <id>\n\
@@ -103,6 +105,11 @@ valid evidence, including failed control; inspect arithmetic_passed,\n\
 service_passed, and control_passed separately. Arithmetic-case prints an\n\
 experiment without running it: operands a/b are 0..15; tap is 0 (sum LSB) or\n\
 4 (carry). This is one four-bit addition, not a stored-program computer.\n\n\
+Ports reads checked custody, acknowledgment, and service progress without\n\
+changing the save. Ports-check freshly verifies a standalone ports receipt.\n\
+Both return exit 0 for valid evidence, including failed commitments; inspect\n\
+custody_passed, acknowledgments_passed, safety_passed, service_passed, and\n\
+commitments_passed separately. These are two finite one-shot commitments.\n\n\
 Prepare verifies an expedition's frozen pair and prints a case Experiment with\n\
 those courier/controller programs. It does not modify that separate collection\n\
 or authenticate ownership. A missing controller is supplied in its child\n\
@@ -432,6 +439,15 @@ fn execute_habitat(args: &[String]) -> Result<u8, Failure> {
         [command, input] if command == "ark-check" => {
             let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
             print_json(&platonik_core::ark_control::grade_receipt(&receipt).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, dir] if command == "ports" => {
+            print_json(&habitat_store::ports(Path::new(dir)).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, input] if command == "ports-check" => {
+            let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
+            print_json(&platonik_core::port_commitments::grade_receipt(&receipt).map_err(error)?)?;
             Ok(0)
         }
         [command, a, b, tap] if command == "arithmetic-case" => {

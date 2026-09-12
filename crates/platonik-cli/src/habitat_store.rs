@@ -96,6 +96,13 @@ pub struct ArkReport {
     pub ark: platonik_core::ark_control::ArkGrade,
 }
 
+#[derive(Serialize)]
+pub struct PortsReport {
+    pub schema: &'static str,
+    pub habitat: Report,
+    pub ports: platonik_core::port_commitments::PortsGrade,
+}
+
 #[derive(Clone)]
 struct Request {
     until: u32,
@@ -454,6 +461,19 @@ pub fn ark(path: &Path) -> Result<ArkReport, String> {
     })
 }
 
+pub fn ports(path: &Path) -> Result<PortsReport, String> {
+    let store = Store::open(path, JOURNAL_SCHEMA)?;
+    let snapshot = read_snapshot(&store)?.1;
+    // Reading a pending intent cannot reveal the advance it has not committed.
+    let ports =
+        platonik_core::port_commitments::grade_verified(&snapshot.experiment, &snapshot.result)?;
+    Ok(PortsReport {
+        schema: "platonik-ports-report-v1",
+        habitat: report(snapshot, None)?,
+        ports,
+    })
+}
+
 fn finish(store: &Store, snapshot: Snapshot, id: &str) -> Result<Report, String> {
     let pending = snapshot
         .pending
@@ -664,12 +684,15 @@ pub fn cases() -> Vec<&'static str> {
         .chain(platonik_core::construction_fixtures::case_ids())
         .chain(platonik_core::answer_fixtures::case_ids())
         .chain(platonik_core::ark_fixtures::case_ids())
+        .chain(platonik_core::port_fixtures::case_ids())
         .copied()
         .collect()
 }
 
 pub fn case(id: &str) -> Result<Experiment, String> {
-    if platonik_core::ark_fixtures::case_ids().contains(&id) {
+    if platonik_core::port_fixtures::case_ids().contains(&id) {
+        platonik_core::port_fixtures::experiment(id)
+    } else if platonik_core::ark_fixtures::case_ids().contains(&id) {
         platonik_core::ark_fixtures::experiment(id)
     } else if platonik_core::answer_fixtures::case_ids().contains(&id) {
         platonik_core::answer_fixtures::experiment(id)

@@ -51,8 +51,64 @@ fn spawn(args: &[&str], input: Option<&[u8]>) -> Child {
     }
     child
 }
+thread_local! {
+    // Only explicitly scoped ports tests collect subprocess telemetry. Older
+    // tests keep their original argv and stderr behavior.
+    static PORTS_EXECUTIONS: std::cell::Cell<Option<u64>> = const { std::cell::Cell::new(None) };
+}
+struct PortsExecutions;
+impl PortsExecutions {
+    fn start() -> Self {
+        PORTS_EXECUTIONS.with(|count| assert!(count.replace(Some(0)).is_none()));
+        Self
+    }
+}
+impl Drop for PortsExecutions {
+    fn drop(&mut self) {
+        let executions = PORTS_EXECUTIONS.with(|count| count.take().unwrap());
+        eprintln!(
+            "{}",
+            json!({
+                "schema": "platonik-cli-test-metrics-v1",
+                "test": std::thread::current().name(),
+                "engine_executions": executions,
+            })
+        );
+    }
+}
 fn cli(args: &[&str], input: Option<&[u8]>) -> Output {
-    spawn(args, input).wait_with_output().unwrap()
+    let collect = PORTS_EXECUTIONS.with(|count| count.get().is_some());
+    let explicit_metrics = args.first() == Some(&"--metrics");
+    let effective: Vec<_> = std::iter::once("--metrics")
+        .filter(|_| collect && !explicit_metrics)
+        .chain(args.iter().copied())
+        .collect();
+    let mut output = spawn(&effective, input).wait_with_output().unwrap();
+    if collect {
+        let stderr = std::mem::take(&mut output.stderr);
+        let mut count = None;
+        for line in stderr.split_inclusive(|byte| *byte == b'\n') {
+            let metric = serde_json::from_slice::<Value>(line)
+                .ok()
+                .filter(|value| value["schema"] == "platonik-process-metrics-v1");
+            if let Some(metric) = metric {
+                assert!(
+                    count
+                        .replace(metric["engine_executions"].as_u64().unwrap())
+                        .is_none()
+                );
+                if explicit_metrics {
+                    output.stderr.extend_from_slice(line);
+                }
+            } else {
+                output.stderr.extend_from_slice(line);
+            }
+        }
+        let executions =
+            count.expect("Every ports-test subprocess must report actual engine executions");
+        PORTS_EXECUTIONS.with(|count| count.set(Some(count.get().unwrap() + executions)));
+    }
+    output
 }
 fn value(output: &Output) -> Value {
     serde_json::from_slice(&output.stdout)
@@ -1283,6 +1339,173 @@ fn ark_failed_evidence_is_readable_but_tampered_receipts_are_rejected() {
     forged["result"]["costs"]["loading"] = json!(1);
     let bad = cli(
         &["habitat", "ark-check", "-"],
+        Some(&serde_json::to_vec(&forged).unwrap()),
+    );
+    assert_eq!(bad.status.code(), Some(2));
+    assert!(bad.stdout.is_empty());
+    assert!(serde_json::from_slice::<Value>(&bad.stderr).unwrap()["error"].is_object());
+}
+
+#[test]
+fn ports_case_exports_are_zero_execution_and_preserve_typed_inputs() {
+    let _executions = PortsExecutions::start();
+    use platonik_core::port_fixtures as ports;
+    let (listed, runs) = measured(&["habitat", "cases"], None);
+    assert_eq!(runs, 0);
+    assert_eq!(ports::case_ids().len(), 8);
+    for id in ports::case_ids() {
+        assert!(listed["examples"].as_array().unwrap().contains(&json!(id)));
+        let (exported, runs) = measured(&["habitat", "case", id], None);
+        assert_eq!(runs, 0);
+        assert_eq!(
+            serde_json::from_value::<Experiment>(exported).unwrap(),
+            ports::experiment(id).unwrap()
+        );
+    }
+}
+
+#[test]
+fn ports_readonly_progress_separates_custody_from_ack_and_preserves_recovery() {
+    let _executions = PortsExecutions::start();
+    let sandbox = Sandbox::new();
+    let source = sandbox.path("ports");
+    let restored = sandbox.path("restored-ports");
+    let pending = sandbox.path("pending-ports");
+    let exp = platonik_core::port_fixtures::experiment("ports-clear-zero-one").unwrap();
+    success(init(&source, &exp));
+    let genesis = journal(&source);
+    let (status, status_runs) = measured(&["habitat", "status", text(&source)], None);
+    let (loaded, grade_runs) = measured(&["habitat", "ports", text(&source)], None);
+    assert_eq!(loaded["schema"], "platonik-ports-report-v1");
+    assert_eq!(loaded["habitat"], status);
+    assert_eq!(
+        grade_runs, status_runs,
+        "The grade adds no execution beyond the verified snapshot"
+    );
+    assert!(
+        status.get("ports").is_none(),
+        "Legacy status remains unchanged"
+    );
+    assert_eq!(loaded["ports"]["phase"], "in_progress");
+    assert_eq!(loaded["ports"]["commitments_passed"], false);
+    assert_eq!(loaded["ports"]["commitments"].as_array().unwrap().len(), 2);
+    for lane in loaded["ports"]["commitments"].as_array().unwrap() {
+        assert_eq!(lane["requested"], Value::Null);
+        assert_eq!(lane["accepted"], Value::Null);
+        assert_eq!(lane["acknowledged"], Value::Null);
+    }
+    assert_eq!(journal(&source), genesis);
+
+    let cold = cli(&["run", "-"], Some(&serde_json::to_vec(&exp).unwrap()));
+    assert!(cold.status.success());
+    let (grade, runs) = measured(&["habitat", "ports-check", "-"], Some(&cold.stdout));
+    assert_eq!(runs, 1, "Standalone grading freshly replays exactly once");
+    assert_eq!(grade["commitments_passed"], true);
+    let cut = grade["commitments"][0]["accepted"].as_u64().unwrap() as u32;
+    assert!(
+        grade["commitments"][0]["acknowledged"]["tick"]
+            .as_u64()
+            .unwrap()
+            > u64::from(cut)
+    );
+    let saved = success(advance(&source, cut, 0, "parcel-arrived"));
+    let prefix = success(cli(&["habitat", "ports", text(&source)], None));
+    assert_eq!(prefix["ports"]["phase"], "in_progress");
+    assert_eq!(prefix["ports"]["commitments"][0]["accepted"], cut);
+    assert_eq!(
+        prefix["ports"]["commitments"][0]["acknowledged"],
+        Value::Null
+    );
+    assert_eq!(prefix["ports"]["commitments_passed"], false);
+    let exported = cli(&["habitat", "export", text(&source)], None);
+    assert!(exported.status.success());
+    let imported = success(cli(
+        &["habitat", "import", "-", text(&restored)],
+        Some(&exported.stdout),
+    ));
+    assert_eq!(imported["current_state"], saved["current_state"]);
+    assert_eq!(imported["costs"], saved["costs"]);
+    assert_eq!(
+        success(cli(&["habitat", "ports", text(&restored)], None))["ports"],
+        prefix["ports"]
+    );
+    let completed = success(advance(&restored, 128, 2, "acknowledge"));
+    let final_grade = success(cli(&["habitat", "ports", text(&restored)], None));
+    assert_eq!(
+        final_grade["ports"], grade,
+        "Saved and cold evidence identities agree"
+    );
+
+    // A committed intent exposes only the previously completed physical prefix.
+    let output = cli(&["habitat", "export", text(&restored)], None);
+    assert!(output.status.success());
+    let mut bundle: Bundle = serde_json::from_slice(&output.stdout).unwrap();
+    let completion = bundle.entries.pop().unwrap();
+    bundle.objects.remove(&completion.event.event_hash).unwrap();
+    success(cli(
+        &["habitat", "import", "-", text(&pending)],
+        Some(&serde_json::to_vec(&bundle).unwrap()),
+    ));
+    let history = journal(&pending);
+    let read = success(cli(&["habitat", "ports", text(&pending)], None));
+    assert_eq!(read["ports"], prefix["ports"]);
+    assert_eq!(read["habitat"]["pending_request_id"], "acknowledge");
+    assert_eq!(read["habitat"]["revision"], 3);
+    assert_eq!(journal(&pending), history);
+    let recovered = success(cli(
+        &[
+            "habitat",
+            "recover",
+            text(&pending),
+            "--expect-revision",
+            "3",
+            "--request-id",
+            "acknowledge",
+        ],
+        None,
+    ));
+    assert_eq!(recovered, completed);
+    assert_eq!(
+        success(cli(&["habitat", "ports", text(&pending)], None)),
+        final_grade
+    );
+    let settled = journal(&pending);
+    assert_eq!(success(advance(&pending, 128, 2, "acknowledge")), completed);
+    assert_eq!(journal(&pending), settled);
+    for (file, bytes) in genesis {
+        assert_eq!(fs::read(file).unwrap(), bytes);
+    }
+}
+
+#[test]
+fn ports_failed_receipts_remain_readable_but_forged_costs_are_rejected() {
+    let _executions = PortsExecutions::start();
+    let sandbox = Sandbox::new();
+    let path = sandbox.path("no-fuel-ports");
+    let mut exp = platonik_core::port_fixtures::experiment("ports-clear-zero-one").unwrap();
+    exp.fuel = 0;
+    assert_eq!(init(&path, &exp).status.code(), Some(1));
+    let read = success(cli(&["habitat", "ports", text(&path)], None));
+    assert_eq!(read["ports"]["phase"], "failed");
+    assert_eq!(read["ports"]["commitments_passed"], false);
+    assert_eq!(read["ports"]["custody_passed"], false);
+    assert_eq!(read["ports"]["commitments"].as_array().unwrap().len(), 2);
+    let failed = cli(&["run", "-"], Some(&serde_json::to_vec(&exp).unwrap()));
+    assert_eq!(failed.status.code(), Some(1));
+    let (grade, runs) = measured(&["habitat", "ports-check", "-"], Some(&failed.stdout));
+    assert_eq!(runs, 1);
+    assert_eq!(grade, read["ports"]);
+    let receipt_path = sandbox.path("failed.receipt.json");
+    fs::write(&receipt_path, &failed.stdout).unwrap();
+    assert_eq!(
+        success(cli(&["habitat", "ports-check", text(&receipt_path)], None)),
+        grade
+    );
+    assert_eq!(fs::read(&receipt_path).unwrap(), failed.stdout);
+    let mut forged = value(&failed);
+    forged["result"]["costs"]["loading"] = json!(1);
+    let bad = cli(
+        &["habitat", "ports-check", "-"],
         Some(&serde_json::to_vec(&forged).unwrap()),
     );
     assert_eq!(bad.status.code(), Some(2));

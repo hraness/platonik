@@ -92,6 +92,8 @@ The signal now sounds less like a single voice. Your own network is beginning to
 - **Allowance and alternatives:** the manifest caps link capacity, in-flight messages, retries, retained identifiers, cargo, and total work. Choose a hub, a chain, or a more distributed arrangement that fits those bounds. Local authored ports supply the entire campaign's needs even if the player market is empty.
 - **What travels onward:** the same transport and service controllers now procure and deliver construction stock. A neighboring home recognizes a lineage because it actually honored its promise.
 
+The [recorded port experiment](https://platonik.space/lab/ports) isolates two one-shot promises in local neighborhoods of one saved world. Couriers preserve a same-bit spare while retrying replies, and the checker distinguishes accepted custody from acknowledgment and beacon service. Its [evaluation](ports-evaluation.md) does not establish distant independent worlds, repeated sessions, or the market described in this chapter.
+
 ## The bloom
 
 Until now, you and your agent have designed the next creature. A later settlement acquires a bounded process that proposes and tests new organisms itself. Your task becomes choosing the questions, habitats, and resource allowances under which those discoveries can grow.

@@ -69,6 +69,18 @@ export const documents = [
     question: "Does the arithmetic change a real decision?",
   },
   {
+    slug: "port-commitments",
+    title: "Keep a promise",
+    description: "Make a physical handoff, confirm it through lost replies, and leave the spare alone when a request returns.",
+    question: "Can two homes rely on their couriers?",
+  },
+  {
+    slug: "ports-evaluation",
+    title: "What kept the promise",
+    description: "Finite custody obligations, duplicate reports, agent comparisons, and the measured cost of reliable handoffs.",
+    question: "Did the parcel arrive, and does its requester know?",
+  },
+  {
     slug: "answer-evaluation",
     title: "What earned the answer",
     description: "Frozen agent comparisons, physical signal provenance, restored journeys, and the measured cost of the complete local adventure.",

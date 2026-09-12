@@ -104,3 +104,5 @@ For a complete local construction-to-contact adventure, follow [Bring a signal h
 For computation that changes a physical delivery, [give home a plan](ark-control.md). This 128-tick habitat carries a number, emits its five-bit sum, and retains one selected bit after contact ends. It uses the same checked save format, with separate arithmetic and service grades.
 
 No account, game server, external model call, or background world simulation is required by these CLI commands. The external agent reasons outside the habitat. Human playtesting follows the remaining [automated campaign gates](design-validation.md#the-automated-path-before-people-play).
+
+The [port walkthrough](port-commitments.md) preserves a handoff while its acknowledgment is missing. Use `habitat ports` to inspect custody, confirmation, and service separately; its [evaluation](ports-evaluation.md) records the bounded six-cut restoration protocol.
