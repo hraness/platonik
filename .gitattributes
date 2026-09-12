@@ -1,0 +1,2 @@
+# Preserve upstream license formatting; the snapshot checker verifies exact bytes.
+vendor/hraness-marketing/fonts/instrument-serif/OFL.txt whitespace=-blank-at-eol

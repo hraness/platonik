@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import "@fontsource/newsreader/latin-400.css";
+import "@hraness/design-kit/fonts.css";
+import "../vendor/hraness-marketing/product-marketing-preset.css";
 import "./globals.css";
+import "./marketing.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -17,7 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
-        <header className="site-header">
+        <header className="site-header hraness-marketing-header-surface" data-hraness-marketing-preset="minimal">
           <Link href="/" className="wordmark" aria-label="Platonik home">platonik<span aria-hidden="true">.</span></Link>
           <nav aria-label="Main navigation">
             <Link href="/lab">Observatory</Link>

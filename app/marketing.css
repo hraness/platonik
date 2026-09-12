@@ -1,0 +1,107 @@
+/* The public story adopts the shared marketing preset. Laboratory and document
+ * content keep their own type, geometry, and recorded evidence. */
+html { scroll-padding-top: 6.5rem; }
+.skip-link { z-index: 20; }
+.docs-sidebar { top: 6.5rem; }
+
+body:has(.home[data-hraness-marketing-preset]) {
+  color-scheme: light dark;
+  --paper: light-dark(#f9f9f6, #191c1a);
+  --ink: light-dark(#262c28, #e8ece7);
+  --muted: light-dark(#616a63, #b8c1bb);
+  --accent: light-dark(#304f3d, #bed5be);
+  --line: light-dark(#d9ddd5, #424942);
+  --wash: light-dark(#edf0e9, #282e29);
+  --background: var(--paper);
+}
+
+.site-header {
+  --background: var(--paper);
+  --font-text: "Nebula Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-backdrop-filter: var(--hraness-marketing-header-backdrop, none);
+  backdrop-filter: var(--hraness-marketing-header-backdrop, none);
+  background: var(--hraness-marketing-header-background, var(--paper));
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-text);
+  min-height: 4.5rem;
+  max-width: none;
+  padding-inline: max(2rem, calc((100% - 72rem) / 2));
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-header .wordmark {
+  font-family: var(--font-text);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+
+.home[data-hraness-marketing-preset] {
+  --body: "Nebula Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-text: var(--body);
+  --display: var(--hraness-marketing-display-font);
+  --hraness-site-accent: var(--accent);
+  --hraness-site-accent-ink: var(--paper);
+  font-family: var(--body);
+  font-size: 1rem;
+  width: 100%;
+}
+
+.home :is(.hero, .home-section, .closing) {
+  margin-inline: auto;
+  max-width: calc(var(--hraness-marketing-content-measure) + 2 * var(--hraness-marketing-gutter));
+  padding-inline: var(--hraness-marketing-gutter);
+  padding-block: var(--hraness-marketing-story-space);
+}
+
+.home .hero {
+  padding-block: 4rem 3rem;
+}
+
+.home .hero h1 {
+  font-size: var(--hraness-marketing-h1-size);
+  line-height: var(--hraness-marketing-h1-leading);
+  letter-spacing: var(--hraness-marketing-h1-tracking);
+}
+
+.home :is(.home-section, .closing) h2 {
+  font-size: var(--hraness-marketing-h2-size);
+  line-height: var(--hraness-marketing-h2-leading);
+  letter-spacing: var(--hraness-marketing-h2-tracking);
+}
+
+.home .hero-description {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 48ch;
+  margin-top: 1.25rem;
+  letter-spacing: 0;
+}
+
+.home .hero-detail { max-width: 60ch; }
+.home .status-note { max-width: 72ch; line-height: 1.6; }
+.home .first-world { border-top: 0; padding-top: 2rem; }
+.home .hraness-marketing-field { --muted: var(--hraness-marketing-field-muted); }
+.home .habitat-figure { background: var(--wash); padding: 2rem; border-radius: .625rem; max-width: 44rem; }
+.home .habitat-map { margin-inline: auto; }
+.home .habitat-figure figcaption { text-align: center; }
+.home .split-section { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 5rem; }
+.home .split-section h2 { max-width: 17ch; }
+.home .primary-link { border-radius: .25rem; min-height: 2.75rem; }
+.home .hero-links { margin-top: 1.75rem; }
+
+@media (max-width: 760px) {
+  .site-header { padding: .75rem 1.25rem; gap: .75rem; }
+  .site-header nav { gap: 1rem; font-size: .8125rem; }
+  .home .hero { padding-block: 2.75rem 2rem; }
+  .home .hero-description { font-size: 1rem; max-width: 34ch; }
+  .home .hero-links { flex-direction: row; align-items: center; gap: 1rem; }
+  .home .split-section { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .home .habitat-figure { padding: 1.25rem; }
+}
+
+@media (forced-colors: active) {
+  .home .habitat-figure { border: 1px solid CanvasText; }
+}
