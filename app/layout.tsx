@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { site } from "@/lib/site";
 import { appearanceFallback } from "@/lib/appearance";
 import { AppearanceControl, AppearanceProvider } from "@/components/appearance";
@@ -28,7 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AppearanceProvider>
           <a href="#main" className="skip-link">Skip to content</a>
           <header className="site-header hraness-material-chrome" data-hraness-marketing-preset="minimal">
-            <Link href="/" className="wordmark" aria-label="Platonik home">platonik<span aria-hidden="true">.</span></Link>
+            <Link href="/" className="wordmark" aria-label="Platonik home"><Image className="brand-icon" src="/brand.png" width={48} height={48} alt="" aria-hidden="true" />platonik<span aria-hidden="true">.</span></Link>
             <nav aria-label="Main navigation">
               <Link href="/lab">Observatory</Link>
               <Link href="/docs">Documentation</Link>

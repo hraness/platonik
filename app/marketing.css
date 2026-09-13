@@ -28,11 +28,15 @@ body[data-hraness-material="lantern"] {
 }
 
 .site-header .wordmark {
+  align-items: center;
+  display: inline-flex;
   font-family: var(--font-text);
   font-size: 1.125rem;
   font-weight: 600;
   letter-spacing: -.02em;
 }
+
+.site-header .brand-icon { flex: none; margin-inline: -.75rem -.25rem; }
 
 .site-header nav { margin-left: auto; }
 .site-appearance { flex: none; }

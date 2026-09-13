@@ -13,6 +13,7 @@ use std::time::Instant;
 mod expedition_store;
 mod habitat_store;
 mod journal;
+mod terminal_help;
 
 const MAX_EXPERIMENT_BYTES: u64 = 65_536;
 const MAX_RECEIPT_BYTES: u64 = 32 * 1024 * 1024;
@@ -264,11 +265,13 @@ fn execute(args: &[String]) -> Result<u8, Failure> {
         [command, rest @ ..] if command == "expedition" => execute_expedition(rest),
         [command, rest @ ..] if command == "habitat" => execute_habitat(rest),
         [] => {
-            print_text(HELP)?;
+            terminal_help::print_root_help(HELP)
+                .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
             Ok(0)
         }
         [command] if command == "help" || command == "--help" || command == "-h" => {
-            print_text(HELP)?;
+            terminal_help::print_root_help(HELP)
+                .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
             Ok(0)
         }
         [command] if command == "--version" => {
