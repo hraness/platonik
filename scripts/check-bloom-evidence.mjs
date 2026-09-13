@@ -16,6 +16,8 @@ for (const item of index.cases) {
   assert.equal(digest(receipt.experiment), receipt.experiment_hash);
   assert.equal(digest(receipt.result), receipt.result_hash);
   assert.equal(item.result_hash, receipt.result_hash);
+  assert.equal(item.composition, `composition/${item.id}.json`);
+  const composition = read(`public/bloom/${item.composition}`);
   assert.equal(receipt.protocol, "platonik-habitat-v4");
   assert.equal(receipt.result.status, "complete");
   assert.equal(receipt.result.ticks_completed, 128);
@@ -32,6 +34,20 @@ for (const item of index.cases) {
     assert.equal(candidate.trial_passed, true);
     assert(candidate.edits.length >= 2 && candidate.edits.length <= 8);
   }
+  assert.equal(composition.schema, "platonik-composition-v1");
+  assert.equal(composition.base_experiment_hash, receipt.experiment_hash);
+  assert.equal(composition.base_result_hash, receipt.result_hash);
+  assert.equal(composition.bloom_grade_hash, digest(grade));
+  const winner = grade.candidates[grade.selection.candidate];
+  assert.equal(composition.selected_child, winner.child);
+  assert.equal(composition.selected_program_hash, winner.program_hash);
+  assert.equal(composition.request.tick, winner.confirmation_requested);
+  assert.equal(composition.pickup, winner.confirmation_pickup);
+  assert.equal(composition.accepted, winner.confirmation_accepted);
+  assert.equal(composition.serviced, winner.confirmation_serviced);
+  assert.equal(composition.ack.receipt_spark, winner.confirmation_parcel);
+  assert.equal(composition.spare.spark, grade.candidates[1 - grade.selection.candidate].confirmation_parcel);
+  assert.equal(composition.work_total, Object.values(receipt.result.costs).reduce((sum, value) => sum + value, 0));
 }
 console.log(`Checked Bloom evidence: ${index.cases.length} public references, generated variants, causal selection, and confirmation.`);
 
