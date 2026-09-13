@@ -63,7 +63,7 @@ pub struct CompositionGrade {
     pub composition_passed: bool,
 }
 
-fn cell<'a>(frame: &'a Frame, id: u16) -> Option<&'a CellState> {
+fn cell(frame: &Frame, id: u16) -> Option<&CellState> {
     frame.state.cells.iter().find(|cell| cell.id == id)
 }
 fn unique_pickup(frames: &[Frame], child: u16, point: Point, parcel: Spark) -> Option<u32> {
