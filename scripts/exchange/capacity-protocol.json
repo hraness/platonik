@@ -1,0 +1,32 @@
+{
+  "schema": "platonik-bloom-exchange-capacity-protocol-v1",
+  "references": ["bloom-exchange-left", "bloom-exchange-right", "bloom-exchange-left-delay", "bloom-exchange-right-delay", "bloom-exchange-rotated-left", "bloom-exchange-rotated-right"],
+  "controls": ["no-child-ack", "forged-report", "wrong-winner", "early-ack", "no-request", "missing-spare", "selector-bypass", "stray-report"],
+  "control_case": "bloom-exchange-left",
+  "representatives": ["bloom-exchange-left", "bloom-exchange-rotated-right"],
+  "samples_per_representative": 30,
+  "warmups": "The initial matrix pair for each representative is its single excluded warmup; there are no extra warmup executions.",
+  "sample_order": "After the fourteen matrix pairs, alternate left then rotated-right for sample indices 0 through 29.",
+  "maximum_engine_executions": 148,
+  "expected_cli_calls": 162,
+  "percentile_method": "Nearest rank: sorted index 14 for p50 and index 28 for p95 of thirty samples, separately by representative and operation. This p50 is the lower central observation, not the arithmetic average of the middle two.",
+  "limits": {
+    "operation_p95_ms": 500,
+    "cli_peak_rss_bytes": 268435456,
+    "recorder_peak_rss_bytes": 268435456,
+    "receipt_bytes": 8388608,
+    "logical_archive_bytes": 1073741824,
+    "compressed_archive_bytes": 67108864
+  },
+  "packing_safety": {
+    "entry_bytes": 33554432,
+    "file_count": 1024,
+    "encoded_envelope_bytes": 67108864,
+    "compressed_archive_bytes": 67108864
+  },
+  "measurement": "macOS /usr/bin/time -lp measures each run and verification process and the recorder process tree. Monotonic elapsed time covers process launch through completion, including receipt I/O. Hashing and ledger writes happen outside individual CLI timings but inside recorder measurement. Native Node resourceUsage reports recorder self high-water RSS after archive packing, in KiB converted to bytes. OS memory observations are per-process/tree high-water values, not summed concurrent machine memory.",
+  "environment": "Require exclusive mac-native host-scheduler admission. Record OS, CPU, RAM, Node, Rust toolchain, locale and allocator setting. Each CLI invocation is a fresh process; warmups prime filesystem caches only. Other unmanaged activity and cache state are not controlled.",
+  "storage": "Retain every logical output, source and ledger entry. Store identical SHA-256 byte strings once in a content-addressed compressed archive. Report logical bytes and unique bytes separately. Deterministic repetitions do not predict novel-candidate compression ratios.",
+  "failure_policy": "Never replace failed samples. Missing counters, uncertain completion, changed frozen sources or exceeded packing safety bounds stop the run with preserved incomplete evidence. Available complete measurements can produce failed admission gates. The compressed-size admission limit shares the package safety ceiling: an oversized package stops before summary sealing. CLI performance thresholds do not enforce a runtime sandbox.",
+  "scope": "Capacity admission for one bounded independent-agent study of this exact exchange on the measured machine. Not a worst-case program bound, larger ecology, service throughput, multiplayer economy, complete campaign, research result, or human playtest. Modeled work is not wall time or energy."
+}
