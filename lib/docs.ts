@@ -87,6 +87,12 @@ export const documents = [
     question: "Did the world learn from its own trial?",
   },
   {
+    slug: "composition-v5-gate",
+    title: "The Bloom–Ports composition gate",
+    description: "The versioned one-lane contract for connecting endogenous selection to reliable exchange.",
+    question: "What must the true composition test prove?",
+  },
+  {
     slug: "ports-evaluation",
     title: "What kept the promise",
     description: "Finite custody obligations, duplicate reports, agent comparisons, and the measured cost of reliable handoffs.",
@@ -178,6 +184,6 @@ export async function readDocument(slug: string) {
 }
 
 export function documentHref(href: string) {
-  const match = /^([a-z-]+)\.md(#[\w-]+)?$/.exec(href);
+  const match = /^([a-z0-9-]+)\.md(#[\w-]+)?$/.exec(href);
   return match && findDocument(match[1]) ? `/docs/${match[1]}${match[2] ?? ""}` : href;
 }

@@ -11,7 +11,7 @@ for (const document of documents) {
   for (const match of text.matchAll(/\]\(([^)]+)\)/g)) {
     const href = match[1];
     if (/^https:\/\//.test(href)) continue;
-    const target = /^([a-z-]+)\.md(?:#[\w-]+)?$/.exec(href);
+    const target = /^([a-z0-9-]+)\.md(?:#[\w-]+)?$/.exec(href);
     if (!target || !known.has(target[1] as typeof documents[number]["slug"])) throw new Error(`Unmapped document link: ${document.slug}: ${href}`);
     if (!documentHref(href).startsWith("/docs/")) throw new Error(`Link was not mapped: ${href}`);
   }
