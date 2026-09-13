@@ -3,6 +3,7 @@ pub mod ark_control;
 pub mod ark_fixtures;
 pub mod bloom;
 pub mod bloom_fixtures;
+pub mod bloom_ports_composition;
 pub mod check;
 pub mod construction;
 pub mod construction_fixtures;
