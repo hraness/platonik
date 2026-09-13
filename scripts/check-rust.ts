@@ -30,3 +30,5 @@ run("node", ["scripts/check-ark-evidence.mjs"]);
 run("node", ["scripts/check-ports-evidence.mjs"]);
 run("node", ["scripts/check-bloom-evidence.mjs"]);
 run("node", ["scripts/check-exchange-evidence.mjs"]);
+run("node", ["--test", "scripts/exchange/capacity-io.test.mjs"]);
+run("node", ["scripts/check-exchange-capacity.mjs"]);

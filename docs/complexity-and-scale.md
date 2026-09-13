@@ -58,6 +58,8 @@ Begin with bounded active expeditions and pause them between runs. A civilizatio
 
 Measure interpreter throughput, peak memory, verification cost, and trace size on declared hardware before admitting larger tiers. Keep compact state, share immutable programs, bound neighborhoods, and save checkpoints plus replay inputs rather than every rendered frame. The [storage design](storage.md) publishes selected artifacts; it does not upload every rejected candidate.
 
+The [generated-courier capacity measurement](exchange-capacity.md) supplies one concrete bound: a nine-cell, 128-tick exchange passed its local study limits, with roughly 32 ms median execution and a similar fresh verification cost. Retaining the experiment peaked at 211.2 MiB in the recorder, while each CLI process stayed at or below 15.1 MiB. These separate observations show why measuring only the interpreter misses the cost of searching and preserving evidence. They admit a small study of that workload, not a larger active ecology.
+
 There are two different ways to accelerate a world. An exact implementation optimization preserves every relevant transition and the same charged work. A reusable macro needs a verified contract covering inputs, boundary interactions, intermediate observable events, timing, and resource accounting; a final output match alone is insufficient. Exhaustive verification is possible for some bounded components. Tests alone do not certify arbitrary replacements. Fall back to ordinary simulation outside the certified domain. A statistical approximation belongs in a separately labeled mode, not an official replay.
 
 ## Build a computer inside it

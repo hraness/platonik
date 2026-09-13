@@ -93,6 +93,12 @@ export const documents = [
     question: "Can the organism we just grew fulfill a real request?",
   },
   {
+    slug: "exchange-capacity",
+    title: "What a kept promise costs",
+    description: "Measured execution, replay, memory, and retained evidence costs for a bounded generated-courier exchange.",
+    question: "Can we afford to let agents search this habitat?",
+  },
+  {
     slug: "ports-evaluation",
     title: "What kept the promise",
     description: "Finite custody obligations, duplicate reports, agent comparisons, and the measured cost of reliable handoffs.",
