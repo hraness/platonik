@@ -1,0 +1,31 @@
+{
+  "schema": "platonik-composition-v1",
+  "scope": "Reduced one-lane Bloom composition: the selected generated child fulfills its later confirmation as a checked request, depot report, and service. The v3 two-lane port contract remains separate.",
+  "base_experiment_hash": "sha256:db55ebd526b1faa7cb982588af3c2b41b653b709179076c9c1b6d657a9355fa7",
+  "base_result_hash": "sha256:96ce39af43411a090e2959049179b597d5290c5a3731564c994b51dcf182b628",
+  "bloom_grade_hash": "sha256:2a64dcd5f14b272af45791b22b4c642875055b39bfcfe96ab5215f27d01b6248",
+  "selected_child": 4,
+  "selected_program_hash": "sha256:275a2fabeae92b55e8b7cd4d1873a661faf93cb851233805b17ff06ad059c806",
+  "request": {
+    "tick": 100,
+    "sent_tick": 97,
+    "signal": 101,
+    "link": 47
+  },
+  "pickup": 101,
+  "accepted": 113,
+  "ack": {
+    "tick": 116,
+    "sent_tick": 113,
+    "signal": 132,
+    "link": 41,
+    "receipt_spark": 201
+  },
+  "serviced": 120,
+  "spare": {
+    "source": 10,
+    "spark": 101
+  },
+  "work_total": 53490,
+  "controls": []
+}
