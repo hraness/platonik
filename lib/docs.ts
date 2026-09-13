@@ -88,9 +88,9 @@ export const documents = [
   },
   {
     slug: "composition-v5-gate",
-    title: "The Bloom–Ports composition gate",
-    description: "The versioned one-lane contract for connecting endogenous selection to reliable exchange.",
-    question: "What must the true composition test prove?",
+    title: "When a new organism keeps a promise",
+    description: "Generated couriers, physical custody reports, child acknowledgments, and controls that distinguish delivery from a kept promise.",
+    question: "Can the organism we just grew fulfill a real request?",
   },
   {
     slug: "ports-evaluation",

@@ -705,12 +705,15 @@ pub fn cases() -> Vec<&'static str> {
         .chain(platonik_core::ark_fixtures::case_ids())
         .chain(platonik_core::port_fixtures::case_ids())
         .chain(platonik_core::bloom_fixtures::case_ids())
+        .chain(platonik_core::bloom_exchange_fixtures::case_ids())
         .copied()
         .collect()
 }
 
 pub fn case(id: &str) -> Result<Experiment, String> {
-    if platonik_core::bloom_fixtures::case_ids().contains(&id) {
+    if platonik_core::bloom_exchange_fixtures::case_ids().contains(&id) {
+        platonik_core::bloom_exchange_fixtures::experiment(id)
+    } else if platonik_core::bloom_fixtures::case_ids().contains(&id) {
         platonik_core::bloom_fixtures::experiment(id)
     } else if platonik_core::port_fixtures::case_ids().contains(&id) {
         platonik_core::port_fixtures::experiment(id)
@@ -726,6 +729,11 @@ pub fn case(id: &str) -> Result<Experiment, String> {
 }
 
 pub fn prepare(id: &str, source: &Path) -> Result<Experiment, String> {
+    if platonik_core::bloom_exchange_fixtures::case_ids().contains(&id) {
+        return Err(
+            "Exchange cases do not support Prepare's fixed courier/controller role mapping.".into(),
+        );
+    }
     let campaign = crate::expedition_store::status(source)?.campaign;
     let pair = campaign
         .frozen

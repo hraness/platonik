@@ -1,45 +1,73 @@
-# The true Bloom–Ports composition gate
+# When a new organism keeps a promise
 
-This is the proposal and contract for the next automated milestone. It is intentionally a design gate until an authoritative Rust fixture and replay exist.
+The campaign proposal now has a working one-lane exchange: a generated organism wins a physical trial, receives a request, delivers its parcel, and sends a custody acknowledgment back to the requester. Six fresh Rust worlds complete that chain in one continuous 128-tick execution.
 
-## Why the current records cannot be joined
+This page retains the earlier v5 proposal's URL. The implemented exchange uses existing v4 instructions with a new fixture and grade, `platonik-bloom-exchange-v1`. It needs no interpreter extension. The old Bloom and two-lane Ports records remain separate, reproducible experiments.
 
-The published Bloom habitat is variation version 4. Its generated child is a source-to-depot organism: it edits a blueprint, performs a trial, and later requests a confirmation trip. The earlier Ports commitment is version 3 and grades a fixed courier, requester, report relay, network relay, and Keeper topology. Their program interfaces, role identities, construction rules, and world bounds differ. Concatenating their JSON records would preserve hashes but would not prove that one runtime carried a request through the selected child.
+## What actually connects
 
-The current v4 envelope starts with six cells and can birth two more. A single Ports lane needs five protocol roles, and the existing child program has no request/acknowledgment state machine. The 16-cell limit therefore cannot support a faithful two-lane join. The reduced `platonik-composition-v1` records are provenance projections inside v4; they are not this gate.
+Two builders derive opposite directions from the same supplied seed. Both children try the route and return; a physical depot report chooses the winner. After a later request arrives, the adapter asks that selected child to make its confirmation trip.
 
-## Required v5 fixture
+The depot emits a report containing the delivered parcel's identity. Ordinary local messages carry that evidence back to the selected child, which stores it and emits an acknowledgment. The adapter forwards the acknowledgment to the requester. The requester stops asking only after consuming the reply. The final beacon then receives the physical parcel.
 
-Add a versioned one-lane composition fixture and grade it in Rust. Keep the existing Bloom and Ports fixtures immutable. The new fixture must declare:
+The replay checks this complete chain:
 
-1. A Bloom phase in which two candidates are generated, tested, and selected from a physical post-trial report.
-2. A typed adapter boundary that exposes the selected child as a Ports participant. The child must be the actual born program, with its program hash and edit history bound to the construction event.
-3. A post-selection request that crosses the adapter into the selected child, a depot-origin report that crosses back through the declared relay, and an acknowledgment that reaches the requester before service.
-4. Physical service of the selected confirmation parcel and preservation of the losing parcel as a spare.
-5. One fixed horizon and one cost ledger. Every candidate, failed control, replay, serialization, and grade execution is charged.
+`trial → selection → requester → adapter → generated child → depot → child report → child acknowledgment → requester → service`
 
-The implementation may use a 128-tick v5 horizon split into a Bloom window and a post-selection exchange, or a deliberately versioned 256-tick horizon. The choice must be recorded in the fixture protocol and capacity receipt; it must not be inferred by the checker.
+Each hop binds its sender, receiver, ports, link, bit, parcel evidence, and timing to successful actions in the Rust trace. A constant false bit cannot stand in for a custody report. The losing candidate's confirmation parcel stays in its source throughout the run. All world resources, seed bodies, initial memory, wiring, schedules, and budgets must match the named reference case; only initial-cell programs are editable. Changed world grants produce a false admission predicate.
 
-## Admission evidence
+## What the qualification establishes
 
-The gate admits only a fresh Rust receipt and a grade whose experiment and result hashes match. The checker must bind, in order:
+| Supplied worlds | Requester receives acknowledgment | Physical service |
+| --- | --- | --- |
+| Left and right winners | Tick 115 | Tick 126 |
+| Delayed left and right routes | Tick 120 | Tick 126 |
+| Rotated left and right routes | Tick 125 | Tick 126 |
 
-`selection → adapter request → selected born program → depot report → acknowledgment → physical service`.
+These are reachable examples with a supplied program family, not independently discovered agent strategies. The [qualification record](https://github.com/hraness/platonik/blob/main/fixtures/evidence/exchange-qualification.json) includes each grade, work total, source identity, and binary identity. Its compressed archive retains every qualification input, receipt, grade, subprocess output, and measured engine count. Six references and eight completed controls use 28 engine executions, including fresh grade replays, within a predeclared allowance of 64.
 
-It must also verify endpoint and link provenance, signal bits, delivery times, construction ancestry, loser-spare conservation, and complete replay hashes. A public record should retain the fixture, receipt, grade, compact replay, source/binary identities, modeled work, artifact size, and verifier result.
+The controls test specific failures:
 
-Retain negative controls with rejection diagnostics:
+- **No child acknowledgment:** physical delivery succeeds, but the requester never obtains the child's valid reply.
+- **Forged report:** a constant bit loses the depot's parcel evidence; delivery alone does not rescue the exchange.
+- **Wrong winner:** the adapter requests the losing candidate.
+- **Early acknowledgment:** the requester receives a reply before custody exists.
+- **No request:** the requester never commissions the confirmation trip.
+- **Missing spare:** the experiment omits the losing confirmation parcel from its initial resources, failing admission and preservation.
+- **Selector bypass:** the adapter dispatches without consuming a request.
+- **Stray report:** an unsupported report precedes an otherwise successful exchange. Later success does not erase the false claim.
 
-- selector bypass or direct request to a child;
-- request routed to the losing child;
-- forged cell-origin report instead of a depot report;
-- acknowledgment sent before acceptance or service;
-- discarded or double-spent loser spare.
+Separate integrity tests reject rehashed changes to acknowledgment evidence, remembered state, birth programs, costs, and duplicated parcel identities. A forged receipt is an integrity failure; it is not counted as an honestly completed control. Serialized checkpoints with a request or child acknowledgment in flight resume to the same complete trace, state, outcome, and work as uninterrupted execution.
 
-Controls must complete their declared horizon and fail the specific composition predicate. A malformed input is not a completed control.
+## Run and inspect the exchange
 
-## Capacity and stop conditions
+From a repository checkout with the pinned Rust toolchain, build the CLI and use fresh output filenames:
 
-Before raising the envelope, measure p50/p95 runtime, peak RSS, receipt bytes, verifier time, and total engine executions on the same reference machine used by the Bloom capacity gate. The first v5 target is one lane, two candidates, one confirmation, and the existing bounded artifact budget. Do not claim a larger ecology, a multiplayer economy, useful research output, or a P-versus-NP result from this fixture.
+```sh
+cargo build --release --locked -p platonik-cli
+./target/release/platonik habitat case bloom-exchange-left > exchange-world.json
+./target/release/platonik run exchange-world.json > exchange-receipt.json
+./target/release/platonik habitat exchange-check bloom-exchange-left exchange-receipt.json
+```
 
-If the generated child cannot carry the declared request/ack protocol without changing its semantics, stop and revise the substrate or narrow the campaign claim. Do not repair the mismatch with a browser-only adapter or an uncharged conversion reward.
+Inspect `exchange_passed` and the separate stage predicates in the JSON grade. The check replays the receipt once. Exit 0 means the evidence is valid, including an honestly failed exchange; corrupt evidence and unknown case identifiers return exit 2.
+
+To see delivery succeed while the reply fails:
+
+```sh
+./target/release/platonik habitat exchange-control bloom-exchange-left no-child-ack > without-ack.json
+./target/release/platonik run without-ack.json > without-ack-receipt.json
+./target/release/platonik habitat exchange-check bloom-exchange-left without-ack-receipt.json
+```
+
+The grade reports a service timestamp with `acknowledgment_passed: false`. This seed-removal control also fails the unchanged-seed admission and generation requirements. `habitat cases` lists the available reference worlds; `habitat help` lists the controls. Existing habitat initialization, advance, export, and import commands can carry these fresh worlds through checked pauses. The generic expedition `prepare` command does not substitute its incompatible role IDs into an exchange.
+
+## Limits and the next gate
+
+The fixture has nine active cells after two births, thirteen links, two candidate bodies, and one confirmation obligation. The new seed extends the earlier seed with report handling and acknowledgment; this is adaptation with recorded ancestry, not unchanged courier reuse. The retained Keeper also needs a new memory policy to hold the report through the closed-valve interval. All its retries consume modeled work.
+
+A scheduled valve reopening creates the final service window. Receiving an acknowledgment does not itself authorize service: the no-ack control deliberately demonstrates that separation. This establishes ordered custody, acknowledgment, and service for the declared reference; it does not prove an acknowledgment-controlled economy.
+
+The six cases exclude the old late-reopening crossing schedules. The three-tick link delay already puts the requester acknowledgment at tick 125, one tick before service. Extending those schedules requires a separately qualified protocol or a larger runtime envelope. The earlier claim that a 16-cell bound makes composition impossible was too strong; it only ruled out a naive union of unshared roles.
+
+Next measure this exact workload's execution, verification, memory, and artifact costs, then run bounded agents against it with every failed candidate retained and transfer cases frozen before selection. Subsequent campaign work must still connect the other chapter transitions, repeated operation, and the final ending. Human playtesting comes after those useful automated investigations. This exchange does not establish scalable ecologies, research novelty, a P-versus-NP result, or human enjoyment.

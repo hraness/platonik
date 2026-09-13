@@ -76,6 +76,8 @@ const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
   platonik habitat ports-check <receipt.json|->\n\
   platonik habitat bloom <dir>\n\
   platonik habitat bloom-check <receipt.json|->\n\
+  platonik habitat exchange-check <case-id> <receipt.json|->\n\
+  platonik habitat exchange-control <case-id> <kind>\n\
   platonik habitat arithmetic-case <a> <b> <tap>\n\
   platonik habitat cases\n\
   platonik habitat case <id>\n\
@@ -118,10 +120,21 @@ Both return exit 0 for valid evidence, including unfinished or failed blooms;\n\
 inspect generated_passed, trials_passed, selection_passed, confirmation_passed,\n\
 service_passed, and bloomed separately. This is bounded in-world variation.\n\
 \n\
+Exchange-check freshly verifies a receipt once against the named exchange case.\n\
+It returns exit 0 for valid evidence, including failed exchanges; inspect\n\
+exchange_passed and the separate stage predicates. Only initial-cell programs\n\
+may differ from the named world. This is one generated-courier exchange in a\n\
+single v4 world, not the full campaign or the two-lane Ports contract.\n\
+Exchange-control exports a Rust-authored negative-control experiment without\n\
+running it; exchange-check grades its resulting receipt against the base case.\n\
+Kinds: no-child-ack, forged-report, wrong-winner, early-ack, no-request,\n\
+missing-spare, selector-bypass, stray-report. Case identifiers are listed by habitat cases.\n\
+\n\
 Prepare verifies an expedition's frozen pair and prints a case Experiment with\n\
 those courier/controller programs. It does not modify that separate collection\n\
 or authenticate ownership. A missing controller is supplied in its child\n\
 blueprint and must still be built. Use a new filename for redirected output.\n\n\
+Exchange cases do not support Prepare's fixed courier/controller role mapping.\n\n\
 Exit 1 means init/advance/recover finished with a valid mission failure; a valid\n\
 failed habitat can status/verify/import with exit 0. Exit 2 is invalid input,\n\
 stale revision, corruption, or an operational error. Prefix --metrics to count\n\
@@ -465,6 +478,19 @@ fn execute_habitat(args: &[String]) -> Result<u8, Failure> {
         [command, input] if command == "bloom-check" => {
             let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
             print_json(&platonik_core::bloom::grade_receipt(&receipt).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, case_id, input] if command == "exchange-check" => {
+            let receipt: check::Receipt = read_json(input, MAX_RECEIPT_BYTES)?;
+            print_json(
+                &platonik_core::bloom_exchange::grade_receipt(case_id, &receipt).map_err(error)?,
+            )?;
+            Ok(0)
+        }
+        [command, case_id, kind] if command == "exchange-control" => {
+            print_json(
+                &platonik_core::bloom_exchange_fixtures::control(case_id, kind).map_err(error)?,
+            )?;
             Ok(0)
         }
         [command, a, b, tap] if command == "arithmetic-case" => {
