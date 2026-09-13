@@ -51,9 +51,13 @@ const expected=[...ledger.plan.references.map(case_id=>({case_id,kind:'reference
 assert.deepEqual(ledger.attempts.map(({case_id,kind})=>({case_id,kind})),expected);
 const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'platonik-exchange-admit-'));
 let executions=0;
+// Admission uses the current debug build, like the other evidence checkers.
+// The archived release-binary identity describes the historical qualification.
+const binary=path.resolve(process.env.PLATONIK_CLI??'target/debug/platonik');
 const cli=args=>{
-  const result=spawnSync(path.resolve('target/release/platonik'),['--metrics',...args],{encoding:'utf8',maxBuffer:32*1024*1024,timeout:60000});
-  assert.equal(result.status,0,result.stderr);
+  const result=spawnSync(binary,['--metrics',...args],{encoding:'utf8',maxBuffer:32*1024*1024,timeout:60000});
+  if(result.error)throw result.error;
+  assert.equal(result.status,0,`${result.stderr}\nCLI terminated with signal ${result.signal??'none'}`);
   const metrics=result.stderr.trim().split('\n').filter(Boolean).map(JSON.parse).filter(v=>v.schema==='platonik-process-metrics-v1');
   assert.equal(metrics.length,1);executions+=metrics[0].engine_executions;
   return JSON.parse(result.stdout);
