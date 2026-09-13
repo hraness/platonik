@@ -1,0 +1,2894 @@
+{
+  "schema": "platonik-bloom-exchange-qualification-v1",
+  "scope": "One generated child fulfills one custody obligation through an explicit adapter within a fresh v4 world. Functional qualification only; not the legacy PortsGrade, full campaign, independent agent search, or capacity admission.",
+  "protocol": {
+    "schema": "platonik-bloom-exchange-protocol-v1",
+    "references": [
+      "bloom-exchange-left",
+      "bloom-exchange-right",
+      "bloom-exchange-left-delay",
+      "bloom-exchange-right-delay",
+      "bloom-exchange-rotated-left",
+      "bloom-exchange-rotated-right"
+    ],
+    "controls": [
+      "no-child-ack",
+      "forged-report",
+      "wrong-winner",
+      "early-ack",
+      "no-request",
+      "missing-spare",
+      "selector-bypass",
+      "stray-report"
+    ],
+    "control_case": "bloom-exchange-left",
+    "maximum_engine_executions": 64,
+    "scope": "One generated child fulfills one custody obligation through an explicit adapter within a fresh v4 world. Functional qualification only; not the legacy PortsGrade, full campaign, independent agent search, or capacity admission."
+  },
+  "source_files": {
+    "Cargo.lock": "dc9b3d71e43601172444edf3cdf16edc6ed50d1fc494d9708f344c018f5a8584",
+    "Cargo.toml": "1880cbd83b8e24cf7843dd1ab6a4b15739a07c67b21b1003d90bddcb4a86b7db",
+    "crates/platonik-cli/Cargo.toml": "718cf728704c6edc3e83db908fd9f42636156f455ffebb12f12c0e2ba3cd738e",
+    "crates/platonik-cli/examples/benchmark.rs": "9e09c271d90e9f4f9f992d591661c25b4cb6a2bab0b362866fc9ba290c604796",
+    "crates/platonik-cli/src/expedition_store.rs": "d545ada68ddd9610ed0e551a8d62a8bb7bc9bd62612db10f26fa10b480386d17",
+    "crates/platonik-cli/src/habitat_store.rs": "547ca6935d5fae3d4f48b1a8b90850165939f783cf924cc9352af0f3dd0d3f3e",
+    "crates/platonik-cli/src/journal.rs": "d347f9dd993dcc38bf2070d95805a9f54223ae0f48d9b6775feb0e33ea94d276",
+    "crates/platonik-cli/src/main.rs": "1e6269360ffdcdeed1380c3a3655dbcf2cc51ea9331a83ed30b1be907e593c0e",
+    "crates/platonik-cli/tests/bloom_cli.rs": "a3adce8d8be1567569da64e2e241be0ac949fde0f5a028e89261cfb946f8c29f",
+    "crates/platonik-cli/tests/cli.rs": "3d78eb1124ff5efe5c3784c6c5a42f9cf1ffea4bc7bdc61da8cdfc287d4c1d8d",
+    "crates/platonik-cli/tests/exchange_cli.rs": "54b5f7f3d1e9ffe39ed742935662d93598641b7da5db9082ab54ced436983d7d",
+    "crates/platonik-cli/tests/expedition_cli.rs": "ef8d6435dff3c5ea1cfed8bdbb74647d3a6503aa34a2ce75a5eba1b2b0b8548b",
+    "crates/platonik-cli/tests/habitat_cli.rs": "7345761741ee89888fa9b3b3a3efd272946be0d778c1d6a200ec0a091679ab63",
+    "crates/platonik-core/Cargo.toml": "96c6334c2b8e83f224114695b9c1677e194aa8413cc7876835c1f22a19e8ed09",
+    "crates/platonik-core/examples/answer_capacity.rs": "68aa7319db05e0384793c9249c81dfb7f7b4d0ff1856e2b0c600e18f0e8ea763",
+    "crates/platonik-core/examples/ark_capacity.rs": "76da6bbf73f4fc533292d3e37951eee4a133c73fc0b6d24f5ec9eb3eb292cee6",
+    "crates/platonik-core/examples/bloom_capacity.rs": "5bf0a6b4933f2b5da97bf684fb9f4c75e2f2936a3cb1d61489048a4c65cc9741",
+    "crates/platonik-core/examples/construction_capacity.rs": "df0b3bd0f91c57cacb817f0ea6a3757cfe11edaa50976cc95cf65db04c3a889e",
+    "crates/platonik-core/examples/ports_capacity.rs": "c58d41774307fadb992a7dd5454d759279e0cbd183910eda9cee5a181f569d5a",
+    "crates/platonik-core/src/answer_fixtures.rs": "4919aa44aa38334dee0a54a63a2d77995b4d22bd15707b230a37cef4be59af15",
+    "crates/platonik-core/src/ark_control.rs": "fb9fea65ddb75a49bcd9fe229fe320a3aee6a8310bdde29acf80097ce521ae24",
+    "crates/platonik-core/src/ark_fixtures.rs": "004530790d4bf4ee1969ec05852672e489d960f88385e8bf12a2b530ce6e29bb",
+    "crates/platonik-core/src/bloom.rs": "cf0d4ca5b5a541bb5db605ce70ade4a2c83db76125bd54b6758601dc9d9d962e",
+    "crates/platonik-core/src/bloom_exchange.rs": "d77d7db3d982d89e830ebe7a4a54007fe4e22f4b3c043689188f84650ead488d",
+    "crates/platonik-core/src/bloom_exchange_fixtures.rs": "977ab3681e590b7f45ba9a44a73fbc1526c5ad75972682ad9ea4fef2432e2a2e",
+    "crates/platonik-core/src/bloom_fixtures.rs": "ff237ccee71c6dc629829f4c2a7792f03401b87e2d14b33c9514687775c37492",
+    "crates/platonik-core/src/bloom_ports_composition.rs": "ba191b0655fd46e3563760d04e39bddc050d78036287e7d99f7de98795eb527b",
+    "crates/platonik-core/src/check.rs": "c7349c86427ed90dbe019edf0f9daa6fc7d8a6c5e6037171397358bcaf41e634",
+    "crates/platonik-core/src/check_construction.rs": "0ecf8fd41d1548746828d837141a1c69cc31d09b343f409df18b9564cd8232a7",
+    "crates/platonik-core/src/construction.rs": "2d1a50144732ca58c02924891b46b0f59f6af3171bb5076a29e21239c74e9e33",
+    "crates/platonik-core/src/construction_fixtures.rs": "0bb9f6203ae465247e5a8cdf296224de34c715824045dd55422c7029dfad4e51",
+    "crates/platonik-core/src/continuation.rs": "755548725ad81b965d1853966cfdf58b178c057e0b079f6c6746263ce14b8bf6",
+    "crates/platonik-core/src/continuity_fixtures.rs": "69c012303cdbce3a99bd4d94514f93526a79d6de9ba786c927ffe800249dec40",
+    "crates/platonik-core/src/expedition.rs": "324844414572ca46af225f4bf39215bfe66579c14f36add455d7dcdfc42b5757",
+    "crates/platonik-core/src/expedition_fixtures.rs": "e98f0d994b563ce82c939802a6128767deb5b0f16d6bff5c19ad4a329d372725",
+    "crates/platonik-core/src/first_answer.rs": "b3b74a99469627ee1c5894a7cd81d942b330d262ac0b12e0d2f1ea7ce5c28b0f",
+    "crates/platonik-core/src/fixtures.rs": "1cff49eb3195df9dab141d888a771d2c6080d530a5596a1e97dfb619b465ff2d",
+    "crates/platonik-core/src/lib.rs": "aebfc9ed7a79fc4d4e60e8cbaa361c5c2392edc7c74c3fabba0d3cab178e8c0d",
+    "crates/platonik-core/src/model.rs": "d600cd1f7b0d6c4e063b3484fe0779fb2757af9bd8e04bb13353017d86cf659b",
+    "crates/platonik-core/src/policy.rs": "205b01cc363cac595dc7ef226c48e7a8d72f2b934aad81a8b67e073e09a24262",
+    "crates/platonik-core/src/port_commitments.rs": "e58d63e95860edc1ecabde4f7ed10fe107859d17628000406b803acac3e80fda",
+    "crates/platonik-core/src/port_fixtures.rs": "16f6b06fa6414def8bc2a13c1386a6643a6ea0ef59962662787e5b9467e7d993",
+    "crates/platonik-core/src/sim.rs": "8609bf4e8f051483e61a27a762f3ba55ee683932d4af57505cb6b1dd0bf6be02",
+    "crates/platonik-core/src/suite.rs": "caf4e288ddeca5c06bf1782bcf6e30c5a2a9549b94b23032691eff2768ead220",
+    "crates/platonik-core/tests/answer_fixtures.rs": "59315547f08a076e43e2bb2bd43bf9e5301eae59a45e30af968f842c10335ae4",
+    "crates/platonik-core/tests/ark_control.rs": "1361dcba0366dad8f4150d135052e2400d1c9d2039132d26b38dec0deba2311a",
+    "crates/platonik-core/tests/ark_fixtures.rs": "4229ab880162ccab2d5ab7889a5e4b09e9d369da25c897532b51c56b086acb64",
+    "crates/platonik-core/tests/bloom.rs": "ca21e9fb183539f06bd75047dcd4f8ddcc5a9790e94a06d9a21a17daa854c4d5",
+    "crates/platonik-core/tests/bloom_exchange.rs": "2e8677a6566b390ef4973d2dc81654d00379fdf6df2f23e417530841cd935da2",
+    "crates/platonik-core/tests/bloom_exchange_fixture.rs": "716c0b792c97446cdaaf8e4c84c38b3587756839bb591604cf944cc5fad3abec",
+    "crates/platonik-core/tests/bloom_ports_composition.rs": "e016d4a52e7d5f5d01070f8f9184cedd613100b64f030597d58f72f99c41c468",
+    "crates/platonik-core/tests/bridge.rs": "4bac3643ebca65e17789d4918798e2d91350dd1f2cbaafbb3c197100386a0f94",
+    "crates/platonik-core/tests/construction.rs": "ae364aec5e0cc1e2c074aea5454c4518f128e56fc0f8ba67c76465e212f3a4db",
+    "crates/platonik-core/tests/construction_check.rs": "d07223003ee8bdac814f1d9d3bbfe64fb4bede3650c8d0c73272430dbd452f14",
+    "crates/platonik-core/tests/continuation.rs": "70dff3cd955f89fde5f162cb922fac64abe24620005c3abcaaaf09e5a08158bd",
+    "crates/platonik-core/tests/continuation_metrics.rs": "cc8e411cbd4e97d9537f9b044a499df5d9092ce9fa709dd2db2ed3583959f4b7",
+    "crates/platonik-core/tests/continuity_fixtures.rs": "1ab06d09bf9bdaff48f8658ad8b78d0d4b90d68f1e57d1f81b01c2adbf377201",
+    "crates/platonik-core/tests/edges_exhaustive.rs": "4934f86e898710935f8152216c398e43fdc0eb82e13cae1c2e6f187b8d643be8",
+    "crates/platonik-core/tests/expedition.rs": "97bc4bd4d77bf3c9f1d2623a0333a8a7f3e261b763a244538a047b3d60fc38f1",
+    "crates/platonik-core/tests/expedition_fixtures.rs": "496ef08ee33e5796bbcb9784f1e04bb33366ad9996e261910932089e9f4a3bdc",
+    "crates/platonik-core/tests/first_answer.rs": "8d4808f5ee34353d445e168a36d41538664add2acaf99aafe4d0d87d5dbfef89",
+    "crates/platonik-core/tests/port_commitments.rs": "cb2a132b1c966102b0459cff41a7bf61539b5ccf273b166aff83b6dc8e032315",
+    "crates/platonik-core/tests/port_fixtures.rs": "4ef563c2e8210d8274e9e3fe9412c866f8c53f952109b30a7a04b5bfe5565acb",
+    "crates/platonik-core/tests/variation.rs": "ecf24b402dd02eb6cc85ab9bb3baee2caec7a3f333c3de5847a702c6bd01904d",
+    "crates/platonik-core/tests/variation_check.rs": "ae692a5d8b7f8a7f670a376cd43858989ae16114f8b435d2aee20684ed5ba18c",
+    "fixtures/evidence/continuity-inputs/previous-resilient--changing-one.json": "4bbb15caea63e156f3c61f9cffc338bd7384284c6413056dcf684f54dc5eb3d9",
+    "fixtures/evidence/continuity-protocol.json": "afb9f05572082229cc7c4a74f78f16e8c9210f76dd7fd9a0b2a7f21df05a8ebb",
+    "fixtures/evidence/expedition-protocol.json": "75fd7e221d8eab1eef16a07671418a9856949abe2cae1af2baaeeb15f08824fd",
+    "fixtures/evidence/expedition-study.json": "b7333cbeb9775c7ed6b5388baf11e010da714d56085bef0219b30ff81efe92ad",
+    "fixtures/evidence/navigation-repair-submissions/compass-goal-heading.json": "dbf0de8bd8d0bd4c2db821244a4dc628e86ff94012f36e8bf6693d3be7876b7b",
+    "rust-toolchain.toml": "559f488c181e0e9e77cf17c29de663977f036ec7ff2e2060585714bf53c52d62",
+    "scripts/bloom/agent-session.mjs": "9b702f6890cbbbae19da5f8cc6d4c91f143ce1fb4a8e39e5dcd62bec7d4c6256",
+    "scripts/bloom/collect-study.mjs": "4e365b55565e6502223958bb2220ee84333a533a4ef6511613ad6760cbb17a0e",
+    "scripts/bloom/common.mjs": "d7f58aaaebc5630816445ee6ce5b9090a578c701f5f3129ca2f2903603865d06",
+    "scripts/bloom/compose.mjs": "1bf29ad8b67940c878ec5a97c299aa617e620585f4ef8b0c05464b1a4c488fbc",
+    "scripts/bloom/prepare-study.mjs": "d41f39da9a994e743450ed5c61adf73e5e9b9e034e6bfe950d42a7667d764a48",
+    "scripts/bloom/qualify.mjs": "2c6bbf71c6622efd2cca9d33983333a0c18fa4b0303d811c8770796e6dadf64c",
+    "scripts/bloom/study-common.mjs": "ebcfb14f5572145aedc1651f0804f68734fec55ec8989d50cb9cae10501c4dd9",
+    "scripts/exchange/qualify.mjs": "db1992d89d5947927906e82a421baa3239e9abf73ab9d86f489ada8891d7349f"
+  },
+  "binary_sha256": "b33e4723458214459de544ded6628fca74a878aa271e34a3ff5a2417954cef0e",
+  "archive_sha256": "4ef98ac6da55304b25f6e69662e0c2da98eaebe24749ec1cdf8e1a32fa6f20cc",
+  "packer_sha256": "319813c74553027c6b8984a02e07e14e08bb3014e8cb0199be1a109bb42e8445",
+  "engine_executions": 28,
+  "results": [
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "reference",
+      "index": 0,
+      "completed": true,
+      "first_call": 0,
+      "input": "0000.stdout.json",
+      "receipt": "0001.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:baf91e1a39b551b140ec8f6651a704ccd14689ff533969daa18b32830c2af9fa",
+        "result_hash": "sha256:05d2181d9f1deb8a2f8eeb9dc279f29c1e48fbca12e39833410964e7fa925a5b",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 101,
+          "signal": {
+            "id": 106,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 101,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 102,
+        "accepted": 106,
+        "depot_report": {
+          "tick": 107,
+          "signal": {
+            "id": 120,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 106,
+            "deliver_tick": 107,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": {
+          "tick": 111,
+          "signal": {
+            "id": 131,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 110,
+            "deliver_tick": 111,
+            "receipt_spark": 101
+          }
+        },
+        "child_ack": {
+          "tick": 113,
+          "signal": {
+            "id": 136,
+            "link": 53,
+            "from": {
+              "kind": "cell",
+              "id": 3,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 112,
+            "deliver_tick": 113,
+            "receipt_spark": 101
+          }
+        },
+        "acknowledgment": {
+          "tick": 115,
+          "signal": {
+            "id": 141,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 114,
+            "deliver_tick": 115,
+            "receipt_spark": 101
+          }
+        },
+        "serviced": 126,
+        "work_total": 68903,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": true,
+        "service_passed": true,
+        "exchange_passed": true
+      },
+      "exchange_passed": true,
+      "service_deliveries": 2,
+      "work": 68903,
+      "after_call": 3
+    },
+    {
+      "case_id": "bloom-exchange-right",
+      "kind": "reference",
+      "index": 1,
+      "completed": true,
+      "first_call": 3,
+      "input": "0003.stdout.json",
+      "receipt": "0004.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-right",
+        "experiment_hash": "sha256:60ba7dfd5300b51804f9a93da1e9bbe57b95322dbfc129f0ac4e1dcd367bcab2",
+        "result_hash": "sha256:a6f513f2026256702d63d7fec8b94e2137eda2dc14afa7c41526a8e20c694886",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          }
+        ],
+        "selected_candidate": 1,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 44,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 1,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 200
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 101,
+          "signal": {
+            "id": 106,
+            "link": 47,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 1
+            },
+            "to_cell": 4,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 101,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 102,
+        "accepted": 106,
+        "depot_report": {
+          "tick": 107,
+          "signal": {
+            "id": 118,
+            "link": 41,
+            "from": {
+              "kind": "depot",
+              "id": 13
+            },
+            "to_cell": 6,
+            "to_port": 1,
+            "bit": false,
+            "sent_tick": 106,
+            "deliver_tick": 107,
+            "receipt_spark": 201
+          }
+        },
+        "child_report": {
+          "tick": 111,
+          "signal": {
+            "id": 131,
+            "link": 47,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 1
+            },
+            "to_cell": 4,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 110,
+            "deliver_tick": 111,
+            "receipt_spark": 201
+          }
+        },
+        "child_ack": {
+          "tick": 113,
+          "signal": {
+            "id": 134,
+            "link": 54,
+            "from": {
+              "kind": "cell",
+              "id": 4,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 112,
+            "deliver_tick": 113,
+            "receipt_spark": 201
+          }
+        },
+        "acknowledgment": {
+          "tick": 115,
+          "signal": {
+            "id": 142,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 114,
+            "deliver_tick": 115,
+            "receipt_spark": 201
+          }
+        },
+        "serviced": 126,
+        "work_total": 69104,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": true,
+        "service_passed": true,
+        "exchange_passed": true
+      },
+      "exchange_passed": true,
+      "service_deliveries": 2,
+      "work": 69104,
+      "after_call": 6
+    },
+    {
+      "case_id": "bloom-exchange-left-delay",
+      "kind": "reference",
+      "index": 2,
+      "completed": true,
+      "first_call": 6,
+      "input": "0006.stdout.json",
+      "receipt": "0007.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left-delay",
+        "experiment_hash": "sha256:89173eb28aea13a0d9391df1c202d2561b74bd4675be09aef83fd7026b4596f1",
+        "result_hash": "sha256:4d6da70c98838a3424e2770885bd7ed1b76a054c00221edcf9b17d1877fe286b",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:156da44ffb9e9560b3f2f7f46c2c2c1a780fbbc7f4ee74523fe0bcb722102446",
+                "after_hash": "sha256:5be3c7e443bd173703d6758521ffc65c18162474c4f4074ad2898587216607d4",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:5be3c7e443bd173703d6758521ffc65c18162474c4f4074ad2898587216607d4",
+                "after_hash": "sha256:ee4ebd8c3a2526e5c5963bd8d08ed1401522cebf4da8930c5538f7670ddb7080",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:69fd008eb9a1dfe5fc66f5dcf5128c8b7bcc071183e03f71e3feab079bf3668c",
+                "after_hash": "sha256:0c3bbde172d32c7604794f4c6ccad4b98e94262b5ea6ffe39782e3b6a4a8a1a0",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:0c3bbde172d32c7604794f4c6ccad4b98e94262b5ea6ffe39782e3b6a4a8a1a0",
+                "after_hash": "sha256:86b9bb93e2e489ec7a3b08563ff53007f54e08afe3fce1146fb27f9be53b35d7",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 87,
+          "signal": {
+            "id": 87,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 85,
+            "deliver_tick": 87,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 102,
+          "signal": {
+            "id": 105,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 102,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 103,
+        "accepted": 107,
+        "depot_report": {
+          "tick": 109,
+          "signal": {
+            "id": 122,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 107,
+            "deliver_tick": 109,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": {
+          "tick": 115,
+          "signal": {
+            "id": 137,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 113,
+            "deliver_tick": 115,
+            "receipt_spark": 101
+          }
+        },
+        "child_ack": {
+          "tick": 118,
+          "signal": {
+            "id": 144,
+            "link": 53,
+            "from": {
+              "kind": "cell",
+              "id": 3,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 116,
+            "deliver_tick": 118,
+            "receipt_spark": 101
+          }
+        },
+        "acknowledgment": {
+          "tick": 120,
+          "signal": {
+            "id": 153,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 119,
+            "deliver_tick": 120,
+            "receipt_spark": 101
+          }
+        },
+        "serviced": 126,
+        "work_total": 69233,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": true,
+        "service_passed": true,
+        "exchange_passed": true
+      },
+      "exchange_passed": true,
+      "service_deliveries": 2,
+      "work": 69233,
+      "after_call": 9
+    },
+    {
+      "case_id": "bloom-exchange-right-delay",
+      "kind": "reference",
+      "index": 3,
+      "completed": true,
+      "first_call": 9,
+      "input": "0009.stdout.json",
+      "receipt": "0010.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-right-delay",
+        "experiment_hash": "sha256:066ecf067af476aec19cfe682a29c0be8ba0ee2d299e3cbce435730bd1945c00",
+        "result_hash": "sha256:4bd31411b5f12e0fe9021e856bca4801fd1e9a6016666fd76ba41b4e6b73194c",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:156da44ffb9e9560b3f2f7f46c2c2c1a780fbbc7f4ee74523fe0bcb722102446",
+                "after_hash": "sha256:5be3c7e443bd173703d6758521ffc65c18162474c4f4074ad2898587216607d4",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:5be3c7e443bd173703d6758521ffc65c18162474c4f4074ad2898587216607d4",
+                "after_hash": "sha256:ee4ebd8c3a2526e5c5963bd8d08ed1401522cebf4da8930c5538f7670ddb7080",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:69fd008eb9a1dfe5fc66f5dcf5128c8b7bcc071183e03f71e3feab079bf3668c",
+                "after_hash": "sha256:0c3bbde172d32c7604794f4c6ccad4b98e94262b5ea6ffe39782e3b6a4a8a1a0",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:0c3bbde172d32c7604794f4c6ccad4b98e94262b5ea6ffe39782e3b6a4a8a1a0",
+                "after_hash": "sha256:86b9bb93e2e489ec7a3b08563ff53007f54e08afe3fce1146fb27f9be53b35d7",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          }
+        ],
+        "selected_candidate": 1,
+        "selection": {
+          "tick": 87,
+          "signal": {
+            "id": 87,
+            "link": 44,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 1,
+            "bit": false,
+            "sent_tick": 85,
+            "deliver_tick": 87,
+            "receipt_spark": 200
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 102,
+          "signal": {
+            "id": 105,
+            "link": 47,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 1
+            },
+            "to_cell": 4,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 102,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 103,
+        "accepted": 107,
+        "depot_report": {
+          "tick": 109,
+          "signal": {
+            "id": 122,
+            "link": 41,
+            "from": {
+              "kind": "depot",
+              "id": 13
+            },
+            "to_cell": 6,
+            "to_port": 1,
+            "bit": false,
+            "sent_tick": 107,
+            "deliver_tick": 109,
+            "receipt_spark": 201
+          }
+        },
+        "child_report": {
+          "tick": 115,
+          "signal": {
+            "id": 137,
+            "link": 47,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 1
+            },
+            "to_cell": 4,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 113,
+            "deliver_tick": 115,
+            "receipt_spark": 201
+          }
+        },
+        "child_ack": {
+          "tick": 118,
+          "signal": {
+            "id": 143,
+            "link": 54,
+            "from": {
+              "kind": "cell",
+              "id": 4,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 116,
+            "deliver_tick": 118,
+            "receipt_spark": 201
+          }
+        },
+        "acknowledgment": {
+          "tick": 120,
+          "signal": {
+            "id": 154,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 119,
+            "deliver_tick": 120,
+            "receipt_spark": 201
+          }
+        },
+        "serviced": 126,
+        "work_total": 69428,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": true,
+        "service_passed": true,
+        "exchange_passed": true
+      },
+      "exchange_passed": true,
+      "service_deliveries": 2,
+      "work": 69428,
+      "after_call": 12
+    },
+    {
+      "case_id": "bloom-exchange-rotated-left",
+      "kind": "reference",
+      "index": 4,
+      "completed": true,
+      "first_call": 12,
+      "input": "0012.stdout.json",
+      "receipt": "0013.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-rotated-left",
+        "experiment_hash": "sha256:1db2de672b92ab82a8c7930e621f5fd63490c2a9dafcf0ea353900a00fb9623b",
+        "result_hash": "sha256:f7328156e2d9599d42d820891ed4cbc26e3a5b91ae71f5b1d407a6f5167c61ed",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:1ed4420284a8dfef8211672aaf2fd97e4defb4fb13e8555694e8d8551aac73c3",
+                "after_hash": "sha256:8dde0831b6b1d22f75e80e83b32c111dfd97e1f50f3e8dc0cd35bd8a8b7f4b7c",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:8dde0831b6b1d22f75e80e83b32c111dfd97e1f50f3e8dc0cd35bd8a8b7f4b7c",
+                "after_hash": "sha256:67bca8e4f142f0ecd7eef6f82272597704479dd26f0c1de37bdf51b469622308",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:b755aa640f97ed2708158314decc128887fa7f19b427c7f5ba4ff53762f35914",
+                "after_hash": "sha256:a82ece078c428dfc27ded8fcb28d6ec6447943ac6b8f4668a019c7f17bd0d698",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:a82ece078c428dfc27ded8fcb28d6ec6447943ac6b8f4668a019c7f17bd0d698",
+                "after_hash": "sha256:30da40bbc236dd4a5ca2d84c887998e20975b9236839efae3446cce2fc9079eb",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 89,
+          "signal": {
+            "id": 88,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 86,
+            "deliver_tick": 89,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 102,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 103,
+          "signal": {
+            "id": 107,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 103,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 104,
+        "accepted": 108,
+        "depot_report": {
+          "tick": 111,
+          "signal": {
+            "id": 124,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 108,
+            "deliver_tick": 111,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": {
+          "tick": 119,
+          "signal": {
+            "id": 142,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 116,
+            "deliver_tick": 119,
+            "receipt_spark": 101
+          }
+        },
+        "child_ack": {
+          "tick": 123,
+          "signal": {
+            "id": 150,
+            "link": 53,
+            "from": {
+              "kind": "cell",
+              "id": 3,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 120,
+            "deliver_tick": 123,
+            "receipt_spark": 101
+          }
+        },
+        "acknowledgment": {
+          "tick": 125,
+          "signal": {
+            "id": 165,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 124,
+            "deliver_tick": 125,
+            "receipt_spark": 101
+          }
+        },
+        "serviced": 126,
+        "work_total": 69566,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": true,
+        "service_passed": true,
+        "exchange_passed": true
+      },
+      "exchange_passed": true,
+      "service_deliveries": 2,
+      "work": 69566,
+      "after_call": 15
+    },
+    {
+      "case_id": "bloom-exchange-rotated-right",
+      "kind": "reference",
+      "index": 5,
+      "completed": true,
+      "first_call": 15,
+      "input": "0015.stdout.json",
+      "receipt": "0016.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-rotated-right",
+        "experiment_hash": "sha256:3ca5d4489bb56cbd07244c8cd76ce716b9da998fe22adef4d4192a81624ea28a",
+        "result_hash": "sha256:a967e7e6877824dd4e1d48d2f92f3d2918e039f56231b885fbf6fb459f26670a",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:1ed4420284a8dfef8211672aaf2fd97e4defb4fb13e8555694e8d8551aac73c3",
+                "after_hash": "sha256:8dde0831b6b1d22f75e80e83b32c111dfd97e1f50f3e8dc0cd35bd8a8b7f4b7c",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:8dde0831b6b1d22f75e80e83b32c111dfd97e1f50f3e8dc0cd35bd8a8b7f4b7c",
+                "after_hash": "sha256:67bca8e4f142f0ecd7eef6f82272597704479dd26f0c1de37bdf51b469622308",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:b755aa640f97ed2708158314decc128887fa7f19b427c7f5ba4ff53762f35914",
+                "after_hash": "sha256:a82ece078c428dfc27ded8fcb28d6ec6447943ac6b8f4668a019c7f17bd0d698",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:a82ece078c428dfc27ded8fcb28d6ec6447943ac6b8f4668a019c7f17bd0d698",
+                "after_hash": "sha256:30da40bbc236dd4a5ca2d84c887998e20975b9236839efae3446cce2fc9079eb",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          }
+        ],
+        "selected_candidate": 1,
+        "selection": {
+          "tick": 89,
+          "signal": {
+            "id": 88,
+            "link": 44,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 1,
+            "bit": false,
+            "sent_tick": 86,
+            "deliver_tick": 89,
+            "receipt_spark": 200
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 102,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 103,
+          "signal": {
+            "id": 107,
+            "link": 47,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 1
+            },
+            "to_cell": 4,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 103,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 104,
+        "accepted": 108,
+        "depot_report": {
+          "tick": 111,
+          "signal": {
+            "id": 123,
+            "link": 41,
+            "from": {
+              "kind": "depot",
+              "id": 13
+            },
+            "to_cell": 6,
+            "to_port": 1,
+            "bit": false,
+            "sent_tick": 108,
+            "deliver_tick": 111,
+            "receipt_spark": 201
+          }
+        },
+        "child_report": {
+          "tick": 119,
+          "signal": {
+            "id": 142,
+            "link": 47,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 1
+            },
+            "to_cell": 4,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 116,
+            "deliver_tick": 119,
+            "receipt_spark": 201
+          }
+        },
+        "child_ack": {
+          "tick": 123,
+          "signal": {
+            "id": 151,
+            "link": 54,
+            "from": {
+              "kind": "cell",
+              "id": 4,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 120,
+            "deliver_tick": 123,
+            "receipt_spark": 201
+          }
+        },
+        "acknowledgment": {
+          "tick": 125,
+          "signal": {
+            "id": 165,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 124,
+            "deliver_tick": 125,
+            "receipt_spark": 201
+          }
+        },
+        "serviced": 126,
+        "work_total": 69755,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": true,
+        "service_passed": true,
+        "exchange_passed": true
+      },
+      "exchange_passed": true,
+      "service_deliveries": 2,
+      "work": 69755,
+      "after_call": 18
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "no-child-ack",
+      "index": 6,
+      "completed": true,
+      "first_call": 18,
+      "input": "0018.stdout.json",
+      "receipt": "0019.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:96d84af5cd0e2d52336d268b82155a0881d59dc9f21578edee1411f58737f19f",
+        "result_hash": "sha256:64c049279367be3b07d843421628deec9b8f36d5f9f0d41d7f375308da763e46",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:4c60efee6c8e02bc7e28da98fd56888e213148011b7d7d1aad8d06e302a553e3",
+            "program_hash": "sha256:1d2cf60175757e5bc12d82270bcb0c111f143bb8a43317951fa4996665eac91e",
+            "born": 75,
+            "edits": [
+              {
+                "tick": 73,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:3df3bccc79d8816f2aea4c20f5c66545ee09150292fda95c7c3a41523a86dfed",
+                "after_hash": "sha256:fe30d320685a611e812b4f148c2247b13dfc51802abc2fdea1b8b251da7c183e",
+                "bytes_written": 2164
+              },
+              {
+                "tick": 74,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:fe30d320685a611e812b4f148c2247b13dfc51802abc2fdea1b8b251da7c183e",
+                "after_hash": "sha256:27ef777df73856e7fbc1da01c7845a8b9bba9ba88f7481d5232077661b29a9d2",
+                "bytes_written": 2161
+              }
+            ],
+            "generated": false,
+            "trial_pickup": 76,
+            "trial_returned": 82,
+            "trial_accepted": 80
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:4c60efee6c8e02bc7e28da98fd56888e213148011b7d7d1aad8d06e302a553e3",
+            "program_hash": "sha256:8d720068a2f52afcd0657df33ae34ebdc8411bfc5a1dccb55b6873b087cc51b0",
+            "born": 75,
+            "edits": [
+              {
+                "tick": 73,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:8dea33fc70a37b01c40b8446883f12f0adef1e5fd9a981b024a7b2d8fa1c3f0e",
+                "after_hash": "sha256:7668e4637f00db1345515787e1bd002c4e77d5e787dd07346e8445d7b4d797cf",
+                "bytes_written": 2165
+              },
+              {
+                "tick": 74,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:7668e4637f00db1345515787e1bd002c4e77d5e787dd07346e8445d7b4d797cf",
+                "after_hash": "sha256:36b9f216457088624b258a4e21d534868f8769fbd32e6996a4b2acd6a27bda81",
+                "bytes_written": 2163
+              }
+            ],
+            "generated": false,
+            "trial_pickup": 76,
+            "trial_returned": 81,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 83,
+          "signal": {
+            "id": 84,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 82,
+            "deliver_tick": 83,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 101,
+          "signal": {
+            "id": 106,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 101,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 102,
+        "accepted": 106,
+        "depot_report": {
+          "tick": 107,
+          "signal": {
+            "id": 120,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 106,
+            "deliver_tick": 107,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": {
+          "tick": 111,
+          "signal": {
+            "id": 131,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 110,
+            "deliver_tick": 111,
+            "receipt_spark": 101
+          }
+        },
+        "child_ack": null,
+        "acknowledgment": null,
+        "serviced": 126,
+        "work_total": 69298,
+        "fixed_world_passed": false,
+        "generation_passed": false,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": false,
+        "spare_preserved": true,
+        "service_passed": false,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 2,
+      "work": 69298,
+      "after_call": 21
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "forged-report",
+      "index": 7,
+      "completed": true,
+      "first_call": 21,
+      "input": "0021.stdout.json",
+      "receipt": "0022.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:406511d192be77e6ca04dcf916a81077bff28160fb4a7f7b73f003cc284ff537",
+        "result_hash": "sha256:87c00d04774845ff294a896d052f8bece855ec883c292c47342262e5bbe17890",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 101,
+          "signal": {
+            "id": 106,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 101,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 102,
+        "accepted": 106,
+        "depot_report": {
+          "tick": 107,
+          "signal": {
+            "id": 120,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 106,
+            "deliver_tick": 107,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": null,
+        "child_ack": null,
+        "acknowledgment": null,
+        "serviced": 126,
+        "work_total": 68917,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": false,
+        "spare_preserved": true,
+        "service_passed": false,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 2,
+      "work": 68917,
+      "after_call": 24
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "wrong-winner",
+      "index": 8,
+      "completed": true,
+      "first_call": 24,
+      "input": "0024.stdout.json",
+      "receipt": "0025.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:8feddadb9ea386bbf614292c05b4e36c54f2f3e5d4bfc1855e811181e930439f",
+        "result_hash": "sha256:6db2ab67bd5aed7a9a24ef233eb80d3b27fe19631e4c473c8d92a23f094c8c4b",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": null,
+        "pickup": null,
+        "accepted": null,
+        "depot_report": null,
+        "child_report": null,
+        "child_ack": null,
+        "acknowledgment": null,
+        "serviced": null,
+        "work_total": 70026,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": false,
+        "custody_passed": false,
+        "acknowledgment_passed": false,
+        "spare_preserved": true,
+        "service_passed": false,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 1,
+      "work": 70026,
+      "after_call": 27
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "early-ack",
+      "index": 9,
+      "completed": true,
+      "first_call": 27,
+      "input": "0027.stdout.json",
+      "receipt": "0028.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:c968b0dd328ec11f10464d0d4c4e7560ed56fedf1179030ff8c757ca180868b3",
+        "result_hash": "sha256:eb49c3e1bbf757824221135c438e8a25708616c494bd6985339490cdf932e32f",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": null,
+        "pickup": null,
+        "accepted": null,
+        "depot_report": null,
+        "child_report": null,
+        "child_ack": null,
+        "acknowledgment": null,
+        "serviced": null,
+        "work_total": 68203,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": false,
+        "custody_passed": false,
+        "acknowledgment_passed": false,
+        "spare_preserved": true,
+        "service_passed": false,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 1,
+      "work": 68203,
+      "after_call": 30
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "no-request",
+      "index": 10,
+      "completed": true,
+      "first_call": 30,
+      "input": "0030.stdout.json",
+      "receipt": "0031.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:94011a473f5695917ac098463303ae81456e90dd5fe3469f1c86a6df325bda03",
+        "result_hash": "sha256:7de15935fcad9ac2c375b31822d704a2b58e4d90418d88f9419ad414918e15cc",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": null,
+        "child_request": null,
+        "pickup": null,
+        "accepted": null,
+        "depot_report": null,
+        "child_report": null,
+        "child_ack": null,
+        "acknowledgment": null,
+        "serviced": null,
+        "work_total": 67878,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": false,
+        "custody_passed": false,
+        "acknowledgment_passed": false,
+        "spare_preserved": true,
+        "service_passed": false,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 1,
+      "work": 67878,
+      "after_call": 33
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "missing-spare",
+      "index": 11,
+      "completed": true,
+      "first_call": 33,
+      "input": "0033.stdout.json",
+      "receipt": "0034.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:e5f879f780f5747367feda9fa06640e3392aa240ed89c087ec191449c6d2aa8f",
+        "result_hash": "sha256:9192aa5068c40c62ebcede076235c28cf056d032bd9903c82df0858d4ff54db2",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 101,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 101,
+          "signal": {
+            "id": 106,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 101,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 102,
+        "accepted": 106,
+        "depot_report": {
+          "tick": 107,
+          "signal": {
+            "id": 120,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 106,
+            "deliver_tick": 107,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": {
+          "tick": 111,
+          "signal": {
+            "id": 131,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 110,
+            "deliver_tick": 111,
+            "receipt_spark": 101
+          }
+        },
+        "child_ack": {
+          "tick": 113,
+          "signal": {
+            "id": 136,
+            "link": 53,
+            "from": {
+              "kind": "cell",
+              "id": 3,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 112,
+            "deliver_tick": 113,
+            "receipt_spark": 101
+          }
+        },
+        "acknowledgment": {
+          "tick": 115,
+          "signal": {
+            "id": 141,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 114,
+            "deliver_tick": 115,
+            "receipt_spark": 101
+          }
+        },
+        "serviced": 126,
+        "work_total": 68751,
+        "fixed_world_passed": false,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": false,
+        "service_passed": true,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 2,
+      "work": 68751,
+      "after_call": 36
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "selector-bypass",
+      "index": 12,
+      "completed": true,
+      "first_call": 36,
+      "input": "0036.stdout.json",
+      "receipt": "0037.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:8d49b6452dfb8cf4154bd7b53d677ce08f68d7bb221a2b9e83957d205b338a22",
+        "result_hash": "sha256:f5a45027f9c1b9d37f350539037c1df7951536b5c8b6d2d0310e646f5221737c",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": null,
+        "child_request": {
+          "tick": 88,
+          "signal": {
+            "id": 91,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 87,
+            "deliver_tick": 88,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 89,
+        "accepted": 93,
+        "depot_report": {
+          "tick": 94,
+          "signal": {
+            "id": 97,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 93,
+            "deliver_tick": 94,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": {
+          "tick": 98,
+          "signal": {
+            "id": 105,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 97,
+            "deliver_tick": 98,
+            "receipt_spark": 101
+          }
+        },
+        "child_ack": {
+          "tick": 100,
+          "signal": {
+            "id": 110,
+            "link": 53,
+            "from": {
+              "kind": "cell",
+              "id": 3,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 99,
+            "deliver_tick": 100,
+            "receipt_spark": 101
+          }
+        },
+        "acknowledgment": {
+          "tick": 102,
+          "signal": {
+            "id": 117,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 101,
+            "deliver_tick": 102,
+            "receipt_spark": 101
+          }
+        },
+        "serviced": 94,
+        "work_total": 67954,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": false,
+        "custody_passed": true,
+        "acknowledgment_passed": true,
+        "spare_preserved": true,
+        "service_passed": false,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 2,
+      "work": 67954,
+      "after_call": 39
+    },
+    {
+      "case_id": "bloom-exchange-left",
+      "kind": "stray-report",
+      "index": 13,
+      "completed": true,
+      "first_call": 39,
+      "input": "0039.stdout.json",
+      "receipt": "0040.stdout.json",
+      "grade": {
+        "schema": "platonik-bloom-exchange-v1",
+        "case_id": "bloom-exchange-left",
+        "experiment_hash": "sha256:6ad4d26580a96e55cb489310161381724abdd555d5dfa8858d1089528634eae2",
+        "result_hash": "sha256:4ecf07dc3f9409bccd1546308511d5f82d733f57e5ec93e89b9dd0414654fed7",
+        "candidates": [
+          {
+            "child": 3,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:ed39f265b7560d95e9f50a8e3fb1ea2ac484e35882441fe174b8046ffc9fadd6",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 1,
+                "rule": 0,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:81fa870db76a1e1bc56364a01c5a811bcc2d5db5484273f6c70fca9c56871ee7",
+                "after_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "bytes_written": 2206
+              },
+              {
+                "tick": 76,
+                "actor": 1,
+                "rule": 1,
+                "slot": 1,
+                "value": 1,
+                "before_hash": "sha256:840d5ca1ef7cd30f6d7c8ce8dc3d1c62128d7ef9df02a48ce8a4c82bb31ee82f",
+                "after_hash": "sha256:f51bb9eda8fa25a78864cd92666c6bb709066fea9c0868de762fe48a3199802c",
+                "bytes_written": 2203
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 84,
+            "trial_accepted": 82
+          },
+          {
+            "child": 4,
+            "seed_hash": "sha256:313600352d4b6dbbd83592926360c4c46978e67ae35ae64789549f56fd9f6f33",
+            "program_hash": "sha256:95f41109747d16f4cfd0b45012ab13a07301b12c8cf8555829147a0199053f6b",
+            "born": 77,
+            "edits": [
+              {
+                "tick": 75,
+                "actor": 2,
+                "rule": 0,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:c7e1fa18a898804860193b97f926d98e5d187bbc4a17ee4344c632bab3471b5e",
+                "after_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "bytes_written": 2207
+              },
+              {
+                "tick": 76,
+                "actor": 2,
+                "rule": 1,
+                "slot": 1,
+                "value": 2,
+                "before_hash": "sha256:bd92a307aba19fe21f9b95498d4dea24ba3b6ebd0e5694545e7ca2603483c5ba",
+                "after_hash": "sha256:486434f1d46398c92781898cd1fe28b591db9b648add2768dfe99fd8ef56e1d3",
+                "bytes_written": 2205
+              }
+            ],
+            "generated": true,
+            "trial_pickup": 78,
+            "trial_returned": 83,
+            "trial_accepted": null
+          }
+        ],
+        "selected_candidate": 0,
+        "selection": {
+          "tick": 85,
+          "signal": {
+            "id": 85,
+            "link": 42,
+            "from": {
+              "kind": "cell",
+              "id": 6,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 84,
+            "deliver_tick": 85,
+            "receipt_spark": 100
+          }
+        },
+        "request": {
+          "tick": 99,
+          "signal": {
+            "id": 102,
+            "link": 48,
+            "from": {
+              "kind": "cell",
+              "id": 8,
+              "port": 0
+            },
+            "to_cell": 5,
+            "to_port": 2,
+            "bit": true,
+            "sent_tick": 98,
+            "deliver_tick": 99,
+            "receipt_spark": null
+          }
+        },
+        "child_request": {
+          "tick": 101,
+          "signal": {
+            "id": 107,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": true,
+            "sent_tick": 100,
+            "deliver_tick": 101,
+            "receipt_spark": null
+          }
+        },
+        "pickup": 102,
+        "accepted": 106,
+        "depot_report": {
+          "tick": 107,
+          "signal": {
+            "id": 121,
+            "link": 40,
+            "from": {
+              "kind": "depot",
+              "id": 11
+            },
+            "to_cell": 6,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 106,
+            "deliver_tick": 107,
+            "receipt_spark": 101
+          }
+        },
+        "child_report": {
+          "tick": 111,
+          "signal": {
+            "id": 132,
+            "link": 46,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 0
+            },
+            "to_cell": 3,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 110,
+            "deliver_tick": 111,
+            "receipt_spark": 101
+          }
+        },
+        "child_ack": {
+          "tick": 113,
+          "signal": {
+            "id": 137,
+            "link": 53,
+            "from": {
+              "kind": "cell",
+              "id": 3,
+              "port": 1
+            },
+            "to_cell": 5,
+            "to_port": 3,
+            "bit": false,
+            "sent_tick": 112,
+            "deliver_tick": 113,
+            "receipt_spark": 101
+          }
+        },
+        "acknowledgment": {
+          "tick": 115,
+          "signal": {
+            "id": 142,
+            "link": 52,
+            "from": {
+              "kind": "cell",
+              "id": 5,
+              "port": 2
+            },
+            "to_cell": 8,
+            "to_port": 0,
+            "bit": false,
+            "sent_tick": 114,
+            "deliver_tick": 115,
+            "receipt_spark": 101
+          }
+        },
+        "serviced": 126,
+        "work_total": 69583,
+        "fixed_world_passed": true,
+        "generation_passed": true,
+        "trials_passed": true,
+        "selection_passed": true,
+        "request_passed": true,
+        "custody_passed": true,
+        "acknowledgment_passed": false,
+        "spare_preserved": true,
+        "service_passed": true,
+        "exchange_passed": false
+      },
+      "exchange_passed": false,
+      "service_deliveries": 2,
+      "work": 69583,
+      "after_call": 42
+    }
+  ]
+}

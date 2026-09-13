@@ -17,6 +17,7 @@ run("cargo", ["test", "-p", "platonik-core", "--example", "construction_capacity
 run("cargo", ["test", "-p", "platonik-core", "--example", "answer_capacity", "--locked"]);
 run("cargo", ["test", "-p", "platonik-core", "--example", "ark_capacity", "--locked"]);
 run("cargo", ["test", "-p", "platonik-core", "--example", "ports_capacity", "--locked"]);
+run("cargo", ["build", "--locked", "-p", "platonik-cli"]);
 run("bun", ["scripts/record-bridge.ts", "--check"]);
 run("node", ["scripts/check-expedition-evidence.mjs"]);
 run("node", ["scripts/check-continuity-evidence.mjs"]);
@@ -28,3 +29,4 @@ run("node", ["scripts/check-answer-evidence.mjs"]);
 run("node", ["scripts/check-ark-evidence.mjs"]);
 run("node", ["scripts/check-ports-evidence.mjs"]);
 run("node", ["scripts/check-bloom-evidence.mjs"]);
+run("node", ["scripts/check-exchange-evidence.mjs"]);

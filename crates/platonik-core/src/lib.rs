@@ -2,6 +2,8 @@ pub mod answer_fixtures;
 pub mod ark_control;
 pub mod ark_fixtures;
 pub mod bloom;
+pub mod bloom_exchange;
+pub mod bloom_exchange_fixtures;
 pub mod bloom_fixtures;
 pub mod bloom_ports_composition;
 pub mod check;
