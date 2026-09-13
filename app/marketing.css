@@ -4,24 +4,11 @@ html { scroll-padding-top: 6.5rem; }
 .skip-link { z-index: 20; }
 .docs-sidebar { top: 6.5rem; }
 
-/* Bind material to this site's existing palette, including its light reading
- * pages. The homepage retains its established system-aware color scheme. */
+/* The shared palette owns every route; material is independent of appearance. */
 body[data-hraness-material="lantern"] {
   --background: var(--paper);
-  --surface: var(--paper);
   --foreground: var(--ink);
   --focus: var(--accent);
-}
-
-body:has(.home[data-hraness-marketing-preset]) {
-  color-scheme: light dark;
-  --paper: light-dark(#f9f9f6, #191c1a);
-  --ink: light-dark(#262c28, #e8ece7);
-  --muted: light-dark(#616a63, #b8c1bb);
-  --accent: light-dark(#304f3d, #bed5be);
-  --line: light-dark(#d9ddd5, #424942);
-  --wash: light-dark(#edf0e9, #282e29);
-  --background: var(--paper);
 }
 
 .site-header {
@@ -41,18 +28,25 @@ body:has(.home[data-hraness-marketing-preset]) {
 }
 
 .site-header .wordmark {
+  align-items: center;
+  display: inline-flex;
   font-family: var(--font-text);
   font-size: 1.125rem;
   font-weight: 600;
   letter-spacing: -.02em;
 }
 
+.site-header .brand-icon { flex: none; margin-inline: -.75rem -.25rem; }
+
+.site-header nav { margin-left: auto; }
+.site-appearance { flex: none; }
+
 .home[data-hraness-marketing-preset] {
   --body: "Nebula Sans", ui-sans-serif, system-ui, sans-serif;
   --font-text: var(--body);
   --display: var(--hraness-marketing-display-font);
   --hraness-site-accent: var(--accent);
-  --hraness-site-accent-ink: var(--paper);
+  --hraness-site-accent-ink: var(--hraness-palette-primary-foreground);
   font-family: var(--body);
   font-size: 1rem;
   width: 100%;
@@ -104,6 +98,8 @@ body:has(.home[data-hraness-marketing-preset]) {
   /* Wrapped navigation must not cover anchored content at enlarged text sizes. */
   .site-header { position: static; padding: .75rem 1.25rem; gap: .75rem; }
   .site-header nav { gap: 1rem; font-size: .8125rem; }
+  .site-header .wordmark { margin-right: auto; }
+  .site-header nav { order: 3; width: 100%; margin-left: 0; }
   .home .hero { padding-block: 2.75rem 2rem; }
   .home .hero-description { font-size: 1rem; max-width: 34ch; }
   .home .hero-links { flex-direction: row; align-items: center; gap: 1rem; }

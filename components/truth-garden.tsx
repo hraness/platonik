@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { thresholdMap, trajectory, type RuleId, type Schedule, type TruthPair } from "@/lib/observatory/truth";
+import { rgbChannels } from "@/lib/appearance";
+import { useObservatoryPaint } from "./observatory-paint";
 
 export function TruthGarden() {
   const [rule, setRule] = useState<RuleId>("squared");
@@ -13,6 +15,7 @@ export function TruthGarden() {
   const [radius, setRadius] = useState(.8);
   const [view, setView] = useState<"map" | "path">("map");
   const ref = useRef<HTMLCanvasElement>(null);
+  const paint = useObservatoryPaint();
   const map = useMemo(() => thresholdMap({ rule, schedule, iterations, radius, size: 192, center, zoom }), [rule, schedule, iterations, radius, center, zoom]);
   const path = useMemo(() => trajectory(seed, rule, schedule, iterations), [seed, rule, schedule, iterations]);
   const repeatedAt = useMemo(() => {
@@ -25,16 +28,16 @@ export function TruthGarden() {
     if (!canvas || !context) return;
     canvas.width = map.size; canvas.height = map.size;
     const pixels = context.createImageData(map.size, map.size);
+    const background = rgbChannels(paint.surface);
+    const early = rgbChannels(paint.success), late = rgbChannels(paint.warning);
     for (let i = 0; i < map.counts.length; i++) {
       const count = map.counts[i];
       const t = count ? Math.log1p(count) / Math.log1p(iterations) : 0;
-      pixels.data[i * 4] = count ? 42 + 155 * t : 249;
-      pixels.data[i * 4 + 1] = count ? 71 + 87 * t : 249;
-      pixels.data[i * 4 + 2] = count ? 54 + 50 * t : 246;
+      for (let channel = 0; channel < 3; channel++) pixels.data[i * 4 + channel] = count ? early[channel] * (1 - t) + late[channel] * t : background[channel];
       pixels.data[i * 4 + 3] = 255;
     }
     context.putImageData(pixels, 0, 0);
-  }, [map, iterations, view]);
+  }, [map, iterations, view, paint]);
   const { xMin, xMax, yMin, yMax } = map.domain;
   const px = (seed[0] - xMin) / (xMax - xMin) * 100;
   const py = (yMax - seed[1]) / (yMax - yMin) * 100;
@@ -51,9 +54,10 @@ export function TruthGarden() {
     <div className="specimen-bench truth-bench">
       <div>
         <div className="specimen-toolbar"><span>{view === "map" ? `Truth square · ${zoom}×` : `${iterations} revisions`}</span><div className="lab-view-switch"><button aria-pressed={view === "map"} onClick={() => setView("map")}>Landscape</button><button aria-pressed={view === "path"} onClick={() => setView("path")}>Trajectory</button></div></div>
-        {view === "map" ? <div className="truth-map-wrap"><button className="truth-map" onClick={chooseAt} aria-label="Choose a seed by clicking the map; keyboard activation chooses its center. Use the x and y sliders for precise control." aria-describedby="truth-map-summary"><canvas ref={ref} role="img" aria-label={`First threshold-crossing map: ${crossed} of ${map.size * map.size} sampled seeds crossed radius ${radius} within ${iterations} revisions. Horizontal axis x ${xMin.toFixed(3)} to ${xMax.toFixed(3)}, vertical axis y ${yMin.toFixed(3)} to ${yMax.toFixed(3)}.`} />{px >= 0 && px <= 100 && py >= 0 && py <= 100 && <span className="truth-cursor" style={{ left: `${px}%`, top: `${py}%` }} aria-hidden="true" />}</button><div className="truth-axis"><span>x {xMin.toFixed(3)}</span><span>{xMax.toFixed(3)}</span></div></div> : <svg className="truth-trajectory" viewBox="0 0 400 400" role="img" aria-label={`Trajectory of ${iterations} revisions from x ${seed[0].toFixed(4)}, y ${seed[1].toFixed(4)}. Both axes run from 0 to 1.`}><rect width="400" height="400" fill="#edf0e9" /><polyline points={path.map(([x, y]) => `${12 + x * 376},${388 - y * 376}`).join(" ")} fill="none" stroke="#304f3d" strokeWidth="1" opacity=".55" /><circle cx={12 + seed[0] * 376} cy={388 - seed[1] * 376} r="5" fill="#805d2d" /><circle cx={12 + path.at(-1)![0] * 376} cy={388 - path.at(-1)![1] * 376} r="4" fill="#304f3d" /></svg>}
+        {view === "map" ? <div className="truth-map-wrap"><button className="truth-map" onClick={chooseAt} aria-label="Choose a seed by clicking the map; keyboard activation chooses its center. Use the x and y sliders for precise control." aria-describedby="truth-map-summary"><canvas ref={ref} role="img" aria-label={`First threshold-crossing map: ${crossed} of ${map.size * map.size} sampled seeds crossed radius ${radius} within ${iterations} revisions. Horizontal axis x ${xMin.toFixed(3)} to ${xMax.toFixed(3)}, vertical axis y ${yMin.toFixed(3)} to ${yMax.toFixed(3)}.`} />{px >= 0 && px <= 100 && py >= 0 && py <= 100 && <span className="truth-cursor" style={{ left: `${px}%`, top: `${py}%` }} aria-hidden="true" />}</button><div className="truth-axis"><span>x {xMin.toFixed(3)}</span><span>{xMax.toFixed(3)}</span></div></div> : <svg className="truth-trajectory" viewBox="0 0 400 400" role="img" aria-label={`Trajectory of ${iterations} revisions from x ${seed[0].toFixed(4)}, y ${seed[1].toFixed(4)}. Both axes run from 0 to 1.`}><rect width="400" height="400" fill="var(--wash)" /><polyline points={path.map(([x, y]) => `${12 + x * 376},${388 - y * 376}`).join(" ")} fill="none" stroke="var(--specimen-ink)" strokeWidth="1" opacity=".55" /><circle cx={12 + seed[0] * 376} cy={388 - seed[1] * 376} r="5" fill="var(--specimen-warm)" /><circle cx={12 + path.at(-1)![0] * 376} cy={388 - path.at(-1)![1] * 376} r="4" fill="var(--specimen-ink)" /></svg>}
         {view === "map" && <p id="truth-map-summary" className="lab-note">{crossed.toLocaleString("en-US")} of {(map.size * map.size).toLocaleString("en-US")} sampled seeds crossed within {iterations} updates. The visible y range is {yMin.toFixed(3)}–{yMax.toFixed(3)}, increasing upward.</p>}
-        <p className="lab-note">{view === "map" ? "Each pixel starts a separate experiment. Dark green crosses the threshold sooner; ochre crosses later. Paper-colored points have not crossed within the cap. Click to choose a seed; use Zoom here to inspect a smaller region." : "The ochre dot is the initial pair; the green dot is the final pair. Lines join successive revisions in the full [0, 1] truth square. They are a trajectory, not an organism’s path through a world."}</p>
+        {view === "map" && <div className="truth-legend" aria-label="Threshold crossing colors"><span><i className="truth-early" aria-hidden="true" />Earlier</span><span><i className="truth-late" aria-hidden="true" />Later</span><span><i className="truth-unreached" aria-hidden="true" />Not within the cap</span></div>}
+        <p className="lab-note">{view === "map" ? "Each pixel starts a separate experiment. Color shows when it first crosses the threshold; background-colored points have not crossed within the cap. Click to choose a seed; use Zoom here to inspect a smaller region." : "The larger dot is the initial pair; the smaller dot is the final pair. Lines join successive revisions in the full [0, 1] truth square. They are a trajectory, not an organism’s path through a world."}</p>
       </div>
       <div className="lab-controls">
         <div className="lab-field"><label htmlFor="truth-rule">Coupled truth rules</label><select id="truth-rule" value={rule} onChange={event => setRule(event.target.value as RuleId)}><option value="squared">Grim’s second pair</option><option value="dualist">Grim’s first pair</option></select></div>

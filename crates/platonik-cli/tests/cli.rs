@@ -193,6 +193,55 @@ fn help_discovery_and_invalid_commands_match_the_public_surface() {
     }
 }
 
+#[test]
+fn redirected_help_and_machine_outputs_have_no_terminal_intro() {
+    let canonical = cli(&["--help"], None);
+    for args in [
+        vec![],
+        vec!["help"],
+        vec!["-h"],
+        vec!["--metrics", "--help"],
+    ] {
+        let output = cli(&args, None);
+        assert!(output.status.success());
+        assert_eq!(output.stdout, canonical.stdout);
+    }
+    assert!(canonical.stdout.starts_with(b"Platonik"));
+    assert!(canonical.stderr.is_empty());
+    for args in [
+        vec!["expedition", "help"],
+        vec!["habitat", "help"],
+        vec!["--version"],
+    ] {
+        let output = cli(&args, None);
+        assert!(output.status.success());
+        assert!(
+            !String::from_utf8(output.stdout)
+                .unwrap()
+                .contains("--( : )--")
+        );
+        assert!(output.stderr.is_empty());
+    }
+    let examples = cli(&["--metrics", "examples"], None);
+    assert!(examples.status.success());
+    assert_eq!(json(&examples.stdout)["schema"], "platonik-examples-v1");
+    assert_eq!(
+        json(&examples.stderr)["schema"],
+        "platonik-process-metrics-v1"
+    );
+    for args in [
+        vec!["--json"],
+        vec!["--jsonl"],
+        vec!["completions"],
+        vec!["help", "missing"],
+    ] {
+        let output = cli(&args, None);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(output.stdout.is_empty());
+        assert_eq!(json(&output.stderr)["schema"], "platonik-error-v1");
+    }
+}
+
 #[cfg(unix)]
 #[test]
 fn non_utf8_arguments_are_structured_errors_instead_of_panics() {

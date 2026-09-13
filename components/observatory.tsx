@@ -17,12 +17,12 @@ function Journey({ result, frame }: { result: ExperimentResult; frame: number })
   const state = result.trace[Math.min(frame, result.trace.length - 1)];
   const { world } = result;
   return <svg className="journey-map" viewBox={`0 0 ${world.width * 24} ${world.height * 24}`} role="img" aria-label={`Courier expedition at tick ${state.tick}. ${state.delivered} sparks delivered. Home is H, source is S. The line is the traveled route.`}>
-    <rect width="100%" height="100%" fill="#f9f9f6" />
-    {world.walls.map(({ x, y }) => <rect key={`${x}:${y}`} x={x * 24 + 2} y={y * 24 + 2} width="20" height="20" fill="#dde3d9" />)}
-    <polyline points={result.trace.slice(0, frame + 1).map(point => `${point.x * 24 + 12},${point.y * 24 + 12}`).join(" ")} fill="none" stroke="#668768" strokeWidth="2" opacity=".65" />
-    <text x={world.home.x * 24 + 12} y={world.home.y * 24 + 17} textAnchor="middle" fill="#304f3d" fontSize="14" fontWeight="bold">H</text>
-    <text x={world.source.x * 24 + 12} y={world.source.y * 24 + 17} textAnchor="middle" fill="#805d2d" fontSize="14" fontWeight="bold">S</text>
-    <circle cx={state.x * 24 + 12} cy={state.y * 24 + 12} r="6" fill={state.carrying ? "#ad7731" : "#304f3d"} stroke="#f9f9f6" strokeWidth="2" />
+    <rect width="100%" height="100%" fill="var(--surface)" />
+    {world.walls.map(({ x, y }) => <rect key={`${x}:${y}`} x={x * 24 + 2} y={y * 24 + 2} width="20" height="20" fill="var(--specimen-wall)" />)}
+    <polyline points={result.trace.slice(0, frame + 1).map(point => `${point.x * 24 + 12},${point.y * 24 + 12}`).join(" ")} fill="none" stroke="var(--specimen-ink)" strokeWidth="2" opacity=".65" />
+    <text x={world.home.x * 24 + 12} y={world.home.y * 24 + 17} textAnchor="middle" fill="var(--specimen-ink)" fontSize="14" fontWeight="bold">H</text>
+    <text x={world.source.x * 24 + 12} y={world.source.y * 24 + 17} textAnchor="middle" fill="var(--specimen-warm)" fontSize="14" fontWeight="bold">S</text>
+    <circle cx={state.x * 24 + 12} cy={state.y * 24 + 12} r="6" fill={state.carrying ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke="var(--surface)" strokeWidth="2" />
   </svg>;
 }
 
