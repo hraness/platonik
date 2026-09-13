@@ -24,12 +24,12 @@ function CircuitView({ circuit, frame }: { circuit: Circuit; frame: CircuitFrame
       if (source === null) return null;
       const from = positions.get(source)!; const to = positions.get(node.id)!;
       const bend = Math.min(from.y, to.y) - 20 - index * 7;
-      return <path key={`${node.id}-${index}`} d={`M ${from.x} ${from.y} C ${from.x} ${bend}, ${to.x} ${bend}, ${to.x} ${to.y}`} fill="none" stroke="#849981" strokeWidth="1" opacity=".45" />;
+      return <path key={`${node.id}-${index}`} d={`M ${from.x} ${from.y} C ${from.x} ${bend}, ${to.x} ${bend}, ${to.x} ${to.y}`} fill="none" stroke="var(--specimen-ink)" strokeWidth="1" opacity=".45" />;
     }))}
     {circuit.nodes.map(node => {
       const point = positions.get(node.id)!; const active = frame.values[node.id] === 1;
       const broken = sources(node).some(source => source === null);
-      return <g key={node.id}><title>{node.id}: {node.kind}, value {frame.values[node.id] ?? 0}{broken ? ", broken connection" : ""}</title><rect x={point.x - 18} y={point.y - 18} width="36" height="36" rx={node.kind === "register" ? 3 : 18} fill={active ? "#304f3d" : "#f9f9f6"} stroke={broken ? "#813c29" : "#304f3d"} strokeWidth={broken ? 2 : 1} strokeDasharray={broken ? "3 2" : undefined} /><text x={point.x} y={point.y + 5} textAnchor="middle" fill={active ? "#f9f9f6" : "#304f3d"} fontSize="13">{node.kind[0].toUpperCase()}</text><text x={point.x} y={point.y + 32} textAnchor="middle" fill="#262c28" fontSize="8">{node.id}</text></g>;
+      return <g key={node.id}><title>{node.id}: {node.kind}, value {frame.values[node.id] ?? 0}{broken ? ", broken connection" : ""}</title><rect x={point.x - 18} y={point.y - 18} width="36" height="36" rx={node.kind === "register" ? 3 : 18} fill={active ? "var(--specimen-ink)" : "var(--surface)"} stroke={broken ? "var(--danger)" : "var(--specimen-ink)"} strokeWidth={broken ? 2 : 1} strokeDasharray={broken ? "3 2" : undefined} /><text x={point.x} y={point.y + 5} textAnchor="middle" fill={active ? "var(--specimen-ink-on)" : "var(--specimen-ink)"} fontSize="13">{node.kind[0].toUpperCase()}</text><text x={point.x} y={point.y + 32} textAnchor="middle" fill="var(--ink)" fontSize="8">{node.id}</text></g>;
     })}
   </svg>;
 }

@@ -125,6 +125,32 @@ components:
 
 # Design System: Platonik
 
+## Shared appearance and observatory
+
+All routes now use the shared design-kit palette and appearance menu. Paper
+with System appearance is the initial preference; the menu is the final header
+action and offers the shared palettes plus Light, Dark, and System. Without
+JavaScript, the initial Paper palette follows the operating system. Preference
+persistence, system changes, menu keyboard behavior, and browser theme color
+belong to the shared provider and control.
+
+The observatory is an Operate surface. Nebula Sans supports compact controls and
+readable measurements; Newsreader remains the heading voice. Reading planes are
+opaque, inputs use the shared inset edge, and selected experiments, views, and
+lineages use Lantern's warm plane. Rich glass is limited to the sticky header.
+The eight recorded Rust studies are grouped in one labeled disclosure before
+the four browser experiment tabs, keeping the working bench close to arrival.
+
+SVG and canvas diagrams use the shared semantic palette. Structural portraits
+retain their rule-derived geometry and memory-dependent tint; truth maps retain
+their exact crossing counts and bounded domain. The map legend describes the
+current palette's early/late colors. Appearance never enters the simulation,
+saved collection, recorded Rust data, playback, or work calculations.
+
+This section supersedes the light-only colors and Arial body type in the
+original laboratory/documentation record below. The immutable Lantern and
+marketing bundles remain independently checked under `vendor/`.
+
 ## Shared marketing surface
 
 The homepage now uses Hraness's approved Peopleblade marketing treatment: Instrument Serif 400 display headings, Nebula Sans body text, a restrained continuous gradient with faint grain and cell seams, and more open spacing. The shared preset and its font, texture, license, and validation files live in `vendor/hraness-marketing`; keep that immutable bundle intact and adapt through `app/marketing.css`.
