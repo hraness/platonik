@@ -50,7 +50,7 @@ An external agent can follow the repository's [platonik-play skill](https://gith
 
 File-taking commands also accept `-` for bounded standard input. JSON goes to stdout; operational errors are JSON on stderr. Exit **0** means success, **1** means a valid mission or suite failed, and **2** means invalid input, tampering, I/O, or usage error. A valid failed mission can verify with exit 0: integrity and success are different questions. Capture exit codes rather than hiding failed attempts with a pipeline.
 
-`verify` and `inspect` consume real CPU because they rerun the experiment. Neither advances a persisted world. The separate `expedition` command family now provides a checked local journal and interrupted-trial recovery. Immutable parent and child files remain useful for standalone experiments. There is no automatic breeding, hosted submission, or leaderboard.
+`verify` and `inspect` consume real CPU because they rerun the experiment. Neither advances a persisted world. The separate `expedition` command family now provides a checked local journal and interrupted-trial recovery. Immutable parent and child files remain useful for standalone experiments. There is no automatic breeding or in-game leaderboard; [hosted seasons](seasons.md) take challenge submissions by pull request.
 
 ## The actual laws
 

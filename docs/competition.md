@@ -1,6 +1,6 @@
 # Competition proposal
 
-Proposal, 11 September 2026. The Platonik website and documentation are the current milestone. The game engine and leaderboard are proposed; no hosted ranking service exists yet. This page specifies the intended merit model and the work needed before calling results official.
+Proposal, 11 September 2026. The Platonik website, documentation, and a first [hosted season evaluator](seasons.md) for generated challenges are the current milestone. The full game engine and the in-game leaderboard described here remain proposed. This page specifies the intended merit model and the work needed before calling game results official.
 
 ## What it means to be better
 
@@ -46,7 +46,7 @@ Wall time is useful operational information; deterministic work is the primary c
 
 Proposed local campaign saves and practice tables would record local results. Hashes make accidental changes detectable but cannot make a self-reported local score authoritative.
 
-Official ranking requires an organizer-operated evaluator that accepts an immutable genome/body bundle and reruns it on withheld cases. It validates the candidate, enforces CPU and memory limits outside the VM as well as within it, and records all scheduled outcomes. It does not trust an uploaded score file.
+Official ranking requires an organizer-operated evaluator that accepts an immutable genome/body bundle and reruns it on withheld cases. It validates the candidate, enforces CPU and memory limits outside the VM as well as within it, and records all scheduled outcomes. It does not trust an uploaded score file. The [hosted season evaluator](seasons.md) already implements this pattern for the generated-challenge family: pull-request entries, a salt-committed withheld case set, per-entrant quotas, and committed replayable results.
 
 Publish the generator, rules, evaluator source, baseline entries, and training seeds. Before entries close, commit to the evaluation seed set with a secret random salt. After the evaluation round closes, reveal seeds and salt, confirm the commitment, and release per-case evidence for replay. Fresh rounds use new held-out seeds. Detailed hidden trajectories should not leak while a round is accepting entries.
 

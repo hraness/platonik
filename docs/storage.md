@@ -1,6 +1,6 @@
 # Keeping a shared world inexpensive
 
-Architecture proposal, 11 September 2026. No game backend or storage service has been provisioned. This is a decision record for the proposed market and leaderboard, with illustrative workloads rather than measured Platonik usage. Provider prices were checked on this date and must be checked again before implementation.
+Architecture proposal, 11 September 2026. No game backend or storage service has been provisioned; the [hosted season evaluator](seasons.md) publishes committed static artifacts, not a live service. This is a decision record for the proposed market and in-game leaderboard, with illustrative workloads rather than measured Platonik usage. Provider prices were checked on this date and must be checked again before implementation.
 
 ## The recommendation
 
