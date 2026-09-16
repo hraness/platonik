@@ -74,7 +74,7 @@ A **bounded searcher** must additionally generate candidate descriptions, execut
 
 A chapter admission includes a successful reference witness and enough allowance for more than one viable approach. Freeze its finite inputs, permitted disturbances, service invariants, completion predicates, and limits before judging a run. Campaign constants remain provisional until calibrated; the [competitive rules](competition.md) retain their separate versioned divisions.
 
-The finale checker verifies required services throughout the voyage, admitted construction, and the outbound message and reply before the deadline. A lit final frame is insufficient. Record initial state, artifact and dependency identities, versions, inputs, seeds, costs, failures, and trace identity. Independent replay must agree. Authored dialogue never changes the verdict.
+The finale checker verifies required services throughout the voyage, admitted construction, and the outbound message and reply before the deadline. A lit final frame is insufficient. Record initial state, artifact and dependency identities, versions, inputs, seeds, costs, failures, and trace identity. Independent replay must agree. Authored dialogue never changes the verdict; a proposed [generated voice](voices.md) would live on this same fiction layer.
 
 Activate bounded regions, pause other regions explicitly, and declare how transfers occur between them. Retain checkpoints and replay inputs instead of requiring a continuously simulated galaxy. Compiled or cached components must preserve observable transitions, timing, and charged work over their certified domain; otherwise use ordinary simulation. The [scale proposal](complexity-and-scale.md) explains the missing performance evidence.
 

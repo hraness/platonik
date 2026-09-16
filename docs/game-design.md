@@ -92,7 +92,7 @@ The same verbs survive every transition: **inspect, change, connect, run, compar
 
 The external agent provides working reference blueprints and explains their tradeoffs. The player chooses an ambition and architecture, notices failures, and decides what to keep. Templates are free to inspect; executing them expands into the same metered parts as an original design. No chapter requires hand-wiring a prescribed circuit or preserving a particular starter genome.
 
-The campaign culminates in a fictional first contact, with success determined by a bounded expedition. Research into checkable answers and complexity remains an optional open frontier. Finishing the story does not require or imply solving P versus NP.
+The campaign culminates in a fictional first contact, with success determined by a bounded expedition. A proposed [voice on the wire](voices.md) explores what could speak on the far side of that contact without breaking the fiction's honesty rules. Research into checkable answers and complexity remains an optional open frontier. Finishing the story does not require or imply solving P versus NP.
 
 ## What you are actually building
 

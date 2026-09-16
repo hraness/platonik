@@ -76,6 +76,8 @@ export default function HomePage() {
         <Link className="text-link" href="/docs/campaign">Follow the Long Trail <span aria-hidden="true">↗</span></Link>
         <p>Your couriers learn to carry signals. Signals become memory and control. Working habitats become places that can construct new ones. The Autoverse path gives each change of scale a capability to earn—and a reason to bring an earlier creation along.</p>
         <Link className="text-link" href="/docs/autoverse">Explore the Autoverse path <span aria-hidden="true">↗</span></Link>
+        <p>Somewhere past the last port, something is already answering. A proposed character model would voice the far side of that contact—knowing only its own world.</p>
+        <Link className="text-link" href="/docs/voices">Who answers at the Far Beacon? <span aria-hidden="true">↗</span></Link>
         <p className="figure-note">A complete design needs evidence from play. <Link href="/docs/design-validation">See what works today and the tests that come next.</Link></p>
       </section>
 

@@ -46,7 +46,7 @@ There are at most eight advances per habitat, so this two-advance walkthrough le
 
 The Rust checker requires the complete service horizon, construction from acquired material, useful work by both born children, and an exact spark identity carried through the reply. It also traces the final spark through the courier's physical deposit and the Keeper's service action. A constant correct bit, an earlier spark's report, an inactive child, or a broken return connection cannot satisfy that conjunction.
 
-The reply carries a report originally emitted at the depot. The receiver must consume it after the final physical delivery. This establishes matching provenance and completed service together; the beacon itself does not emit an acknowledgment. The story text is authored, and the reply cell does not generate language or demonstrate a mind.
+The reply carries a report originally emitted at the depot. The receiver must consume it after the final physical delivery. This establishes matching provenance and completed service together; the beacon itself does not emit an acknowledgment. The story text is authored, and the reply cell does not generate language or demonstrate a mind. A separate proposal, [a voice on the wire](voices.md), explores a generated voice for the contacted side — still fiction, still unable to change the verdict.
 
 Intermediate reports expose only milestones observed in the committed prefix. Even after the matching reply arrives, the ending stays locked until the full horizon verifies: the crew still has lights to keep alive. The browser uses these recorded Rust facts to reveal the same moments; it does not run another simulation.
 

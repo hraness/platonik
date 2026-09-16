@@ -120,7 +120,7 @@ The Far Beacon lies beyond a region where the familiar relay network cannot reac
 
 Your first companion's lineage can supply a small part of the solution—the same recovery habit, now keeping an ark's light routes open. Make that contribution available and visible without secretly requiring one starter genome. Players who took another path deserve a climax that reflects their own herd.
 
-The authored revelation is that the Far Beacon is sustained by another civilization of many cooperating forms. The pulse was an invitation whose structure you could only understand after learning to build something that could answer. Successful play earns the reply; the particular fleet and rescue that delivered it belong to the player's run.
+The authored revelation is that the Far Beacon is sustained by another civilization of many cooperating forms. The pulse was an invitation whose structure you could only understand after learning to build something that could answer. Successful play earns the reply; the particular fleet and rescue that delivered it belong to the player's run. What that reply could sound like — a bounded voice knowing only its own world — is a separate proposal: [a voice on the wire](voices.md).
 
 The final scene returns to a little light moving between two places. You began by helping one creature make that journey. Now you have helped a civilization learn how to keep making it.
 
