@@ -1,6 +1,6 @@
 # Explore the observatory
 
-Browser prototype guide, 11 September 2026. The experiments described here are implemented on the website. The complete campaign, rankings, and large shared world remain a proposal. A separate [Rust bridge](rust-bridge.md) now supplies real CLI experiments and an agent play guide; [replay its recorded evidence](https://platonik.space/lab/bridge). These small models are for testing a design direction, not evidence that the larger ecology works.
+Browser prototype guide, 11 September 2026. The experiments described here are implemented on the website. The complete campaign, in-game rankings, and large shared world remain a proposal; a separate [hosted season board](seasons.md) already ranks generated-challenge entries. A separate [Rust bridge](rust-bridge.md) now supplies real CLI experiments and an agent play guide; [replay its recorded evidence](https://platonik.space/lab/bridge). These small models are for testing a design direction, not evidence that the larger ecology works.
 
 ## Put a specimen on the bench
 
@@ -14,7 +14,7 @@ Open [the observatory](https://platonik.space/lab). No account, installation, cr
 
 The portrait is a lossy visualization: lobes encode rules, grains encode conditions, rings encode used memory slots, and memory-writing rules shift the tint. Directional choices alter lobe reach. Unused rules can affect appearance, so beauty is never a fitness score or a guarantee of novelty. Different programs can share a portrait. Collection names are labels, not claims about biological species.
 
-Local browser data can be cleared. **Export this program** downloads the current JSON for safekeeping or editing by an external agent. It exports the program only; record the map seed separately to repeat a particular run. The website makes no model calls and has no shared collection or leaderboard.
+Local browser data can be cleared. **Export this program** downloads the current JSON for safekeeping or editing by an external agent. It exports the program only; record the map seed separately to repeat a particular run. The website makes no model calls and has no shared collection or live leaderboard; challenge standings are committed records, not a service.
 
 ## Let an agent change the rules
 
