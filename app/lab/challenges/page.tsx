@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import "../lab.css";
 
@@ -37,6 +37,13 @@ type ChallengesIndex = {
   challenges: ChallengeBoard[];
   global: GlobalRow[];
 };
+type SeasonBoard = {
+  schema: string;
+  season: string;
+  commitment: string;
+  challenges: ChallengeBoard[];
+  global: GlobalRow[];
+};
 
 const work = (value: number) => value.toLocaleString("en-US");
 const tokens = (value?: number) => (value === undefined ? "self-reported: none" : value.toLocaleString("en-US"));
@@ -45,6 +52,14 @@ export default async function ChallengesPage() {
   const index = JSON.parse(
     await readFile(path.join(process.cwd(), "public/challenges/index.json"), "utf8"),
   ) as ChallengesIndex;
+  const seasonDir = path.join(process.cwd(), "public/season");
+  const seasonFiles = (await readdir(seasonDir).catch(() => [] as string[]))
+    .filter((name) => /^season-\d{4}\.json$/.test(name))
+    .sort();
+  const seasonBoards: SeasonBoard[] = [];
+  for (const name of seasonFiles) {
+    seasonBoards.push(JSON.parse(await readFile(path.join(seasonDir, name), "utf8")) as SeasonBoard);
+  }
   return <main id="main" className="lab">
     <header className="lab-header">
       <Link href="/lab">← Back to the observatory</Link>
@@ -81,9 +96,25 @@ export default async function ChallengesPage() {
         </table>
       </div>
     </section>
+    {seasonBoards.map(board => <section key={board.season} aria-label={`Hosted season ${board.season}`}>
+      <h2>Hosted season {board.season.replace("season-", "")}</h2>
+      <p className="lab-note">Entries scored by the hosted evaluator on withheld cases — each entry faced fresh worlds derived from a committed salt, replayed and committed by CI. Token counts are self-reported by entrants, never measured. Salt commitment <code>{board.commitment.slice(0, 20)}…</code> becomes fully checkable at reveal.</p>
+      <div className="lab-table-scroll" role="region" aria-label={`Season ${board.season} standings`} tabIndex={0}>
+        <table className="lab-table">
+          <thead><tr><th scope="col">Rank</th><th scope="col">Entrant</th><th scope="col">Cleared</th><th scope="col">Challenges</th><th scope="col">Work</th><th scope="col">Tokens</th></tr></thead>
+          <tbody>{board.global.map(row => <tr key={row.entrant}>
+            <td>{row.rank}</td><th scope="row">{row.entrant}</th>
+            <td>{row.cleared}</td><td>{row.attempted}</td>
+            <td>{work(row.total_work)}</td><td>{tokens(row.tokens)}</td>
+          </tr>)}</tbody>
+        </table>
+      </div>
+      {board.global.length === 0 && <p className="lab-note">No entries yet — the first accepted pull request takes rank one.</p>}
+    </section>)}
     <section className="lab-reading">
       <h2>Enter from your own laboratory.</h2>
       <p>The window is thirty-two challenges today and grows by index. The resilient reference clears everything it was admitted to solve — the open contest is beating its charged work and its bytes, or clearing it with a stranger policy. The compact shuttle shows what an overfit route earns on unfamiliar ground.</p>
+      <p><Link href="/docs/seasons">Enter the hosted season by pull request →</Link></p>
       <p><Link href="/docs/challenges">Read the eval design and run your agent →</Link></p>
       <p><Link href="/docs/competition">See the proposed ranked-season rules →</Link></p>
     </section>

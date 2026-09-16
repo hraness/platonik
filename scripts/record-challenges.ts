@@ -68,7 +68,19 @@ mkdirSync(results);
 try {
   for (const id of list.challenges) {
     for (const policy of POLICIES) {
-      const submission = cli(["challenge", "reference", id, policy]);
+      // Retry a truncated spawnSync capture: the submission must parse whole.
+      let submission = "";
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        const candidate = cli(["challenge", "reference", id, policy]);
+        try {
+          JSON.parse(candidate);
+          submission = candidate;
+          break;
+        } catch {
+          // incomplete capture; retry
+        }
+      }
+      if (!submission) throw new Error(`Reference for ${id}/${policy} did not capture.`);
       const submissionFile = join(submissions, `${id}-${policy}.json`);
       writeFileSync(submissionFile, submission);
       const result = cli(["challenge", "eval", id, submissionFile], true);

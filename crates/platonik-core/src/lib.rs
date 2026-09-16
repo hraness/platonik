@@ -20,6 +20,7 @@ pub mod model;
 pub mod policy;
 pub mod port_commitments;
 pub mod port_fixtures;
+pub mod season;
 pub mod sim;
 pub mod suite;
 pub use model::{Experiment, PROTOCOL, RunResult};

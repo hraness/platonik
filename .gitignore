@@ -10,3 +10,10 @@
 .env*
 .DS_Store
 .vercel
+
+# Season salts must never be committed — only their hash commitments are.
+*.salt
+*.salt.txt
+salt*.txt
+*-salt.txt
+*.salt.hex

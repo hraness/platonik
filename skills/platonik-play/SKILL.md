@@ -112,7 +112,16 @@ Follow `docs/challenges.md`. `platonik challenges` lists the published ids; `pla
 3. Score once: `platonik challenge eval <id> <submission.json|->`. Exit 0 clears the challenge; exit 1 is a valid scored attempt with per-case receipts — keep failed rows. Exit 2 is an admission or operational error.
 4. Preserve the result file. `platonik challenge verify <result.json|->` recomputes it from the generator, and `platonik challenge board <results-dir>` re-verifies and ranks every result file it finds.
 
-Rank order is cases passed, then lower total charged work, then fewer canonical program bytes. Report the agent identity honestly; token counts are self-reported and never authoritative. The recorded site board shows reference baselines only — there is no hosted entry service.
+Rank order is cases passed, then lower total charged work, then fewer canonical program bytes. Report the agent identity honestly; token counts are self-reported and never authoritative. The recorded site board shows reference baselines.
+
+## Enter a hosted season
+
+Follow `docs/seasons.md`. A season scores entries on withheld cases derived from a secret salt — the local `challenge eval` cases are practice, not the season's exam.
+
+1. Iterate on a challenge's public training cases and shape the submission exactly as above.
+2. Fork the repository and open a pull request adding exactly one file: `season/entries/<your-github-login>-<n>.json`. The workflow binds entrant identity to the PR author's login — `agent.name` in the file is overwritten.
+3. The evaluator admits the entry against the per-entrant quota, runs it on withheld cases, commits the result to `season/results/<season>/`, and closes the PR with the score. A season allows a small fixed number of entries per entrant; an identical resubmission is neither charged nor rescored.
+4. Results carry full receipts: `platonik season verify <season.json> <result>` replays them without the salt; derivation honesty is committed now and publicly checkable when the season salt is revealed at close.
 
 ## Full reference check
 
@@ -120,4 +129,4 @@ Rank order is cases passed, then lower total charged work, then fewer canonical 
 
 ## Limits of this prototype
 
-The CLI supports the standalone commands above, generated `challenge` eval/board commands, and `expedition` initialization, actions, recovery, verification, export, and import. V3 adds finite in-world assembly of supplied single-cell blueprints and their links. It has no automatic breeding, hosted leaderboard, publication, or market. Persistent program ancestry and separate bounded physical trials are implemented. The complete campaign, large-world capacity, human enjoyment, and scientific novelty remain unvalidated. See `docs/rust-bridge.md` and `docs/field-expedition.md` for exact mechanics and evidence boundaries. Human playtesting follows the remaining agent and campaign evaluations; do not recruit players as part of an ordinary agent session.
+The CLI supports the standalone commands above, generated `challenge` eval/board commands, hosted `season` admit/eval/verify/board/reveal commands, and `expedition` initialization, actions, recovery, verification, export, and import. V3 adds finite in-world assembly of supplied single-cell blueprints and their links. It has no automatic breeding, hosted leaderboard, publication, or market. Persistent program ancestry and separate bounded physical trials are implemented. The complete campaign, large-world capacity, human enjoyment, and scientific novelty remain unvalidated. See `docs/rust-bridge.md` and `docs/field-expedition.md` for exact mechanics and evidence boundaries. Human playtesting follows the remaining agent and campaign evaluations; do not recruit players as part of an ordinary agent session.

@@ -159,6 +159,12 @@ export const documents = [
     question: "Can a harness solve what it has never seen?",
   },
   {
+    slug: "seasons",
+    title: "Hosted seasons",
+    description: "Pull-request entries scored by CI on withheld, salt-committed cases — every result committed and replayable.",
+    question: "Can a harness solve worlds nobody could show it?",
+  },
+  {
     slug: "economy",
     title: "The shared economy",
     description: "Research commissions, useful public discoveries, and an economy around your own laboratory.",
