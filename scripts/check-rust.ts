@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 
 function run(command: string, args: string[]) {
   const result = spawnSync(command, args, { stdio: "inherit" });
@@ -41,5 +41,18 @@ run("bun", ["scripts/record-challenges.ts", "--check"]);
 if (existsSync("seasons")) {
   for (const name of readdirSync("seasons").filter((name) => /^season-\d{4}\.json$/.test(name)).sort()) {
     run("bun", ["scripts/record-season.ts", name.replace(/\.json$/, ""), "--check"]);
+  }
+}
+
+// The evaluator publishes canonical entries under season/entries/<season>/.
+// Anything else at the top level on main means an entry bypassed admission.
+// Entry pull requests legitimately add such files, so this only applies
+// outside pull_request runs.
+if (process.env.GITHUB_EVENT_NAME !== "pull_request" && existsSync("season/entries")) {
+  for (const name of readdirSync("season/entries")) {
+    const path = `season/entries/${name}`;
+    if (name !== "README.md" && !(/^season-\d{4}$/.test(name) && statSync(path).isDirectory())) {
+      throw new Error(`${path} is not an evaluated canonical entry; entries publish only through the season workflow.`);
+    }
   }
 }
