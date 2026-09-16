@@ -12,6 +12,7 @@ name = "platonik"
 path = "src/main.rs"
 
 [dependencies]
+hraness-support-foundation = { git = "https://github.com/hraness/support-foundation", rev = "b32c1c81bb2444f50509ed54388758ecfab1f1c0" }
 platonik-core = { path = "../platonik-core" }
 serde.workspace = true
 serde_json.workspace = true

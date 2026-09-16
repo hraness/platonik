@@ -28,6 +28,7 @@ impl Run {
     }
     fn cli(&mut self, args: &[&str], input: Option<&[u8]>) -> (Output, u64) {
         let mut child = Command::new(env!("CARGO_BIN_EXE_platonik"))
+            .env("HRANESS_SUPPORT", "off")
             .arg("--metrics")
             .args(args)
             .stdin(if input.is_some() {

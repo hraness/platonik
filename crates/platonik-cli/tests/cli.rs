@@ -38,6 +38,7 @@ impl Drop for InputFile {
 
 fn cli(args: &[&str], input: Option<&[u8]>) -> Output {
     let mut child = Command::new(env!("CARGO_BIN_EXE_platonik"))
+        .env("HRANESS_SUPPORT", "off")
         .args(args)
         .stdin(if input.is_some() {
             Stdio::piped()
@@ -247,6 +248,7 @@ fn redirected_help_and_machine_outputs_have_no_terminal_intro() {
 fn non_utf8_arguments_are_structured_errors_instead_of_panics() {
     use std::os::unix::ffi::OsStringExt;
     let output = Command::new(env!("CARGO_BIN_EXE_platonik"))
+        .env("HRANESS_SUPPORT", "off")
         .arg(std::ffi::OsString::from_vec(vec![0xff]))
         .output()
         .unwrap();
@@ -273,6 +275,7 @@ fn an_unconnected_fifo_is_rejected_without_waiting_for_a_writer() {
     let fifo = InputFile(path);
     for command in ["run", "verify", "inspect"] {
         let mut child = Command::new(env!("CARGO_BIN_EXE_platonik"))
+            .env("HRANESS_SUPPORT", "off")
             .args([command, fifo.path()])
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
