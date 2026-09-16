@@ -26,6 +26,9 @@ env:
   # Repository context for every `gh pr` call — no checkout exists yet.
   GH_REPO: ${{ github.repository }}
   ENTRY_LIMIT: "65536"
+  # Pre-checkout artifacts live outside the workspace: actions/checkout cleans
+  # untracked files, so admit.env/submission.json/report.done stage here.
+  STAGE: ${{ runner.temp }}/season-stage
 
 jobs:
   evaluate:
@@ -37,17 +40,23 @@ jobs:
       # 1. ADMIT — cheap checks before any build work. admit.env values are
       #    %q-quoted so sourcing them later can never split or execute.
       - name: Admit entry
+        id: admit
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
-          reject() { printf 'kind=%q\n' invalid >> admit.env; printf 'reason=%q\n' "$1" >> admit.env; exit 0; }
+          mkdir -p "$STAGE"
+          cd "$STAGE"
+          reject() { printf 'kind=%q\n' invalid >> admit.env; printf 'reason=%q\n' "$1" >> admit.env; echo kind=invalid >> "$GITHUB_OUTPUT"; exit 0; }
           # REST pull object: .base.ref, .draft, .changed_files, .head.sha,
           # .user.login, .head.repo.full_name all in one trusted shape.
           gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}" > pr.json
           gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}/files" --paginate \
             --jq '.[] | [.filename, .status] | @tsv' > files.tsv
+          # A PR that edits this workflow runs it despite the paths filter;
+          # a diff with nothing under season/entries/ is not an entry at all.
+          grep -q '^season/entries/' files.tsv || { printf 'kind=%q\n' skip >> admit.env; echo kind=skip >> "$GITHUB_OUTPUT"; exit 0; }
           [ "$(jq -r '.base.ref' pr.json)" = "main" ] || reject "Entries target the main branch."
           [ "$(jq -r '.draft' pr.json)" = "false" ] || reject "Draft PRs are not scored."
           login="$(jq -r '.user.login' pr.json | tr 'A-Z' 'a-z')"
@@ -67,14 +76,16 @@ jobs:
           printf 'entry_path=%q\n' "$path" >> admit.env
           printf 'head_sha=%q\n' "$(jq -r '.head.sha' pr.json)" >> admit.env
           printf 'head_repo=%q\n' "$(jq -r '.head.repo.full_name' pr.json)" >> admit.env
+          echo kind=entry >> "$GITHUB_OUTPUT"
 
       - name: Reject inadmissible pull request
-        if: ${{ always() }}
+        if: ${{ always() && steps.admit.outputs.kind != 'entry' && steps.admit.outputs.kind != 'skip' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
+          cd "$STAGE"
           kind=invalid; reason="Admission did not run."
           [ -f admit.env ] && . ./admit.env
           [ "$kind" = "entry" ] && exit 0
@@ -90,11 +101,13 @@ jobs:
       #    The fork's ref name is never used, and nothing from the PR is checked
       #    out or executed.
       - name: Fetch entry file
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
+          cd "$STAGE"
           . ./admit.env
           gh api "repos/${head_repo}/contents/${entry_path}?ref=${head_sha}" \
             -H 'Accept: application/vnd.github.raw+json' > entry.json
@@ -122,14 +135,21 @@ jobs:
       # 3. BASE CHECKOUT — trusted tree only, for the toolchain and the ledger.
       #    Actions are SHA-pinned: this workflow is privileged.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         with:
           ref: main
           persist-credentials: false
 
+      - name: Restore staged entry artifacts
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
+        run: cp -a "$STAGE"/. .
+
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         with:
           bun-version: '1.3.14'
       - name: Install toolchain
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         run: |
           rustup toolchain install 1.97.1 --profile minimal
           cargo build --locked -p platonik-cli
@@ -137,6 +157,7 @@ jobs:
 
       # 4. QUOTA + DEDUP — committed results are the authoritative count.
       - name: Check season admission
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
@@ -164,6 +185,7 @@ jobs:
 
       # 5. EVAL — withheld cases keyed to (salt, entrant, challenge, entry).
       - name: Score entry
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         env:
           SEASON_SALT: ${{ secrets.SEASON_SALT_0001 }}
         run: |
@@ -181,6 +203,7 @@ jobs:
 
       # 6. COMMIT — result + canonical entry + regenerated public board.
       - name: Publish result
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
@@ -212,6 +235,7 @@ jobs:
 
       # 7. REPORT — honest outcome on the PR; the PR is the entry's audit trail.
       - name: Report outcome
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
@@ -249,6 +273,7 @@ jobs:
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -uo pipefail
+          [ -f "$STAGE/report.done" ] && exit 0
           [ -f report.done ] && exit 0
           {
             echo "The season evaluator could not score this entry."
