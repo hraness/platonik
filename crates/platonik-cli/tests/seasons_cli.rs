@@ -7,8 +7,15 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 static NEXT_FILE: AtomicU64 = AtomicU64::new(0);
 
-const SALT: &str = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f";
-const OTHER_SALT: &str = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+fn salt_hex() -> String {
+    (0u8..32).map(|byte| format!("{byte:02x}")).collect()
+}
+
+fn other_salt_hex() -> String {
+    (0u8..32)
+        .map(|byte| format!("{:02x}", byte.wrapping_add(32)))
+        .collect()
+}
 
 fn scratch(name: &str) -> PathBuf {
     std::env::temp_dir().join(format!(
@@ -48,7 +55,7 @@ fn salt_file(name: &str, salt: &str) -> PathBuf {
 }
 
 fn season_fixture(challenges: &str, max_entries: u32) -> (PathBuf, PathBuf, Value) {
-    let salt = salt_file("salt.txt", SALT);
+    let salt = salt_file("salt.txt", &salt_hex());
     let manifest = scratch("season.json");
     let begin = cli(
         &[
@@ -91,7 +98,7 @@ fn season_begin_eval_verify_and_reveal_round_trip() {
     assert!(commitment.starts_with("sha256:"));
     // The manifest commits to the salt but never contains it.
     assert!(begun.get("salt").is_none());
-    assert!(!String::from_utf8_lossy(&fs::read(&manifest).unwrap()).contains(SALT));
+    assert!(!String::from_utf8_lossy(&fs::read(&manifest).unwrap()).contains(&salt_hex()));
 
     let show = cli(&["season", "show", manifest.to_str().unwrap()], None);
     assert_eq!(show.status.code(), Some(0));
@@ -147,7 +154,7 @@ fn season_begin_eval_verify_and_reveal_round_trip() {
     assert_eq!(full.status.code(), Some(0));
 
     // A wrong salt fails derivation verification.
-    let wrong = salt_file("wrong.txt", OTHER_SALT);
+    let wrong = salt_file("wrong.txt", &other_salt_hex());
     let mismatched = cli(
         &[
             "season",
@@ -175,7 +182,7 @@ fn season_begin_eval_verify_and_reveal_round_trip() {
     assert_eq!(revealed.status.code(), Some(0));
     let revealed = json(&revealed.stdout);
     assert_eq!(revealed["commitment"].as_str().unwrap(), commitment);
-    assert_eq!(revealed["salt"].as_str().unwrap(), SALT);
+    assert_eq!(revealed["salt"].as_str().unwrap(), salt_hex());
 
     // Revealing with the wrong salt is rejected against the commitment.
     let bad_reveal = cli(
@@ -343,7 +350,7 @@ fn season_rejects_malformed_input() {
     );
     assert_eq!(bad_eval.status.code(), Some(2));
 
-    let short_salt = salt_file("short.txt", "abcd");
+    let short_salt = salt_file("short.txt", &salt_hex()[..4]);
     let bad_salt = cli(
         &[
             "season",

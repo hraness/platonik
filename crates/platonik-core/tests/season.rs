@@ -12,7 +12,10 @@ fn salt() -> Vec<u8> {
 }
 
 fn other_salt() -> Vec<u8> {
-    vec![0xa5; SALT_BYTES]
+    salt()
+        .into_iter()
+        .map(|byte| byte.wrapping_add(SALT_BYTES as u8))
+        .collect()
 }
 
 fn hex_of(bytes: &[u8]) -> String {
@@ -108,7 +111,7 @@ fn salt_commitment_is_stable_and_tamper_evident() {
     assert!(salt_commitment(0, &salt).is_err());
     assert!(salt_commitment(10_000, &salt).is_err());
     assert!(salt_commitment(1, &salt[..31]).is_err());
-    assert!(salt_commitment(1, &[0; 33]).is_err());
+    assert!(salt_commitment(1, &(0u8..=SALT_BYTES as u8).collect::<Vec<u8>>()).is_err());
 }
 
 #[test]
@@ -118,7 +121,15 @@ fn begin_validates_index_window_salt_and_quota() {
     assert!(begin(10_000, vec![1], 1, &salt).is_err());
     assert!(begin(1, vec![], 1, &salt).is_err());
     assert!(begin(1, vec![1], 1, &salt[..31]).is_err());
-    assert!(begin(1, vec![1], 1, &[0; 33]).is_err());
+    assert!(
+        begin(
+            1,
+            vec![1],
+            1,
+            &(0u8..=SALT_BYTES as u8).collect::<Vec<u8>>()
+        )
+        .is_err()
+    );
     assert!(begin(1, vec![1], 0, &salt).is_err());
     assert!(begin(1, vec![1], 257, &salt).is_err());
     // Oversized and out-of-range windows are refused before they score.
