@@ -164,16 +164,27 @@ jobs:
           . ./admit.env
           mkdir -p "season/results/$SEASON"
           code=0
-          ./target/debug/platonik season admit "seasons/$SEASON.json" "season/results/$SEASON" submission.json > admission.json || code=$?
-          [ "$code" -le 1 ] || { cat admission.json > /dev/stderr; exit 1; }
+          ./target/debug/platonik season admit "seasons/$SEASON.json" "season/results/$SEASON" submission.json > admission.json 2> admit.err || code=$?
+          if [ "$code" -gt 1 ]; then
+            # Parse/schema failures are invalid entries, not evaluator faults.
+            reason="$(jq -r '.error.message // empty' admit.err 2>/dev/null || true)"
+            [ -n "$reason" ] || reason="Entry is not a readable submission."
+            printf 'Entry not admitted: %s\n' "$reason" > report.md
+            gh pr comment "$PR" --body-file report.md || true
+            gh pr edit "$PR" --add-label season-invalid || true
+            gh pr close "$PR" || true
+            touch report.done
+            exit 1
+          fi
           cat admission.json
           if [ "$(jq -r '.admitted' admission.json)" != "true" ]; then
-            reason="$(jq -r '.reason // "Entry quota exhausted."' admission.json)"
+            reason="$(jq -r '.reason // "Entry refused."' admission.json)"
             printf 'Entry not admitted: %s\n' "$reason" > report.md
             gh pr comment "$PR" --body-file report.md || true
             case "$reason" in
               *uplicate*) gh pr edit "$PR" --add-label season-duplicate || true ;;
-              *) gh pr edit "$PR" --add-label season-quota-exceeded || true ;;
+              *quota*)    gh pr edit "$PR" --add-label season-quota-exceeded || true ;;
+              *)          gh pr edit "$PR" --add-label season-invalid || true ;;
             esac
             gh pr close "$PR" || true
             touch report.done
@@ -199,17 +210,24 @@ jobs:
           ./target/debug/platonik season verify "seasons/$SEASON.json" result.json --salt salt.txt > verify.json
           jq -e '.verified == true' verify.json
 
-      # 6. COMMIT — result + canonical entry + regenerated public board.
+      # 6. COMMIT — result + canonical entry + regenerated public board. main
+      #    requires the aggregate check for everyone else; the publish push runs
+      #    over SSH with the repo's season deploy key, the ruleset bypass actor.
       - name: Publish result
         if: ${{ steps.admit.outputs.kind == 'entry' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEASON_DEPLOY_KEY: ${{ secrets.SEASON_DEPLOY_KEY }}
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
-          trap 'git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"' EXIT
+          trap 'rm -f "$RUNNER_TEMP/season-key"; git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"' EXIT
           . ./admit.env
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          umask 077
+          printf '%s\n' "$SEASON_DEPLOY_KEY" > "$RUNNER_TEMP/season-key"
+          gh api meta --jq '.ssh_keys[] | "github.com \(.)"' > "$RUNNER_TEMP/known-hosts"
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/season-key -o IdentitiesOnly=yes -o UserKnownHostsFile=$RUNNER_TEMP/known-hosts -o StrictHostKeyChecking=yes"
+          git remote set-url origin "git@github.com:${GITHUB_REPOSITORY}.git"
           git config user.name "platonik-season[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mkdir -p "season/results/$SEASON" "season/entries/$SEASON"
