@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 const recordings = [
+  { href: "/lab/challenges", name: "Challenges", description: "One program against worlds it never saw" },
   { href: "/lab/bloom", name: "Bloom", description: "Watch creations begin creating" },
   { href: "/lab/ports", name: "Ports", description: "Keep a promise when the reply goes missing" },
   { href: "/lab/ark", name: "Ark control", description: "Give home a plan it can carry out" },

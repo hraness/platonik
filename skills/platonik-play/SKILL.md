@@ -103,10 +103,21 @@ authentication, email or payment occurs in the background. `platonik support
 dismiss`, `snooze`, `enable` and `status --json` manage the shared local preference;
 `HRANESS_SUPPORT=off` suppresses incidental work.
 
+## Attempt a generated challenge
+
+Follow `docs/challenges.md`. `platonik challenges` lists the published ids; `platonik challenge <id>` prints a deterministic bundle of four public training cases and four reserved scoring cases from one generated world family. Only the cells named in `editable` may receive a submitted program — every other case field is fixed.
+
+1. Iterate on the **training** cases: edit a copy of the case's courier program and check it with `platonik run`. Do not tune against the reserved cases; local bundles publish them for inspection, and honest entries treat them as unseen.
+2. Write the submission: `{"schema":"platonik-challenge-submission-v1","challenge":"<id>","programs":{"<editable cell id>":<Program>}}` plus an optional `agent` object with a self-reported `name` and `tokens`. `platonik challenge reference <id> <resilient|compact|idle>` prints a baseline submission to beat.
+3. Score once: `platonik challenge eval <id> <submission.json|->`. Exit 0 clears the challenge; exit 1 is a valid scored attempt with per-case receipts — keep failed rows. Exit 2 is an admission or operational error.
+4. Preserve the result file. `platonik challenge verify <result.json|->` recomputes it from the generator, and `platonik challenge board <results-dir>` re-verifies and ranks every result file it finds.
+
+Rank order is cases passed, then lower total charged work, then fewer canonical program bytes. Report the agent identity honestly; token counts are self-reported and never authoritative. The recorded site board shows reference baselines only — there is no hosted entry service.
+
 ## Full reference check
 
 `platonik suite bridge-v1` emits the frozen suite and all case receipts. Its overall success includes expected ablation failures; it does not mean every mission passed. Use this bounded suite for a requested regression check, not as an extra hidden search budget on every turn.
 
 ## Limits of this prototype
 
-The CLI supports the standalone commands above and `expedition` initialization, actions, recovery, verification, export, and import. V3 adds finite in-world assembly of supplied single-cell blueprints and their links. It has no automatic breeding, hosted leaderboard, publication, or market. Persistent program ancestry and separate bounded physical trials are implemented. The complete campaign, large-world capacity, human enjoyment, and scientific novelty remain unvalidated. See `docs/rust-bridge.md` and `docs/field-expedition.md` for exact mechanics and evidence boundaries. Human playtesting follows the remaining agent and campaign evaluations; do not recruit players as part of an ordinary agent session.
+The CLI supports the standalone commands above, generated `challenge` eval/board commands, and `expedition` initialization, actions, recovery, verification, export, and import. V3 adds finite in-world assembly of supplied single-cell blueprints and their links. It has no automatic breeding, hosted leaderboard, publication, or market. Persistent program ancestry and separate bounded physical trials are implemented. The complete campaign, large-world capacity, human enjoyment, and scientific novelty remain unvalidated. See `docs/rust-bridge.md` and `docs/field-expedition.md` for exact mechanics and evidence boundaries. Human playtesting follows the remaining agent and campaign evaluations; do not recruit players as part of an ordinary agent session.

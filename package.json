@@ -18,6 +18,7 @@
     "check:web": "bun run check:theme && bun run check:content && bun run test:lab && bun run typecheck && bun run build",
     "check:rust": "bun scripts/check-rust.ts",
     "bridge:record": "bun scripts/record-bridge.ts --write",
+    "challenges:record": "bun scripts/record-challenges.ts --write",
     "check": "bun run check:rust && bun run check:web"
   },
   "dependencies": {
