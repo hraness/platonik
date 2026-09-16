@@ -153,6 +153,12 @@ export const documents = [
     question: "What makes one organism better?",
   },
   {
+    slug: "challenges",
+    title: "Generated challenges",
+    description: "A deterministic, growing eval: prompt your agent to write one program that survives unfamiliar seeded worlds.",
+    question: "Can a harness solve what it has never seen?",
+  },
+  {
     slug: "economy",
     title: "The shared economy",
     description: "Research commissions, useful public discoveries, and an economy around your own laboratory.",

@@ -1,6 +1,7 @@
-use platonik_core::{check, fixtures, model::Experiment, suite};
+use platonik_core::{challenge, check, fixtures, model::Experiment, suite};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
+use std::collections::BTreeMap;
 use std::env;
 use std::fs::{self, Metadata, OpenOptions};
 use std::io::{self, Read, Write};
@@ -26,6 +27,7 @@ Usage:\n\
   platonik verify <receipt.json|->  Recompute and independently check a receipt\n\
   platonik inspect <receipt.json|-> Verify, then print compact replay maps\n\
   platonik suite [bridge-v1]        Run the frozen engineering validation suite\n\
+  platonik challenge help           Show generated challenge commands\n\
   platonik expedition help          Show durable local expedition commands\n\
   platonik habitat help             Show continuous-habitat checkpoint commands\n\
   platonik support                  Show optional development support\n\
@@ -42,6 +44,30 @@ missed its goal, and 2 means invalid input or an operational error.\n\
 An honestly failed experiment can verify successfully: verification checks\n\
 integrity and recomputation, independently of mission success.\n\n\
 This is a bounded Rust prototype, not the full campaign or a hosted ranking.\n";
+
+const CHALLENGE_HELP: &str = "Generated deterministic Platonik challenges\n\n\
+  platonik challenges                              List the published challenge ids\n\
+  platonik challenge <id>                          Print a challenge bundle as JSON\n\
+  platonik challenge eval <id> <submission.json|-> Score a submission on reserved cases\n\
+  platonik challenge verify <result.json|->        Recompute and check a scored result\n\
+  platonik challenge board <results-dir>           Verify result files and print rankings\n\
+  platonik challenge reference <id> <policy>       Print a baseline submission JSON\n\n\
+A challenge derives from its id alone: four public training cases and four\n\
+reserved scoring cases in one generated world family. A submission supplies a\n\
+program for each editable cell (see the bundle's `editable` list), for example\n\
+{\"schema\":\"platonik-challenge-submission-v1\",\"challenge\":\"challenge-0001\",\n\
+\"programs\":{\"1\":{\"rules\":[...]}},\"agent\":{\"name\":\"you\",\"tokens\":0}}.\n\n\
+Eval scores cases passed first, then total charged work, then canonical program\n\
+bytes. Agent names and token counts are self-reported and never authoritative.\n\
+Reference policies are resilient, compact, and idle.\n\
+Every result carries full receipts; verify recomputes all cases from the\n\
+generator. Board scans up to 1024 .json files in one directory, keeps the ones\n\
+that parse as results, verifies up to 256 of them, and ranks each challenge\n\
+plus a global rollup. Training on the reserved cases is recorded nowhere;\n\
+honest entries iterate on the training cases only.\n\n\
+Eval exits 0 when every scoring case passed and 1 for an honest incomplete\n\
+result. Verify and board exit 0 when the evidence itself checks out, including\n\
+failed runs. Invalid input or an operational error exits 2.\n";
 
 const EXPEDITION_HELP: &str = "Durable local Platonik expeditions\n\n\
   platonik expedition init <new-dir> <name> <frugal|resilient>\n\
@@ -273,6 +299,9 @@ fn execute(args: &[String]) -> Result<u8, Failure> {
                 .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
             Ok(u8::try_from(result.exit_code).unwrap_or(2))
         }
+        [command, rest @ ..] if command == "challenge" || command == "challenges" => {
+            execute_challenge(command, rest)
+        }
         [command, rest @ ..] if command == "expedition" => execute_expedition(rest),
         [command, rest @ ..] if command == "habitat" => execute_habitat(rest),
         [] => {
@@ -423,6 +452,141 @@ fn execute_expedition(args: &[String]) -> Result<u8, Failure> {
         _ => Err(Failure::new(
             "usage",
             "Unknown expedition command or arguments. Run 'platonik expedition help'.",
+        )),
+    }
+}
+
+fn execute_challenge(command: &str, args: &[String]) -> Result<u8, Failure> {
+    let error = |message| Failure::new("invalid_challenge", message);
+    if command == "challenges" {
+        return match args {
+            [] => {
+                print_json(&serde_json::json!({
+                    "schema": "platonik-challenges-v1",
+                    "generator": challenge::GENERATOR_VERSION,
+                    "family": "crossing",
+                    "challenges": challenge::names(),
+                }))?;
+                Ok(0)
+            }
+            [flag] if matches!(flag.as_str(), "help" | "--help" | "-h") => {
+                print_text(CHALLENGE_HELP)?;
+                Ok(0)
+            }
+            _ => Err(Failure::new(
+                "usage",
+                "challenges takes no arguments. Run 'platonik challenge help'.",
+            )),
+        };
+    }
+    match args {
+        [] => {
+            print_text(CHALLENGE_HELP)?;
+            Ok(0)
+        }
+        [command] if matches!(command.as_str(), "help" | "--help" | "-h") => {
+            print_text(CHALLENGE_HELP)?;
+            Ok(0)
+        }
+        [command, id, policy] if command == "reference" => {
+            let challenge = challenge::by_id(id).map_err(error)?;
+            let submission = challenge::reference_submission(&challenge, policy).map_err(error)?;
+            print_json(&submission)?;
+            Ok(0)
+        }
+        [command, _id] if command == "eval" => Err(Failure::new(
+            "usage",
+            "eval needs a submission file: platonik challenge eval <id> <submission.json|->.",
+        )),
+        [command, id, input] if command == "eval" => {
+            let challenge = challenge::by_id(id).map_err(error)?;
+            let submission: challenge::Submission = read_json(input, MAX_EXPERIMENT_BYTES)?;
+            let result = challenge::evaluate(&challenge, &submission).map_err(error)?;
+            let mut bytes = serde_json::to_vec_pretty(&result)
+                .map_err(|cause| Failure::new("output_json", cause.to_string()))?;
+            bytes.push(b'\n');
+            if bytes.len() as u64 > MAX_RECEIPT_BYTES {
+                return Err(Failure::new(
+                    "receipt_limit",
+                    "Result exceeds the symmetric 32 MiB export limit.",
+                ));
+            }
+            io::stdout()
+                .lock()
+                .write_all(&bytes)
+                .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
+            Ok(if result.passed { 0 } else { 1 })
+        }
+        [command, input] if command == "verify" => {
+            let result: challenge::ChallengeResult = read_json(input, MAX_RECEIPT_BYTES)?;
+            let report = challenge::verify_result(&result).map_err(error)?;
+            print_json(&report)?;
+            Ok(0)
+        }
+        [command, dir] if command == "board" => {
+            let mut paths = Vec::new();
+            for entry in fs::read_dir(Path::new(dir))
+                .map_err(|cause| Failure::new("input_io", cause.to_string()))?
+            {
+                let path = entry
+                    .map_err(|cause| Failure::new("input_io", cause.to_string()))?
+                    .path();
+                let json = path
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .is_some_and(|ext| ext.eq_ignore_ascii_case("json"));
+                if json && path.is_file() {
+                    paths.push(path);
+                }
+            }
+            paths.sort();
+            if paths.len() > 1024 {
+                return Err(Failure::new(
+                    "input_limit",
+                    "Board scans at most 1024 .json files; up to 256 may be verified results.",
+                ));
+            }
+            let mut generated: BTreeMap<u64, challenge::Challenge> = BTreeMap::new();
+            let mut results = Vec::new();
+            for path in paths {
+                match read_json::<challenge::ChallengeResult>(
+                    path.to_str().ok_or_else(|| {
+                        Failure::new("input_io", "Board paths must be valid UTF-8.")
+                    })?,
+                    MAX_RECEIPT_BYTES,
+                ) {
+                    Ok(result) => {
+                        if let std::collections::btree_map::Entry::Vacant(entry) =
+                            generated.entry(result.index)
+                        {
+                            entry.insert(challenge::generate(result.index).map_err(error)?);
+                        }
+                        challenge::verify_against(&generated[&result.index], &result)
+                            .map_err(error)?;
+                        results.push(result);
+                        if results.len() > 256 {
+                            return Err(Failure::new(
+                                "input_limit",
+                                "Board admits at most 256 verified results.",
+                            ));
+                        }
+                    }
+                    // Files that do not parse as results are not entries.
+                    Err(failure) if failure.code == "invalid_json" => continue,
+                    Err(failure) => return Err(failure),
+                }
+            }
+            print_json(&challenge::board(&results))?;
+            Ok(0)
+        }
+        [id] if !matches!(id.as_str(), "eval" | "verify" | "board" | "reference") => {
+            let challenge = challenge::by_id(id).map_err(error)?;
+            print_json(&challenge)?;
+            Ok(0)
+        }
+        _ => Err(Failure::new(
+            "usage",
+            "Unknown challenge command or arguments. Run 'platonik challenge help'.",
         )),
     }
 }

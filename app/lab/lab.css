@@ -87,6 +87,7 @@
 .truth-axis { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 8px; }
 .truth-trajectory { display: block; width: 100%; margin-block: 20px; }
 .truth-equations { font-family: var(--display); font-size: 25px; padding: 16px 0; border-block: 1px solid var(--line); line-height: 1.6; }
+.lab-table-scroll { overflow-x: auto; }
 .lab-table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
 .lab-table th, .lab-table td { padding: 9px 12px 9px 0; text-align: left; border-bottom: 1px solid var(--line); }
 .lab-reading { margin-top: 38px; border-top: 1px solid var(--line); padding-top: 28px; font-size: 15px; }

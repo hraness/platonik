@@ -6,6 +6,7 @@ pub mod bloom_exchange;
 pub mod bloom_exchange_fixtures;
 pub mod bloom_fixtures;
 pub mod bloom_ports_composition;
+pub mod challenge;
 pub mod check;
 pub mod construction;
 pub mod construction_fixtures;

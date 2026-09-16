@@ -32,3 +32,4 @@ run("node", ["scripts/check-bloom-evidence.mjs"]);
 run("node", ["scripts/check-exchange-evidence.mjs"]);
 run("node", ["--test", "scripts/exchange/capacity-io.test.mjs"]);
 run("node", ["scripts/check-exchange-capacity.mjs"]);
+run("bun", ["scripts/record-challenges.ts", "--check"]);
