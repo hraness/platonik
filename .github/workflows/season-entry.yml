@@ -26,6 +26,9 @@ env:
   # Repository context for every `gh pr` call — no checkout exists yet.
   GH_REPO: ${{ github.repository }}
   ENTRY_LIMIT: "65536"
+  # Pre-checkout artifacts live outside the workspace: actions/checkout cleans
+  # untracked files, so admit.env/submission.json/report.done stage here.
+  STAGE: ${{ runner.temp }}/season-stage
 
 jobs:
   evaluate:
@@ -42,6 +45,8 @@ jobs:
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
+          mkdir -p "$STAGE"
+          cd "$STAGE"
           reject() { printf 'kind=%q\n' invalid >> admit.env; printf 'reason=%q\n' "$1" >> admit.env; exit 0; }
           # REST pull object: .base.ref, .draft, .changed_files, .head.sha,
           # .user.login, .head.repo.full_name all in one trusted shape.
@@ -75,6 +80,7 @@ jobs:
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
+          cd "$STAGE"
           kind=invalid; reason="Admission did not run."
           [ -f admit.env ] && . ./admit.env
           [ "$kind" = "entry" ] && exit 0
@@ -95,6 +101,7 @@ jobs:
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
+          cd "$STAGE"
           . ./admit.env
           gh api "repos/${head_repo}/contents/${entry_path}?ref=${head_sha}" \
             -H 'Accept: application/vnd.github.raw+json' > entry.json
@@ -125,6 +132,9 @@ jobs:
         with:
           ref: main
           persist-credentials: false
+
+      - name: Restore staged entry artifacts
+        run: cp -a "$STAGE"/. .
 
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
@@ -249,6 +259,7 @@ jobs:
           PR: ${{ github.event.pull_request.number }}
         run: |
           set -uo pipefail
+          [ -f "$STAGE/report.done" ] && exit 0
           [ -f report.done ] && exit 0
           {
             echo "The season evaluator could not score this entry."
