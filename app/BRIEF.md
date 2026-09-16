@@ -2,7 +2,7 @@
 
 Mode: Persuade.
 
-Help a visitor understand the proposed creative play loop and choose between the observatory and the field guide. Preserve the exact distinction between a game proposal, a working browser model, and recorded Rust evidence.
+Help a visitor understand the proposed creative play loop and choose between the observatory and the field guide. Preserve the exact distinction between a game proposal, a working browser model, and recorded Rust evidence — including the live hosted challenge season, which is implemented and must not be described as proposed.
 
 Use the shared Hraness editorial marketing preset approved on Peopleblade. Keep Platonik's green accent, labeled concept diagram, and calm open sections. The opening background provides continuity; it never textures text, identity, or evidence. Keep supporting copy short in measure without changing its claims.
 

@@ -1,6 +1,6 @@
 # Platonik game design
 
-Living design proposal, revised 11 September 2026. The website and its bounded browser experiments are implemented. A bounded [Rust bridge and agent play guide](rust-bridge.md) are implemented. A [persistent field expedition](field-expedition.md) now preserves collections and verifies trials. The complete campaign and leaderboard described here remain proposed. Campaign creatures, dialogue, and results are illustrative unless linked to a specific recorded experiment.
+Living design proposal, revised 11 September 2026. The website and its bounded browser experiments are implemented. A bounded [Rust bridge and agent play guide](rust-bridge.md) are implemented. A [persistent field expedition](field-expedition.md) now preserves collections and verifies trials. The complete campaign and the in-game leaderboard described here remain proposed; a working [hosted season evaluator](seasons.md) already ranks generated-challenge entries. Campaign creatures, dialogue, and results are illustrative unless linked to a specific recorded experiment.
 
 ## The premise
 

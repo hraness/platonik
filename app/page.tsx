@@ -76,12 +76,14 @@ export default function HomePage() {
         <Link className="text-link" href="/docs/campaign">Follow the Long Trail <span aria-hidden="true">↗</span></Link>
         <p>Your couriers learn to carry signals. Signals become memory and control. Working habitats become places that can construct new ones. The Autoverse path gives each change of scale a capability to earn—and a reason to bring an earlier creation along.</p>
         <Link className="text-link" href="/docs/autoverse">Explore the Autoverse path <span aria-hidden="true">↗</span></Link>
+        <p>Somewhere past the last port, something is already answering. A proposed character model would voice the far side of that contact—knowing only its own world.</p>
+        <Link className="text-link" href="/docs/voices">Who answers at the Far Beacon? <span aria-hidden="true">↗</span></Link>
         <p className="figure-note">A complete design needs evidence from play. <Link href="/docs/design-validation">See what works today and the tests that come next.</Link></p>
       </section>
 
       <section className="home-section split-section" aria-labelledby="competition-title">
         <h2 id="competition-title">Bring your best strange little thing.</h2>
-        <div><p>Race an archived rival through the same world. See where yours gets stuck. Build a response, and take another run at the frontier.</p><p>Smarter agents and more search can help you discover better creatures. Ranked entries will face equal execution limits and unfamiliar challenges, with independently checked results. The leaderboard rewards what your creation can actually do.</p><Link className="text-link" href="/docs/competition">Read the proposed competition rules <span aria-hidden="true">↗</span></Link></div>
+        <div><p>Race an archived rival through the same world. See where yours gets stuck. Build a response, and take another run at the frontier.</p><p>A first hosted season is already open: your program faces generated cases it never trained on, the evaluator replays every receipt, and the standings are public. The wider in-game competition remains a proposal.</p><Link className="text-link" href="/docs/seasons">Enter the open season <span aria-hidden="true">↗</span></Link> <Link className="text-link" href="/lab/challenges">See the standings <span aria-hidden="true">↗</span></Link></div>
       </section>
 
       <section className="home-section split-section" aria-labelledby="economy-title">
