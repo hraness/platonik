@@ -30,6 +30,7 @@ impl Drop for Sandbox {
 
 fn spawn(args: &[&str], input: Option<&[u8]>) -> Child {
     let mut child = Command::new(env!("CARGO_BIN_EXE_platonik"))
+        .env("HRANESS_SUPPORT", "off")
         .arg("expedition")
         .args(args)
         .stdin(if input.is_some() {
@@ -449,6 +450,7 @@ fn explicit_metrics_count_replay_and_are_emitted_after_errors() {
     let plain = cli(&["status", text(&path)], None);
     assert!(plain.stderr.is_empty());
     let measured = Command::new(env!("CARGO_BIN_EXE_platonik"))
+        .env("HRANESS_SUPPORT", "off")
         .args(["--metrics", "expedition", "status", text(&path)])
         .output()
         .unwrap();
@@ -462,6 +464,7 @@ fn explicit_metrics_count_replay_and_are_emitted_after_errors() {
     );
     assert!(metrics["elapsed_micros"].as_u64().unwrap() > 0);
     let invalid = Command::new(env!("CARGO_BIN_EXE_platonik"))
+        .env("HRANESS_SUPPORT", "off")
         .args(["--metrics", "expedition", "unknown"])
         .output()
         .unwrap();

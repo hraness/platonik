@@ -13,6 +13,7 @@ use std::time::Instant;
 mod expedition_store;
 mod habitat_store;
 mod journal;
+mod support;
 mod terminal_help;
 
 const MAX_EXPERIMENT_BYTES: u64 = 65_536;
@@ -27,11 +28,13 @@ Usage:\n\
   platonik suite [bridge-v1]        Run the frozen engineering validation suite\n\
   platonik expedition help          Show durable local expedition commands\n\
   platonik habitat help             Show continuous-habitat checkpoint commands\n\
+  platonik support                  Show optional development support\n\
+  platonik support protocol --json  Read the agent invitation lifecycle\n\
   platonik --metrics <command...>   Emit process execution metrics on stderr\n\
   platonik --help                   Show this help\n\
   platonik --version                Show the CLI version\n\n\
-JSON commands write to stdout; errors are JSON on stderr. Expedition/habitat commands\n\
-write only their selected store; the other commands do not write files.\n\
+Experiment errors are JSON on stderr. Expedition/habitat commands write only\n\
+their selected store. Support has separate output and local preferences.\n\
 Use a new output filename when redirecting stdout.\n\
 Input '-' reads bounded JSON from stdin. Experiments: at most 64 KiB; receipts:\n\
 at most 32 MiB. Exit 0 means success, 1 means a valid experiment or suite\n\
@@ -262,6 +265,14 @@ fn print_receipt(receipt: &check::Receipt) -> Result<(), Failure> {
 
 fn execute(args: &[String]) -> Result<u8, Failure> {
     match args {
+        [command, rest @ ..] if command == "support" => {
+            let result = support::command(rest);
+            io::stdout()
+                .write_all(result.stdout.as_bytes())
+                .and_then(|()| io::stderr().write_all(result.stderr.as_bytes()))
+                .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
+            Ok(u8::try_from(result.exit_code).unwrap_or(2))
+        }
         [command, rest @ ..] if command == "expedition" => execute_expedition(rest),
         [command, rest @ ..] if command == "habitat" => execute_habitat(rest),
         [] => {
@@ -605,7 +616,13 @@ fn main() -> ExitCode {
                 .map_err(|_| Failure::new("usage", "Command arguments must be valid UTF-8."))
         })
         .collect();
-    let result = args.and_then(|args| execute(&args));
+    let result = args.and_then(|args| {
+        let code = execute(&args)?;
+        if code == 0 && support::useful_result(&args, metrics) {
+            support::completed();
+        }
+        Ok(code)
+    });
     let exit = match result {
         Ok(code) => ExitCode::from(code),
         Err(failure) => {

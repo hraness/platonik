@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { renderHranessSiteFooter } from "@hraness/site-footer";
+import "@hraness/site-footer/styles.css";
 import Link from "next/link";
 import Image from "next/image";
 import { site } from "@/lib/site";
@@ -42,6 +44,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <p>Platonik <span className="footer-divider" aria-hidden="true">/</span> A project by <a href="https://hraness.com">Hraness</a></p>
             <p>Game in design. Ideas open to exploration.</p>
           </footer>
+          <div dangerouslySetInnerHTML={{ __html: renderHranessSiteFooter({
+            mailingList: { kind: "none" },
+            placement: "flow",
+            support: { id: "platonik", name: "Platonik", updates: false, valueProposition: "Support development of the simulation and its open documentation." },
+          }) }} />
         </AppearanceProvider>
       </body>
     </html>
