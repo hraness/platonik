@@ -42,7 +42,7 @@ impl Rng {
     }
 }
 
-fn stream(index: u64, stream_id: u64) -> u64 {
+pub(crate) fn stream(index: u64, stream_id: u64) -> u64 {
     let mut rng = Rng(index ^ (stream_id << 33) ^ ((GENERATOR_VERSION as u64) << 48));
     rng.next() ^ rng.next().rotate_left(31)
 }
@@ -68,7 +68,7 @@ pub fn names() -> Vec<String> {
 }
 
 /// Difficulty band. Every eight indices raise the band, up to band four.
-fn band(index: u64) -> u32 {
+pub(crate) fn band(index: u64) -> u32 {
     1 + ((index - 1) / 8).min(3) as u32
 }
 
@@ -299,14 +299,16 @@ fn draw_case(rng: &mut Rng, band: u32) -> Option<Experiment> {
     })
 }
 
-fn generate_case(
-    index: u64,
-    kind: u64,
+/// Draw one witnessed case from a derivation root. Public generation passes
+/// `stream(index, kind)` as the root; hosted seasons pass a salted root so the
+/// same case engine serves both paths.
+pub(crate) fn generate_case(
+    root: u64,
     ordinal: u64,
     difficulty: u32,
     exclude: &[Experiment],
 ) -> Result<Experiment, String> {
-    let mut rng = Rng(stream(index, kind).wrapping_add(ordinal.wrapping_mul(0x9e37_79b9)));
+    let mut rng = Rng(root.wrapping_add(ordinal.wrapping_mul(0x9e37_79b9)));
     for _ in 0..MAX_CASE_ATTEMPTS {
         let mut draw = Rng(rng.next());
         let Some(experiment) = draw_case(&mut draw, difficulty) else {
@@ -322,7 +324,7 @@ fn generate_case(
         }
     }
     Err(format!(
-        "Challenge generation found no feasible case for index {index}."
+        "Challenge generation found no feasible case for derivation root {root}."
     ))
 }
 
@@ -337,12 +339,17 @@ pub fn generate(index: u64) -> Result<Challenge, String> {
     let mut train: Vec<Experiment> = Vec::new();
     let mut eval = Vec::new();
     for ordinal in 0..TRAIN_CASES as u64 {
-        train.push(generate_case(index, 1, ordinal, difficulty, &train)?);
+        train.push(generate_case(
+            stream(index, 1),
+            ordinal,
+            difficulty,
+            &train,
+        )?);
     }
     for ordinal in 0..EVAL_CASES as u64 {
         let mut seen = train.clone();
         seen.extend(eval.iter().cloned());
-        eval.push(generate_case(index, 2, ordinal, difficulty, &seen)?);
+        eval.push(generate_case(stream(index, 2), ordinal, difficulty, &seen)?);
     }
     Ok(Challenge {
         schema: CHALLENGE_SCHEMA.into(),
@@ -387,7 +394,10 @@ pub fn reference_submission(challenge: &Challenge, policy: &str) -> Result<Submi
     })
 }
 
-fn check_submission(challenge: &Challenge, submission: &Submission) -> Result<(), String> {
+pub(crate) fn check_submission(
+    challenge: &Challenge,
+    submission: &Submission,
+) -> Result<(), String> {
     if submission.schema != SUBMISSION_SCHEMA {
         return Err("Submission schema must be platonik-challenge-submission-v1.".into());
     }
@@ -569,10 +579,10 @@ fn order(a: &ChallengeResult, b: &ChallengeResult) -> std::cmp::Ordering {
         .then(a.submission_hash.cmp(&b.submission_hash))
 }
 
-/// Rank verified results into per-challenge boards and a global rollup. An
-/// entrant keeps their best result per challenge; only cleared challenges
-/// count toward global work. Callers supply verified results; this orders them.
-pub fn board(results: &[ChallengeResult]) -> Board {
+/// Shared ranking core: per-challenge boards and a global rollup, in the same
+/// order the public board publishes. Callers verify results first; this orders
+/// them. Season boards reuse it so hosted rankings match public ones.
+pub(crate) fn rank_results(results: &[ChallengeResult]) -> (Vec<ChallengeBoard>, Vec<GlobalRow>) {
     let mut challenges: BTreeMap<String, Vec<&ChallengeResult>> = BTreeMap::new();
     for result in results {
         challenges
@@ -640,10 +650,18 @@ pub fn board(results: &[ChallengeResult]) -> Board {
     for (index, row) in rows.iter_mut().enumerate() {
         row.rank = index as u32 + 1;
     }
+    (boards, rows)
+}
+
+/// Rank verified results into per-challenge boards and a global rollup. An
+/// entrant keeps their best result per challenge; only cleared challenges
+/// count toward global work. Callers supply verified results; this orders them.
+pub fn board(results: &[ChallengeResult]) -> Board {
+    let (challenges, global) = rank_results(results);
     Board {
         schema: BOARD_SCHEMA.into(),
         generator: GENERATOR_VERSION,
-        challenges: boards,
-        global: rows,
+        challenges,
+        global,
     }
 }

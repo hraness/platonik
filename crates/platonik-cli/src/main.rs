@@ -1,4 +1,4 @@
-use platonik_core::{challenge, check, fixtures, model::Experiment, suite};
+use platonik_core::{challenge, check, fixtures, model::Experiment, season, suite};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use std::collections::BTreeMap;
@@ -28,6 +28,7 @@ Usage:\n\
   platonik inspect <receipt.json|-> Verify, then print compact replay maps\n\
   platonik suite [bridge-v1]        Run the frozen engineering validation suite\n\
   platonik challenge help           Show generated challenge commands\n\
+  platonik season help              Show hosted season commands\n\
   platonik expedition help          Show durable local expedition commands\n\
   platonik habitat help             Show continuous-habitat checkpoint commands\n\
   platonik support                  Show optional development support\n\
@@ -68,6 +69,32 @@ honest entries iterate on the training cases only.\n\n\
 Eval exits 0 when every scoring case passed and 1 for an honest incomplete\n\
 result. Verify and board exit 0 when the evidence itself checks out, including\n\
 failed runs. Invalid input or an operational error exits 2.\n";
+
+const SEASON_HELP: &str = "Hosted challenge seasons\n\n\
+  platonik season show <season.json|->                         Print a season manifest\n\
+  platonik season admit <season.json|-> <results-dir> <submission.json|->\n\
+                                                               Check an entry against the quota\n\
+  platonik season eval <season.json|-> <submission.json|-> <entry> --salt <file|->\n\
+                                                               Score an entry on withheld cases\n\
+  platonik season verify <season.json|-> <result.json|-> [--salt <file|->]\n\
+                                                               Check a season result's evidence\n\
+  platonik season board <season.json|-> <results-dir> [--salt <file|->]\n\
+                                                               Verify season results and rank them\n\
+  platonik season begin <index> <challenges> <max-entries> --salt <file|->\n\
+                                                               Print a new season manifest\n\
+  platonik season reveal <season.json|-> --salt <file|->       Print the revealed manifest\n\n\
+A season is a committed manifest: a challenge window, a per-entrant entry\n\
+allowance, and a hash commitment to a secret salt the organizer holds. Season\n\
+scoring cases derive from (salt, entrant, challenge, entry): every entry faces\n\
+fresh withheld worlds nobody can precompute, and the salt's reveal at season\n\
+close makes every result publicly re-derivable. `begin` needs 32 bytes of hex\n\
+salt on a file or '-' for stdin; <challenges> is a comma list or range like\n\
+1-32. The salt itself is never printed or committed — only its commitment is.\n\n\
+Admit exits 0 for an admitted entry and 1 for a rejected one. Eval exits 0 when\n\
+every scoring case passed and 1 for an honest incomplete result. Verify and\n\
+board exit 0 when the evidence checks out, including failed runs; verify\n\
+without --salt checks receipts and arithmetic only, and reports derivation as\n\
+withheld. Invalid input or an operational error exits 2.\n";
 
 const EXPEDITION_HELP: &str = "Durable local Platonik expeditions\n\n\
   platonik expedition init <new-dir> <name> <frugal|resilient>\n\
@@ -302,6 +329,7 @@ fn execute(args: &[String]) -> Result<u8, Failure> {
         [command, rest @ ..] if command == "challenge" || command == "challenges" => {
             execute_challenge(command, rest)
         }
+        [command, rest @ ..] if command == "season" => execute_season(rest),
         [command, rest @ ..] if command == "expedition" => execute_expedition(rest),
         [command, rest @ ..] if command == "habitat" => execute_habitat(rest),
         [] => {
@@ -524,28 +552,7 @@ fn execute_challenge(command: &str, args: &[String]) -> Result<u8, Failure> {
             Ok(0)
         }
         [command, dir] if command == "board" => {
-            let mut paths = Vec::new();
-            for entry in fs::read_dir(Path::new(dir))
-                .map_err(|cause| Failure::new("input_io", cause.to_string()))?
-            {
-                let path = entry
-                    .map_err(|cause| Failure::new("input_io", cause.to_string()))?
-                    .path();
-                let json = path
-                    .extension()
-                    .and_then(|ext| ext.to_str())
-                    .is_some_and(|ext| ext.eq_ignore_ascii_case("json"));
-                if json && path.is_file() {
-                    paths.push(path);
-                }
-            }
-            paths.sort();
-            if paths.len() > 1024 {
-                return Err(Failure::new(
-                    "input_limit",
-                    "Board scans at most 1024 .json files; up to 256 may be verified results.",
-                ));
-            }
+            let paths = json_files(dir)?;
             let mut generated: BTreeMap<u64, challenge::Challenge> = BTreeMap::new();
             let mut results = Vec::new();
             for path in paths {
@@ -587,6 +594,231 @@ fn execute_challenge(command: &str, args: &[String]) -> Result<u8, Failure> {
         _ => Err(Failure::new(
             "usage",
             "Unknown challenge command or arguments. Run 'platonik challenge help'.",
+        )),
+    }
+}
+
+fn read_text(path: &str, limit: u64) -> Result<String, Failure> {
+    let mut bytes = Vec::new();
+    let reader: Box<dyn Read> = if path == "-" {
+        Box::new(io::stdin())
+    } else {
+        let before_open =
+            fs::metadata(path).map_err(|error| Failure::new("input_io", error.to_string()))?;
+        validate_input_file(&before_open, limit)?;
+        let mut options = OpenOptions::new();
+        options.read(true);
+        // Prevent a path replaced with a FIFO between metadata and open from
+        // blocking before the opened-file check. Explicit stdin may still wait.
+        #[cfg(unix)]
+        options.custom_flags(libc::O_NONBLOCK);
+        let file = options
+            .open(path)
+            .map_err(|error| Failure::new("input_io", error.to_string()))?;
+        let metadata = file
+            .metadata()
+            .map_err(|error| Failure::new("input_io", error.to_string()))?;
+        validate_input_file(&metadata, limit)?;
+        Box::new(file)
+    };
+    reader
+        .take(limit + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|error| Failure::new("input_io", error.to_string()))?;
+    if bytes.len() as u64 > limit {
+        return Err(Failure::new(
+            "input_limit",
+            format!("Input exceeds the {limit}-byte limit."),
+        ));
+    }
+    String::from_utf8(bytes).map_err(|error| Failure::new("invalid_input", error.to_string()))
+}
+
+fn read_salt(path: &str) -> Result<Vec<u8>, Failure> {
+    season::parse_salt_hex(&read_text(path, 1024)?).map_err(|message| {
+        Failure::new(
+            "invalid_salt",
+            format!("Salt must be 64 hex characters: {message}"),
+        )
+    })
+}
+
+fn json_files(dir: &str) -> Result<Vec<std::path::PathBuf>, Failure> {
+    let mut paths = Vec::new();
+    for entry in
+        fs::read_dir(Path::new(dir)).map_err(|cause| Failure::new("input_io", cause.to_string()))?
+    {
+        let path = entry
+            .map_err(|cause| Failure::new("input_io", cause.to_string()))?
+            .path();
+        let json = path
+            .extension()
+            .and_then(|ext| ext.to_str())
+            .is_some_and(|ext| ext.eq_ignore_ascii_case("json"));
+        if json && path.is_file() {
+            paths.push(path);
+        }
+    }
+    paths.sort();
+    if paths.len() > 1024 {
+        return Err(Failure::new(
+            "input_limit",
+            "At most 1024 .json files are scanned in one directory.",
+        ));
+    }
+    Ok(paths)
+}
+
+fn season_results(dir: &str) -> Result<Vec<season::SeasonResult>, Failure> {
+    let mut results = Vec::new();
+    for path in json_files(dir)? {
+        match read_json::<season::SeasonResult>(
+            path.to_str()
+                .ok_or_else(|| Failure::new("input_io", "Paths must be valid UTF-8."))?,
+            MAX_RECEIPT_BYTES,
+        ) {
+            Ok(result) if result.schema == season::SEASON_RESULT_SCHEMA => {
+                results.push(result);
+                if results.len() > 256 {
+                    return Err(Failure::new(
+                        "input_limit",
+                        "At most 256 season results are admitted.",
+                    ));
+                }
+            }
+            // A well-formed JSON file that is not a season result is skipped.
+            Ok(_) => continue,
+            // Files that do not parse as results are not entries.
+            Err(failure) if failure.code == "invalid_json" => continue,
+            Err(failure) => return Err(failure),
+        }
+    }
+    Ok(results)
+}
+
+fn emit_result(result: &season::SeasonResult) -> Result<(), Failure> {
+    let mut bytes = serde_json::to_vec_pretty(result)
+        .map_err(|cause| Failure::new("output_json", cause.to_string()))?;
+    bytes.push(b'\n');
+    if bytes.len() as u64 > MAX_RECEIPT_BYTES {
+        return Err(Failure::new(
+            "receipt_limit",
+            "Result exceeds the symmetric 32 MiB export limit.",
+        ));
+    }
+    io::stdout()
+        .lock()
+        .write_all(&bytes)
+        .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
+    Ok(())
+}
+
+fn execute_season(args: &[String]) -> Result<u8, Failure> {
+    fn error(message: impl Into<String>) -> Failure {
+        Failure::new("invalid_season", message)
+    }
+    match args {
+        [] => {
+            print_text(SEASON_HELP)?;
+            Ok(0)
+        }
+        [command] if matches!(command.as_str(), "help" | "--help" | "-h") => {
+            print_text(SEASON_HELP)?;
+            Ok(0)
+        }
+        [command, path] if command == "show" => {
+            let season: season::Season = read_json(path, MAX_EXPERIMENT_BYTES)?;
+            print_json(&season)?;
+            Ok(0)
+        }
+        [command, index, challenges, max_entries, flag, salt_path]
+            if command == "begin" && flag == "--salt" =>
+        {
+            let index: u64 = index
+                .parse()
+                .map_err(|_| error("Season index must be an unsigned integer."))?;
+            let challenges = season::parse_challenge_list(challenges).map_err(error)?;
+            let max_entries: u32 = max_entries
+                .parse()
+                .map_err(|_| error("Max entries must be an unsigned integer."))?;
+            let salt = read_salt(salt_path)?;
+            print_json(&season::begin(index, challenges, max_entries, &salt).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, season_path, dir, submission_path] if command == "admit" => {
+            let season: season::Season = read_json(season_path, MAX_EXPERIMENT_BYTES)?;
+            let submission: challenge::Submission =
+                read_json(submission_path, MAX_EXPERIMENT_BYTES)?;
+            let prior = season_results(dir)?;
+            let admission = season::admit(&season, &prior, &submission).map_err(error)?;
+            print_json(&admission)?;
+            Ok(if admission.admitted { 0 } else { 1 })
+        }
+        [
+            command,
+            season_path,
+            submission_path,
+            entry,
+            flag,
+            salt_path,
+        ] if command == "eval" && flag == "--salt" => {
+            let season: season::Season = read_json(season_path, MAX_EXPERIMENT_BYTES)?;
+            let submission: challenge::Submission =
+                read_json(submission_path, MAX_EXPERIMENT_BYTES)?;
+            let entry: u32 = entry
+                .parse()
+                .map_err(|_| error("Entry must be an unsigned integer."))?;
+            let salt = read_salt(salt_path)?;
+            let result =
+                season::evaluate_entry(&season, &salt, &submission, entry).map_err(error)?;
+            let passed = result.result.passed;
+            emit_result(&result)?;
+            Ok(if passed { 0 } else { 1 })
+        }
+        [command, season_path, result_path]
+            if command == "verify" && !result_path.starts_with('-') =>
+        {
+            let season: season::Season = read_json(season_path, MAX_EXPERIMENT_BYTES)?;
+            let result: season::SeasonResult = read_json(result_path, MAX_RECEIPT_BYTES)?;
+            print_json(&season::verify_season_result(&season, &result, None).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, season_path, result_path, flag, salt_path]
+            if command == "verify" && flag == "--salt" =>
+        {
+            let season: season::Season = read_json(season_path, MAX_EXPERIMENT_BYTES)?;
+            let result: season::SeasonResult = read_json(result_path, MAX_RECEIPT_BYTES)?;
+            let salt = read_salt(salt_path)?;
+            print_json(
+                &season::verify_season_result(&season, &result, Some(&salt)).map_err(error)?,
+            )?;
+            Ok(0)
+        }
+        [command, season_path, dir] if command == "board" => {
+            let season: season::Season = read_json(season_path, MAX_EXPERIMENT_BYTES)?;
+            let results = season_results(dir)?;
+            print_json(&season::season_board(&season, &results).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, season_path, dir, flag, salt_path] if command == "board" && flag == "--salt" => {
+            let season: season::Season = read_json(season_path, MAX_EXPERIMENT_BYTES)?;
+            let results = season_results(dir)?;
+            let salt = read_salt(salt_path)?;
+            for result in &results {
+                season::verify_season_result(&season, result, Some(&salt)).map_err(error)?;
+            }
+            print_json(&season::season_board(&season, &results).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, season_path, flag, salt_path] if command == "reveal" && flag == "--salt" => {
+            let season: season::Season = read_json(season_path, MAX_EXPERIMENT_BYTES)?;
+            let salt = read_salt(salt_path)?;
+            print_json(&season::reveal(&season, &salt).map_err(error)?)?;
+            Ok(0)
+        }
+        _ => Err(Failure::new(
+            "usage",
+            "Unknown season command or arguments. Run 'platonik season help'.",
         )),
     }
 }

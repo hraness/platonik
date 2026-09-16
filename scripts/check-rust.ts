@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { existsSync, readdirSync } from "node:fs";
 
 function run(command: string, args: string[]) {
   const result = spawnSync(command, args, { stdio: "inherit" });
@@ -33,3 +34,12 @@ run("node", ["scripts/check-exchange-evidence.mjs"]);
 run("node", ["--test", "scripts/exchange/capacity-io.test.mjs"]);
 run("node", ["scripts/check-exchange-capacity.mjs"]);
 run("bun", ["scripts/record-challenges.ts", "--check"]);
+
+// Every committed season manifest gets its public board artifact re-verified
+// (receipt replay + ranking; derivation is salt-gated by the evaluator and
+// publicly checkable after the season reveals its salt).
+if (existsSync("seasons")) {
+  for (const name of readdirSync("seasons").filter((name) => /^season-\d{4}\.json$/.test(name)).sort()) {
+    run("bun", ["scripts/record-season.ts", name.replace(/\.json$/, ""), "--check"]);
+  }
+}

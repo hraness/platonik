@@ -1,0 +1,261 @@
+name: Season entry
+# Hosted challenge evaluation. Entrants open PRs that add one file under
+# season/entries/; this workflow validates the entry, scores it on withheld
+# cases with the season salt, and commits the result plus the regenerated
+# public board. pull_request_target runs this file from the base branch, so the
+# fork's code is never checked out or executed — the submission is fetched as
+# data through the GitHub API, pinned to the PR head SHA.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    paths: ["season/entries/**"]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+# Entries are serialized globally so the committed results directory is a
+# race-free ledger: each entry's ordinal and quota check see every prior commit.
+concurrency:
+  group: season-eval
+  cancel-in-progress: false
+
+env:
+  SEASON: season-0001
+  # Repository context for every `gh pr` call — no checkout exists yet.
+  GH_REPO: ${{ github.repository }}
+  ENTRY_LIMIT: "65536"
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Maintainer approval gates every entry before the salt-bearing steps run.
+    environment: season-eval
+    steps:
+      # 1. ADMIT — cheap checks before any build work. admit.env values are
+      #    %q-quoted so sourcing them later can never split or execute.
+      - name: Admit entry
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          reject() { printf 'kind=%q\n' invalid >> admit.env; printf 'reason=%q\n' "$1" >> admit.env; exit 0; }
+          # REST pull object: .base.ref, .draft, .changed_files, .head.sha,
+          # .user.login, .head.repo.full_name all in one trusted shape.
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}" > pr.json
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}/files" --paginate \
+            --jq '.[] | [.filename, .status] | @tsv' > files.tsv
+          [ "$(jq -r '.base.ref' pr.json)" = "main" ] || reject "Entries target the main branch."
+          [ "$(jq -r '.draft' pr.json)" = "false" ] || reject "Draft PRs are not scored."
+          login="$(jq -r '.user.login' pr.json | tr 'A-Z' 'a-z')"
+          [ "$(wc -l < files.tsv | tr -d ' ')" = "1" ] && [ "$(jq -r '.changed_files' pr.json)" = "1" ] \
+            || reject "PRs must add exactly one file under season/entries/."
+          status="$(cut -f2 files.tsv)"
+          path="$(cut -f1 files.tsv)"
+          [ "$status" = "added" ] || reject "Entry files must be new additions, not edits."
+          case "$path" in
+            season/entries/"$login"-[0-9]*.json) : ;;
+            *) reject "Path must be season/entries/<your-login>-<n>.json." ;;
+          esac
+          echo "$path" | grep -Eq "^season/entries/[a-z0-9-]+-[0-9]+\.json$" \
+            || reject "Entry filename must be <login>-<n>.json."
+          printf 'kind=%q\n' entry >> admit.env
+          printf 'login=%q\n' "$login" >> admit.env
+          printf 'entry_path=%q\n' "$path" >> admit.env
+          printf 'head_sha=%q\n' "$(jq -r '.head.sha' pr.json)" >> admit.env
+          printf 'head_repo=%q\n' "$(jq -r '.head.repo.full_name' pr.json)" >> admit.env
+
+      - name: Reject inadmissible pull request
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          kind=invalid; reason="Admission did not run."
+          [ -f admit.env ] && . ./admit.env
+          [ "$kind" = "entry" ] && exit 0
+          printf 'Entry not admitted: %s\n\nOnly `season/entries/<login>-<n>.json` additions are scored; see [the hosted seasons doc](https://platonik.space/docs/seasons).\n' "$reason" > report.md
+          gh pr comment "$PR" --body-file report.md || true
+          gh pr edit "$PR" --add-label season-invalid || true
+          gh pr close "$PR" || true
+          touch report.done
+          echo "Entry rejected: $reason"
+          exit 1
+
+      # 2. FETCH — the submission is data: one file, pinned to the head SHA.
+      #    The fork's ref name is never used, and nothing from the PR is checked
+      #    out or executed.
+      - name: Fetch entry file
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          . ./admit.env
+          gh api "repos/${head_repo}/contents/${entry_path}?ref=${head_sha}" \
+            -H 'Accept: application/vnd.github.raw+json' > entry.json
+          bytes="$(wc -c < entry.json | tr -d ' ')"
+          [ "$bytes" -le "$ENTRY_LIMIT" ] || {
+            echo "Entry exceeds the 64 KiB input limit." > report.md
+            gh pr comment "$PR" --body-file report.md || true
+            gh pr close "$PR" || true
+            touch report.done
+            exit 1
+          }
+          # Identity is bound by the workflow, not the file: the entrant is the
+          # GitHub account that opened the PR.
+          jq --arg name "github:$login" '.agent = ((.agent // {}) + {name: $name})' entry.json > submission.json
+          rm entry.json
+          # The bound copy is what the CLI reads — enforce the input limit on it.
+          [ "$(wc -c < submission.json | tr -d ' ')" -le "$ENTRY_LIMIT" ] || {
+            echo "Entry exceeds the 64 KiB input limit." > report.md
+            gh pr comment "$PR" --body-file report.md || true
+            gh pr close "$PR" || true
+            touch report.done
+            exit 1
+          }
+
+      # 3. BASE CHECKOUT — trusted tree only, for the toolchain and the ledger.
+      #    Actions are SHA-pinned: this workflow is privileged.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: '1.3.14'
+      - name: Install toolchain
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal
+          cargo build --locked -p platonik-cli
+          bun install --frozen-lockfile
+
+      # 4. QUOTA + DEDUP — committed results are the authoritative count.
+      - name: Check season admission
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          . ./admit.env
+          mkdir -p "season/results/$SEASON"
+          code=0
+          ./target/debug/platonik season admit "seasons/$SEASON.json" "season/results/$SEASON" submission.json > admission.json || code=$?
+          [ "$code" -le 1 ] || { cat admission.json > /dev/stderr; exit 1; }
+          cat admission.json
+          if [ "$(jq -r '.admitted' admission.json)" != "true" ]; then
+            reason="$(jq -r '.reason // "Entry quota exhausted."' admission.json)"
+            printf 'Entry not admitted: %s\n' "$reason" > report.md
+            gh pr comment "$PR" --body-file report.md || true
+            case "$reason" in
+              *uplicate*) gh pr edit "$PR" --add-label season-duplicate || true ;;
+              *) gh pr edit "$PR" --add-label season-quota-exceeded || true ;;
+            esac
+            gh pr close "$PR" || true
+            touch report.done
+            exit 1
+          fi
+          printf 'seq=%q\n' "$(jq -r '.entry' admission.json)" >> admit.env
+
+      # 5. EVAL — withheld cases keyed to (salt, entrant, challenge, entry).
+      - name: Score entry
+        env:
+          SEASON_SALT: ${{ secrets.SEASON_SALT_0001 }}
+        run: |
+          set -euo pipefail
+          trap 'rm -f salt.txt' EXIT
+          . ./admit.env
+          umask 077
+          printf '%s' "$SEASON_SALT" > salt.txt
+          code=0
+          ./target/debug/platonik season eval "seasons/$SEASON.json" submission.json "$seq" --salt salt.txt > result.json || code=$?
+          [ "$code" -le 1 ] || { [ -f result.json ] && cat result.json > /dev/stderr; exit 1; }
+          # Self-verify before publishing: full derivation + replay with salt.
+          ./target/debug/platonik season verify "seasons/$SEASON.json" result.json --salt salt.txt > verify.json
+          jq -e '.verified == true' verify.json
+
+      # 6. COMMIT — result + canonical entry + regenerated public board.
+      - name: Publish result
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          trap 'git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"' EXIT
+          . ./admit.env
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config user.name "platonik-season[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p "season/results/$SEASON" "season/entries/$SEASON"
+          cp submission.json "season/entries/$SEASON/${login}-${seq}.json"
+          cp result.json "season/results/$SEASON/${login}-${seq}.json"
+          bun scripts/record-season.ts "$SEASON" --write
+          git add "season/entries/$SEASON" "season/results/$SEASON" "public/season/$SEASON.json"
+          git commit -m "season: $SEASON entry $seq for $login (pr #$PR, ${head_sha:0:12})"
+          pushed=""
+          for attempt in 1 2 3; do
+            git rebase --abort >/dev/null 2>&1 || true
+            if git fetch origin main && git rebase "origin/main" && git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep 3
+          done
+          [ -n "$pushed" ] || { echo "Could not publish the result to main." > /dev/stderr; exit 1; }
+          # Re-check the pushed state: board regeneration must reproduce exactly.
+          bun scripts/record-season.ts "$SEASON" --check
+
+      # 7. REPORT — honest outcome on the PR; the PR is the entry's audit trail.
+      - name: Report outcome
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          . ./admit.env
+          challenge="$(jq -r '.result.challenge' result.json)"
+          passed="$(jq -r '.result.cases_passed' result.json)"
+          total="$(jq -r '.result.cases_total' result.json)"
+          work="$(jq -r '.result.total_work' result.json)"
+          bytes="$(jq -r '.result.program_bytes' result.json)"
+          hash="$(jq -r '.result.submission_hash' result.json | cut -c8-19)"
+          max="$(jq -r '.max_entries' "seasons/$SEASON.json")"
+          {
+            echo "Season \`$SEASON\` entry $seq scored on \`$challenge\`:"
+            echo ""
+            echo "| cases passed | charged work | program bytes |"
+            echo "|---|---|---|"
+            echo "| $passed / $total | $work | $bytes |"
+            echo ""
+            echo "Submission \`$hash…\` · entry $seq of $max allowed per entrant."
+            echo "Result committed at \`season/results/$SEASON/${login}-${seq}.json\` — receipts replay independently with \`platonik season verify\`; the withheld case derivation becomes publicly checkable when the season salt is revealed at close."
+            echo "Standings: https://platonik.space/lab/challenges"
+          } > report.md
+          gh pr comment "$PR" --body-file report.md || true
+          gh pr edit "$PR" --add-label season-entered || true
+          gh pr close "$PR" || true
+          touch report.done
+
+      # 8. CATCH-ALL — unexpected failures still close the loop on the PR.
+      - name: Report evaluator failure
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -uo pipefail
+          [ -f report.done ] && exit 0
+          {
+            echo "The season evaluator could not score this entry."
+            echo ""
+            echo "The entry file must be valid JSON in the submission shape from [the hosted seasons doc](https://platonik.space/docs/seasons); everything else is closed unscored."
+          } > report.md
+          gh pr comment "$PR" --body-file report.md || true
+          gh pr edit "$PR" --add-label season-error || true
+          gh pr close "$PR" || true
+          exit 1
