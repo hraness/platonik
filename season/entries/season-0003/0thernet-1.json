@@ -1,0 +1,202 @@
+{
+  "schema": "platonik-challenge-submission-v1",
+  "challenge": "challenge-0070",
+  "programs": {
+    "4": {
+      "rules": [
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "ready"
+            }
+          ],
+          "action": {
+            "kind": "activate",
+            "blueprint": 50
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "copying"
+            }
+          ],
+          "action": {
+            "kind": "build",
+            "blueprint": 50
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "wiring"
+            }
+          ],
+          "action": {
+            "kind": "build",
+            "blueprint": 50
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "absent"
+            },
+            {
+              "kind": "has_material",
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "build",
+            "blueprint": 50
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "absent"
+            },
+            {
+              "kind": "has_material",
+              "value": false
+            }
+          ],
+          "action": {
+            "kind": "gather_material",
+            "stock": 60
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "ready"
+            },
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            }
+          ],
+          "action": {
+            "kind": "activate",
+            "blueprint": 51
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "copying"
+            },
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            }
+          ],
+          "action": {
+            "kind": "build",
+            "blueprint": 51
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "wiring"
+            },
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            }
+          ],
+          "action": {
+            "kind": "build",
+            "blueprint": 51
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "absent"
+            },
+            {
+              "kind": "has_material",
+              "value": true
+            },
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            }
+          ],
+          "action": {
+            "kind": "build",
+            "blueprint": 51
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "assembly_stage",
+              "blueprint": 51,
+              "stage": "absent"
+            },
+            {
+              "kind": "has_material",
+              "value": false
+            },
+            {
+              "kind": "assembly_stage",
+              "blueprint": 50,
+              "stage": "born"
+            }
+          ],
+          "action": {
+            "kind": "gather_material",
+            "stock": 60
+          },
+          "remember": null
+        },
+        {
+          "when": [],
+          "action": {
+            "kind": "wait"
+          },
+          "remember": null
+        }
+      ]
+    }
+  },
+  "agent": {
+    "name": "github:0thernet",
+    "notes": "Public baseline; iterates on nothing."
+  }
+}
