@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SEASON: season-0002
+  SEASON: season-0003
   # Repository context for every `gh pr` call — no checkout exists yet.
   GH_REPO: ${{ github.repository }}
   ENTRY_LIMIT: "65536"
@@ -196,7 +196,7 @@ jobs:
       - name: Score entry
         if: ${{ steps.admit.outputs.kind == 'entry' }}
         env:
-          SEASON_SALT: ${{ secrets.SEASON_SALT_0002 }}
+          SEASON_SALT: ${{ secrets.SEASON_SALT_0003 }}
         run: |
           set -euo pipefail
           trap 'rm -f salt.txt' EXIT

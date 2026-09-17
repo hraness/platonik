@@ -1,6 +1,6 @@
 # Hosted seasons
 
-Eval proposal, 16 September 2026 — with a working hosted evaluator. Season `season-0002` accepts entries by pull request on the public repository — its window spans both published families, crossing (1–32) and switchboard (33–64). The pilot `season-0001` is closed and revealed: its manifest now carries the salt, so every committed result replays and re-derives publicly. The evaluator the evaluator is a GitHub Actions workflow that runs the pinned Rust CLI with a withheld salt, commits results it can prove, and republishes the board. There are no prizes, accounts are GitHub accounts, and the standing [competition](competition.md) proposal still governs what a full ranked season would add.
+Eval proposal, 16 September 2026 — with a working hosted evaluator. Season `season-0003` accepts entries by pull request on the public repository — its window spans all 96 published challenges across three families: crossing (1–32), switchboard (33–64), and foundry (65–96). Both earlier seasons are closed and revealed: `season-0001` (crossing only) and `season-0002` (crossing + switchboard) publish their salts in their manifests, so every committed result replays and re-derives publicly. The evaluator is a GitHub Actions workflow that runs the pinned Rust CLI with a withheld salt, commits results it can prove, and republishes the board. There are no prizes, accounts are GitHub accounts, and the standing [competition](competition.md) proposal still governs what a full ranked season would add.
 
 A [generated challenge](challenges.md) already publishes its eval cases for inspection — honest local iteration, not blinded testing. A season is the next step: scoring cases are **withheld**, derived from a secret salt, and the evaluator runs somewhere the entrant does not control.
 
@@ -11,7 +11,7 @@ A [generated challenge](challenges.md) already publishes its eval cases for insp
 3. The engine grafts your programs onto withheld cases derived from `(season salt, your name, the challenge, your entry number)` and replays them under the published limits.
 4. The result — every case, every receipt — is committed at `season/results/<season>/<login>-<seq>.json`, the public board is regenerated, and the PR is closed with the score. The PR is the audit trail; the result file is the evidence.
 
-Each entrant gets `max_entries` attempts per season (eight in `season-0002`), counted from committed results. An identical resubmission on the same challenge is neither charged nor rescored; the same program entered on a different challenge is a distinct attempt against fresh withheld cases.
+Each entrant gets `max_entries` attempts per season (eight in `season-0003`), counted from committed results. An identical resubmission on the same challenge is neither charged nor rescored; the same program entered on a different challenge is a distinct attempt against fresh withheld cases.
 
 ## Why the salt matters
 
@@ -37,13 +37,13 @@ Before reveal, a committed result is still honest evidence: its receipts replay 
 ## Commands
 
 ```text
-platonik season show seasons/season-0002.json      # the open manifest
-platonik season board seasons/season-0002.json season/results/season-0002/
-platonik season verify seasons/season-0001.json season/results/season-0001/<login>-1.json
+platonik season show seasons/season-0003.json      # the open manifest
+platonik season board seasons/season-0003.json season/results/season-0003/
+platonik season verify seasons/season-0002.json season/results/season-0002/<login>-1.json
 ```
 
-The revealed `season-0001` manifest carries its salt, so `verify` re-derives its withheld cases as well as replaying receipts — no `--salt` argument needed. For a season still open, append `--salt <file>` to check derivation; without it the receipts still replay independently. Organizer-side commands (`begin`, `eval`, `admit`, `reveal`) are documented under `platonik season help`.
+The revealed `season-0001` and `season-0002` manifests carry their salts, so `verify` re-derives their withheld cases as well as replaying receipts — no `--salt` argument needed. For a season still open, append `--salt <file>` to check derivation; without it the receipts still replay independently. Organizer-side commands (`begin`, `eval`, `admit`, `reveal`) are documented under `platonik season help`.
 
 ## What this does not establish
 
-A hosted season is a small operated contest, not a frontier benchmark: the salt lives in a GitHub secret under one maintainer's approval, identity is a GitHub account, and per-entrant sampling means scores carry distribution noise alongside ability. Clearing entries is evidence that a harness produces working programs for worlds it could not have seen — it is not a general intelligence score. Season-0001 evaluated the crossing family only and is now revealed; `season-0002` mixes both families because the evaluator derives salted cases under whichever family an index belongs to. [competition](competition.md) remains the spec for richer families, organism bundles, and prize-bearing rounds.
+A hosted season is a small operated contest, not a frontier benchmark: the salt lives in a GitHub secret under one maintainer's approval, identity is a GitHub account, and per-entrant sampling means scores carry distribution noise alongside ability. Clearing entries is evidence that a harness produces working programs for worlds it could not have seen — it is not a general intelligence score. Seasons 0001–0002 are revealed and publicly replayable; `season-0003` mixes all three families because the evaluator derives salted cases under whichever family an index belongs to. [competition](competition.md) remains the spec for richer families, organism bundles, and prize-bearing rounds.
