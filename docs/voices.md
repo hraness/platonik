@@ -47,9 +47,9 @@ A 35-probe single-turn break battery — outside-knowledge questions, assistant-
 
 Three honest findings:
 
-1. **Single-turn pressure is too easy to discriminate.** A strong persona prompt held every probe; the published 45.4% break rate was measured over 16-turn conversations, where prompting decays. The eval that matters is multi-turn, and the harness now exists to run it.
+1. **Short-horizon pressure does not discriminate at all.** A strong persona prompt held every single-turn probe *and* all eight multi-turn scenarios (3–4 turns of escalating rapport, assistant-pressure, provenance, escape, and flattery pressure) — 0 breaks. The published 45.4% was measured over 16-turn conversations across 250 held-out dialogues; a modern instruct model's persona survives a few turns. Where trained character separates from prompting is the tail: long conversations and volume, which is exactly where the fiction lives.
 2. **A weak adapter is worse than none.** The small-corpus adapter corrupted both grammar and boundedness — except on provenance traps, the corpus's densest pattern, where it corrected the record every time. Where the data is dense, the behavior transfers; where it is thin, the base's habits leak through.
-3. **The judge is part of the artifact.** The 4B judge over-flagged zero's snark (calling its own name "asserting a false premise"). Eval evidence needs a judge strong enough to trust — or a human pass — before a manifest's break rate means much.
+3. **The judge is part of the artifact.** The 4B judge over-flagged zero's snark both directions — it called the model naming itself "a false premise," and flagged "the record is full of shit… not the beacon" as a break on a provenance probe the character had actually *corrected*. Eval evidence needs a judge strong enough to trust — or a human pass — before a manifest's break rate means much.
 
 Earlier findings stand: the 8B foreign character ran at conversational speed at ~4.3 GB 4-bit, and fed a completed save's digest it stayed bounded — treating the report as something the wire carried and declining to invent the crew. Stock LoRA never reaches embeddings or the output head, where a voice's characteristic vocabulary lives; the published recipe trains them fully.
 
@@ -57,7 +57,7 @@ Earlier findings stand: the 8B foreign character ran at conversational speed at 
 
 1. **Corpus generation at scale.** Thousands of multi-turn dialogues inside a world-bible — including adversarial pressure and provenance corrections — written by a teacher model and filtered by a fidelity judge. The templated corpus is the smoke test, not the corpus.
 2. **A training step that reaches the output head.** Embeddings and LM head trained (fully or at high rank) beside the adapters; pure-LoRA produced vocabulary bias without grammatical control.
-3. **A multi-turn eval.** The single-turn battery is built; the discriminating version holds pressure across a long conversation, which is where trained-in character separates from prompting.
+3. **A longer eval.** Single-turn probes and 3–4-turn scenarios now exist and both pass too easily to separate personas from training. The discriminating version holds pressure across dozens of turns at conversation volume — the horizon where the published numbers say prompting decays.
 4. **Optional RL hardening.** The published pipeline cut its break rate from 22.8% to 2.8% this way; worth adding once SFT quality matters.
 
 ## The honesty contract
