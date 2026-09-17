@@ -188,6 +188,12 @@ export const documents = [
     description: "Michael Levin, minimal collective computation, and a careful route toward complexity research.",
     question: "What could playing help us learn?",
   },
+  {
+    slug: "voices",
+    title: "A voice on the wire",
+    description: "A proposed character-model layer for the contacted side of the wire: checked reports in, fiction out — plus what a local spike established.",
+    question: "Who answers at the Far Beacon?",
+  },
 ] as const;
 
 export function findDocument(slug: string) {
