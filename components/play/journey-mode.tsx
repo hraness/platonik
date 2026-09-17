@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { RecordedArk } from "@/components/recorded-ark";
 import { RecordedBloom } from "@/components/recorded-bloom";
 import { RecordedHabitat } from "@/components/recorded-habitat";
@@ -86,6 +87,16 @@ function advanceTick(advance: Advance | null): number {
 const ADVANCE_GRADED = new Set(["answer", "ark", "ports", "bloom"]);
 /** Journeys whose cold receipts a grader admits. Exchange needs its case id. */
 const RECEIPT_GRADED = new Set(["answer", "ark", "ports", "bloom", "exchange"]);
+
+const JOURNEY_ORDER = [
+  "continuity",
+  "construction",
+  "answer",
+  "ark",
+  "ports",
+  "bloom",
+  "exchange",
+];
 
 const JOURNEY_PRESETS: Record<string, { name: string; label: string }[]> = {
   continuity: [
@@ -637,6 +648,14 @@ export function JourneyMode({
       ? advanceTick(advance)
       : 0;
   const outcome = receipt?.result ?? finished;
+  const journeyIndex = JOURNEY_ORDER.indexOf(activeJourney);
+  const nextJourney =
+    outcome?.outcome?.passed && journeyIndex >= 0 && journeyIndex < JOURNEY_ORDER.length - 1
+      ? JOURNEY_ORDER[journeyIndex + 1]
+      : null;
+  const nextCase = nextJourney
+    ? catalog?.journeys.find((journey) => journey.id === nextJourney)?.cases[0] ?? null
+    : null;
   const brief = `${copy?.detail ?? track?.title ?? "Journey"}${caseId ? ` Case ${caseId}.` : ""} Write the program for cell ${editCell}.`;
 
   return (
@@ -857,6 +876,17 @@ export function JourneyMode({
                 : "World contract failed"}{" "}
               — {outcome.status ?? "finished"} · {outcome.ticks_completed ?? 0}{" "}
               ticks · {number(work(outcome.costs))} modeled work.
+            </p>
+          )}
+          {outcome?.outcome?.passed && nextCase && nextJourney && (
+            <p className="play-next">
+              <Link
+                className="lab-button secondary"
+                href={`/play?mode=journeys&case=${nextCase}`}
+              >
+                Next: {JOURNEY_DESCRIPTIONS[nextJourney]?.title ?? nextJourney}{" "}
+                <span aria-hidden="true">→</span>
+              </Link>
             </p>
           )}
           {grade && (

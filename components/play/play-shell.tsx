@@ -180,7 +180,7 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
       </nav>
       {programNotice && <p className="play-notice lab-note">{programNotice}</p>}
       <section className="play-track-body">
-        {track === "opening" && <OpeningMode wasm={wasm} initialMission={initial.case} />}
+        {track === "opening" && <OpeningMode wasm={wasm} initialMission={initial.case} initialProgram={initial.program} />}
         {track === "challenges" && (
           <ChallengeMode
             wasm={wasm}
