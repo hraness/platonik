@@ -15,10 +15,14 @@ pub const BOARD_SCHEMA: &str = "platonik-challenge-board-v1";
 pub const GENERATOR_VERSION: u32 = 1;
 /// The currently published window. Higher indices still derive, but the
 /// supported set grows only with a reviewed generator change.
-pub const PUBLISHED_CHALLENGES: u64 = 32;
+pub const PUBLISHED_CHALLENGES: u64 = 64;
+/// Indices 1..=32 are the crossing family forever: their derived bytes are
+/// frozen by the committed artifacts. Switchboard begins at index 33.
+const CROSSING_CHALLENGES: u64 = 32;
 pub const TRAIN_CASES: usize = 4;
 pub const EVAL_CASES: usize = 4;
 pub const EDITABLE_COURIER: u16 = 1;
+pub const EDITABLE_KEEPER: u16 = 2;
 const MAX_CASE_ATTEMPTS: u32 = 512;
 const MAX_PLACEMENT_ATTEMPTS: u32 = 64;
 
@@ -67,9 +71,36 @@ pub fn names() -> Vec<String> {
     (1..=PUBLISHED_CHALLENGES).map(challenge_id).collect()
 }
 
-/// Difficulty band. Every eight indices raise the band, up to band four.
+/// The family an index belongs to. Keyed by range, not by a version bump, so
+/// the existing crossing stream keeps its exact bytes.
+pub(crate) fn family(index: u64) -> &'static str {
+    if index <= CROSSING_CHALLENGES {
+        "crossing"
+    } else {
+        "switchboard"
+    }
+}
+
+/// The families inside the published window, in first-index order.
+pub fn families() -> Vec<String> {
+    let mut seen = Vec::new();
+    for name in (1..=PUBLISHED_CHALLENGES).map(family) {
+        if !seen.iter().any(|known| *known == name) {
+            seen.push(name.to_string());
+        }
+    }
+    seen
+}
+
+/// Difficulty band. Every eight indices raise the band, up to band four, and
+/// each family restarts its ramp at band one on its first index.
 pub(crate) fn band(index: u64) -> u32 {
-    1 + ((index - 1) / 8).min(3) as u32
+    let offset = if index <= CROSSING_CHALLENGES {
+        index.saturating_sub(1)
+    } else {
+        index - CROSSING_CHALLENGES - 1
+    };
+    1 + (offset / 8).min(3) as u32
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -299,10 +330,365 @@ fn draw_case(rng: &mut Rng, band: u32) -> Option<Experiment> {
     })
 }
 
+/// Switchboard: a fixed porter shuttles sparks from the source to a
+/// capacity-one depot, each drop reports the spark's bit on the depot's
+/// links, a fixed relay forwards it, and the editable keeper routes the
+/// depot's front spark through the valve to the matching zero/one beacon.
+/// The capacity-one depot serializes arrivals so the newest report always
+/// describes the front spark; the scored skill is conditional routing with
+/// memory, not pathfinding.
+fn draw_switchboard(rng: &mut Rng, band: u32) -> Option<Experiment> {
+    let flip_x = rng.chance(1, 2);
+    let flip_y = rng.chance(1, 2);
+    // Corridor length: the porter walks 2..=5 cells from source to depot.
+    let distance = (2 + rng.below(2 + u64::from(band.min(2)))) as u8;
+    let height = (5 + rng.below(2)) as u8;
+    let width = distance + 4 + rng.below(2) as u8;
+    let corridor_y = (1 + rng.below(u64::from(height - 3))) as u8;
+    let source = Point {
+        x: 1,
+        y: corridor_y,
+    };
+    let depot = Point {
+        x: 1 + distance,
+        y: corridor_y,
+    };
+    // The relay sits past the depot and doubles as the shuttle's bumper.
+    let relay = Point {
+        x: 2 + distance,
+        y: corridor_y,
+    };
+    let valve = Point {
+        x: 1 + distance,
+        y: corridor_y + 1,
+    };
+    let keeper = Point {
+        x: 2 + distance,
+        y: corridor_y + 1,
+    };
+    // The valve's two free neighbors are the outlets; which side is zero is drawn.
+    let west = Point {
+        x: distance,
+        y: corridor_y + 1,
+    };
+    let south = Point {
+        x: 1 + distance,
+        y: corridor_y + 2,
+    };
+    let (beacon_zero, beacon_one) = if rng.chance(1, 2) {
+        (west, south)
+    } else {
+        (south, west)
+    };
+    let report_delay = (1 + rng.below(u64::from(band.min(4)))) as u32;
+    let forward_delay = (1 + rng.below(u64::from(band.min(4)))) as u32;
+    // Delivery schedule: the porter's round trip is 2d+4 ticks; a routed spark
+    // frees the depot after report+forward+3. The slower side paces arrivals.
+    let first_drop = u64::from(distance) + 2;
+    let period =
+        (2 * u64::from(distance) + 4).max(u64::from(report_delay) + u64::from(forward_delay) + 3);
+    let mut count = 3 + band + rng.below(3) as u32;
+    let mut last_delivery = first_drop
+        + u64::from(count - 1) * period
+        + u64::from(report_delay)
+        + u64::from(forward_delay)
+        + 2;
+    // Keep slack for events and a tail margin under the 128-tick horizon.
+    while last_delivery > 80 && count > 4 {
+        count -= 1;
+        last_delivery = first_drop
+            + u64::from(count - 1) * period
+            + u64::from(report_delay)
+            + u64::from(forward_delay)
+            + 2;
+    }
+    // Bit mix: at least one of each value, minority dealt evenly through the
+    // drop order so no beacon starves behind a long run of the other value.
+    let zeros = (1 + rng.below(u64::from(count - 1))) as u32;
+    let ones = count - zeros;
+    let (minor, minor_bit) = if zeros <= ones {
+        (zeros, false)
+    } else {
+        (ones, true)
+    };
+    let mut bits = Vec::with_capacity(count as usize);
+    let mut acc = (rng.below(u64::from(count))) as u32;
+    for _ in 0..count {
+        acc += minor;
+        if acc >= count {
+            bits.push(minor_bit);
+            acc -= count;
+        } else {
+            bits.push(!minor_bit);
+        }
+    }
+    // Longest delivery gap each outlet can face, in spark positions, counting
+    // the run-up to a bit's first arrival as a gap too.
+    let gap = |value: bool| -> u64 {
+        let mut longest = 0u64;
+        let mut seen = 0u64;
+        for (index, bit) in bits.iter().enumerate() {
+            if *bit == value {
+                longest = longest.max(index as u64 - seen);
+                seen = index as u64 + 1;
+            }
+        }
+        longest
+    };
+    // Mid-run disturbances, all retry-safe for a patient keeper: one of the
+    // redundant depot links can be cut, the valve can open late or flicker
+    // shut, and the downstream link can flap. Nothing blocks the corridor.
+    let mut events = Vec::new();
+    let mut valve_starts_enabled = true;
+    let mut stall = 0u64;
+    if band >= 2 {
+        let event_count = match band {
+            2 => 1,
+            3 => 1 + rng.below(2),
+            _ => 2 + rng.below(2),
+        };
+        let mut kinds = [0u8, 1, 2, 3];
+        let mut remaining = kinds.len();
+        for _ in 0..event_count.min(remaining as u64) {
+            let pick = rng.below(remaining as u64) as usize;
+            remaining -= 1;
+            kinds.swap(pick, remaining);
+            match kinds[remaining] {
+                0 => {
+                    // Cut one redundant depot->relay report link for good.
+                    let at = first_drop + 2 + rng.below((last_delivery - first_drop - 4).max(1));
+                    events.push(Event {
+                        tick: at as u32,
+                        event: EventKind::LinkEnabled {
+                            id: 40,
+                            enabled: false,
+                        },
+                    });
+                }
+                1 => {
+                    // The valve opens late; everything upstream just waits.
+                    valve_starts_enabled = false;
+                    let at = 2 + rng.below(4 + u64::from(band));
+                    stall += at;
+                    events.push(Event {
+                        tick: at as u32,
+                        event: EventKind::ValveEnabled {
+                            id: fixtures::VALVE,
+                            enabled: true,
+                        },
+                    });
+                }
+                2 => {
+                    // The valve flickers shut for a few ticks mid-run.
+                    let width = 1 + rng.below(2 + u64::from(band));
+                    let span = (last_delivery - first_drop - period - width - 2).max(1);
+                    let at = first_drop + period + rng.below(span);
+                    stall += width;
+                    events.push(Event {
+                        tick: at as u32,
+                        event: EventKind::ValveEnabled {
+                            id: fixtures::VALVE,
+                            enabled: false,
+                        },
+                    });
+                    events.push(Event {
+                        tick: (at + width) as u32,
+                        event: EventKind::ValveEnabled {
+                            id: fixtures::VALVE,
+                            enabled: true,
+                        },
+                    });
+                }
+                _ => {
+                    // The relay->keeper link drops briefly; resends cover it.
+                    let width = 1 + rng.below(2 + u64::from(band));
+                    let span = (last_delivery - first_drop - period - width - 2).max(1);
+                    let at = first_drop + period + rng.below(span);
+                    stall += width;
+                    events.push(Event {
+                        tick: at as u32,
+                        event: EventKind::LinkEnabled {
+                            id: 44,
+                            enabled: false,
+                        },
+                    });
+                    events.push(Event {
+                        tick: (at + width) as u32,
+                        event: EventKind::LinkEnabled {
+                            id: 44,
+                            enabled: true,
+                        },
+                    });
+                }
+            }
+        }
+    }
+    events.sort_by_key(|event| event.tick);
+    let ticks = last_delivery + stall + 12 + rng.below(6);
+    if ticks > u64::from(MAX_TICKS - 2) {
+        return None;
+    }
+    let ticks = ticks as u32;
+    // Each beacon must see its quota of its own bit and stay charged: charge
+    // covers the run-up plus the longest gap between that bit's deliveries,
+    // so a late or stalled router still drains to zero.
+    let drain_every = 4 + rng.below(4) as u32;
+    let spark_charge = 3 + rng.below(4) as u32;
+    let first_delivery = first_drop + u64::from(report_delay) + u64::from(forward_delay) + 2;
+    let early_drains = first_delivery / u64::from(drain_every) + 1;
+    let mut beacon = |id: u16, position: Point, accepts: bool, needed: u32| -> Beacon {
+        let gap_drains = gap(!accepts) * period / u64::from(drain_every);
+        Beacon {
+            id,
+            position,
+            accepts,
+            initial_charge: (early_drains + gap_drains + 3 + rng.below(3)) as u32,
+            drain_every,
+            drain_amount: 1,
+            spark_charge,
+            required_deliveries: needed,
+        }
+    };
+    let beacons = vec![
+        beacon(20, beacon_zero, false, zeros),
+        beacon(21, beacon_one, true, ones),
+    ];
+    // Decorative walls only: never on the corridor or under the mechanism.
+    let mut forbidden: Vec<Point> = (1..=2 + distance)
+        .map(|x| Point { x, y: corridor_y })
+        .collect();
+    forbidden.extend([valve, keeper, beacon_zero, beacon_one]);
+    let mut walls = Vec::new();
+    for _ in 0..rng.below(3 + u64::from(band)) {
+        for _ in 0..MAX_PLACEMENT_ATTEMPTS {
+            let point = Point {
+                x: rng.below(u64::from(width)) as u8,
+                y: rng.below(u64::from(height)) as u8,
+            };
+            if !forbidden.contains(&point) && !walls.contains(&point) {
+                walls.push(point);
+                break;
+            }
+        }
+    }
+    let place = |point: Point| Point {
+        x: if flip_x { width - 1 - point.x } else { point.x },
+        y: if flip_y {
+            height - 1 - point.y
+        } else {
+            point.y
+        },
+    };
+    let walls = walls.iter().map(|point| place(*point)).collect();
+    Some(Experiment {
+        version: MODEL_VERSION,
+        seed: rng.next(),
+        width,
+        height,
+        walls,
+        sources: vec![Source {
+            id: 10,
+            position: place(source),
+            sparks: (1..=count)
+                .map(|id| Spark {
+                    id,
+                    bit: bits[id as usize - 1],
+                })
+                .collect(),
+        }],
+        depots: vec![Depot {
+            id: 11,
+            position: place(depot),
+            capacity: 1,
+        }],
+        beacons: beacons
+            .into_iter()
+            .map(|entry| Beacon {
+                position: place(entry.position),
+                ..entry
+            })
+            .collect(),
+        valves: vec![Valve {
+            id: fixtures::VALVE,
+            position: place(valve),
+            depot: 11,
+            beacon_zero: 20,
+            beacon_one: 21,
+            enabled: valve_starts_enabled,
+        }],
+        cells: vec![
+            Cell {
+                id: 1,
+                position: place(source),
+                heading: if flip_x {
+                    Direction::West
+                } else {
+                    Direction::East
+                },
+                mobile: true,
+                memory: [0; 4],
+                program: fixtures::switchboard_porter(),
+            },
+            Cell {
+                id: EDITABLE_KEEPER,
+                position: place(keeper),
+                heading: Direction::East,
+                mobile: false,
+                memory: [0; 4],
+                program: fixtures::idle_program(),
+            },
+            Cell {
+                id: 3,
+                position: place(relay),
+                heading: Direction::East,
+                mobile: false,
+                memory: [0; 4],
+                program: fixtures::switchboard_relay(),
+            },
+        ],
+        links: vec![
+            Link {
+                id: 40,
+                from: Endpoint::Depot { id: 11 },
+                to_cell: 3,
+                to_port: 0,
+                delay: report_delay,
+                enabled: true,
+            },
+            Link {
+                id: 41,
+                from: Endpoint::Depot { id: 11 },
+                to_cell: 3,
+                to_port: 0,
+                delay: report_delay,
+                enabled: true,
+            },
+            Link {
+                id: 44,
+                from: Endpoint::Cell { id: 3, port: 0 },
+                to_cell: EDITABLE_KEEPER,
+                to_port: 0,
+                delay: forward_delay,
+                enabled: true,
+            },
+        ],
+        events,
+        ticks,
+        fuel: 20_000 + rng.below(20_000),
+        activation_fuel: 128,
+        construction: None,
+    })
+}
+
 /// Draw one witnessed case from a derivation root. Public generation passes
 /// `stream(index, kind)` as the root; hosted seasons pass a salted root so the
-/// same case engine serves both paths.
-pub(crate) fn generate_case(
+/// same case engine serves both paths. The draw function, editable cell, and
+/// witness program are the family's contract: a case is admitted only when
+/// the witness passes it under the published limits.
+fn witnessed_case(
+    draw: fn(&mut Rng, u32) -> Option<Experiment>,
+    editable: u16,
+    witness: &Program,
     root: u64,
     ordinal: u64,
     difficulty: u32,
@@ -310,15 +696,14 @@ pub(crate) fn generate_case(
 ) -> Result<Experiment, String> {
     let mut rng = Rng(root.wrapping_add(ordinal.wrapping_mul(0x9e37_79b9)));
     for _ in 0..MAX_CASE_ATTEMPTS {
-        let mut draw = Rng(rng.next());
-        let Some(experiment) = draw_case(&mut draw, difficulty) else {
+        let mut drawn = Rng(rng.next());
+        let Some(experiment) = draw(&mut drawn, difficulty) else {
             continue;
         };
         if exclude.contains(&experiment) {
             continue;
         }
-        let witnessed =
-            fixtures::replace_program(&experiment, EDITABLE_COURIER, fixtures::resilient_courier());
+        let witnessed = fixtures::replace_program(&experiment, editable, witness.clone());
         if crate::sim::run(&witnessed).is_ok_and(|result| result.outcome.passed) {
             return Ok(experiment);
         }
@@ -328,6 +713,57 @@ pub(crate) fn generate_case(
     ))
 }
 
+/// One family's case-generation contract: which cell entrants edit, the
+/// public witness that admits cases, and the draw that builds a world.
+struct FamilySpec {
+    family: &'static str,
+    editable: u16,
+    witness_name: &'static str,
+    witness: Program,
+    draw: fn(&mut Rng, u32) -> Option<Experiment>,
+}
+
+fn spec_for(family: &str) -> FamilySpec {
+    match family {
+        "switchboard" => FamilySpec {
+            family: "switchboard",
+            editable: EDITABLE_KEEPER,
+            witness_name: "switchboard_keeper",
+            witness: fixtures::switchboard_keeper(),
+            draw: draw_switchboard,
+        },
+        _ => FamilySpec {
+            family: "crossing",
+            editable: EDITABLE_COURIER,
+            witness_name: "resilient_courier",
+            witness: fixtures::resilient_courier(),
+            draw: draw_case,
+        },
+    }
+}
+
+/// Derive one case under the index's own family contract — the same draw,
+/// editable cell, and witness the public bundle uses — for the hosted
+/// season's salted path. A season manifest may name any published index and
+/// stay coherent.
+pub(crate) fn derive_case(
+    index: u64,
+    root: u64,
+    ordinal: u64,
+    exclude: &[Experiment],
+) -> Result<Experiment, String> {
+    let spec = spec_for(family(index));
+    witnessed_case(
+        spec.draw,
+        spec.editable,
+        &spec.witness,
+        root,
+        ordinal,
+        band(index),
+        exclude,
+    )
+}
+
 /// Derive one challenge. Pure and deterministic: the same index always yields
 /// the same train/eval split under this generator version. Eval draws never
 /// repeat a case already issued in the same bundle.
@@ -335,11 +771,15 @@ pub fn generate(index: u64) -> Result<Challenge, String> {
     if !(1..=9999).contains(&index) {
         return Err(format!("Unknown challenge index: {index}"));
     }
+    let spec = spec_for(family(index));
     let difficulty = band(index);
     let mut train: Vec<Experiment> = Vec::new();
     let mut eval = Vec::new();
     for ordinal in 0..TRAIN_CASES as u64 {
-        train.push(generate_case(
+        train.push(witnessed_case(
+            spec.draw,
+            spec.editable,
+            &spec.witness,
             stream(index, 1),
             ordinal,
             difficulty,
@@ -349,17 +789,25 @@ pub fn generate(index: u64) -> Result<Challenge, String> {
     for ordinal in 0..EVAL_CASES as u64 {
         let mut seen = train.clone();
         seen.extend(eval.iter().cloned());
-        eval.push(generate_case(stream(index, 2), ordinal, difficulty, &seen)?);
+        eval.push(witnessed_case(
+            spec.draw,
+            spec.editable,
+            &spec.witness,
+            stream(index, 2),
+            ordinal,
+            difficulty,
+            &seen,
+        )?);
     }
     Ok(Challenge {
         schema: CHALLENGE_SCHEMA.into(),
         id: challenge_id(index),
         index,
         generator: GENERATOR_VERSION,
-        family: "crossing".into(),
+        family: spec.family.into(),
         band: difficulty,
-        editable: vec![EDITABLE_COURIER],
-        witness: "resilient_courier".into(),
+        editable: vec![spec.editable],
+        witness: spec.witness_name.into(),
         train,
         eval,
     })
@@ -369,23 +817,44 @@ pub fn by_id(id: &str) -> Result<Challenge, String> {
     generate(parse_id(id)?)
 }
 
+/// The reference policies a family admits, in board order. `idle` is the
+/// shared honest floor; `resilient` on switchboard grafts the crossing
+/// witness into the keeper cell, where it runs and fails on its own merits —
+/// a control showing the two skills do not transfer.
+fn family_policies(family: &str) -> &'static [&'static str] {
+    match family {
+        "switchboard" => &["keeper", "resilient", "idle"],
+        _ => &["resilient", "compact", "idle"],
+    }
+}
+
 /// A named public baseline submission. Reference entries are honest anchors for
 /// a board, not strong policies; their token counts are unknown, not zero.
+/// Policies are family-scoped: asking for one outside its family is an error,
+/// never a silent substitution.
 pub fn reference_submission(challenge: &Challenge, policy: &str) -> Result<Submission, String> {
-    let program = match policy {
-        "resilient" => fixtures::resilient_courier(),
-        "compact" => fixtures::compact_courier(),
-        "idle" => fixtures::idle_program(),
+    let program = match (challenge.family.as_str(), policy) {
+        (_, "idle") => fixtures::idle_program(),
+        ("crossing", "resilient") => fixtures::resilient_courier(),
+        ("crossing", "compact") => fixtures::compact_courier(),
+        ("switchboard", "keeper") => fixtures::switchboard_keeper(),
+        ("switchboard", "resilient") => fixtures::resilient_courier(),
         _ => {
             return Err(format!(
-                "Unknown reference policy: {policy}. Known: resilient, compact, idle."
+                "Unknown reference policy for family {}: {policy}. Known: {}.",
+                challenge.family,
+                family_policies(&challenge.family).join(", ")
             ));
         }
     };
     Ok(Submission {
         schema: SUBMISSION_SCHEMA.into(),
         challenge: challenge.id.clone(),
-        programs: BTreeMap::from([(EDITABLE_COURIER.to_string(), program)]),
+        programs: challenge
+            .editable
+            .iter()
+            .map(|id| (id.to_string(), program.clone()))
+            .collect(),
         agent: Some(AgentReport {
             name: format!("reference:{policy}"),
             tokens: None,

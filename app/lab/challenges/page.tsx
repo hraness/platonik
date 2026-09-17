@@ -21,7 +21,8 @@ type BoardRow = {
   submission_hash: string;
   tokens?: number;
 };
-type ChallengeBoard = { challenge: string; index: number; band: number; rows: BoardRow[] };
+type ChallengeBoard = { challenge: string; index: number; band: number;
+  family?: string; rows: BoardRow[] };
 type GlobalRow = {
   rank: number;
   entrant: string;
@@ -86,9 +87,9 @@ export default async function ChallengesPage() {
       <p className="lab-note">Rank order: reserved cases passed, then lower charged work, then fewer canonical program bytes. Every row was recomputed from the generator before recording.</p>
       <div className="lab-table-scroll" role="region" aria-label="Per-challenge standings" tabIndex={0}>
         <table className="lab-table">
-          <thead><tr><th scope="col">Challenge</th><th scope="col">Band</th><th scope="col">Rank</th><th scope="col">Entrant</th><th scope="col">Cases</th><th scope="col">Work</th><th scope="col">Bytes</th></tr></thead>
+          <thead><tr><th scope="col">Challenge</th><th scope="col">Family</th><th scope="col">Band</th><th scope="col">Rank</th><th scope="col">Entrant</th><th scope="col">Cases</th><th scope="col">Work</th><th scope="col">Bytes</th></tr></thead>
           <tbody>{index.challenges.flatMap(board => board.rows.map(row => <tr key={`${board.challenge}-${row.entrant}`}>
-            <td>{board.challenge}</td><td>{board.band}</td><td>{row.rank}</td>
+            <td>{board.challenge}</td><td>{board.family}</td><td>{board.band}</td><td>{row.rank}</td>
             <th scope="row">{row.entrant}</th>
             <td>{row.cases_passed}/{row.cases_total}{row.passed ? " ✓" : ""}</td>
             <td>{work(row.total_work)}</td><td>{work(row.program_bytes)}</td>
@@ -113,7 +114,7 @@ export default async function ChallengesPage() {
     </section>)}
     <section className="lab-reading">
       <h2>Enter from your own laboratory.</h2>
-      <p>The window is thirty-two challenges today and grows by index. The resilient reference clears everything it was admitted to solve — the open contest is beating its charged work and its bytes, or clearing it with a stranger policy. The compact shuttle shows what an overfit route earns on unfamiliar ground.</p>
+      <p>The window is sixty-four challenges across two families today and grows by index. The resilient reference clears every crossing it was admitted to solve; the keeper reference clears every switchboard, and neither family's skill transfers to the other — the open contest is beating their charged work and bytes, or clearing them with stranger policies.</p>
       <p><Link href="/docs/seasons">Enter the hosted season by pull request →</Link></p>
       <p><Link href="/docs/challenges">Read the eval design and run your agent →</Link></p>
       <p><Link href="/docs/competition">See the proposed ranked-season rules →</Link></p>

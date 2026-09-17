@@ -148,6 +148,102 @@ pub fn controller_program() -> Program {
     }
 }
 
+/// The fixed switchboard shuttle: carry each spark from the source to the
+/// depot, bouncing off whatever blocks the far side of each stop. The depot
+/// itself reports the dropped spark's bit, so this program never needs to
+/// read the bit it carries.
+pub fn switchboard_porter() -> Program {
+    Program {
+        rules: vec![
+            rule(
+                vec![
+                    Condition::AtReceiver { value: true },
+                    Condition::Carrying { value: true },
+                ],
+                Action::Drop,
+            ),
+            rule(
+                vec![
+                    Condition::AtSource { value: true },
+                    Condition::Carrying { value: false },
+                ],
+                Action::Pickup,
+            ),
+            rule(
+                vec![Condition::Blocked {
+                    direction: Relative::Forward,
+                    value: true,
+                }],
+                Action::Turn {
+                    direction: Relative::Back,
+                },
+            ),
+            rule(
+                vec![],
+                Action::Move {
+                    direction: Relative::Forward,
+                },
+            ),
+        ],
+    }
+}
+
+/// The fixed switchboard depot reader: take each arrival report, then keep
+/// forwarding the last taken bit downstream. A forwarded signal carries the
+/// original spark's receipt id as evidence, so the report still names its
+/// spark; resending is what lets a downstream link flap heal on its own.
+pub fn switchboard_relay() -> Program {
+    Program {
+        rules: vec![
+            Rule {
+                when: vec![Condition::HasMessage {
+                    port: 0,
+                    value: true,
+                }],
+                action: Action::TakeMessage { port: 0, slot: 0 },
+                remember: Some(MemoryWrite { slot: 1, value: 1 }),
+            },
+            rule(
+                vec![Condition::Memory { slot: 1, value: 1 }],
+                Action::Send {
+                    port: 0,
+                    bit: BitSource::Memory { slot: 0 },
+                },
+            ),
+            rule(vec![], Action::Wait),
+        ],
+    }
+}
+
+/// The switchboard witness: take each forwarded report, then keep routing the
+/// depot's front spark by the last taken bit. A capacity-one depot keeps the
+/// newest report aligned with the front spark, and the engine's own beacon
+/// check turns a stale bit into a rejected action rather than a wrong
+/// delivery, so retrying can never misroute.
+pub fn switchboard_keeper() -> Program {
+    Program {
+        rules: vec![
+            Rule {
+                when: vec![Condition::Memory { slot: 1, value: 1 }],
+                action: Action::Route {
+                    valve: VALVE,
+                    bit: BitSource::Memory { slot: 0 },
+                },
+                remember: Some(MemoryWrite { slot: 1, value: 0 }),
+            },
+            Rule {
+                when: vec![Condition::HasMessage {
+                    port: 0,
+                    value: true,
+                }],
+                action: Action::TakeMessage { port: 0, slot: 0 },
+                remember: Some(MemoryWrite { slot: 1, value: 1 }),
+            },
+            rule(vec![], Action::Wait),
+        ],
+    }
+}
+
 pub fn constant_controller(bit: bool) -> Program {
     Program {
         rules: vec![rule(
