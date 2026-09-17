@@ -1554,3 +1554,93 @@ mod tests {
         );
     }
 }
+
+/// Kani bounded model-checking harnesses (`cargo kani -p platonik-core`).
+///
+/// These cover the receipt arithmetic and identity helpers rather than the
+/// full simulator replay — `verify_receipt` re-executes the world, which is
+/// too large a model for CBMC; what *is* proven here is that cost summation
+/// never wraps silently and that frame-id equality is exactly set equality
+/// with distinctness.
+#[cfg(kani)]
+mod proofs {
+    use super::*;
+
+    fn any_costs() -> Costs {
+        Costs {
+            loading: kani::any(),
+            scheduling: kani::any(),
+            conditions: kani::any(),
+            sensors: kani::any(),
+            memory_reads: kani::any(),
+            memory_writes: kani::any(),
+            actions: kani::any(),
+            messages: kani::any(),
+            transfers: kani::any(),
+            checking: kani::any(),
+            draining: kani::any(),
+            copying: kani::any(),
+            construction: kani::any(),
+        }
+    }
+
+    /// `checked_work` returns the exact arithmetic sum of all thirteen
+    /// counters, or fails — it can never silently wrap.
+    #[kani::proof]
+    #[kani::unwind(16)]
+    fn checked_work_never_wraps() {
+        let costs = any_costs();
+        let expected = counters(&costs)
+            .iter()
+            .fold(0u128, |sum, &value| sum + value as u128);
+        match checked_work(&costs) {
+            Ok(work) => {
+                assert_eq!(work as u128, expected);
+                assert!(expected <= u64::MAX as u128);
+            }
+            Err(_) => {
+                assert!(expected > u64::MAX as u128);
+            }
+        }
+    }
+
+    /// `ids_match` accepts exactly when the observed ids are a permutation
+    /// of the expected ids with no duplicates — a frame can neither replay
+    /// nor omit an id.
+    #[kani::proof]
+    #[kani::unwind(10)]
+    fn ids_match_is_set_equality_with_distinctness() {
+        let n: usize = kani::any();
+        kani::assume(n <= 3);
+        let m: usize = kani::any();
+        kani::assume(m <= 3);
+        let mut expected = Vec::with_capacity(n);
+        let mut observed = Vec::with_capacity(m);
+        for _ in 0..n {
+            expected.push(kani::any::<u16>() % 4);
+        }
+        for _ in 0..m {
+            observed.push(kani::any::<u16>() % 4);
+        }
+        let result = ids_match(expected.iter().copied(), observed.iter().copied());
+        // Check side is plain O(n²) loops — no BTreeSet, which is the
+        // expensive part for the solver and already exercised inside
+        // `ids_match` itself.
+        let mut distinct = true;
+        for i in 0..observed.len() {
+            for j in (i + 1)..observed.len() {
+                if observed[i] == observed[j] {
+                    distinct = false;
+                }
+            }
+        }
+        let mut same_set = expected.len() == observed.len();
+        for &e in &expected {
+            same_set &= observed.contains(&e);
+        }
+        for &o in &observed {
+            same_set &= expected.contains(&o);
+        }
+        assert_eq!(result, distinct && same_set);
+    }
+}

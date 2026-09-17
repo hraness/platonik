@@ -452,3 +452,127 @@ pub(crate) fn activate(
         }
     }
 }
+
+/// Kani bounded model-checking harnesses (`cargo kani -p platonik-core`).
+///
+/// The movement policy is the world's physics: these prove it over every
+/// heading, relative direction, and grid position — `face` is a clean
+/// four-element rotation group, and `destination` moves exactly one
+/// orthogonal step or correctly reports an off-grid move. Exhaustive over
+/// the enum axes and symbolic over position; no bounds are assumed beyond
+/// the type itself.
+#[cfg(kani)]
+mod proofs {
+    use super::*;
+
+    fn any_direction() -> Direction {
+        match kani::any::<u8>() % 4 {
+            0 => Direction::North,
+            1 => Direction::East,
+            2 => Direction::South,
+            _ => Direction::West,
+        }
+    }
+
+    fn any_relative() -> Relative {
+        match kani::any::<u8>() % 4 {
+            0 => Relative::Forward,
+            1 => Relative::Left,
+            2 => Relative::Right,
+            _ => Relative::Back,
+        }
+    }
+
+    /// `face` is a rotation: Forward fixes the heading, Right∘Right == Back,
+    /// Right then Left cancels, and four Rights return to the start.
+    #[kani::proof]
+    #[kani::unwind(10)]
+    fn face_is_a_four_rotation() {
+        let heading = any_direction();
+        assert_eq!(face(heading, Relative::Forward), heading);
+        assert_eq!(
+            face(face(heading, Relative::Right), Relative::Right),
+            face(heading, Relative::Back)
+        );
+        assert_eq!(
+            face(face(heading, Relative::Right), Relative::Left),
+            heading
+        );
+        let mut spun = heading;
+        for _ in 0..4 {
+            spun = face(spun, Relative::Right);
+        }
+        assert_eq!(spun, heading);
+    }
+
+    /// Every relative direction is reachable and deterministic per heading:
+    /// the four relatives map one heading to four distinct facings.
+    #[kani::proof]
+    #[kani::unwind(12)]
+    fn face_maps_heading_to_four_distinct_facings() {
+        let heading = any_direction();
+        let facings = [
+            face(heading, Relative::Forward),
+            face(heading, Relative::Right),
+            face(heading, Relative::Back),
+            face(heading, Relative::Left),
+        ];
+        for i in 0..4 {
+            for j in (i + 1)..4 {
+                assert_ne!(facings[i], facings[j]);
+            }
+        }
+    }
+
+    /// `destination` never panics and returns exactly a Manhattan step: the
+    /// result, when `Some`, is distance 1 from the origin inside the grid;
+    /// when `None`, the step would have left the 256×256 space. It also
+    /// agrees with `face` about which way the step points.
+    #[kani::proof]
+    #[kani::unwind(10)]
+    fn destination_is_one_orthogonal_step_or_off_grid() {
+        let position = Point {
+            x: kani::any(),
+            y: kani::any(),
+        };
+        let heading = any_direction();
+        let relative = any_relative();
+        match destination(position, heading, relative) {
+            Some(target) => {
+                assert_eq!(position.distance(target), 1);
+                // The inverse step from the target must land on the origin.
+                let back = match face(heading, relative) {
+                    Direction::North => Point {
+                        x: target.x,
+                        y: target.y.wrapping_add(1),
+                    },
+                    Direction::South => Point {
+                        x: target.x,
+                        y: target.y - 1,
+                    },
+                    Direction::East => Point {
+                        x: target.x - 1,
+                        y: target.y,
+                    },
+                    Direction::West => Point {
+                        x: target.x.wrapping_add(1),
+                        y: target.y,
+                    },
+                };
+                assert_eq!(back, position);
+            }
+            None => {
+                // Off-grid only when the faced step leaves 0..=255.
+                let (dx, dy): (i16, i16) = match face(heading, relative) {
+                    Direction::North => (0, -1),
+                    Direction::East => (1, 0),
+                    Direction::South => (0, 1),
+                    Direction::West => (-1, 0),
+                };
+                let x = position.x as i16 + dx;
+                let y = position.y as i16 + dy;
+                assert!(x < 0 || y < 0 || x > 255 || y > 255);
+            }
+        }
+    }
+}
