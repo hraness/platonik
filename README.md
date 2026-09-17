@@ -18,9 +18,23 @@ The [competition model](docs/competition.md) compares organisms under equal exec
 
 The growing [symbols and facts glossary](docs/symbols-and-facts.md) adds a Wittgenstein-inspired layer: compose descriptions of local situations, breed their parts, and check them against the world. Definitions remain revisable; the proposed mechanics preserve sensory limits and computation costs.
 
-An exploration proposal, [a voice on the wire](docs/voices.md), considers a bounded character model for the contacted side of the campaign's distant signal — checked reports in, fiction out — with first local measurements on a completed save.
+[A voice on the wire](docs/voices.md) now joins the checked digest to a live, account-gated fiction renderer: checked reports in, labeled Qwen output out. The words cannot change an engine verdict. The same document records the model comparisons, production cost, cache, and limits of this prompted-character approach.
 
 The [shared economy](docs/economy.md) proposes a multiplayer expedition board around local play: commission checked improvements and publish reusable discoveries. The [storage and cost decision](docs/storage.md) compares a small Convex service with SQL alternatives, plus R2 artifacts and cached public views. Credits, escrow, and hosted market services remain unimplemented.
+
+## Run a short journey
+
+The full Long Trail is not one playable campaign yet, but five bounded local journeys can be run today:
+
+| Journey | What it connects | Guide |
+| --- | --- | --- |
+| First camp | Persistent collection, ancestry, a closing route, frozen confirmation cases | [Field expedition](docs/field-expedition.md) |
+| The First Answer | Finite construction, continuing service, and a checked contact ending | [Bring a signal home](docs/first-answer.md) |
+| Ark control | Physical input, four-bit arithmetic, retained control, and a payload decision | [Give home a plan](docs/ark-control.md) |
+| Port commitments | Physical custody, lost replies, acknowledgment, service, and finite spares | [Keep a promise](docs/port-commitments.md) |
+| Bloom exchange | Bounded variation, physical selection, a request, delivery, and acknowledgment | [Run the one-lane exchange](docs/composition-v5-gate.md) |
+
+They share the deterministic interpreter, checker, cost model, and replay discipline. They do not yet share one continuous campaign progression: finishing one does not unlock the next, the field expedition's trials start separate declared worlds, and moving arks and independent settlements remain proposals.
 
 ## Run the Rust experiment
 
@@ -57,7 +71,7 @@ bun run dev
 
 Open `http://localhost:3000` and follow **Enter the observatory**, or visit `/docs` for the field guide. The documentation renders the Markdown files in `docs/` at build time; editing one updates both the source document and its website projection. The separately authored homepage presents the same product facts in a shorter form.
 
-The website loads its reading font locally and has no analytics, account system, or model calls. Observatory controls run locally; saved specimens use bounded browser local storage. No program text is sent to a service. Following source links leaves the site.
+The browser observatory has no analytics or model calls. Its controls run locally, saved specimens use bounded browser local storage, and no program text is sent to a service. Production separately exposes the opt-in, Hraness-account-gated `POST /voice` renderer; it accepts checked wire digests, keeps gateway credentials server-side, and returns labeled fiction. A local site without the server environment remains disabled at that route. Following source links leaves the site.
 
 ## Validate and deploy
 

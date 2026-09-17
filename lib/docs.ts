@@ -11,8 +11,8 @@ export const documents = [
   {
     slug: "campaign",
     title: "The Long Trail",
-    description: "A hopeful space western: one companion, a traveling herd, living arks, and a civilization following a distant light.",
-    question: "Where could this whole journey lead?",
+    description: "The proposed six-chapter space western, plus the bounded Rust journeys that now implement pieces of its trail.",
+    question: "What can I run now, and where could the whole journey lead?"
   },
   {
     slug: "autoverse",
@@ -173,8 +173,8 @@ export const documents = [
   {
     slug: "engine",
     title: "Agents & engine",
-    description: "The implemented Rust slice, proposed campaign engine, and remaining first-playable criteria.",
-    question: "How would an agent drive the game?",
+    description: "The implemented Rust journeys, agent-facing CLI, deterministic checks, and remaining campaign progression.",
+    question: "How does an agent drive the game now?",
   },
   {
     slug: "storage",
@@ -191,8 +191,8 @@ export const documents = [
   {
     slug: "voices",
     title: "A voice on the wire",
-    description: "A proposed character-model layer for the contacted side of the wire: checked reports in, fiction out — plus what a local spike established.",
-    question: "Who answers at the Far Beacon?",
+    description: "A live account-gated renderer over checked wire digests, plus model, cost, boundary, and portability evidence.",
+    question: "Who answers at the Far Beacon, and what can it know?",
   },
 ] as const;
 

@@ -36,7 +36,7 @@ The world should offer small moments the player can recognize: a courier doublin
 
 ## The first fifteen minutes: The Wound
 
-The intended first session is one complete creation-and-rescue story. This is a storyboard for an unbuilt game, not a playable tutorial.
+The intended first session is one complete creation-and-rescue story. This interface remains a storyboard, not a playable tutorial. The [field expedition](field-expedition.md) runs the related persistence, failure, ancestry, frozen-selection, and confirmation loop through an external agent and the local CLI.
 
 1. **Make something yours.** Name a starter colony and give it a wish: “Get the light there quickly.” The agent shows one plain-language rule change and runs a short, bounded expedition. See a spark reach its destination before learning a metric.
 2. **Watch its habit.** Inspect three compact map snapshots: departure, the decisive moment, and the outcome. Track the same cells between frames. A short explanation connects their movements to the change you requested.
@@ -84,7 +84,7 @@ The campaign has one recurring problem: carry something precious, keep a home co
 | **The bloom** | Turn supplied stock and descriptions into working descendants | Assemble a checked blueprint, then earn a bounded process that generates, tests, and selects a useful candidate |
 | **Across the Quiet** | Reuse those capabilities in one long expedition | Preserve services, construct the required continuation, and complete an acknowledged two-way exchange |
 
-These are future campaign gates, not implemented achievements. Each [chapter](campaign.md) specifies the player's wish, new lever, inspectable failure, success contract, resource allowance, and alternative approaches. The first Rust release tests the opening rescue only. Later chapters require calibrated limits, feasible reference builds, and independent checks before they can be called playable.
+These remain campaign gates, not integrated achievements. Bounded Rust journeys now test the opening rescue, construction-to-contact, one arithmetic-controlled service choice, finite port promises, Bloom variation, and one generated-courier exchange. Each [chapter](campaign.md) specifies the player's wish, new lever, inspectable failure, success contract, resource allowance, and alternative approaches. Those slices still need calibrated progression, carried player choices, and one continuous ending before the chapter sequence can be called playable.
 
 A colony can become a component of a larger body without consuming the parent or erasing its identity. Its descendants might form the transport system of a living ark while the original remains at home. Composition preserves execution, memory, and communication costs. Changing scale never turns an expensive algorithm into a free primitive.
 
