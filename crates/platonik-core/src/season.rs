@@ -333,7 +333,7 @@ pub fn season_challenge(
     let mut seen: Vec<Experiment> = Vec::new();
     let mut eval = Vec::with_capacity(EVAL_CASES);
     for ordinal in 0..EVAL_CASES as u64 {
-        let case = challenge::generate_case(root, ordinal, difficulty, &seen)?;
+        let case = challenge::derive_case(index, root, ordinal, &seen)?;
         seen.push(case.clone());
         eval.push(case);
     }
@@ -342,7 +342,7 @@ pub fn season_challenge(
         id: challenge::challenge_id(index),
         index,
         generator: GENERATOR_VERSION,
-        family: "crossing".into(),
+        family: public.family.clone(),
         band: difficulty,
         editable: public.editable,
         witness: public.witness,

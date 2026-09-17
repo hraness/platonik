@@ -713,32 +713,55 @@ fn witnessed_case(
     ))
 }
 
-/// The crossing case engine. The hosted season evaluator still calls this
-/// path, so its cases keep their admitted crossing shape and witness.
-pub(crate) fn generate_case(
-    root: u64,
-    ordinal: u64,
-    difficulty: u32,
-    exclude: &[Experiment],
-) -> Result<Experiment, String> {
-    witnessed_case(
-        draw_case,
-        EDITABLE_COURIER,
-        &fixtures::resilient_courier(),
-        root,
-        ordinal,
-        difficulty,
-        exclude,
-    )
-}
-
 /// One family's case-generation contract: which cell entrants edit, the
 /// public witness that admits cases, and the draw that builds a world.
 struct FamilySpec {
+    family: &'static str,
     editable: u16,
     witness_name: &'static str,
     witness: Program,
     draw: fn(&mut Rng, u32) -> Option<Experiment>,
+}
+
+fn spec_for(family: &str) -> FamilySpec {
+    match family {
+        "switchboard" => FamilySpec {
+            family: "switchboard",
+            editable: EDITABLE_KEEPER,
+            witness_name: "switchboard_keeper",
+            witness: fixtures::switchboard_keeper(),
+            draw: draw_switchboard,
+        },
+        _ => FamilySpec {
+            family: "crossing",
+            editable: EDITABLE_COURIER,
+            witness_name: "resilient_courier",
+            witness: fixtures::resilient_courier(),
+            draw: draw_case,
+        },
+    }
+}
+
+/// Derive one case under the index's own family contract — the same draw,
+/// editable cell, and witness the public bundle uses — for the hosted
+/// season's salted path. A season manifest may name any published index and
+/// stay coherent.
+pub(crate) fn derive_case(
+    index: u64,
+    root: u64,
+    ordinal: u64,
+    exclude: &[Experiment],
+) -> Result<Experiment, String> {
+    let spec = spec_for(family(index));
+    witnessed_case(
+        spec.draw,
+        spec.editable,
+        &spec.witness,
+        root,
+        ordinal,
+        band(index),
+        exclude,
+    )
 }
 
 /// Derive one challenge. Pure and deterministic: the same index always yields
@@ -748,22 +771,8 @@ pub fn generate(index: u64) -> Result<Challenge, String> {
     if !(1..=9999).contains(&index) {
         return Err(format!("Unknown challenge index: {index}"));
     }
-    let family = family(index);
+    let spec = spec_for(family(index));
     let difficulty = band(index);
-    let spec = match family {
-        "switchboard" => FamilySpec {
-            editable: EDITABLE_KEEPER,
-            witness_name: "switchboard_keeper",
-            witness: fixtures::switchboard_keeper(),
-            draw: draw_switchboard,
-        },
-        _ => FamilySpec {
-            editable: EDITABLE_COURIER,
-            witness_name: "resilient_courier",
-            witness: fixtures::resilient_courier(),
-            draw: draw_case,
-        },
-    };
     let mut train: Vec<Experiment> = Vec::new();
     let mut eval = Vec::new();
     for ordinal in 0..TRAIN_CASES as u64 {
@@ -795,7 +804,7 @@ pub fn generate(index: u64) -> Result<Challenge, String> {
         id: challenge_id(index),
         index,
         generator: GENERATOR_VERSION,
-        family: family.into(),
+        family: spec.family.into(),
         band: difficulty,
         editable: vec![spec.editable],
         witness: spec.witness_name.into(),

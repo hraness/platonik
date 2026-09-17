@@ -1,6 +1,6 @@
 use platonik_core::challenge::{
-    self, AgentReport, ChallengeResult, EDITABLE_COURIER, EVAL_CASES, GENERATOR_VERSION,
-    RESULT_SCHEMA, SUBMISSION_SCHEMA, Submission,
+    self, AgentReport, ChallengeResult, EDITABLE_COURIER, EDITABLE_KEEPER, EVAL_CASES,
+    GENERATOR_VERSION, RESULT_SCHEMA, SUBMISSION_SCHEMA, Submission,
 };
 use platonik_core::fixtures;
 use platonik_core::model::{Action, Condition, Program, Rule};
@@ -190,6 +190,26 @@ fn season_eval_cases_are_witness_admitted() {
         &submission(1, "github:alice", fixtures::resilient_courier()),
     )
     .unwrap();
+    assert!(result.passed);
+    assert_eq!(result.cases_passed, EVAL_CASES as u32);
+}
+
+#[test]
+fn season_derivation_follows_the_challenge_family() {
+    // A manifest may name any published index: the salted split uses that
+    // index's own family draw, editable cell, and witness.
+    let season = begin(1, vec![40], 2, &salt()).expect("season opens");
+    let derived = season_challenge(&season, &salt(), "github:alice", 1, 40).unwrap();
+    assert_eq!(derived.family, "switchboard");
+    assert_eq!(derived.editable, vec![EDITABLE_KEEPER]);
+    assert_eq!(derived.witness, "switchboard_keeper");
+
+    let keeper = Submission {
+        challenge: derived.id.clone(),
+        programs: BTreeMap::from([(EDITABLE_KEEPER.to_string(), fixtures::switchboard_keeper())]),
+        ..submission(40, "github:alice", Program { rules: Vec::new() })
+    };
+    let result = challenge::evaluate(&derived, &keeper).unwrap();
     assert!(result.passed);
     assert_eq!(result.cases_passed, EVAL_CASES as u32);
 }
