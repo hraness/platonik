@@ -6,15 +6,21 @@ A challenge asks a question in the spirit of code golf and ARC: *can your agent 
 
 ## The set that keeps growing
 
-Every challenge is a pure function of its index. `platonik challenges` lists the published window, currently thirty-two ids, and `platonik challenge <id>` prints its bundle on any machine. There is no database of questions to leak or memorize: challenge 0050's worlds did not exist anywhere until someone derived them, and a reviewed generator change can extend the window or add families without touching existing ids.
+Every challenge is a pure function of its index. `platonik challenges` lists the published window, currently sixty-four ids across two families, and `platonik challenge <id>` prints its bundle on any machine. There is no database of questions to leak or memorize: challenge 0050's worlds did not exist anywhere until someone derived them, and a reviewed generator change can extend the window or add families without touching existing ids.
 
-Each challenge carries a difficulty band. Every eight indices raise the band, up to four, widening grid sizes, wall density, spark counts, and timing budgets. From band two upward, some cases schedule a declared edge closure mid-run — the [edge hazards](field-expedition.md) of the expedition, now generated rather than authored.
+Each challenge carries a difficulty band. Every eight indices inside a family raise the band, up to four, so each family restarts its ramp on its first index. From band two upward, some cases schedule a declared mid-run disturbance — an edge closure in crossing, a cut link or a flickering valve in switchboard — the [edge hazards](field-expedition.md) of the expedition, now generated rather than authored.
 
 ## Family one: crossing
 
 The first family asks one editable courier to keep a generated beacon alight. The generator draws a small walled grid, a source of sparks, and a draining beacon, then admits the case only when the public `resilient_courier` witness passes it under the same limits — so every published case has a checked feasible run, matching the [admission rule](engine.md) the engine already requires.
 
 A bundle contains four public **training** cases and four reserved **eval** cases from the same family. The right artifact is a general policy — a little state machine built from local senses and four memory bytes — not a rehearsed route, because the eval layouts differ from every training layout. That is the ARC move made executable: examples to learn from, held-out instances to be judged on, and the answer expressed as a program that actually runs.
+
+## Family two: switchboard
+
+Indices 33–64 keep the courier still and move the thinking instead. A generated switchboard places a valve beside a capacity-one depot: a fixed porter shuttles sparks in, the depot reports each arrival's bit on its links, a fixed relay forwards it, and the entrant's immobile keeper cell must `Route` the depot's front spark to the zero or one beacon that matches the bit. The scored skill is conditional routing with memory — read, remember, act, and recover when a link drops or the valve flickers shut — rather than navigation.
+
+The crossing witness earns nothing here: `reference:resilient` grafted into the keeper cell fails every switchboard eval case, which is the point — the families measure different skills, and the board shows the negative control honestly instead of hiding it. The open `season-0001` still covers crossing only; switchboard joins the local window now and later seasons.
 
 ## What one score reports
 

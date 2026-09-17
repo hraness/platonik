@@ -43,7 +43,11 @@ fn challenge_surface_lists_shows_and_scores_with_documented_exit_codes() {
     let list = cli(&["challenges"], None);
     assert_eq!(list.status.code(), Some(0));
     let ids = json(&list.stdout);
-    assert_eq!(ids["challenges"].as_array().unwrap().len(), 32);
+    assert_eq!(ids["challenges"].as_array().unwrap().len(), 64);
+    assert_eq!(
+        ids["families"].as_array().unwrap(),
+        &vec![Value::from("crossing"), Value::from("switchboard")]
+    );
 
     let help = cli(&["challenges", "--help"], None);
     assert_eq!(help.status.code(), Some(0));

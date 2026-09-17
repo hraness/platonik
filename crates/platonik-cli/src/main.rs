@@ -492,7 +492,7 @@ fn execute_challenge(command: &str, args: &[String]) -> Result<u8, Failure> {
                 print_json(&serde_json::json!({
                     "schema": "platonik-challenges-v1",
                     "generator": challenge::GENERATOR_VERSION,
-                    "family": "crossing",
+                    "families": challenge::families(),
                     "challenges": challenge::names(),
                 }))?;
                 Ok(0)

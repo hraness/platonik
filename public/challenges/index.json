@@ -2,9 +2,14 @@
   "schema": "platonik-challenges-site-v1",
   "generator": 1,
   "policies": [
-    "resilient",
     "compact",
-    "idle"
+    "idle",
+    "keeper",
+    "resilient"
+  ],
+  "families": [
+    "crossing",
+    "switchboard"
   ],
   "challenges": [
     {
@@ -42,7 +47,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0002",
@@ -79,7 +85,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0003",
@@ -116,7 +123,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0004",
@@ -153,7 +161,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0005",
@@ -190,7 +199,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0006",
@@ -227,7 +237,8 @@
           "program_bytes": 70,
           "submission_hash": "sha256:4a1f03bd0674d0caa51bc6d0acdf2691a3794e39a544646077d7591a3306dec9"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0007",
@@ -264,7 +275,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0008",
@@ -301,7 +313,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0009",
@@ -338,7 +351,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0010",
@@ -375,7 +389,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0011",
@@ -412,7 +427,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0012",
@@ -449,7 +465,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0013",
@@ -486,7 +503,8 @@
           "program_bytes": 70,
           "submission_hash": "sha256:4a1f03bd0674d0caa51bc6d0acdf2691a3794e39a544646077d7591a3306dec9"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0014",
@@ -523,7 +541,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0015",
@@ -560,7 +579,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0016",
@@ -597,7 +617,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0017",
@@ -634,7 +655,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0018",
@@ -671,7 +693,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0019",
@@ -708,7 +731,8 @@
           "program_bytes": 70,
           "submission_hash": "sha256:4a1f03bd0674d0caa51bc6d0acdf2691a3794e39a544646077d7591a3306dec9"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0020",
@@ -745,7 +769,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0021",
@@ -782,7 +807,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0022",
@@ -819,7 +845,8 @@
           "program_bytes": 70,
           "submission_hash": "sha256:4a1f03bd0674d0caa51bc6d0acdf2691a3794e39a544646077d7591a3306dec9"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0023",
@@ -856,7 +883,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0024",
@@ -893,7 +921,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0025",
@@ -930,7 +959,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0026",
@@ -967,7 +997,8 @@
           "program_bytes": 70,
           "submission_hash": "sha256:4a1f03bd0674d0caa51bc6d0acdf2691a3794e39a544646077d7591a3306dec9"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0027",
@@ -1004,7 +1035,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0028",
@@ -1041,7 +1073,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0029",
@@ -1078,7 +1111,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0030",
@@ -1115,7 +1149,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0031",
@@ -1152,7 +1187,8 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
     },
     {
       "challenge": "challenge-0032",
@@ -1189,7 +1225,1224 @@
           "program_bytes": 460,
           "submission_hash": "sha256:9dd321a0951976b10a1cbd4b6443feeb5b2f29cf048c7c6c376b0dc527e62128"
         }
-      ]
+      ],
+      "family": "crossing"
+    },
+    {
+      "challenge": "challenge-0033",
+      "index": 33,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 22774,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 18890,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 24254,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0034",
+      "index": 34,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 24791,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20479,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26485,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0035",
+      "index": 35,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 23160,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 19213,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 24472,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0036",
+      "index": 36,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 20568,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 17191,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22171,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0037",
+      "index": 37,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 21594,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 17990,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23192,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0038",
+      "index": 38,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 21923,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 18240,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23670,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0039",
+      "index": 39,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 21963,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 18285,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23517,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0040",
+      "index": 40,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 21512,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 17905,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22942,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0041",
+      "index": 41,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 24716,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20530,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26662,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0042",
+      "index": 42,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 26572,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22006,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27781,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0043",
+      "index": 43,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 25546,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21171,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26862,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0044",
+      "index": 44,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 24871,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20649,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26592,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0045",
+      "index": 45,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 24578,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20459,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26213,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0046",
+      "index": 46,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 26067,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21616,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27571,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0047",
+      "index": 47,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 26237,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21753,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27579,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0048",
+      "index": 48,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 27452,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22685,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28979,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0049",
+      "index": 49,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 29303,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 24272,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 30677,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0050",
+      "index": 50,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 27125,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22523,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28355,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0051",
+      "index": 51,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 27563,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22849,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 29047,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0052",
+      "index": 52,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 27176,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22478,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28724,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0053",
+      "index": 53,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 28621,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23633,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 30377,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0054",
+      "index": 54,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 27816,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23120,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 29186,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0055",
+      "index": 55,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 28776,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23799,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 30222,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0056",
+      "index": 56,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 28021,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23234,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 30212,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0057",
+      "index": 57,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 30782,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25507,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 32533,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0058",
+      "index": 58,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 30485,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25316,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 32516,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0059",
+      "index": 59,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 29957,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 24849,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 31473,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0060",
+      "index": 60,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 30436,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25196,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 31643,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0061",
+      "index": 61,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 29785,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 24706,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 30910,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0062",
+      "index": 62,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 30203,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25043,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 31688,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0063",
+      "index": 63,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 31194,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25864,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 32017,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0064",
+      "index": 64,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:keeper",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 31364,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25991,
+          "program_bytes": 70,
+          "submission_hash": "sha256:29381073a768282b93daac2b96ed1a4329cb5077224f6f12b99ae11effe57a05"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 32438,
+          "program_bytes": 760,
+          "submission_hash": "sha256:499422d03f1654b4efaf00a80a7f3ccad82e24a7d37f903678fef46512bb92c5"
+        }
+      ],
+      "family": "switchboard"
     }
   ],
   "global": [
@@ -1197,21 +2450,28 @@
       "rank": 1,
       "entrant": "reference:resilient",
       "cleared": 32,
-      "attempted": 32,
+      "attempted": 64,
       "total_work": 465072
     },
     {
       "rank": 2,
+      "entrant": "reference:keeper",
+      "cleared": 32,
+      "attempted": 32,
+      "total_work": 852931
+    },
+    {
+      "rank": 3,
       "entrant": "reference:compact",
       "cleared": 0,
       "attempted": 32,
       "total_work": 0
     },
     {
-      "rank": 3,
+      "rank": 4,
       "entrant": "reference:idle",
       "cleared": 0,
-      "attempted": 32,
+      "attempted": 64,
       "total_work": 0
     }
   ]

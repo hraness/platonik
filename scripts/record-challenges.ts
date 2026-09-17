@@ -18,7 +18,10 @@ import { join } from "node:path";
 const mode = process.argv[2];
 if (!["--write", "--check"].includes(mode)) throw new Error("Use --write or --check.");
 
-const POLICIES = ["resilient", "compact", "idle"] as const;
+const FAMILY_POLICIES: Record<string, readonly string[]> = {
+  crossing: ["resilient", "compact", "idle"],
+  switchboard: ["keeper", "resilient", "idle"],
+};
 const directory = "public/challenges";
 const artifact = "index.json";
 
@@ -66,8 +69,20 @@ const results = join(work, "results");
 mkdirSync(submissions);
 mkdirSync(results);
 try {
+  const familyOf = new Map<string, string>();
+  const policySet = new Set<string>();
   for (const id of list.challenges) {
-    for (const policy of POLICIES) {
+    // The bundle embeds full-range u64 seeds; only its string fields are read.
+    const bundle = cli(["challenge", id]);
+    const family = bundle.match(/"family"\s*:\s*"([^"]+)"/)?.[1] ?? "";
+    if (!/"schema"\s*:\s*"platonik-challenge-v1"/.test(bundle)) {
+      throw new Error(`Challenge ${id} returned an unexpected bundle schema.`);
+    }
+    const policies = FAMILY_POLICIES[family];
+    if (!policies) throw new Error(`Challenge ${id} belongs to an unrecorded family: ${family}.`);
+    familyOf.set(id, family);
+    for (const policy of policies) {
+      policySet.add(policy);
       // Retry a truncated spawnSync capture: the submission must parse whole.
       let submission = "";
       for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -103,15 +118,17 @@ try {
     throw new Error("Board does not cover every published challenge.");
   }
   for (const entry of board.challenges) {
-    if (entry.rows.length !== POLICIES.length) {
+    const expected = FAMILY_POLICIES[familyOf.get(entry.challenge) ?? ""]?.length;
+    if (!expected || entry.rows.length !== expected) {
       throw new Error(`${entry.challenge} is missing a reference row.`);
     }
   }
   const index = {
     schema: "platonik-challenges-site-v1",
     generator: board.generator,
-    policies: [...POLICIES],
-    challenges: board.challenges,
+    policies: [...policySet].sort(),
+    families: [...new Set([...familyOf.values()])],
+    challenges: board.challenges.map((entry) => ({ ...entry, family: familyOf.get(entry.challenge) })),
     global: board.global,
   };
   const content = JSON.stringify(index, null, 2) + "\n";
@@ -127,7 +144,7 @@ try {
   const extras = readdirSync(directory).filter((name) => name.endsWith(".json") && name !== artifact);
   if (extras.length) throw new Error(`Unreferenced challenge artifacts require review: ${extras.join(", ")}`);
   console.log(
-    `${mode === "--write" ? "Recorded" : "Verified"} ${board.challenges.length} challenges × ${POLICIES.length} reference policies; board rows re-verified by the CLI.`,
+    `${mode === "--write" ? "Recorded" : "Verified"} ${board.challenges.length} challenges across ${new Set([...familyOf.values()]).size} families; board rows re-verified by the CLI.`,
   );
 } finally {
   if (existsSync(work)) rmSync(work, { recursive: true, force: true });
