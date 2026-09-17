@@ -56,7 +56,9 @@ const DEFAULT_PERSONA = [
 
 export function voiceConfig(env: Record<string, string | undefined> = process.env): VoiceConfig | null {
   const base = env.VOICE_GATEWAY_BASE?.replace(/\/+$/, "");
-  const key = env.VOICE_GATEWAY_KEY;
+  // Vercel AI Gateway accepts either a scoped API key or the deployment's own
+  // OIDC token, so no managed secret is needed when VERCEL_OIDC_TOKEN is set.
+  const key = env.VOICE_GATEWAY_KEY ?? env.VERCEL_OIDC_TOKEN;
   const model = env.VOICE_MODEL;
   if (!base || !key || !model) return null;
   return {
@@ -93,6 +95,35 @@ export function parseVoiceRequest(body: unknown): VoiceRequest | string {
 
 export function voiceError(error: string): VoiceError {
   return { schema: VOICE_RESPONSE_SCHEMA, error, fiction: true, disclaimer: DISCLAIMER };
+}
+
+// The account gate is the abuse boundary — a Hraness account costs a verified
+// email sign-in — and this per-account cap is the second layer behind it. A
+// contact conversation is a dozen exchanges and the longest measured scenario
+// ran 32 turns, so a generous per-hour allowance still stops automated spend.
+// Like the response cache this is warm-instance only: a cold start resets it.
+export const VOICE_RATE_LIMIT_PER_HOUR = 120;
+const RATE_LIMIT_WINDOW_MS = 3_600_000;
+const RATE_LIMIT_MAX_ACCOUNTS = 1_000;
+const rateLimits = new Map<string, { resetAt: number; count: number }>();
+
+export function voiceRateLimit(accountId: string, now = Date.now()): boolean {
+  let entry = rateLimits.get(accountId);
+  if (entry === undefined || now >= entry.resetAt) {
+    if (entry === undefined && rateLimits.size >= RATE_LIMIT_MAX_ACCOUNTS) {
+      let oldest: string | undefined;
+      for (const [key, value] of rateLimits) {
+        if (oldest === undefined || value.resetAt < rateLimits.get(oldest)!.resetAt) {
+          oldest = key;
+        }
+      }
+      if (oldest !== undefined) rateLimits.delete(oldest);
+    }
+    entry = { resetAt: now + RATE_LIMIT_WINDOW_MS, count: 0 };
+    rateLimits.set(accountId, entry);
+  }
+  entry.count += 1;
+  return entry.count <= VOICE_RATE_LIMIT_PER_HOUR;
 }
 
 export function projectDigest(digest: VoiceRequest["digest"]): unknown {
