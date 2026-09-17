@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Home learns to choose",
   description: "Follow a recorded Rust crew as it calculates a five-bit result, remembers a choice, and attempts a physical delivery.",
   alternates: { canonical: "/lab/ark" },
+  openGraph: { url: "/lab/ark" },
 };
 
 export default async function ArkPage() {

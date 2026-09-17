@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "The first living circuit",
   description: "Replay real Rust experiments connecting a courier, signals, retained memory, and beacon control in one bounded habitat.",
   alternates: { canonical: "/lab/bridge" },
+  openGraph: { url: "/lab/bridge" },
 };
 
 export default function BridgePage() {

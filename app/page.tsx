@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { videoGameJsonLd } from "@/lib/json-ld";
+import { JsonLd } from "@/components/json-ld";
 
-export const metadata: Metadata = { alternates: { canonical: "/" } };
+export const metadata: Metadata = { alternates: { canonical: "/" }, openGraph: { url: "/" } };
 
 function TopicIcon({ slug }: Readonly<{ slug: string }>) {
   // Decorative local SVG; next/image cannot optimize vector sources.
@@ -23,6 +25,7 @@ const chapters = [
 export default function HomePage() {
   return (
     <main id="main" className="home" data-hraness-marketing-preset="editorial">
+      <JsonLd data={videoGameJsonLd} />
       <div className="hraness-material-wall">
         <section className="hero" aria-labelledby="hero-title">
           <h1 id="hero-title">Make a creature. <br />See what it becomes.</h1>

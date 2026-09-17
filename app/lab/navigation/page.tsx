@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Help a lost courier find its way",
   description: "Compare recorded Rust navigation failures with a checked repair. Inspect each courier's route, deliveries, and work in the same worlds.",
   alternates: { canonical: "/lab/navigation" },
+  openGraph: { url: "/lab/navigation" },
 };
 
 export default async function NavigationPage() {
