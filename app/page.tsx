@@ -23,6 +23,14 @@ const chapters = [
   ["Across the Quiet", "Lead living worlds beyond the last familiar route. Reach the Far Beacon—and answer it."],
 ];
 
+const playableJourneys = [
+  ["First camp", "Grow a descendant, survive a closing route, freeze a design, and face four confirmation crossings.", "/docs/field-expedition"],
+  ["The First Answer", "Build two crewmates, keep the lights supplied, and earn a local construction-to-contact ending.", "/docs/first-answer"],
+  ["Ark control", "Carry a number, compute five result bits, and hold a service decision through a communications gap.", "/docs/ark-control"],
+  ["Port commitments", "Make two physical handoffs, recover from lost replies, and preserve each finite spare.", "/docs/port-commitments"],
+  ["Bloom exchange", "Grow two courier variants, choose from physical trials, and let the winner fulfill one request.", "/docs/composition-v5-gate"],
+];
+
 export default function HomePage() {
   return (
     <main id="main" className="home" data-hraness-marketing-preset="editorial">
@@ -32,8 +40,8 @@ export default function HomePage() {
           <h1 id="hero-title">Make a creature. <br />See what it becomes.</h1>
           <p className="hero-description">An engineering adventure about growing strange little creatures with your AI—and the civilization they could become.</p>
           <p className="hero-detail">Start with a companion and a flickering light. Gather a herd. Grow a home that can travel among the stars. Somewhere beyond the charted trails, another beacon is answering.</p>
-          <div className="hero-links"><Link className="primary-link hraness-material-control" href="/lab">Enter the observatory <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Explore the game design</Link></div>
-          <p className="status-note">A game in design, with browser experiments and saved Rust habitats where your crew builds companions, brings a signal home, uses arithmetic to choose what happens next, and keeps finite delivery promises. <Link href="/lab/ports">Follow a promise through a lost reply.</Link></p>
+          <div className="hero-links"><Link className="primary-link hraness-material-control" href="/docs/field-expedition">Run a local journey <span aria-hidden="true">↗</span></Link><Link href="/lab">Enter the observatory</Link><Link href="/docs/game-design">Explore the game design</Link></div>
+          <p className="status-note">The complete campaign is still in design. A runnable Rust trailhead already lets your agent grow a descendant, preserve failures, carry saved habitats through construction and control, and replay every checked result. <Link href="/docs/campaign#the-playable-trailhead">See what is integrated now.</Link></p>
         </section>
       </div>
 
@@ -66,7 +74,7 @@ export default function HomePage() {
           </figure>
           <p>Meet Moth, who favors the direct route, and Moss, who explores. Mix their cells. Name a child. A useful change might keep the beacon lit after a collapse, while delivering less light on an easy journey.</p>
           <p>The light waits while you think. A failed expedition leaves your creature’s lineage intact. There is always another idea to try.</p>
-          <Link className="text-link" href="/docs/game-design#the-first-fifteen-minutes-the-wound">Imagine your first expedition <span aria-hidden="true">↗</span></Link>
+          <Link className="text-link" href="/docs/field-expedition">Run the first-camp expedition <span aria-hidden="true">↗</span></Link>
         </section>
 
       <section className="home-section conversation-section" aria-labelledby="conversation-title">
@@ -77,9 +85,17 @@ export default function HomePage() {
           <div className="message"><span className="speaker">Agent</span><p>We could teach every cell to turn back, or mix in a few explorers. The explorers may find another route, but spend more of the journey wandering.</p></div>
           <div className="message"><span className="speaker">You</span><p>Try a few explorers. Show me what happens.</p></div>
         </div>
-        <p className="figure-note">Illustrative campaign dialogue. A smaller Rust field expedition and agent play guide are available now.</p>
+        <p className="figure-note">Illustrative dialogue. The shipped play skill can drive the first-camp commands through your own agent now.</p>
         <p>Chat is the interface. Your agent turns a wish into a small program; the engine runs it and returns snapshots of what happened. You choose what to keep, what to change, and how far to search.</p>
-        <Link className="text-link" href="/docs/game-design#chat-with-something-to-watch">How play would feel in chat <span aria-hidden="true">↗</span></Link>
+        <Link className="text-link" href="/docs/field-expedition#give-the-agent-a-persistent-ambition">Give your agent a persistent ambition <span aria-hidden="true">↗</span></Link>
+      </section>
+
+      <section className="home-section" aria-labelledby="playable-title">
+        <div className="section-intro"><TopicIcon slug="spark-route" />
+<h2 id="playable-title">Run a short trail today.</h2><p>Build the local Rust CLI, hand its play skill to your agent, and choose a bounded journey. Every failure stays in the record; every result can be replayed.</p></div>
+        <ol className="chapter-list">{playableJourneys.map(([title, description, href]) => <li key={title}><h3><Link href={href}>{title}</Link></h3><p>{description}</p></li>)}</ol>
+        <p>These slices share one interpreter, checker, cost model, and evidence discipline. They are not yet one continuous campaign: finishing a journey does not unlock the next, and the moving ark and independent settlements remain proposals.</p>
+        <Link className="text-link" href="/docs/campaign#the-playable-trailhead">See exactly what is integrated <span aria-hidden="true">↗</span></Link>
       </section>
 
       <section className="home-section" aria-labelledby="scale-title">
@@ -87,11 +103,11 @@ export default function HomePage() {
 <h2 id="scale-title">One companion. A civilization among the stars.</h2><p>Follow the Far Beacon. Each new journey asks more of your herd—and gives an old favorite another way to matter.</p></div>
         <ol className="chapter-list">{chapters.map(([title, description]) => <li key={title}><h3>{title}</h3><p>{description}</p></li>)}</ol>
         <p>Keep the original. Grow a descendant. Build a place where different habits flourish together. The herd you once led through the dust could become a fleet of living worlds.</p>
-        <p className="figure-note">Proposed campaign arc. The first Rust prototype connects courier delivery to local beacon control. Living arks, settlements, and autonomous discovery remain later directions.</p>
+        <p className="figure-note">Proposed campaign arc. The runnable slices now reach construction, local contact, arithmetic control, finite promises, and one generated-courier exchange. They are not yet chained into the six chapters below.</p>
         <Link className="text-link" href="/docs/campaign">Follow the Long Trail <span aria-hidden="true">↗</span></Link>
         <p>Your couriers learn to carry signals. Signals become memory and control. Working habitats become places that can construct new ones. The Autoverse path gives each change of scale a capability to earn—and a reason to bring an earlier creation along.</p>
         <Link className="text-link" href="/docs/autoverse">Explore the Autoverse path <span aria-hidden="true">↗</span></Link>
-        <p>Somewhere past the last port, something is already answering. A proposed character model would voice the far side of that contact—knowing only its own world.</p>
+        <p>Somewhere past the last port, something is already answering. The production voice endpoint renders labeled fiction from a checked wire digest, behind a Hraness account; it cannot alter the world or award an outcome.</p>
         <Link className="text-link" href="/docs/voices">Who answers at the Far Beacon? <span aria-hidden="true">↗</span></Link>
         <p className="figure-note">A complete design needs evidence from play. <Link href="/docs/design-validation">See what works today and the tests that come next.</Link></p>
       </section>
@@ -99,7 +115,7 @@ export default function HomePage() {
       <section className="home-section split-section" aria-labelledby="competition-title">
         <TopicIcon slug="creature" />
         <h2 id="competition-title">Bring your best strange little thing.</h2>
-        <div><p>Race an archived rival through the same world. See where yours gets stuck. Build a response, and take another run at the frontier.</p><p>A first hosted season is already open: your program faces generated cases it never trained on, the evaluator replays every receipt, and the standings are public. The wider in-game competition remains a proposal.</p><Link className="text-link" href="/docs/seasons">Enter the open season <span aria-hidden="true">↗</span></Link> <Link className="text-link" href="/lab/challenges">See the standings <span aria-hidden="true">↗</span></Link></div>
+        <div><p>Race an archived rival through the same world. See where yours gets stuck. Build a response, and take another run at the frontier.</p><p>Hosted season 0003 is open across crossing, switchboard, and foundry challenges: your program faces withheld salt-derived cases, the evaluator replays every receipt, and the standings are public. The wider in-game competition remains a proposal.</p><Link className="text-link" href="/docs/seasons">Enter the open season <span aria-hidden="true">↗</span></Link> <Link className="text-link" href="/lab/challenges">See the standings <span aria-hidden="true">↗</span></Link></div>
       </section>
 
       <section className="home-section split-section" aria-labelledby="economy-title">
@@ -114,7 +130,7 @@ export default function HomePage() {
         <div><p>A surprising recovery. Two habits that work better together. An old creature finding its way through a new world. Ask your agent to investigate, and keep an experiment someone else can replay.</p><p>Inspired by Michael Levin’s questions about collective behavior, Platonik explores what simple rules can do when given different bodies and environments. Useful programs, repeatable effects, and revealing failures could contribute to research. Each claim has to earn its evidence.</p><Link className="text-link" href="/docs/research">Follow the questions into life, minds, and computation <span aria-hidden="true">↗</span></Link></div>
       </section>
 
-      <section className="closing" aria-labelledby="closing-title"><h2 id="closing-title">What would you ask yours to become?</h2><p>Start with a first rescue. Go deeper into breeding, competition, or the ideas behind this possible world.</p><Link className="primary-link" href="/docs/game-design">Read the Platonik game design <span aria-hidden="true">↗</span></Link></section>
+      <section className="closing" aria-labelledby="closing-title"><h2 id="closing-title">What would you ask yours to become?</h2><p>Start with a local first rescue, keep every attempt, and decide which creation to take onward.</p><div className="hero-links"><Link className="primary-link" href="/docs/field-expedition">Run the first camp <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Read the larger game design</Link></div></section>
     </main>
   );
 }

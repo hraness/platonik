@@ -14,7 +14,7 @@ Open [the observatory](https://platonik.space/lab). No account, installation, cr
 
 The portrait is a lossy visualization: lobes encode rules, grains encode conditions, rings encode used memory slots, and memory-writing rules shift the tint. Directional choices alter lobe reach. Unused rules can affect appearance, so beauty is never a fitness score or a guarantee of novelty. Different programs can share a portrait. Collection names are labels, not claims about biological species.
 
-Local browser data can be cleared. **Export this program** downloads the current JSON for safekeeping or editing by an external agent. It exports the program only; record the map seed separately to repeat a particular run. The website makes no model calls and has no shared collection or live leaderboard; challenge standings are committed records, not a service.
+Local browser data can be cleared. **Export this program** downloads the current JSON for safekeeping or editing by an external agent. It exports the program only; record the map seed separately to repeat a particular run. The observatory makes no model calls and has no shared collection or live leaderboard; challenge standings are committed records, not a service. The separate account-gated voice endpoint consumes checked wire digests, not observatory programs.
 
 ## Let an agent change the rules
 

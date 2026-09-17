@@ -1,10 +1,10 @@
 # Rust engine and agent interface proposal
 
-Campaign-engine proposal, 11 September 2026. The stateless Rust bridge and a [persistent field expedition](field-expedition.md) are implemented. The expedition preserves program ancestry, records failed attempts, checks local saves, and admits v2 closing-route trials. The continuous colony, automatic breeding, and full campaign commands below remain a future contract.
+Campaign-engine proposal, revised 17 September 2026. The stateless Rust bridge, [persistent field expedition](field-expedition.md), continuous saved habitat, finite construction, [First Answer](first-answer.md), [ark control](ark-control.md), [port commitments](port-commitments.md), Bloom, and one-lane generated-courier exchange are implemented. They preserve ancestry, failures, physical state, costs, and replay under bounded contracts. Automatic open-ended breeding and the full campaign commands below remain future work.
 
-The implemented [browser observatory](observatory.md) contains separate, bounded TypeScript demonstrators. Its single courier, fuzzy truth maps, cost calculator, and signal workbench do not implement the colony or beacon contract below. Their JSON formats are laboratory formats, not released Rust CLI schemas.
+The implemented [browser observatory](observatory.md) contains separate, bounded TypeScript demonstrators. Its single courier, fuzzy truth maps, cost calculator, and signal workbench do not implement the Rust journeys. Their JSON formats are laboratory formats, not released Rust CLI schemas; the recorded Rust pages display checked artifacts instead of reimplementing the simulation.
 
-The [Autoverse path](autoverse.md) now defines the later module interfaces and capability dependencies. Preserve this first transport contract while admitting explicit versions of signals, memory, and construction. The next integration milestone after the opening is the [migration-to-ark bridge](design-validation.md#the-bridge-we-must-build-first): the same saved creations must carry sparks, retain a signal, and control a bounded habitat under one runtime and ledger. A Boolean circuit demonstration alone does not meet that gate.
+The [Autoverse path](autoverse.md) defines the module interfaces and capability dependencies. The current Rust slices now connect transport, signals, memory, construction, arithmetic, control, bounded variation, physical custody, and acknowledgment under one interpreter and ledger. The remaining integration milestone is progression-level: carry selected creations and consequences through a compressed Long Trail rather than resetting between independently declared journeys.
 
 ## The agent runs the laboratory
 
@@ -91,7 +91,7 @@ Use content-addressed genome, body, challenge, and result objects plus a small a
 
 A replay bundle contains the accepted program, starting body and memory, simulator and cost-model versions, exact seeds and activation rules, interventions, budgets, all outcomes, and digests of the event stream. Re-execution is the check; a hash alone is not evidence that a computation ran correctly. Store enough bounded trace detail to explain a failure without flooding the agent's context.
 
-The current bridge pins Rust 1.97.1, locks Cargo dependencies, enables release overflow checks, and checks generated replay artifacts in the aggregate gate. See the [implemented guide](rust-bridge.md). The field expedition adds persistence, recovery checks, and expanded fixtures under the original small capacity envelope. The broader campaign still needs continuous-habitat progression and capacity admission for every larger target.
+The current bridge pins Rust 1.97.1, locks Cargo dependencies, enables release overflow checks, and checks generated replay artifacts in the aggregate gate. See the [implemented guide](rust-bridge.md). The field expedition adds persistence and recovery; later saved habitats add continuous state, construction, contact, control, promises, variation, and one-lane exchange under the original small capacity envelope. The broader campaign still needs progression across those journeys and capacity admission for every larger target.
 
 ## First-playable acceptance
 

@@ -1,6 +1,6 @@
 # Earning confidence in the whole game
 
-Validation proposal, 12 September 2026. Platonik has working browser experiments, a small [Rust integration slice](rust-bridge.md), and a specified campaign direction. A [persistent field expedition](field-expedition.md) extends that slice into agent-operated trials. It does not yet have the complete Rust campaign, a demonstrated audience, or evidence that large ecologies produce useful new algorithms. This page defines what would justify those claims and what would make us change course.
+Validation proposal, revised 17 September 2026. Platonik has working browser experiments, a deterministic Rust substrate, a [persistent field expedition](field-expedition.md), continuous saved habitats, finite construction, a checked local ending, arithmetic control, port promises, bounded Bloom variation, and one generated-courier exchange. These are separate admitted slices, not a complete Rust campaign. Platonik still lacks a demonstrated audience and evidence that large ecologies produce useful new algorithms. This page defines what would justify those claims and what would make us change course.
 
 **The design decision is to build one engineering adventure with a finite ending and an open workshop beyond it.** The [campaign](campaign.md) supplies reasons to care; the [Autoverse contract](autoverse.md) supplies the capabilities that make its changes of scale possible. Complexity creates tradeoffs. It is not a score that grows just because a program gets longer.
 
@@ -19,7 +19,9 @@ Passing the circuit tests establishes those finite circuit behaviors. It does no
 
 ## The bridge we must build first
 
-Before expanding the setting, build a short **migration-to-ark bridge** in the Rust engine. It must exercise the same saved creations across three problems:
+This remains the campaign's integration contract. Bounded Rust slices now demonstrate its transport, signal, memory, construction, arithmetic, control, custody, and acknowledgment pieces, but not the same player-selected crew progressing through every step. The next integration must carry those choices rather than adding another isolated capability.
+
+The short **migration-to-ark bridge** must exercise the same saved creations across three problems:
 
 1. A named courier colony maintains a beacon through a route change.
 2. Its deliveries trigger local signals. A memory-bearing component retains a route decision after that signal disappears. The player can inspect the delivery, the signal, and the retained state in one replay.
@@ -47,14 +49,14 @@ Also run an agent stress test under equal stated discovery allowances: an unchan
 
 ## The automated path before people play
 
-The current field expedition is the first persistent checkpoint. Its agent diagnostic freezes inputs and search allowances, compares two player ambitions, then evaluates the unchanged winners on public transfer cases. Its record must include every failed candidate, replay computation, and supported integrity probe. The [first agent diagnostic](agent-evaluation.md) completed both ambitions, preserved every creation, passed the four frozen transfer cases, and recorded all twelve adversarial probes. That admits the next automated milestone; it does not admit the complete campaign or human playtesting.
+The [first agent diagnostic](agent-evaluation.md) completed both field-expedition ambitions, preserved every creation, passed the four frozen transfer cases, and recorded all twelve adversarial probes. Later diagnostics qualified continuous saved state, prescribed construction, First Answer, ark control, port commitments, Bloom variation, and the generated-courier exchange. Each record freezes its inputs and allowances, preserves failures, and replays its evidence. Together they admit progression work; they do not admit the complete campaign or human playtesting.
 
-The remaining sequence is:
+The sequence and current state are:
 
-1. **Persistent field loop:** complete training and confirmation, preserve parents and failures, and recover the same outcomes after closing and restoring the save.
-2. **Continuous habitat:** carry actual service state through a bounded journey and interruption. Earlier creations must still do causal work; resetting separate test worlds is not this capability.
-3. **Construction and continuation:** obtain material, build an executable continuation inside the shared runtime, and measure every generated candidate and failed attempt.
-4. **Compressed Long Trail:** automatically complete each chapter transition and the final outbound-and-matching-reply contract from a new save. Include successful references, distinct agent ambitions, adverse schedules, interrupted runs, and preserved collections.
+1. **Persistent field loop — complete as a bounded local expedition:** training and confirmation preserve parents, failures, and recoverable save history.
+2. **Continuous habitat — complete at the current stationary envelope:** actual service state survives bounded advances, interruption, export, and restoration. A moving habitat remains unimplemented.
+3. **Construction and continuation — complete as bounded diagnostics:** acquired material produces useful children; Bloom adds finite variation; the one-lane exchange makes a selected child keep one physical promise. Open-ended generation remains unimplemented.
+4. **Compressed Long Trail — next integration gate:** automatically complete each chapter transition and the final outbound-and-matching-reply contract from a new save. Include successful references, distinct agent ambitions, adverse schedules, interrupted runs, and preserved collections.
 5. **Capacity and sustained operation:** qualify the actual active envelope, repeated-session memory, replay size, verifier cost, and total permitted search on declared hardware. Raise limits only after those measurements.
 6. **Human playtesting:** test comprehension, attachment, agency, pacing, and voluntary continuation after the useful agent and engineering investigations above. Agents can uncover friction and unreachable goals; their completion is not evidence that people enjoy the game.
 
@@ -76,7 +78,7 @@ The [navigation diagnostic](navigation-evaluation.md) passes its bounded gate: t
 
 The subsequent [construction diagnostic](construction-evaluation.md) passes its functional gate: three feasible builders, an unchanged selection completing four transfer worlds, useful born keepers, four restored journeys, and twelve rejected integrity probes. Prebuilt and blind alternatives remain successful comparisons. An allocation-only investigation and a separately recorded buffer repair address the observed benchmark memory growth, with higher measured latency. This admits useful prescribed construction within the current envelope; it does not admit a larger active world or the complete journey.
 
-The [First Answer diagnostic](answer-evaluation.md) connects physical delivery, two constructed children, and a report matching the final serviced spark in one saved world. Its local ending advances the compressed-campaign work. The subsequent [ark control diagnostic](ark-evaluation.md) connects one four-bit addition to two supplied service plans through the existing local-program runtime. It checks all five result bits, remembered control, and the separate physical delivery. The [port commitments experiment](ports-evaluation.md) adds two one-shot custody obligations with distinct acknowledgment and service checks. Repeated regulation and exchange sessions, endogenous search, and full chapter transitions remain explicit contracts before the automated campaign gate can be declared complete.
+The [First Answer diagnostic](answer-evaluation.md) connects physical delivery, two constructed children, and a report matching the final serviced spark in one saved world. Its local ending advances the compressed-campaign work. The subsequent [ark control diagnostic](ark-evaluation.md) connects one four-bit addition to two supplied service plans through the existing local-program runtime. It checks all five result bits, remembered control, and the separate physical delivery. The [port commitments experiment](ports-evaluation.md) adds two one-shot custody obligations with distinct acknowledgment and service checks. The [Bloom](bloom-evaluation.md) adds bounded in-world variation and causal physical selection; the [one-lane exchange](composition-v5-gate.md) makes its selected child answer a request only after physical custody. Repeated regulation and exchange sessions, independent-agent search on that exchange, carried campaign progression, and the final chapter transition remain explicit contracts before the automated campaign gate can be declared complete.
 
 ## Human playtesting comes after agent evaluation
 

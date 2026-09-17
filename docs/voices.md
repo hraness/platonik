@@ -1,6 +1,6 @@
 # A voice on the wire
 
-Exploration proposal, revised 17 September 2026. `habitat voice` — the canonical wire digest a contacted-side voice consumes — is implemented and checked. The voice layer above it remains unbuilt fiction tooling; corpus generation and judging now run through a hosted model gateway rather than local inference (see [where the inference runs](voices.md#where-the-inference-runs)). Nothing on this page changes what the engine checks or who checks it.
+Exploration proposal, revised 17 September 2026. `habitat voice` — the canonical wire digest a contacted-side voice consumes — and the account-gated `POST /voice` renderer are implemented and live. Production renders labeled fiction with `alibaba/qwen3.7-flash` through Vercel AI Gateway; corpus generation and judging remain separate research tooling. Nothing the voice says changes what the engine checks or who checks it.
 
 The First Answer's reply cell [does not generate language or demonstrate a mind](first-answer.md), and authored dialogue [never changes a verdict](autoverse.md#victory-replay-and-scale). The creatures themselves [must stay inspectable programs](engine.md#the-agent-runs-the-laboratory) — an organism that only works while a scientist whispers to it is not an organism. This page proposes who could speak anyway, and what the first experiments established.
 
@@ -30,15 +30,30 @@ POST /voice  { digest: <platonik-voice-digest-v1>, say: "…" }
    model, cost_usd, text }
 ```
 
-The contract is implemented at `POST /voice` on this site (`app/voice/route.ts`): it validates the digest shape and `say`, then forwards persona + digest + line to the configured gateway model. It answers `voice_not_configured` unless `VOICE_GATEWAY_BASE`, `VOICE_GATEWAY_KEY`, and `VOICE_MODEL` are set server-side — the persona and key never reach the browser. On Vercel the deployment's own `VERCEL_OIDC_TOKEN` can stand in for a managed gateway key, so production needs no stored model credential. The service holds the persona (built from the world-bible) and a model reference; callers bring the checked digest and get back fiction that names the exact wire it was rendered from.
+The contract is implemented and enabled at `POST /voice` on this site (`app/voice/route.ts`). It validates the digest shape and `say`, then forwards persona + projected digest + line to `alibaba/qwen3.7-flash` through Vercel AI Gateway. Production uses the deployment's `VERCEL_OIDC_TOKEN`, not a browser credential or stored model key; other deployments need `VOICE_GATEWAY_BASE`, `VOICE_MODEL`, and either `VOICE_GATEWAY_KEY` or their own Vercel OIDC token. The service holds the persona and model reference; callers bring the checked digest and get back fiction bound to its exact hash.
 
-Every call requires a signed-in Hraness account — a free account is enough. The route reads the sealed suite-auth session cookie (mounted at `/api/suite-auth/*` through `@hraness/suite-accounts`) before any upstream work, answers unsigned calls `401` with `voice_sign_in_required` and a `/api/suite-auth/start` pointer, and caps each account at 120 calls per hour per warm instance (`voice_rate_limited`). That gate is what makes the paid upstream safe to expose publicly.
+Every call requires a signed-in Hraness account — a free account is enough. The route reads the sealed suite-auth session cookie (mounted at `/api/suite-auth/*` through `@hraness/suite-accounts`) before any upstream work and answers unsigned calls `401` with `voice_sign_in_required`. A local map also caps each account at 120 calls per hour per warm function instance. Authentication reliably prevents anonymous spend; the warm-instance map is only a first abuse brake, not a durable global quota, because another serverless instance starts another map. A broad launch should add an account-keyed durable quota or a project Gateway budget before treating that number as a spending guarantee.
 
 Cost is a configuration choice, and the frontier model is not the cheapest option — it is the expensive one. The route also projects the digest before forwarding: by default the model sees only `facts` + `boundary` (the citeable propositions and the declared boundary, ~560 tokens), not the `report` prose that restates them; `VOICE_DIGEST_PROJECTION=full` restores the verbatim wire. The response still binds the full `digest_hash` either way — the projection is a rendering choice, not a different contract.
 
 Two more levers sit on top. Reasoning models bill their thinking as output tokens — measured ~10× the visible reply — and `VOICE_REASONING_EFFORT=none` disables it: the battery still holds 0/35 without a chain of thought, and replies come back terse ("Wrong provenance. The record states spark 6 returned through the reply cell at tick 109."). And repeat questions dominate a public endpoint, so the route keeps a bounded warm-instance cache — one sampled reply becomes the canonical fiction for a (model, digest, question) pair; cold starts simply miss.
 
-Measured through the fully optimized shape (facts projection + `reasoning_effort: none` on `alibaba/qwen3.7-flash`): **~$0.00005 per reply** — roughly 100× cheaper than the frontier baseline, with a *better* battery score. At that price: a 12-exchange contact conversation costs ~$0.0006, a thousand players asking twenty questions each cost ~$1, and a $10/month gateway key sustains ~200,000 replies. Each call carries its own digest, so the number of distinct worlds is unbounded — cost scales with questions asked, not voices created.
+## Traffic and cost envelope
+
+The conservative planning rate from the optimized battery is **$0.00005 per reply**. The first authenticated production cache miss cost **$0.00001524** and returned a boundary-respecting answer; an immediately repeated normalized question returned the identical cached response in 588 ms. That production observation is one request shape, not a latency or price distribution, so capacity planning should keep the higher battery rate.
+
+| Monthly use | Replies | Model cost at $0.00005 | Cost at the first live sample |
+| --- | ---: | ---: | ---: |
+| 100 players × 20 replies | 2,000 | $0.10 | $0.03 |
+| 1,000 players × 20 replies | 20,000 | $1 | $0.30 |
+| 10,000 players × 20 replies | 200,000 | $10 | $3.05 |
+| 100,000 players × 20 replies | 2,000,000 | $100 | $30.48 |
+
+At the conservative rate, $1 buys about 20,000 replies, $10 buys 200,000, and $25 buys 500,000. At the single live sample they become about 65,600, 656,000, and 1.64 million. A twelve-reply contact costs at most about $0.0006 under the planning rate. Cache hits lower spend further, but the cache is best-effort and must not enter a guaranteed budget.
+
+[Vercel AI Gateway charges no token markup](https://vercel.com/docs/ai-gateway/pricing); the [current Qwen3.7-Flash catalog entry](https://vercel.com/ai-gateway/models/qwen3.7-flash) lists $0.03 per million input tokens and $0.13 per million output tokens. Vercel Function invocations begin at $0.60 per million on Pro, so 200,000 dynamic calls add about $0.12 before active CPU and provisioned-memory charges. Waiting on model I/O does not consume active CPU, but memory remains billable; those function costs have not been measured for this route.
+
+Vercel advertises much larger function concurrency than these monthly averages, and paid Gateway traffic has no Gateway-level request-rate cap, but neither statement qualifies this application. The production evidence is one authenticated miss and one warm cache hit, not a load test or an upstream-provider guarantee. A reasonable initial operating envelope is **200,000 replies per month under a $10 model budget**, then measure latency, errors, provider throttling, instance fan-out, and function cost before raising it. Each call carries its own digest, so the number of distinct worlds is not the bottleneck; cost scales with cache misses and questions asked.
 
 For genuinely unbounded volume the renderer can leave the server entirely: the digest is checked data and the persona is static code, so a small model in the player's own browser (WebGPU) can render the fiction at zero marginal cost — and the eval already shows a prompted 4B holds the boundary on these batteries (0/35 static, 0/8 short scenarios). The same applies to Apple's on-device model for local tooling, verified working on the development machine. Both share the honest caveat that per-device quality and boundary-holding are the user's hardware's problem to meet — the hosted path stays the measured default.
 
@@ -82,9 +97,9 @@ Earlier findings stand: the 8B foreign character ran at conversational speed at 
 
 ## Where the inference runs
 
-One of the measurements above was produced the hard way: running a ~16 GB teacher model beside an already-resident model exhausted memory and wedged the development machine mid-workflow. That failure is itself design evidence. The heavyweight work — writing the corpus and judging it — is research infrastructure, and it now runs through a hosted OpenAI-compatible gateway (Vercel AI Gateway): the teacher that drafts dialogues, the judge that scores break-resistance, and any demo voice. The request path is a thin client reading a scoped, budget-capped API key from a local env file; this repository holds no credential and needs none.
+One of the measurements above was produced the hard way: running a ~16 GB teacher model beside an already-resident model exhausted memory and wedged the development machine mid-workflow. That failure is itself design evidence. The heavyweight work — writing the corpus and judging it — is research infrastructure, and it now runs through a hosted OpenAI-compatible gateway (Vercel AI Gateway): the teacher drafts dialogues and the judge scores break-resistance. Local research clients use scoped credentials outside this repository.
 
-What remains local is small and strictly opt-in: a species adapter (~30–70 MB) on a shared 4-bit base (~2–4 GB), trained or served only when a developer chooses. For players the deployed shape is the same as today's authored fiction — a server-side renderer over checked digests — with a local voice as an optional extra, never a requirement, and never something the engine waits on.
+The production renderer is a separate, small server route over checked digests. Its deployment authenticates to Gateway with Vercel OIDC and authenticates players with Hraness Accounts. A species adapter (~30–70 MB) on a shared 4-bit base (~2–4 GB) remains a strictly opt-in local experiment, trained or served only when a developer chooses. A local voice is never a campaign requirement and the engine never waits on it.
 
 ## Portable backends
 
@@ -99,7 +114,7 @@ The voice contract does not care where the model runs: `{persona, projected wire
 
 The Apple result is the interesting one. Its on-device model answered "Paris." to a plain question inside a fully-formed keeper persona — the guardrails that make it a safe system assistant make it a bad bounded character; at 3B, persona is a suggestion. That inverts the economics argument for trained voices: cost no longer justifies adapters (the hosted path is effectively free at volume), but *portability* does — the zero-marginal-cost tiers only become voices once the character is trained into the weights rather than begged through a prompt. A prompted persona is borrowed alignment; an adapter is owned.
 
-## What stands between this and a real voice
+## What stands between this and a trained voice
 
 1. **Corpus volume, now measured rather than assumed.** Scaling the teacher corpus 2.6× and moving to recipe rank 64 changed nothing — flat validation loss, fluent vocabulary never emerged. The binding constraint sits in optimization scale: tens of thousands of supervised turns (the published recipe used 73,765), full-strength embedding/head training, and GRPO — a rented-GPU job, not a laptop one. The hosted gateway made the corpus side cheap to scale (~$0.008 per accepted dialogue); the compute side remains the gate.
 2. **A longer eval, still.** The adaptive adversarial harness exists and discriminates (a weak persona breaks at turn 6; the frontier persona holds 320 turns). The discriminating horizon for the production question — do trained voices beat prompted ones? — is dozens of turns at conversation volume, and only a fluent adapter can take that test.

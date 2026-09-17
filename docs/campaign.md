@@ -1,6 +1,19 @@
 # The Long Trail
 
-Campaign proposal, 12 September 2026. A hopeful space western about a herd becoming an alien civilization. The characters, settings, discoveries, and scenes here are fiction for an unbuilt campaign. The [observatory](observatory.md) contains bounded browser experiments; it has not demonstrated this full journey. [The First Answer](first-answer.md) supplies a short construction-to-contact adventure with a checked local ending. The [ark control experiment](ark-control.md) connects arithmetic to a supplied service plan. These bounded Rust habitats do not implement every chapter contract below.
+Campaign proposal, revised 17 September 2026. A hopeful space western about a herd becoming an alien civilization. The characters, settings, discoveries, and scenes here are fiction for an unbuilt full campaign. A set of bounded Rust journeys now implements pieces of that trail; none demonstrates the complete progression below.
+
+## The playable trailhead
+
+Several short local journeys can be run through the same deterministic Rust interpreter, checker, cost ledger, save format, and replay discipline:
+
+- [The field expedition](field-expedition.md) keeps a collection, records a failed crossing, grows a descendant, freezes one courier-controller pair, and checks it unchanged on four confirmation crossings.
+- [The First Answer](first-answer.md) carries one saved habitat through material-dependent construction to a checked local contact ending.
+- [Ark control](ark-control.md) makes physical input drive four-bit arithmetic and a remembered service choice; [port commitments](port-commitments.md) checks two finite handoffs through missing and delayed replies.
+- [The Bloom](bloom.md) grows and tests two bounded variants. The [one-lane exchange](composition-v5-gate.md) then connects a generated winner to a request, physical delivery, custody acknowledgment, and service inside one continuous world.
+
+These are runnable campaign slices, not one campaign save. Completing one does not unlock the next; there is no star map, moving ark, independent settlement network, or six-chapter ending. The field expedition also runs each trial in its own declared world, while the later habitat journeys preserve one physical world across checked pauses. Their integration is technical and causal, not yet progression-level.
+
+The [observatory](observatory.md) displays bounded browser experiments and recorded Rust evidence. The sections below describe the larger journey these working pieces are intended to earn.
 
 ## One companion, a distant light
 
