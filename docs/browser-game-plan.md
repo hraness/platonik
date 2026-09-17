@@ -4,84 +4,129 @@ Colf.dev shows a compelling shape: one page, one prompt/code box, instant scorin
 
 ## What already exists
 
-- `platonik-core`: deterministic experiment engine with per-tick frames, costs, verification, generated challenges, and challenge seasons.
-- `platonik-cli`: local Rust CLI for expeditions, habitats, challenges, seasons, and verification.
-- `/lab/*`: read-only React viewers for recorded Rust results.
+- `platonik-core`: deterministic experiment engine. Everything needed for play is already a pure function: sim + receipts (`sim`, `check`), pause/resume checkpoints (`continuation`), the persistent field campaign (`expedition`), generated challenges (`challenge`), hosted seasons (`season`), per-journey graders (`first_answer`, `ark_control`, `port_commitments`, `bloom`, `bloom_exchange`), and fixture worlds with reference programs (`*_fixtures`).
+- `platonik-cli`: local Rust CLI. Its stores (`habitat_store`, `expedition_store`, `journal`) are filesystem wrappers around pure core functions — the browser replaces the filesystem with IndexedDB and keeps the same event-sourced semantics.
+- `platonik-wasm` + `/play`: spike proves the engine compiles to `wasm32-unknown-unknown`, loads in Next.js via a Turbopack alias, runs an experiment, and replays frames through `RecordedHabitat`.
+- `/lab/*`: read-only React viewers for recorded Rust results (`RecordedHabitat`, `RecordedJourney`, `RecordedArk`, `RecordedPorts`, `RecordedBloom`, `ContinuityLab`, `BridgeLab`).
 - `/voice`: Hraness-account-gated model endpoint for labeled fiction; not required for play.
 - `seasons`: hosted evaluator driven by GitHub Actions and pull requests.
 
-## Goal
+## Architecture decision: the game runs entirely client-side
 
-A visitor can open `platonik.space/play`, interact with the game immediately, understand what is happening, and iterate without installing anything. Auth and persistence start optional; the season path can remain a higher-stakes hosted track.
+Every game action — running an experiment, grading a journey, advancing a continuous habitat, planning/completing an expedition command, scoring a challenge submission — is a pure function in `platonik-core`. There is no game server. The hosted site serves the WASM bundle and the UI; the browser is the console. Servers enter only for optional sync, sharing, and the audited season track.
 
-## Architecture
+Consequences:
 
-1. **WASM engine**: compile `platonik-core` to `wasm32-unknown-unknown` and expose a small JavaScript API.
-2. **Browser state**: one experiment/challenge loaded from the engine, a program editor, a run button, and per-tick replay.
-3. **Visualization**: SVG grid animation driven by the receipt frames, plus overlays for signals, deliveries, blocked edges, and work spend.
-4. **Persistence**: start with `localStorage`/`IndexedDB` for saves and progress; later optionally sync to a Hraness account.
-5. **Agent integration**: reuse the existing `/voice` route or a cheaper direct model call so a player can ask the agent to change the program.
-6. **Season bridge**: optionally submit a result from the browser into the existing season workflow.
+- The browser game is fully playable offline after first load.
+- Self-scored results are honest local evidence; ranked results still flow through the salt-bearing season evaluator (a browser result can seed a season entry but never scores its own withheld cases).
+- The campaign save is the expedition journal + habitat checkpoints, event-sourced exactly like the CLI stores, persisted to IndexedDB instead of files.
+- Abuse surface is minimal: the engine enforces its own bounds (128 ticks, fuel, program size) regardless of client.
+
+## Game structure
+
+One surface — `/play` — with a mission map. Each mission is a world + a goal + an editable program. Completing missions unlocks the next track. All missions reuse the same loop: **see the world → edit or ask an agent for a program → run → watch the replay → read the verdict → iterate**.
+
+### Track 0 — Opening (tutorial)
+
+The existing spike, polished: `opening-normal` with three starter programs and a live grid. Teaches source → depot → beacon, rules, and the run/replay loop. No account, no persistence needed.
+
+### Track 1 — Challenges (the Colf loop)
+
+All 96 generated challenges playable in-browser:
+
+- Pick a challenge by family (crossing 1–32, switchboard 33–64, foundry 65–96) and band.
+- Brief shows the world shape and which cell(s) are editable.
+- Editor holds the program; "Run" executes the public train cases in WASM and shows per-case pass/work plus a replay.
+- "Score" runs `evaluate_challenge` on the reserved eval split — the result is a `ChallengeResult` the existing `verify_result` can re-check.
+- Local board: best result per challenge in IndexedDB, with work totals ranked like `challenge::board`.
+- Bridge: "Enter season" exports the submission JSON + instructions for the PR flow (season stays the audited track).
+
+### Track 2 — Field expedition (the campaign)
+
+`platonik-core::expedition` is already a campaign: a named collection, grow/trial/freeze commands, a 32-trial discovery allowance, training cases, frozen selection, one-shot transfer cases, and a `progress()` that returns the next objective and the ending text. The browser version:
+
+- `expedition_new(name, ambition)` → campaign state (JSON in IndexedDB).
+- Case map: the four training + transfer case IDs with per-case status.
+- Pick case + courier + controller → `expedition_plan` → run the returned experiment in WASM → `expedition_complete`/`expedition_apply` → state advances.
+- Grow screen: derive a child program from a parent (edit JSON), `expedition_plan` validates and admits it.
+- Ending: `progress()` drives the mission log; `field_expedition_complete` shows the first-camp reply.
+
+### Track 3 — Continuous habitat + journeys
+
+`continuation::start_until`/`resume_until` give pause/resume of one immutable world; journey graders turn receipts into milestone reports:
+
+- **First Answer**: build, keep lights on, contact — `first_answer::grade_receipt` produces phase/milestones and the answer text only when earned.
+- **Ark control**: route a 4-bit addition to a service plan — `ark_control::grade_receipt`.
+- **Port commitments**: request → custody → acknowledgment → service — `port_commitments::grade_receipt`.
+- **Bloom**: bounded program edits, birth, selection — `bloom::grade_receipt`; exchange cases via `bloom_exchange::grade_receipt`.
+- Habitat screen shows the current world frame, tick/horizon, remaining fuel, an Advance-to-tick control (max 8 advances like `habitat_store`), and the milestone rail.
+
+## The WASM surface to add
+
+Beyond the existing five exports:
+
+- `list_journeys()` / `journey_cases(journey)` — fixture catalog for every track.
+- `journey_experiment(journey, case_id)` — the world to edit and run.
+- `grade_receipt(journey, receipt_json)` — dispatch to the right journey grader.
+- `habitat_start(experiment_json, until)` / `habitat_resume(checkpoint_json, until)` — `start_until`/`resume_until`.
+- `expedition_new(name, ambition)`, `expedition_cases()`, `expedition_plan(state, command)`, `expedition_complete(state, receipt)`, `expedition_apply(state, event)`, `expedition_progress(state)`.
+- `challenge_info(index)` — id/family/band/editable cells/case count without the full case payload (for the picker).
+- `verify_receipt(receipt_json)` — independent re-check for the UI's "verified" badge.
+
+All JSON-in/JSON-out, all fallible, all bounded by the engine's own limits.
+
+## Frontend architecture
+
+- `app/play/page.tsx` — game shell; the only route that lazy-loads the WASM bundle.
+- `components/play/` — game UI split from the spike's single file:
+  - `play-viewer.tsx` → mission shell (briefing, editor, stage, verdict).
+  - `mission-map.tsx` → track/mission picker with completion state.
+  - `replay-stage.tsx` → animated SVG playback: play/pause/step/scrub/speed, built on `RecordedHabitat` + journey-specific overlays (`RecordedArk`, `RecordedPorts`, `RecordedBloom`).
+  - `program-editor.tsx` → JSON editor with parse diagnostics, starter-program presets, and an agent panel.
+  - `agent-panel.tsx` → "Describe the behavior" → copies a ready-made prompt (world summary + rules schema + goal) for the player's own agent, accepts pasted JSON back; signed-in users can call `/voice` in place.
+  - `verdict-panel.tsx` → pass/fail, work, milestones, receipts, verified badge.
+- `lib/play/` — engine client (`engine.ts` wrapping the WASM calls with typed errors), save store (`saves.ts` over IndexedDB with localStorage fallback), progression (`progress.ts`), submission export.
+- `lib/bridge/types.ts` already defines `Receipt`/`Frame`; extend the local display types only where the live game needs fields the lab never rendered.
+
+## Persistence model
+
+- `localStorage`: UI prefs, last-open mission.
+- `IndexedDB` (`platonik-saves`): one record per expedition campaign (journal events), one per habitat checkpoint chain, challenge results keyed by challenge id. All writes are event-sourced appends; recovery replays the journal — same semantics as `journal.rs`, browser-side.
+- Export/import: download a save bundle (`platonik-habitat-bundle-v1` / expedition journal) compatible with `platonik habitat import` / `platonik expedition import` so local CLI and browser stay interchangeable.
+
+## Agent integration ("tell your agent to set up Platonik")
+
+Two paths, both first-class:
+
+1. **Bring-your-own agent** (default, free): every mission has an "Ask your agent" panel that copies a complete prompt — the world's JSON, the program schema, the goal, and the editable cell — and accepts the pasted program back. This is the Colf-style loop without requiring a Hraness account.
+2. **Hosted assist**: signed-in users (existing suite-auth) can send the same digest to `/voice` for a proposed program. Rate-limited, cost-bounded, clearly labeled.
+
+The README/docs get a one-line setup path: `tell your agent to set up platonik` → agent runs the documented CLI flow for local play, or just opens `/play` for hosted play.
+
+## Open questions resolved by spikes below
+
+1. Does every needed core function compile under `wasm32`? (expedition/continuation/graders are pure serde + engine — expected yes; spike confirms.)
+2. Is `evaluate_challenge` (4–8 eval runs) fast enough in-browser to feel instant?
+3. What's the per-frame render cost for `RecordedHabitat` at 60fps playback, and do we need to throttle?
+4. Do the journey graders' outputs map onto the existing `Recorded*` components, or do we need live variants?
+5. Can a save bundle round-trip browser ↔ CLI (`habitat import`/`expedition import`)?
 
 ## Phases
 
-### Phase 0 — WASM engine proof and one tutorial level
-
-- Make `platonik-core` compile for `wasm32-unknown-unknown`.
-- Add a `crates/platonik-wasm` crate with `wasm-bindgen` exports:
-  - `tutorial_experiment(id: &str) -> String`
-  - `run_experiment(experiment_json: &str) -> String`
-  - `evaluate_challenge(index: u32, submission_json: &str) -> String`
-- Build the WASM artifact as part of the web build and place it where Next.js can import it.
-- Create `/play` with a single fixed level (`opening-normal`), a JSON program editor, a Run button, pass/fail/work output, and a basic SVG replay of the grid.
-
-### Phase 1 — challenge loop
-
-- Load any of the 96 generated challenges (`challenge-0001` to `challenge-0096`).
-- Show the public training cases and let the player edit the editable cell(s).
-- Run all training cases in-browser and display per-case results.
-- Add a simple selector for family/crossing, switchboard, foundry.
-
-### Phase 2 — agent-driven editing
-
-- Add a prompt box on `/play`.
-- For authenticated users, call the existing `/voice` endpoint to turn a wish into a proposed program.
-- For unauthenticated or cheaper use, include a small local prompt-to-program example using a rules schema and lightweight heuristics, clearly marked as a helper.
-
-### Phase 3 — persistence and identity
-
-- Browser-local saves for edited programs, challenge progress, and simple expeditions.
-- Optional Hraness-account sign-in for cross-device saves and season submissions.
-- Migrate season entry creation from manual PR to a web form that still uses the existing audited evaluator.
-
-### Phase 4 — richer journeys
-
-- Port the continuous-habitat and expedition flows to the browser with local saves.
-- Add more visualization modes: signal propagation, construction stages, bloom variation, port handoffs.
-
-## Open questions to resolve by spiking
-
-1. Does `platonik-core` compile to `wasm32-unknown-unknown` out of the box, or do `AtomicU64` / `std::sync::atomic` or other APIs need adjustment?
-2. What is the cleanest way to load a WASM module in Next.js 16 without bloating the bundle for non-play pages?
-3. Is the WASM artifact size acceptable for a first load, or should it be lazy-loaded?
-4. How much of the existing `/lab` SVG/view components can be reused for the live replay?
-5. Should programs be edited as JSON, as a visual block editor, or both?
-6. What is the cost and latency of using `/voice` per edit vs. a client-side heuristic vs. a direct cheap model call?
-
-## Spikes to run now
-
-- Compile `platonik-core` for `wasm32-unknown-unknown`.
-- Build a tiny `wasm-bindgen` wrapper and load it in a throwaway Next.js page.
-- Render one receipt frame as SVG using the existing lab components as reference.
-- Time how long `run_experiment` takes in WASM for the tutorial case.
+- **Phase 0 (done)**: WASM spike — engine compiles, `/play` runs and replays one experiment.
+- **Phase 1**: full WASM surface + challenge loop + IndexedDB saves + polished replay. This is the minimum "full game": tutorial + 96 challenges + expedition campaign.
+- **Phase 2**: continuous habitat + all four journey graders + milestone UI.
+- **Phase 3**: agent panel (BYOA + `/voice`), submission export to season, save bundle interchange with the CLI.
+- **Phase 4 (later, separate decision)**: hosted leaderboard/share API, account sync. The season PR flow stays the ranked path until then.
 
 ## Risks and mitigations
 
-- **WASM size**: lazy-load `/play` and its WASM separately from marketing pages.
-- **Engine changes for WASM**: keep changes minimal and behind feature flags; the native CLI must remain the authoritative evaluator.
-- **Persistence abuse**: local-only at first; no server state means no abuse surface.
-- **Season integrity**: browser submissions still flow through the existing PR-based, salt-bearing evaluator; the browser does not score its own reserved cases.
+- **WASM size** (~1.1 MB today): lazy-load only on `/play`; consider `wasm-opt -Oz` later.
+- **Engine changes for WASM**: none expected — all target functions are already pure. If something pulls in `std::fs`, feature-gate it; the native CLI remains authoritative.
+- **Self-scored challenges**: UI always labels browser scores as local; ranked claims require the season evaluator.
+- **Determinism drift**: `verify_receipt` in-browser plus the CLI's `verify` on export keep both paths honest.
+- **Save corruption**: event-sourced journals + schema tags; a bad event fails apply, never silently rewrites state.
 
 ## Success criteria
 
-A new visitor can land on `/play`, press Run on the tutorial, see the creature move, and understand whether the mission succeeded — all without reading docs or installing Rust. Subsequent iterations add challenge selection, persistence, and agent help.
+A new visitor opens `/play`, runs the opening, watches the courier move, understands the verdict — no docs, no install. They can pick a challenge, paste or write a program, score it, and see their rank locally. They can start a field expedition, grow a courier, and reach the first-camp ending — all client-side, all replayable, all exportable to the CLI.
