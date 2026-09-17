@@ -1,0 +1,30 @@
+/* tslint:disable */
+/* eslint-disable */
+export const memory: WebAssembly.Memory;
+export const challenge_info: (a: number) => [number, number, number, number];
+export const evaluate_challenge: (a: number, b: number, c: number, d: number) => [number, number, number, number];
+export const expedition_apply: (a: number, b: number, c: number, d: number) => [number, number, number, number];
+export const expedition_complete: (a: number, b: number, c: number, d: number) => [number, number, number, number];
+export const expedition_new: (a: number, b: number, c: number, d: number) => [number, number, number, number];
+export const expedition_plan: (a: number, b: number, c: number, d: number) => [number, number, number, number];
+export const expedition_progress: (a: number, b: number) => [number, number, number, number];
+export const expedition_trial_experiment: (a: number, b: number, c: number, d: number) => [number, number, number, number];
+export const generated_challenge: (a: number) => [number, number, number, number];
+export const grade_advance: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => [number, number, number, number];
+export const grade_receipt: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number, number, number];
+export const habitat_resume: (a: number, b: number, c: number) => [number, number, number, number];
+export const habitat_start: (a: number, b: number, c: number) => [number, number, number, number];
+export const journey_catalog: () => [number, number, number, number];
+export const journey_experiment: (a: number, b: number) => [number, number, number, number];
+export const make_submission: (a: number, b: number, c: number, d: number, e: number, f: number) => [number, number, number, number];
+export const reference_program: (a: number, b: number) => [number, number, number, number];
+export const run_experiment: (a: number, b: number) => [number, number, number, number];
+export const tutorial_experiment: (a: number, b: number) => [number, number, number, number];
+export const validate_experiment: (a: number, b: number) => [number, number, number, number];
+export const verify_receipt: (a: number, b: number) => [number, number, number, number];
+export const __wbindgen_externrefs: WebAssembly.Table;
+export const __externref_table_dealloc: (a: number) => void;
+export const __wbindgen_free: (a: number, b: number, c: number) => void;
+export const __wbindgen_malloc: (a: number, b: number) => number;
+export const __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
+export const __wbindgen_start: () => void;

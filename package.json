@@ -21,7 +21,7 @@
     "bridge:record": "bun scripts/record-bridge.ts --write",
     "challenges:record": "bun scripts/record-challenges.ts --write",
     "season:record": "bun scripts/record-season.ts season-0003 --write",
-    "build:wasm": "wasm-pack build --target web --out-dir ../../public/wasm crates/platonik-wasm",
+    "build:wasm": "wasm-pack build --target web --out-dir ../../public/wasm crates/platonik-wasm && rm -f public/wasm/.gitignore public/wasm/package.json",
     "check": "bun run check:rust && bun run check:web"
   },
   "dependencies": {
