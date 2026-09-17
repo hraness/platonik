@@ -27,10 +27,10 @@ The serving contract is deliberately boring — one request in, one labeled resp
 POST /voice  { digest: <platonik-voice-digest-v1>, say: "…" }
 →  platonik-voice-response-v1 { voice, fiction: true, digest_hash,
    disclaimer: "authored fiction — does not demonstrate a mind",
-   model, cost_usd }
+   model, cost_usd, text }
 ```
 
-The service holds the persona (built from the world-bible) and a model reference; callers bring the checked digest and get back fiction that names the exact wire it was rendered from. ~$0.007 per reply through the gateway.
+The contract is implemented at `POST /voice` on this site (`app/voice/route.ts`): it validates the digest shape and `say`, then forwards persona + digest + line to the configured gateway model. It answers `voice_not_configured` unless `VOICE_GATEWAY_BASE`, `VOICE_GATEWAY_KEY`, and `VOICE_MODEL` are set server-side — the persona and key never reach the browser. The service holds the persona (built from the world-bible) and a model reference; callers bring the checked digest and get back fiction that names the exact wire it was rendered from. ~$0.007 per reply through the gateway.
 
 ## The training pipeline, built
 

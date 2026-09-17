@@ -20,7 +20,7 @@
     "check:rust": "bun scripts/check-rust.ts",
     "bridge:record": "bun scripts/record-bridge.ts --write",
     "challenges:record": "bun scripts/record-challenges.ts --write",
-    "season:record": "bun scripts/record-season.ts season-0001 --write",
+    "season:record": "bun scripts/record-season.ts season-0003 --write",
     "check": "bun run check:rust && bun run check:web"
   },
   "dependencies": {
