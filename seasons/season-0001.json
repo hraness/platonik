@@ -39,5 +39,6 @@
     32
   ],
   "max_entries": 8,
-  "status": "open"
+  "status": "revealed",
+  "salt": "5da024fae828b5ea81d45749494db885a193dec3a5d81db311fda87c645f8d2f"
 }
