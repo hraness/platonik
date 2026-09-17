@@ -2,6 +2,7 @@
   "schema": "platonik-challenges-site-v1",
   "generator": 1,
   "policies": [
+    "builder",
     "compact",
     "idle",
     "keeper",
@@ -9,7 +10,8 @@
   ],
   "families": [
     "crossing",
-    "switchboard"
+    "switchboard",
+    "foundry"
   ],
   "challenges": [
     {
@@ -2443,6 +2445,1222 @@
         }
       ],
       "family": "switchboard"
+    },
+    {
+      "challenge": "challenge-0065",
+      "index": 65,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 43844,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 15865,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22009,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0066",
+      "index": 66,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 43258,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 15368,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21530,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0067",
+      "index": 67,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 40746,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 14790,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20646,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0068",
+      "index": 68,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 45639,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 16303,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22654,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0069",
+      "index": 69,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 46431,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 16528,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22987,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0070",
+      "index": 70,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 42290,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 15277,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21286,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0071",
+      "index": 71,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 42607,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 15436,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21481,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0072",
+      "index": 72,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 45756,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 16370,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 22730,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0073",
+      "index": 73,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 50519,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 18949,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25707,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0074",
+      "index": 74,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 46383,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 17984,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 24199,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0075",
+      "index": 75,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 53710,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20166,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27173,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0076",
+      "index": 76,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 52708,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20265,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27147,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0077",
+      "index": 77,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 51099,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 19499,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26230,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0078",
+      "index": 78,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 45004,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 17340,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 23465,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0079",
+      "index": 79,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 50108,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 18799,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25482,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0080",
+      "index": 80,
+      "band": 2,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 49747,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 18663,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25347,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0081",
+      "index": 81,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 50191,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 18800,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25501,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0082",
+      "index": 82,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 49483,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 19364,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 25873,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0083",
+      "index": 83,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 53889,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20165,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27213,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0084",
+      "index": 84,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 52293,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20302,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27099,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0085",
+      "index": 85,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 51754,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20215,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26904,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0086",
+      "index": 86,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 53273,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20469,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27370,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0087",
+      "index": 87,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 54631,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21070,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28084,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0088",
+      "index": 88,
+      "band": 3,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 52237,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 19235,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 26185,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0089",
+      "index": 89,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 55469,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21614,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28704,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0090",
+      "index": 90,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 52920,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20434,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27309,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0091",
+      "index": 91,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 52403,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20393,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27224,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0092",
+      "index": 92,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 51928,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20184,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27000,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0093",
+      "index": 93,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 54041,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21183,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28074,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0094",
+      "index": 94,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 53731,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 20676,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 27702,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0095",
+      "index": 95,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 54981,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21227,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28338,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
+    },
+    {
+      "challenge": "challenge-0096",
+      "index": 96,
+      "band": 4,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "reference:builder",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 55276,
+          "program_bytes": 1778,
+          "submission_hash": "sha256:aabad839182bb919ede8214ce3351485c1b535130122c4657336eca833722cdb"
+        },
+        {
+          "rank": 2,
+          "entrant": "reference:idle",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 21158,
+          "program_bytes": 70,
+          "submission_hash": "sha256:6686d5f5fbea540ce9d5106aded596750b4cd661632ac1c57d2e1779e887c382"
+        },
+        {
+          "rank": 3,
+          "entrant": "reference:resilient",
+          "passed": false,
+          "cases_passed": 0,
+          "cases_total": 4,
+          "total_work": 28306,
+          "program_bytes": 760,
+          "submission_hash": "sha256:22ca71ded543da06839dded6ba7343392cb4c3ebcdd7bc38a5ceb730230f3bec"
+        }
+      ],
+      "family": "foundry"
     }
   ],
   "global": [
@@ -2450,7 +3668,7 @@
       "rank": 1,
       "entrant": "reference:resilient",
       "cleared": 32,
-      "attempted": 64,
+      "attempted": 96,
       "total_work": 465072
     },
     {
@@ -2462,16 +3680,23 @@
     },
     {
       "rank": 3,
+      "entrant": "reference:builder",
+      "cleared": 32,
+      "attempted": 32,
+      "total_work": 1598349
+    },
+    {
+      "rank": 4,
       "entrant": "reference:compact",
       "cleared": 0,
       "attempted": 32,
       "total_work": 0
     },
     {
-      "rank": 4,
+      "rank": 5,
       "entrant": "reference:idle",
       "cleared": 0,
-      "attempted": 64,
+      "attempted": 96,
       "total_work": 0
     }
   ]

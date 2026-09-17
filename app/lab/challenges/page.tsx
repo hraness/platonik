@@ -114,7 +114,7 @@ export default async function ChallengesPage() {
     </section>)}
     <section className="lab-reading">
       <h2>Enter from your own laboratory.</h2>
-      <p>The window is sixty-four challenges across two families today and grows by index. The resilient reference clears every crossing it was admitted to solve; the keeper reference clears every switchboard, and neither family's skill transfers to the other — the open contest is beating their charged work and bytes, or clearing them with stranger policies.</p>
+      <p>The window is ninety-six challenges across three families today and grows by index. The resilient reference clears every crossing it was admitted to solve; the keeper reference clears every switchboard, and neither family's skill transfers to the other. Foundry asks for something else again: a builder that gathers finite material, assembles the declared runner bodies, and activates couriers that deliver what their parent cannot reach — the builder reference clears every foundry. The open contest is beating their charged work and bytes, or clearing them with stranger policies.</p>
       <p><Link href="/docs/seasons">Enter the hosted season by pull request →</Link></p>
       <p><Link href="/docs/challenges">Read the eval design and run your agent →</Link></p>
       <p><Link href="/docs/competition">See the proposed ranked-season rules →</Link></p>
