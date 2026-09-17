@@ -159,3 +159,21 @@
   .specimen-toolbar { font-size: 13px; }
   .lab-panel-intro h2, .lab-panel-intro h3 { font-size: 30px; }
 }
+
+/* Browser-playable surface (Phase 0). */
+.play-viewer { display: grid; grid-template-columns: minmax(280px, .75fr) minmax(0, 1.25fr); gap: 40px; align-items: start; }
+.play-controls h2 { font-size: 22px; margin-bottom: 6px; }
+.play-loaders { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 18px; }
+.play-loaders button { font-size: 12px !important; padding: 8px 10px; }
+.play-editor { width: 100%; min-height: 320px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.6; background: var(--surface); border: 1px solid var(--control-border); padding: 14px; color: var(--ink); tab-size: 2; }
+.play-stage figure { margin: 0; }
+.play-stage .bridge-map { width: 100%; height: auto; max-width: 640px; }
+.play-placeholder { min-height: 280px; display: flex; flex-direction: column; justify-content: center; gap: 12px; border: 1px dashed var(--line); border-radius: .75rem; padding: 28px; }
+.play-actions { display: flex; gap: 12px; margin-top: 12px; }
+.play-pass { color: var(--success, #1a7f37); }
+.play-fail { color: var(--danger); }
+.play-error { color: var(--danger); padding: 18px 0; }
+@media (max-width: 850px) {
+  .play-viewer { grid-template-columns: 1fr; gap: 28px; }
+  .play-stage { order: -1; }
+}

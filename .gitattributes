@@ -1,2 +1,7 @@
 # Preserve upstream license formatting; the snapshot checker verifies exact bytes.
 vendor/hraness-marketing/fonts/instrument-serif/OFL.txt whitespace=-blank-at-eol
+
+# Generated WASM artifacts from crates/platonik-wasm; rebuild with `bun run build:wasm`.
+public/wasm/*.wasm binary
+public/wasm/*.js linguist-generated
+public/wasm/*.d.ts linguist-generated
