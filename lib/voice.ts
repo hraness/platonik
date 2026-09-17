@@ -20,6 +20,8 @@ export interface VoiceConfig {
   model: string;
   voice: string;
   persona: string;
+  projection: "facts" | "full";
+  reasoningEffort?: string;
 }
 
 export interface VoiceRequest {
@@ -63,6 +65,15 @@ export function voiceConfig(env: Record<string, string | undefined> = process.en
     model,
     voice: env.VOICE_NAME ?? "far-beacon",
     persona: env.VOICE_PERSONA ?? DEFAULT_PERSONA,
+    // The wire sent upstream is a projection of the checked digest, not the
+    // digest itself: the response still binds digest_hash either way. "facts"
+    // sends only the citeable propositions plus the declared boundary (~4x
+    // smaller); "full" sends the digest verbatim including the report prose.
+    projection: env.VOICE_DIGEST_PROJECTION === "full" ? "full" : "facts",
+    // Reasoning models bill their thinking as output tokens — measured ~10x
+    // the visible reply on qwen3.7-flash. VOICE_REASONING_EFFORT=none turns
+    // thinking off where the model honors it; the battery holds without it.
+    reasoningEffort: env.VOICE_REASONING_EFFORT,
   };
 }
 
@@ -84,15 +95,29 @@ export function voiceError(error: string): VoiceError {
   return { schema: VOICE_RESPONSE_SCHEMA, error, fiction: true, disclaimer: DISCLAIMER };
 }
 
+export function projectDigest(digest: VoiceRequest["digest"]): unknown {
+  return {
+    schema: digest.schema,
+    digest_hash: digest.digest_hash,
+    facts: digest.facts,
+    boundary: digest.boundary,
+  };
+}
+
 export function upstreamBody(config: VoiceConfig, request: VoiceRequest): string {
+  const wire =
+    config.projection === "full" ? request.digest : projectDigest(request.digest);
   return JSON.stringify({
     model: config.model,
     max_tokens: MAX_REPLY_TOKENS,
     temperature: 0.7,
+    ...(config.reasoningEffort
+      ? { reasoning_effort: config.reasoningEffort }
+      : {}),
     messages: [
       {
         role: "system",
-        content: `${config.persona}\n\nWire digest ${request.digest.digest_hash}:\n${JSON.stringify(request.digest)}`,
+        content: `${config.persona}\n\nWire digest ${request.digest.digest_hash}:\n${JSON.stringify(wire)}`,
       },
       { role: "user", content: request.say },
     ],
@@ -121,11 +146,27 @@ export type FetchLike = (
   },
 ) => Promise<Response>;
 
+// Repeat questions dominate a public endpoint, and a cached answer is free.
+// This is a best-effort warm-instance cache only — a serverless cold start
+// empties it, and that is fine: misses cost the same as before. Capping the
+// map keeps a long-lived instance bounded. One sampled reply becomes the
+// canonical fiction for a (model, digest, question) pair.
+const RESPONSE_CACHE_MAX = 1_000;
+const responseCache = new Map<string, VoiceResponse>();
+
+export function responseCacheKey(config: VoiceConfig, request: VoiceRequest): string {
+  const say = request.say.trim().toLowerCase().replace(/\s+/g, " ");
+  return `${config.model}${config.voice}${request.digest.digest_hash}\n${say}`;
+}
+
 export async function answer(
   config: VoiceConfig,
   request: VoiceRequest,
   fetchFn: FetchLike = fetch,
 ): Promise<VoiceResponse | VoiceError> {
+  const key = responseCacheKey(config, request);
+  const cached = responseCache.get(key);
+  if (cached) return cached;
   const upstream = await fetchFn(`${config.base}/chat/completions`, {
     method: "POST",
     headers: {
@@ -141,7 +182,7 @@ export async function answer(
   const text = parsed?.choices?.[0]?.message?.content?.trim();
   if (!text) return voiceError("voice_gateway_empty");
   const cost = parsed?.usage?.cost ?? parsed?.usage?.total_cost ?? null;
-  return {
+  const response: VoiceResponse = {
     schema: VOICE_RESPONSE_SCHEMA,
     voice: config.voice,
     fiction: true,
@@ -151,4 +192,9 @@ export async function answer(
     text,
     cost_usd: typeof cost === "number" ? cost : null,
   };
+  if (responseCache.size >= RESPONSE_CACHE_MAX) {
+    responseCache.delete(responseCache.keys().next().value!);
+  }
+  responseCache.set(key, response);
+  return response;
 }
