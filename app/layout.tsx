@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { renderHranessSiteFooter } from "@hraness/site-footer";
+import { HranessSiteFooter } from "@hraness/site-footer/react";
 import "@hraness/site-footer/styles.css";
 import Link from "next/link";
 import Image from "next/image";
 import { site } from "@/lib/site";
+import { siteFooterProps } from "@/lib/site-footer";
 import { appearanceFallback } from "@/lib/appearance";
 import { AppearanceControl, AppearanceProvider } from "@/components/appearance";
 import "@fontsource/newsreader/latin-400.css";
@@ -40,15 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <AppearanceControl />
           </header>
           {children}
-          <footer className="site-footer">
-            <p>Platonik <span className="footer-divider" aria-hidden="true">/</span> A project by <a href="https://hraness.com">Hraness</a></p>
-            <p>Game in design. Ideas open to exploration.</p>
-          </footer>
-          <div dangerouslySetInnerHTML={{ __html: renderHranessSiteFooter({
-            mailingList: { kind: "none" },
-            placement: "flow",
-            support: { id: "platonik", name: "Platonik", updates: false, valueProposition: "Support development of the simulation and its open documentation." },
-          }) }} />
+          <HranessSiteFooter {...siteFooterProps} />
         </AppearanceProvider>
       </body>
     </html>

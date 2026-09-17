@@ -14,8 +14,9 @@
     "typecheck": "next typegen && tsc --noEmit",
     "check:content": "bun scripts/check-content.ts",
     "test:lab": "bun test lib/observatory",
+    "test:site": "bun test lib/site-footer.test.ts",
     "check:theme": "node vendor/hraness-marketing/check.mjs && node vendor/hraness-lantern/check.mjs",
-    "check:web": "bun run check:theme && bun run check:content && bun run test:lab && bun run typecheck && bun run build",
+    "check:web": "bun run check:theme && bun run check:content && bun run test:lab && bun run test:site && bun run typecheck && bun run build",
     "check:rust": "bun scripts/check-rust.ts",
     "bridge:record": "bun scripts/record-bridge.ts --write",
     "challenges:record": "bun scripts/record-challenges.ts --write",
@@ -32,7 +33,7 @@
     "react-markdown": "10.1.0",
     "rehype-slug": "6.0.0",
     "remark-gfm": "4.0.1",
-    "@hraness/site-footer": "github:hraness/site-footer#v0.12.1"
+    "@hraness/site-footer": "github:hraness/site-footer#v0.13.0"
   },
   "devDependencies": {
     "@types/bun": "1.4.2",

@@ -207,11 +207,11 @@ At widths up to 480px, the body becomes 16px, document prose 15px, homepage head
 
 ## Layout
 
-The header, footer, and documentation shell share a maximum width of 1160px. Their wide-screen horizontal gutter uses `gutter-wide`. The centered homepage is at most 900px wide, with a hero capped at 780px. Supporting hero text remains within 590px. Ordinary homepage paragraphs may span 70ch; conversation text is capped at 60ch.
+The header and documentation shell share a maximum width of 1160px. Their wide-screen horizontal gutter uses `gutter-wide`. The site footer is the shared `@hraness/site-footer` package in document flow; it owns its own layout, the “Built by Hraness” organization attribution, network links, and responsive behavior, and this site adds no second footer bar. The centered homepage is at most 900px wide, with a hero capped at 780px. Supporting hero text remains within 590px. Ordinary homepage paragraphs may span 70ch; conversation text is capped at 60ch.
 
 The desktop documentation layout has a 190px navigation column, a 60px gap, and a content column capped at 740px. Its sidebar is sticky, 32px from the top. Split homepage sections use a 260px heading column and a 54px gap. The initial hero has 64px top and 76px bottom padding; subsequent homepage sections use 52px top and 56px bottom padding.
 
-At widths up to 800px, the gutters become `gutter-tablet`, split sections stack, and documentation switches to a single column. The documentation navigation becomes a wrapping horizontal row between rules; it is no longer sticky. The footer stacks its text.
+At widths up to 800px, the gutters become `gutter-tablet`, split sections stack, and documentation switches to a single column. The documentation navigation becomes a wrapping horizontal row between rules; it is no longer sticky.
 
 At widths up to 480px, gutters become `gutter-mobile`. Hero links stack, chapter labels sit above descriptions, and section spacing tightens. The conversation speaker column shrinks from 64px to 42px. Tables and code blocks scroll within their own containers; tables retain their 560px minimum width. The table region is keyboard-focusable.
 
