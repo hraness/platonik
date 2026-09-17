@@ -19,15 +19,32 @@
           "submission_hash": "sha256:2a97a2b2f01795ca9b7397404313766e2a5f194d07b3a1dfdb74485379808996"
         }
       ]
+    },
+    {
+      "challenge": "challenge-0040",
+      "index": 40,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "github:0thernet",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 22341,
+          "program_bytes": 359,
+          "submission_hash": "sha256:c45c3b5686e2b4309b0cd8b49e33ab5447c24d31b55ff522f3cc468c16962b75"
+        }
+      ]
     }
   ],
   "global": [
     {
       "rank": 1,
       "entrant": "github:0thernet",
-      "cleared": 1,
-      "attempted": 1,
-      "total_work": 12668
+      "cleared": 2,
+      "attempted": 2,
+      "total_work": 35009
     }
   ]
 }
