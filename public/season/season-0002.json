@@ -2,6 +2,32 @@
   "schema": "platonik-season-board-v1",
   "season": "season-0002",
   "commitment": "sha256:7a4d9210b60d95b9d11f51313b1c9accf1d9a4134240f6c11213ea7d3d0383fd",
-  "challenges": [],
-  "global": []
+  "challenges": [
+    {
+      "challenge": "challenge-0001",
+      "index": 1,
+      "band": 1,
+      "rows": [
+        {
+          "rank": 1,
+          "entrant": "github:0thernet",
+          "passed": true,
+          "cases_passed": 4,
+          "cases_total": 4,
+          "total_work": 12668,
+          "program_bytes": 760,
+          "submission_hash": "sha256:2a97a2b2f01795ca9b7397404313766e2a5f194d07b3a1dfdb74485379808996"
+        }
+      ]
+    }
+  ],
+  "global": [
+    {
+      "rank": 1,
+      "entrant": "github:0thernet",
+      "cleared": 1,
+      "attempted": 1,
+      "total_work": 12668
+    }
+  ]
 }
