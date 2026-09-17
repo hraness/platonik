@@ -20,7 +20,7 @@ A bundle contains four public **training** cases and four reserved **eval** case
 
 Indices 33–64 keep the courier still and move the thinking instead. A generated switchboard places a valve beside a capacity-one depot: a fixed porter shuttles sparks in, the depot reports each arrival's bit on its links, a fixed relay forwards it, and the entrant's immobile keeper cell must `Route` the depot's front spark to the zero or one beacon that matches the bit. The scored skill is conditional routing with memory — read, remember, act, and recover when a link drops or the valve flickers shut — rather than navigation.
 
-The crossing witness earns nothing here: `reference:resilient` grafted into the keeper cell fails every switchboard eval case, which is the point — the families measure different skills, and the board shows the negative control honestly instead of hiding it. The open `season-0001` still covers crossing only; switchboard joins the local window now and later seasons.
+The crossing witness earns nothing here: `reference:resilient` grafted into the keeper cell fails every switchboard eval case, which is the point — the families measure different skills, and the board shows the negative control honestly instead of hiding it. `season-0001` covered crossing only and is now revealed — its manifest publishes the salt, so every result re-derives publicly. `season-0002` is open across both families.
 
 ## What one score reports
 
