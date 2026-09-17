@@ -7,6 +7,11 @@ pub const CONTROLLER: u16 = 3;
 pub const VALVE: u16 = 30;
 pub const CONTACT_END: u32 = 48;
 pub const SERVICE_START: u32 = 52;
+/// Foundry ids shared by the generator and the witness: one stock the builder
+/// stands on and the declared runner blueprints it may raise.
+pub const FOUNDRY_STOCK: u16 = 60;
+pub const FOUNDRY_RUNNER_A: u16 = 50;
+pub const FOUNDRY_RUNNER_B: u16 = 51;
 
 pub fn names() -> Vec<&'static str> {
     vec![
@@ -242,6 +247,64 @@ pub fn switchboard_keeper() -> Program {
             rule(vec![], Action::Wait),
         ],
     }
+}
+
+/// The foundry witness: raise the two declared runner blueprints in order.
+/// A blueprint's assembly stage is only sensible while the builder stands
+/// adjacent to its fixed target, so each rule keys on the stage directly: an
+/// `Absent` stage with a held unit starts the body, `Copying` and `Wiring`
+/// continue it, `Ready` activates the child, and once it is `Born` that
+/// blueprint's rules stop matching and the second block takes over. Every
+/// rule for the second runner also requires the first to be `Born`, so work
+/// on it can never preempt an unfinished assembly, and gathering fires only
+/// for a blueprint that has not started — a held unit is never double-spent
+/// and a declared decoy blueprint is never touched. Failed actions cost one
+/// tick, so retried stages are safe.
+pub fn foundry_builder() -> Program {
+    let mut rules = Vec::new();
+    for blueprint in [FOUNDRY_RUNNER_A, FOUNDRY_RUNNER_B] {
+        for (stage, action) in [
+            (AssemblyStage::Ready, Action::Activate { blueprint }),
+            (AssemblyStage::Copying, Action::Build { blueprint }),
+            (AssemblyStage::Wiring, Action::Build { blueprint }),
+        ] {
+            let mut when = vec![Condition::AssemblyStage { blueprint, stage }];
+            if blueprint == FOUNDRY_RUNNER_B {
+                when.push(Condition::AssemblyStage {
+                    blueprint: FOUNDRY_RUNNER_A,
+                    stage: AssemblyStage::Born,
+                });
+            }
+            rules.push(rule(when, action));
+        }
+        for value in [true, false] {
+            let mut when = vec![
+                Condition::AssemblyStage {
+                    blueprint,
+                    stage: AssemblyStage::Absent,
+                },
+                Condition::HasMaterial { value },
+            ];
+            if blueprint == FOUNDRY_RUNNER_B {
+                when.push(Condition::AssemblyStage {
+                    blueprint: FOUNDRY_RUNNER_A,
+                    stage: AssemblyStage::Born,
+                });
+            }
+            rules.push(rule(
+                when,
+                if value {
+                    Action::Build { blueprint }
+                } else {
+                    Action::GatherMaterial {
+                        stock: FOUNDRY_STOCK,
+                    }
+                },
+            ));
+        }
+    }
+    rules.push(rule(vec![], Action::Wait));
+    Program { rules }
 }
 
 pub fn constant_controller(bit: bool) -> Program {

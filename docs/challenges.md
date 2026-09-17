@@ -6,9 +6,9 @@ A challenge asks a question in the spirit of code golf and ARC: *can your agent 
 
 ## The set that keeps growing
 
-Every challenge is a pure function of its index. `platonik challenges` lists the published window, currently sixty-four ids across two families, and `platonik challenge <id>` prints its bundle on any machine. There is no database of questions to leak or memorize: challenge 0050's worlds did not exist anywhere until someone derived them, and a reviewed generator change can extend the window or add families without touching existing ids.
+Every challenge is a pure function of its index. `platonik challenges` lists the published window, currently ninety-six ids across three families, and `platonik challenge <id>` prints its bundle on any machine. There is no database of questions to leak or memorize: challenge 0050's worlds did not exist anywhere until someone derived them, and a reviewed generator change can extend the window or add families without touching existing ids.
 
-Each challenge carries a difficulty band. Every eight indices inside a family raise the band, up to four, so each family restarts its ramp on its first index. From band two upward, some cases schedule a declared mid-run disturbance — an edge closure in crossing, a cut link or a flickering valve in switchboard — the [edge hazards](field-expedition.md) of the expedition, now generated rather than authored.
+Each challenge carries a difficulty band. Every eight indices inside a family raise the band, up to four, so each family restarts its ramp on its first index. From band two upward, some cases schedule a declared mid-run disturbance — an edge closure in crossing, a cut link or a flickering valve in switchboard, a sealed corridor edge or a memory wipe in foundry — the [edge hazards](field-expedition.md) of the expedition, now generated rather than authored.
 
 ## Family one: crossing
 
@@ -21,6 +21,12 @@ A bundle contains four public **training** cases and four reserved **eval** case
 Indices 33–64 keep the courier still and move the thinking instead. A generated switchboard places a valve beside a capacity-one depot: a fixed porter shuttles sparks in, the depot reports each arrival's bit on its links, a fixed relay forwards it, and the entrant's immobile keeper cell must `Route` the depot's front spark to the zero or one beacon that matches the bit. The scored skill is conditional routing with memory — read, remember, act, and recover when a link drops or the valve flickers shut — rather than navigation.
 
 The crossing witness earns nothing here: `reference:resilient` grafted into the keeper cell fails every switchboard eval case, which is the point — the families measure different skills, and the board shows the negative control honestly instead of hiding it. `season-0001` covered crossing only and is now revealed — its manifest publishes the salt, so every result re-derives publicly. `season-0002` is open across both families.
+
+## Family three: foundry
+
+Indices 65–96 ask for resource-budgeted construction. A generated foundry places one immobile builder on a finite material stock between two corridors it cannot enter. Each corridor has a source feeding sparks toward a draining beacon on the far end, and each declared runner blueprint describes a small courier body — a cell plus any links — that, once built and activated, ferries that corridor's sparks on its own. The entrant's program must gather a material unit, copy the body a chunk at a time, and activate it, once per corridor, sensing each assembly's stage as it goes. The builder never reaches a beacon; only its children deliver.
+
+The budget is the point. The stock holds exactly the units two runners need plus at most one spare, and some cases declare a third blueprint beside the working pair — a decoy that assembles a courier on the builder's own row or cannot move at all. A program that spends a unit on the decoy can no longer field both runners, so clearing requires reading the declared targets rather than building every blueprint on offer. Both earlier controls fail here too: `reference:resilient` commands a body that cannot move, and `reference:keeper` names a valve the case never declares. The `reference:builder` baseline clears every published foundry case.
 
 ## What one score reports
 
@@ -35,7 +41,7 @@ The crossing witness earns nothing here: `reference:resilient` grafted into the 
 }
 ```
 
-That program is the smallest legal one — one unconditional wait — and loses everywhere. `platonik challenge reference <id> resilient` prints a complete passing baseline to start from.
+That program is the smallest legal one — one unconditional wait — and loses everywhere. `platonik challenge reference <id> <policy>` prints a complete passing baseline to start from — `resilient` on crossing, `keeper` on switchboard, `builder` on foundry.
 
 Rank order on a challenge is lexicographic:
 
@@ -55,7 +61,7 @@ Honest practice iterates on the training cases and submits once against the rese
 
 ## What this does not establish
 
-Clearing challenges is evidence that a harness can synthesize working policies for a bounded family it had not seen, at a measured cost. It is not a general intelligence score: the families are known and seeded, the worlds are small, and a public witness already passes every case. What the board does make hard to fake is the artifact itself — a submission is a program whose receipts either replay or do not. [Hosted seasons](seasons.md) add the withheld-salt evaluator and per-entrant quotas on this same family; families for valves, links, construction, and multi-cell organisms remain later work under the competition proposal's [commitment scheme](competition.md#training-submission-and-replay).
+Clearing challenges is evidence that a harness can synthesize working policies for a bounded family it had not seen, at a measured cost. It is not a general intelligence score: the families are known and seeded, the worlds are small, and a public witness already passes every case. What the board does make hard to fake is the artifact itself — a submission is a program whose receipts either replay or do not. [Hosted seasons](seasons.md) add the withheld-salt evaluator and per-entrant quotas on this same family; families for multi-cell organisms and deeper compositions remain later work under the competition proposal's [commitment scheme](competition.md#training-submission-and-replay).
 
 ```text
 platonik challenges                                       # the published window

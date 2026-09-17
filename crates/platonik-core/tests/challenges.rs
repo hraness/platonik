@@ -192,6 +192,37 @@ fn every_published_challenge_generates_deterministically_with_witnessed_cases() 
                     assert_eq!(case.depots.len(), 1);
                     assert_eq!(case.depots[0].capacity, 1);
                 }
+                "foundry" => {
+                    assert_eq!(case.cells.len(), 1);
+                    let builder = &case.cells[0];
+                    assert_eq!(builder.id, EDITABLE_BUILDER);
+                    assert_eq!(builder.program, fixtures::idle_program());
+                    assert!(!builder.mobile);
+                    let spec = case
+                        .construction
+                        .as_ref()
+                        .expect("foundry cases carry a construction catalog");
+                    assert_eq!(spec.stocks.len(), 1);
+                    assert_eq!(spec.stocks[0].position, builder.position);
+                    // Both declared runners target cells adjacent to the
+                    // immobile builder; a case may also declare one decoy.
+                    let targets: Vec<_> = spec
+                        .blueprints
+                        .iter()
+                        .map(|blueprint| blueprint.body.cell.position)
+                        .collect();
+                    assert!((2..=3).contains(&targets.len()));
+                    assert!(
+                        targets
+                            .iter()
+                            .all(|target| target.distance(builder.position) == 1)
+                    );
+                    assert!(
+                        case.beacons
+                            .iter()
+                            .all(|beacon| beacon.required_deliveries >= 1)
+                    );
+                }
                 _ => {
                     assert_eq!(first.family, "crossing");
                     assert_eq!(case.cells.len(), 1);
@@ -219,7 +250,7 @@ fn crossing_bundles_keep_their_frozen_byte_identities() {
 
 #[test]
 fn switchboard_witness_passes_every_published_case() {
-    for index in 33..=PUBLISHED_CHALLENGES {
+    for index in 33..=64 {
         let challenge = generate(index).expect("switchboard challenge generates");
         assert_eq!(challenge.family, "switchboard");
         assert_eq!(challenge.editable, vec![EDITABLE_KEEPER]);
@@ -234,6 +265,88 @@ fn switchboard_witness_passes_every_published_case() {
             );
         }
     }
+}
+
+#[test]
+fn foundry_witness_passes_every_published_case() {
+    for index in 65..=PUBLISHED_CHALLENGES {
+        let challenge = generate(index).expect("foundry challenge generates");
+        assert_eq!(challenge.family, "foundry");
+        assert_eq!(challenge.editable, vec![EDITABLE_BUILDER]);
+        assert_eq!(challenge.witness, "foundry_builder");
+        for case in challenge.train.iter().chain(challenge.eval.iter()) {
+            let witnessed =
+                fixtures::replace_program(case, EDITABLE_BUILDER, fixtures::foundry_builder());
+            let result = platonik_core::run(&witnessed).expect("case runs");
+            assert!(
+                result.outcome.passed,
+                "the builder witness must pass every case of challenge-{index:04}"
+            );
+        }
+    }
+}
+
+/// A builder that spends a unit on a declared decoy blueprint can no longer
+/// field both runners: with a two-unit stock the second runner is impossible.
+/// Grafted into a decoy case, the wrong-blueprint policy fails on its own.
+#[test]
+fn foundry_decoy_spend_cannot_raise_both_runners() {
+    for index in 65..=PUBLISHED_CHALLENGES {
+        let challenge = generate(index).expect("foundry challenge generates");
+        for case in challenge.train.iter().chain(challenge.eval.iter()) {
+            let spec = case.construction.as_ref().unwrap();
+            if spec.blueprints.len() < 3 || spec.stocks[0].units.len() > 2 {
+                continue;
+            }
+            let decoy = spec
+                .blueprints
+                .iter()
+                .map(|blueprint| blueprint.id)
+                .find(|id| ![fixtures::FOUNDRY_RUNNER_A, fixtures::FOUNDRY_RUNNER_B].contains(id))
+                .expect("three-blueprint cases carry a decoy");
+            let mut mistaken = fixtures::foundry_builder();
+            // A greedy first rule always starts the decoy before the real
+            // runners get their ordered turn.
+            mistaken.rules.insert(
+                0,
+                Rule {
+                    when: vec![
+                        Condition::AssemblyStage {
+                            blueprint: decoy,
+                            stage: AssemblyStage::Absent,
+                        },
+                        Condition::HasMaterial { value: true },
+                    ],
+                    action: Action::Build { blueprint: decoy },
+                    remember: None,
+                },
+            );
+            mistaken.rules.insert(
+                0,
+                Rule {
+                    when: vec![
+                        Condition::AssemblyStage {
+                            blueprint: decoy,
+                            stage: AssemblyStage::Absent,
+                        },
+                        Condition::HasMaterial { value: false },
+                    ],
+                    action: Action::GatherMaterial {
+                        stock: fixtures::FOUNDRY_STOCK,
+                    },
+                    remember: None,
+                },
+            );
+            let grafted = fixtures::replace_program(case, EDITABLE_BUILDER, mistaken);
+            let result = platonik_core::run(&grafted).expect("case runs");
+            assert!(
+                !result.outcome.passed,
+                "spending the two-unit stock on the decoy must fail challenge-{index:04}"
+            );
+            return;
+        }
+    }
+    panic!("no two-unit decoy case found in the published foundry window");
 }
 
 #[test]
@@ -462,10 +575,70 @@ fn switchboard_result_verifies_and_a_constant_router_cannot_clear_mixed_bits() {
     }
 }
 
+/// Foundry negative controls on the reserved eval cases: the idle builder
+/// never gathers, the crossing witness moves a body that cannot move, and
+/// the switchboard witness names a valve no foundry case declares, so it is
+/// rejected at submission check rather than merely failing on arrival.
+#[test]
+fn foundry_eval_cases_differ_from_train_and_controls_fail() {
+    for index in 65..=PUBLISHED_CHALLENGES {
+        let challenge = generate(index).expect("foundry challenge generates");
+        for case in &challenge.eval {
+            assert!(
+                !challenge.train.contains(case),
+                "eval layouts must not duplicate a training layout"
+            );
+        }
+        let idle = evaluate(
+            &challenge,
+            &submission_on(
+                &challenge.id,
+                EDITABLE_BUILDER,
+                fixtures::idle_program(),
+                "idle-control",
+            ),
+        )
+        .unwrap();
+        assert!(!idle.passed);
+        assert_eq!(idle.cases_passed, 0);
+        assert!(
+            idle.cases
+                .iter()
+                .all(|case| case.status == RunStatus::Complete)
+        );
+        let resilient = evaluate(
+            &challenge,
+            &submission_on(
+                &challenge.id,
+                EDITABLE_BUILDER,
+                fixtures::resilient_courier(),
+                "crossing-control",
+            ),
+        )
+        .unwrap();
+        assert!(!resilient.passed);
+        assert_eq!(resilient.cases_passed, 0);
+        let keeper = evaluate(
+            &challenge,
+            &submission_on(
+                &challenge.id,
+                EDITABLE_BUILDER,
+                fixtures::switchboard_keeper(),
+                "switchboard-control",
+            ),
+        );
+        assert!(
+            keeper.is_err() || !keeper.unwrap().passed,
+            "the keeper cannot clear a foundry challenge"
+        );
+    }
+}
+
 #[test]
 fn reference_policies_are_family_scoped() {
     let crossing = generate(4).unwrap();
     let switchboard = generate(40).unwrap();
+    let foundry = generate(70).unwrap();
     assert!(reference_submission(&switchboard, "keeper").is_ok());
     // The crossing witness is a legal switchboard submission that fails on
     // arrival: it cannot read reports or work a valve.
@@ -477,12 +650,28 @@ fn reference_policies_are_family_scoped() {
     );
     let control = evaluate(&switchboard, &misplaced).unwrap();
     assert!(!control.passed);
-    // A keeper program names a valve no crossing case has: asking for it on
-    // the wrong family is a clear error, and so is an unknown name anywhere.
+    // The builder witness clears its own family; the same crossing control
+    // grafted into the immobile builder cell fails there too.
+    assert!(reference_submission(&foundry, "builder").is_ok());
+    let stranded = reference_submission(&foundry, "resilient").unwrap();
+    assert!(
+        stranded
+            .programs
+            .contains_key(&EDITABLE_BUILDER.to_string())
+    );
+    let control = evaluate(&foundry, &stranded).unwrap();
+    assert!(!control.passed);
+    // A keeper program names a valve no crossing or foundry case has: asking
+    // for it on the wrong family is a clear error, and so is an unknown name
+    // anywhere.
     assert!(reference_submission(&crossing, "keeper").is_err());
+    assert!(reference_submission(&foundry, "keeper").is_err());
+    assert!(reference_submission(&crossing, "builder").is_err());
+    assert!(reference_submission(&foundry, "compact").is_err());
     assert!(reference_submission(&switchboard, "compact").is_err());
     assert!(reference_submission(&crossing, "unknown").is_err());
     assert!(reference_submission(&switchboard, "unknown").is_err());
+    assert!(reference_submission(&foundry, "unknown").is_err());
 }
 
 #[test]

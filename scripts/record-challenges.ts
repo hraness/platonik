@@ -21,6 +21,7 @@ if (!["--write", "--check"].includes(mode)) throw new Error("Use --write or --ch
 const FAMILY_POLICIES: Record<string, readonly string[]> = {
   crossing: ["resilient", "compact", "idle"],
   switchboard: ["keeper", "resilient", "idle"],
+  foundry: ["builder", "resilient", "idle"],
 };
 const directory = "public/challenges";
 const artifact = "index.json";

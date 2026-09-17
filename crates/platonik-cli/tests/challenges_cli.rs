@@ -43,10 +43,14 @@ fn challenge_surface_lists_shows_and_scores_with_documented_exit_codes() {
     let list = cli(&["challenges"], None);
     assert_eq!(list.status.code(), Some(0));
     let ids = json(&list.stdout);
-    assert_eq!(ids["challenges"].as_array().unwrap().len(), 64);
+    assert_eq!(ids["challenges"].as_array().unwrap().len(), 96);
     assert_eq!(
         ids["families"].as_array().unwrap(),
-        &vec![Value::from("crossing"), Value::from("switchboard")]
+        &vec![
+            Value::from("crossing"),
+            Value::from("switchboard"),
+            Value::from("foundry")
+        ]
     );
 
     let help = cli(&["challenges", "--help"], None);
@@ -90,6 +94,48 @@ fn challenge_surface_lists_shows_and_scores_with_documented_exit_codes() {
     assert_eq!(invalid.status.code(), Some(2));
     let unknown = cli(&["challenge", "challenge-0000"], None);
     assert_eq!(unknown.status.code(), Some(2));
+}
+
+/// The foundry family scores construction: its builder reference clears a
+/// challenge, the crossing reference is a scored failure, and the switchboard
+/// reference is rejected before scoring because its program names a valve.
+#[test]
+fn foundry_reference_policies_score_and_controls_fail() {
+    let bundle = cli(&["challenge", "challenge-0065"], None);
+    assert_eq!(bundle.status.code(), Some(0));
+    let bundle = json(&bundle.stdout);
+    assert_eq!(bundle["family"], "foundry");
+    assert_eq!(bundle["editable"], serde_json::json!([4]));
+
+    let builder = cli(
+        &["challenge", "reference", "challenge-0065", "builder"],
+        None,
+    );
+    assert_eq!(builder.status.code(), Some(0));
+    let passed = cli(
+        &["challenge", "eval", "challenge-0065", "-"],
+        Some(&builder.stdout),
+    );
+    assert_eq!(passed.status.code(), Some(0));
+    assert_eq!(json(&passed.stdout)["passed"], true);
+
+    let resilient = cli(
+        &["challenge", "reference", "challenge-0065", "resilient"],
+        None,
+    );
+    assert_eq!(resilient.status.code(), Some(0));
+    let failed = cli(
+        &["challenge", "eval", "challenge-0065", "-"],
+        Some(&resilient.stdout),
+    );
+    assert_eq!(failed.status.code(), Some(1));
+    assert_eq!(json(&failed.stdout)["passed"], false);
+
+    let keeper = cli(
+        &["challenge", "reference", "challenge-0065", "keeper"],
+        None,
+    );
+    assert_eq!(keeper.status.code(), Some(2));
 }
 
 #[test]

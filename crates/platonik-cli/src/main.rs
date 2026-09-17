@@ -60,10 +60,13 @@ program for each editable cell (see the bundle's `editable` list), for example\n
 \"programs\":{\"1\":{\"rules\":[...]}},\"agent\":{\"name\":\"you\",\"tokens\":0}}.\n\n\
 Eval scores cases passed first, then total charged work, then canonical program\n\
 bytes. Agent names and token counts are self-reported and never authoritative.\n\
-Reference policies are resilient, compact, and idle.\n\
+Families: crossing ids 1-32, switchboard 33-64, foundry 65-96. Reference\n\
+policies are family-scoped: crossing admits resilient, compact, idle;\n\
+switchboard admits keeper, resilient, idle; foundry admits builder, resilient,\n\
+idle.\n\
 Every result carries full receipts; verify recomputes all cases from the\n\
 generator. Board scans up to 1024 .json files in one directory, keeps the ones\n\
-that parse as results, verifies up to 256 of them, and ranks each challenge\n\
+that parse as results, verifies up to 512 of them, and ranks each challenge\n\
 plus a global rollup. Training on the reserved cases is recorded nowhere;\n\
 honest entries iterate on the training cases only.\n\n\
 Eval exits 0 when every scoring case passed and 1 for an honest incomplete\n\
@@ -577,10 +580,10 @@ fn execute_challenge(command: &str, args: &[String]) -> Result<u8, Failure> {
                         challenge::verify_against(&generated[&result.index], &result)
                             .map_err(error)?;
                         results.push(result);
-                        if results.len() > 256 {
+                        if results.len() > 512 {
                             return Err(Failure::new(
                                 "input_limit",
-                                "Board admits at most 256 verified results.",
+                                "Board admits at most 512 verified results.",
                             ));
                         }
                     }
