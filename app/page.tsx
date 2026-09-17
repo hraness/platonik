@@ -17,7 +17,7 @@ export default function HomePage() {
     <main id="main" className="home" data-hraness-marketing-preset="editorial">
       <div className="hraness-material-wall">
         <section className="hero" aria-labelledby="hero-title">
-          <h1 id="hero-title">Make a creature.<br />See what it becomes.</h1>
+          <h1 id="hero-title">Make a creature. <br />See what it becomes.</h1>
           <p className="hero-description">An engineering adventure about growing strange little creatures with your AI—and the civilization they could become.</p>
           <p className="hero-detail">Start with a companion and a flickering light. Gather a herd. Grow a home that can travel among the stars. Somewhere beyond the charted trails, another beacon is answering.</p>
           <div className="hero-links"><Link className="primary-link hraness-material-control" href="/lab">Enter the observatory <span aria-hidden="true">↗</span></Link><Link href="/docs/game-design">Explore the game design</Link></div>
