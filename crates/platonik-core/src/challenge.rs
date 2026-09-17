@@ -15,14 +15,17 @@ pub const BOARD_SCHEMA: &str = "platonik-challenge-board-v1";
 pub const GENERATOR_VERSION: u32 = 1;
 /// The currently published window. Higher indices still derive, but the
 /// supported set grows only with a reviewed generator change.
-pub const PUBLISHED_CHALLENGES: u64 = 64;
+pub const PUBLISHED_CHALLENGES: u64 = 96;
 /// Indices 1..=32 are the crossing family forever: their derived bytes are
-/// frozen by the committed artifacts. Switchboard begins at index 33.
+/// frozen by the committed artifacts. Switchboard begins at index 33 and
+/// foundry at index 65.
 const CROSSING_CHALLENGES: u64 = 32;
+const SWITCHBOARD_CHALLENGES: u64 = 64;
 pub const TRAIN_CASES: usize = 4;
 pub const EVAL_CASES: usize = 4;
 pub const EDITABLE_COURIER: u16 = 1;
 pub const EDITABLE_KEEPER: u16 = 2;
+pub const EDITABLE_BUILDER: u16 = 4;
 const MAX_CASE_ATTEMPTS: u32 = 512;
 const MAX_PLACEMENT_ATTEMPTS: u32 = 64;
 
@@ -76,8 +79,10 @@ pub fn names() -> Vec<String> {
 pub(crate) fn family(index: u64) -> &'static str {
     if index <= CROSSING_CHALLENGES {
         "crossing"
-    } else {
+    } else if index <= SWITCHBOARD_CHALLENGES {
         "switchboard"
+    } else {
+        "foundry"
     }
 }
 
@@ -97,8 +102,10 @@ pub fn families() -> Vec<String> {
 pub(crate) fn band(index: u64) -> u32 {
     let offset = if index <= CROSSING_CHALLENGES {
         index.saturating_sub(1)
-    } else {
+    } else if index <= SWITCHBOARD_CHALLENGES {
         index - CROSSING_CHALLENGES - 1
+    } else {
+        index - SWITCHBOARD_CHALLENGES - 1
     };
     1 + (offset / 8).min(3) as u32
 }
@@ -680,6 +687,332 @@ fn draw_switchboard(rng: &mut Rng, band: u32) -> Option<Experiment> {
     })
 }
 
+/// Foundry: an immobile builder stands on a finite material stock between two
+/// shuttle corridors only built children can serve. Each declared runner
+/// blueprint assembles a courier that ferries its corridor's sparks from the
+/// source to the beacon the builder cannot reach, so a passing program must
+/// gather a unit, copy the body, then activate it — once per corridor — on a
+/// stock that holds at most one spare unit. Higher bands add a decoy
+/// blueprint beside the real runners and brief mid-run corridor closures;
+/// born children carry fixed programs, so the scored skill is
+/// resource-budgeted construction sequencing, not navigation or routing.
+fn draw_foundry(rng: &mut Rng, band: u32) -> Option<Experiment> {
+    let flip_x = rng.chance(1, 2);
+    let flip_y = rng.chance(1, 2);
+    let width = (8 + rng.below(2 + u64::from(band.min(2)))) as u8;
+    let height: u8 = 5;
+    // The builder stands on the stock in the middle row, adjacent to both
+    // runner targets on the corridor rows above and below it.
+    let builder = Point {
+        x: (2 + rng.below(u64::from(width) - 4)) as u8,
+        y: 2,
+    };
+    let source_a = Point { x: 0, y: 1 };
+    let source_b = Point { x: 0, y: 3 };
+    let beacon_a = Point { x: width - 1, y: 1 };
+    let beacon_b = Point { x: width - 1, y: 3 };
+    // Each runner body is a cell plus a report link back to the builder it was
+    // born beside: the link wires one extra build tick into every assembly and
+    // keeps the child's provenance legible once it is far from home.
+    let runner = |blueprint: u16, child: u16, link: u16, target: Point| Blueprint {
+        id: blueprint,
+        body: BlueprintBody {
+            cell: Cell {
+                id: child,
+                position: target,
+                heading: Direction::West,
+                mobile: true,
+                memory: [0; 4],
+                program: fixtures::switchboard_porter(),
+            },
+            links: vec![Link {
+                id: link,
+                from: Endpoint::Cell { id: child, port: 0 },
+                to_cell: EDITABLE_BUILDER,
+                to_port: 0,
+                delay: 1,
+                enabled: true,
+            }],
+        },
+    };
+    let runner_a = runner(
+        fixtures::FOUNDRY_RUNNER_A,
+        70,
+        81,
+        Point { x: builder.x, y: 1 },
+    );
+    let runner_b = runner(
+        fixtures::FOUNDRY_RUNNER_B,
+        71,
+        82,
+        Point { x: builder.x, y: 3 },
+    );
+    let copy_ticks = |blueprint: &Blueprint| -> u64 {
+        crate::construction::payload(blueprint)
+            .map(|bytes| (bytes.len() as u64).div_ceil(COPY_BYTES as u64))
+            .unwrap_or(u64::MAX)
+    };
+    let build_ticks =
+        |blueprint: &Blueprint| copy_ticks(blueprint) + blueprint.body.links.len() as u64;
+    // Birth ticks are exact: one gather tick, the fixed copy-and-wire loop, one
+    // activation tick, and the child first acts on the next tick.
+    let birth_a = 2 + build_ticks(&runner_a);
+    let birth_b = birth_a + 2 + build_ticks(&runner_b);
+    // A runner walks `reach` tiles to its source, then cycles pickup ->
+    // beacon drop -> back; each round trip is one corridor length each way.
+    let reach = u64::from(builder.x);
+    let interval = 2 * u64::from(width) + 2;
+    let first_a = birth_a + reach + u64::from(width) + 2;
+    let first_b = birth_b + reach + u64::from(width) + 2;
+    let mut quota_a = 1 + rng.below(2 + u64::from(band)) as u32;
+    let mut quota_b = 1 + rng.below(2 + u64::from(band)) as u32;
+    // Keep slack for events and a tail margin under the 128-tick horizon:
+    // trim the binding beacon's quota first, but never below one delivery —
+    // both runners must be built for a case to pass.
+    let mut last_a = first_a + u64::from(quota_a - 1) * interval;
+    let mut last_b = first_b + u64::from(quota_b - 1) * interval;
+    while last_a.max(last_b) + 18 > u64::from(MAX_TICKS) && quota_a + quota_b > 2 {
+        if last_b >= last_a && quota_b > 1 {
+            quota_b -= 1;
+        } else if quota_a > 1 {
+            quota_a -= 1;
+        } else {
+            quota_b -= 1;
+        }
+        last_a = first_a + u64::from(quota_a - 1) * interval;
+        last_b = first_b + u64::from(quota_b - 1) * interval;
+    }
+    let last_delivery = last_a.max(last_b);
+    // Mid-run disturbances, all retry-safe for a patient builder: a corridor
+    // edge can close briefly — the shuttle bounces off and delivers late — or
+    // a memory wipe can land on the builder, which a memoryless policy
+    // ignores. Nothing blocks the gather-build-activate sequence itself.
+    let mut events = Vec::new();
+    let mut stall = 0u64;
+    if band >= 2 {
+        let event_count = match band {
+            2 => 1,
+            3 => 1 + rng.below(2),
+            _ => 2 + rng.below(2),
+        };
+        for _ in 0..event_count {
+            if rng.chance(1, 4) {
+                let at = (2 + rng.below((last_delivery - 4).max(1))) as u32;
+                events.push(Event {
+                    tick: at,
+                    event: EventKind::ClearMemory {
+                        cell: EDITABLE_BUILDER,
+                    },
+                });
+            } else {
+                let row = if rng.chance(1, 2) { 1u8 } else { 3u8 };
+                let x = rng.below(u64::from(width) - 1) as u8;
+                let closed = 1 + rng.below(2 + u64::from(band));
+                let span = (last_delivery - birth_a - 4).max(1);
+                let at = (birth_a + 2 + rng.below(span)) as u32;
+                stall += closed + interval;
+                let edge = Edge::new(Point { x, y: row }, Point { x: x + 1, y: row });
+                events.push(Event {
+                    tick: at,
+                    event: EventKind::EdgeBlocked {
+                        edge,
+                        blocked: true,
+                    },
+                });
+                events.push(Event {
+                    tick: at + closed as u32,
+                    event: EventKind::EdgeBlocked {
+                        edge,
+                        blocked: false,
+                    },
+                });
+            }
+        }
+    }
+    events.sort_by_key(|event| event.tick);
+    let ticks = last_delivery + stall + 10 + rng.below(6);
+    if ticks > u64::from(MAX_TICKS - 2) {
+        return None;
+    }
+    let ticks = ticks as u32;
+    // Some cases declare a decoy blueprint beside the real runners: same
+    // shuttle program, but its fixed target sits on the builder's own row
+    // where no source or beacon can be reached — or it cannot move at all —
+    // so building it only spends a material unit. Linked variants also cost
+    // extra copy and wiring ticks.
+    let decoy = if band >= 2 && rng.chance(2 + u64::from(band), 6) {
+        let side = if rng.chance(1, 2) {
+            builder.x - 1
+        } else {
+            builder.x + 1
+        };
+        let linked = rng.chance(1, 3);
+        let mobile = rng.chance(1, 2);
+        Some(Blueprint {
+            id: 52,
+            body: BlueprintBody {
+                cell: Cell {
+                    id: 72,
+                    position: Point { x: side, y: 2 },
+                    heading: Direction::West,
+                    mobile,
+                    memory: [0; 4],
+                    program: fixtures::switchboard_porter(),
+                },
+                links: if linked {
+                    vec![Link {
+                        id: 80,
+                        from: Endpoint::Cell { id: 72, port: 0 },
+                        to_cell: EDITABLE_BUILDER,
+                        to_port: 0,
+                        delay: 1,
+                        enabled: true,
+                    }]
+                } else {
+                    Vec::new()
+                },
+            },
+        })
+    } else {
+        None
+    };
+    // The stock holds exactly the needed units plus at most one spare, so a
+    // unit spent on the decoy can be the difference between passing and not.
+    let units = (0..2 + rng.below(2) as u32)
+        .map(|unit| 900 + unit)
+        .collect();
+    // Each beacon must see its quota and stay charged: charge covers the
+    // run-up to its first delivery plus the gap each later delivery must
+    // bridge, and every delivered spark's energy carries the tail.
+    let drain_every = 4 + rng.below(4) as u32;
+    let spark_charge = 3 + rng.below(4) as u32;
+    let charge = |first: u64, quota: u32, rng: &mut Rng| -> u32 {
+        let d = u64::from(drain_every);
+        let c = u64::from(spark_charge);
+        let mut need = (u64::from(ticks) / d + 1).saturating_sub(u64::from(quota) * c);
+        for k in 0..u64::from(quota) {
+            let at = first + k * interval;
+            need = need.max(((at - 1) / d + 1).saturating_sub(k * c));
+        }
+        (need + 4 + rng.below(4) + stall / d) as u32
+    };
+    let bit_a = rng.chance(1, 2);
+    let bit_b = rng.chance(1, 2);
+    let charge_a = charge(first_a, quota_a, rng);
+    let charge_b = charge(first_b, quota_b, rng);
+    // Decorative walls only: never on a corridor row or the builder's row.
+    let mut walls = Vec::new();
+    for _ in 0..rng.below(3 + u64::from(band)) {
+        let point = Point {
+            x: rng.below(u64::from(width)) as u8,
+            y: if rng.chance(1, 2) { 0 } else { height - 1 },
+        };
+        if !walls.contains(&point) {
+            walls.push(point);
+        }
+    }
+    let place = |point: Point| Point {
+        x: if flip_x { width - 1 - point.x } else { point.x },
+        y: if flip_y {
+            height - 1 - point.y
+        } else {
+            point.y
+        },
+    };
+    // Runners launch toward their source; the shuttle program only needs a
+    // heading to start its first leg on.
+    let heading = if flip_x {
+        Direction::East
+    } else {
+        Direction::West
+    };
+    let born = |blueprint: Blueprint| -> Blueprint {
+        let mut blueprint = blueprint;
+        blueprint.body.cell.position = place(blueprint.body.cell.position);
+        blueprint.body.cell.heading = heading;
+        blueprint
+    };
+    let mut blueprints = vec![born(runner_a), born(runner_b)];
+    if let Some(decoy) = decoy {
+        blueprints.push(born(decoy));
+    }
+    let events = events
+        .into_iter()
+        .map(|mut event| {
+            if let EventKind::EdgeBlocked { edge, .. } = &mut event.event {
+                *edge = Edge::new(place(edge.a), place(edge.b));
+            }
+            event
+        })
+        .collect();
+    Some(Experiment {
+        version: CONSTRUCTION_VERSION,
+        seed: rng.next(),
+        width,
+        height,
+        walls: walls.iter().map(|point| place(*point)).collect(),
+        sources: vec![
+            Source {
+                id: 10,
+                position: place(source_a),
+                sparks: (1..=quota_a).map(|id| Spark { id, bit: bit_a }).collect(),
+            },
+            Source {
+                id: 11,
+                position: place(source_b),
+                sparks: (quota_a + 1..=quota_a + quota_b)
+                    .map(|id| Spark { id, bit: bit_b })
+                    .collect(),
+            },
+        ],
+        depots: vec![],
+        beacons: vec![
+            Beacon {
+                id: 20,
+                position: place(beacon_a),
+                accepts: bit_a,
+                initial_charge: charge_a,
+                drain_every,
+                drain_amount: 1,
+                spark_charge,
+                required_deliveries: quota_a,
+            },
+            Beacon {
+                id: 21,
+                position: place(beacon_b),
+                accepts: bit_b,
+                initial_charge: charge_b,
+                drain_every,
+                drain_amount: 1,
+                spark_charge,
+                required_deliveries: quota_b,
+            },
+        ],
+        valves: vec![],
+        cells: vec![Cell {
+            id: EDITABLE_BUILDER,
+            position: place(builder),
+            heading: Direction::East,
+            mobile: false,
+            memory: [0; 4],
+            program: fixtures::idle_program(),
+        }],
+        links: vec![],
+        events,
+        ticks,
+        fuel: 30_000 + rng.below(30_000),
+        activation_fuel: 128,
+        construction: Some(ConstructionSpec {
+            stocks: vec![MaterialStock {
+                id: fixtures::FOUNDRY_STOCK,
+                position: place(builder),
+                units,
+            }],
+            blueprints,
+        }),
+    })
+}
+
 /// Draw one witnessed case from a derivation root. Public generation passes
 /// `stream(index, kind)` as the root; hosted seasons pass a salted root so the
 /// same case engine serves both paths. The draw function, editable cell, and
@@ -731,6 +1064,13 @@ fn spec_for(family: &str) -> FamilySpec {
             witness_name: "switchboard_keeper",
             witness: fixtures::switchboard_keeper(),
             draw: draw_switchboard,
+        },
+        "foundry" => FamilySpec {
+            family: "foundry",
+            editable: EDITABLE_BUILDER,
+            witness_name: "foundry_builder",
+            witness: fixtures::foundry_builder(),
+            draw: draw_foundry,
         },
         _ => FamilySpec {
             family: "crossing",
@@ -818,12 +1158,13 @@ pub fn by_id(id: &str) -> Result<Challenge, String> {
 }
 
 /// The reference policies a family admits, in board order. `idle` is the
-/// shared honest floor; `resilient` on switchboard grafts the crossing
-/// witness into the keeper cell, where it runs and fails on its own merits —
-/// a control showing the two skills do not transfer.
+/// shared honest floor; `resilient` on switchboard or foundry grafts the
+/// crossing witness into a cell it cannot drive, where it runs and fails on
+/// its own merits — a control showing the skills do not transfer.
 fn family_policies(family: &str) -> &'static [&'static str] {
     match family {
         "switchboard" => &["keeper", "resilient", "idle"],
+        "foundry" => &["builder", "resilient", "idle"],
         _ => &["resilient", "compact", "idle"],
     }
 }
@@ -839,6 +1180,8 @@ pub fn reference_submission(challenge: &Challenge, policy: &str) -> Result<Submi
         ("crossing", "compact") => fixtures::compact_courier(),
         ("switchboard", "keeper") => fixtures::switchboard_keeper(),
         ("switchboard", "resilient") => fixtures::resilient_courier(),
+        ("foundry", "builder") => fixtures::foundry_builder(),
+        ("foundry", "resilient") => fixtures::resilient_courier(),
         _ => {
             return Err(format!(
                 "Unknown reference policy for family {}: {policy}. Known: {}.",
