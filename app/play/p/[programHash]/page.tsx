@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PlayShell } from "@/components/play/play-shell";
-import { site } from "@/lib/site";
-import "../lab/lab.css";
+import "../../../lab/lab.css";
 
-export const metadata: Metadata = {
-  title: "Play",
-  description:
-    "Play Platonik in your browser: run the deterministic Rust engine on challenges, a field expedition, and continuous habitats — no install, no account.",
-  alternates: { canonical: "/play" },
-  openGraph: { url: "/play", siteName: site.name },
-};
+type PageProps = { params: Promise<{ programHash: string }> };
 
-export default function PlayPage() {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { programHash } = await params;
+  return {
+    title: `Play Platonik · ${programHash.slice(0, 16)}…`,
+    description: "Run a content-addressed Platonik program in your browser.",
+    alternates: { canonical: `/play/p/${programHash}` },
+  };
+}
+
+export default async function ProgramPage({ params }: PageProps) {
+  const { programHash } = await params;
   return (
     <main id="main" className="lab">
       <header className="lab-header">
@@ -27,7 +30,7 @@ export default function PlayPage() {
         </p>
       </header>
       <Suspense fallback={<p role="status">Loading the Platonik engine…</p>}>
-        <PlayShell />
+        <PlayShell programHash={programHash} />
       </Suspense>
     </main>
   );

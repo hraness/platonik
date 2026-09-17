@@ -15,10 +15,12 @@ import {
   engine,
   type Advance,
   type JourneyCatalog,
+  type Program,
   type WasmModule,
 } from "@/lib/play/engine";
 import { JOURNEY_DESCRIPTIONS } from "@/lib/play/missions";
 import { PROGRAM_SCHEMA_HELP } from "@/lib/play/schema-help";
+import { buildPlayUrl } from "@/lib/play/url";
 import { AgentPanel } from "./agent-panel";
 import { ProgramEditor } from "./program-editor";
 import { ReplayStage } from "./replay-stage";
@@ -319,9 +321,20 @@ function GradeRail({
  * either run the whole world in one shot (receipt + journey grade) or advance
  * the same continuous habitat tick by tick through pause/resume checkpoints.
  */
-export function JourneyMode({ wasm }: { wasm: WasmModule }) {
+export function JourneyMode({
+  wasm,
+  initialJourney,
+  initialCase,
+  initialProgram,
+}: {
+  wasm: WasmModule;
+  initialJourney?: string;
+  initialCase?: string;
+  initialProgram?: Program;
+}) {
   const [catalog, setCatalog] = useState<JourneyCatalog | null>(null);
-  const [journeyId, setJourneyId] = useState("continuity");
+  const startJourney = initialJourney ?? "continuity";
+  const [journeyId, setJourneyId] = useState(startJourney);
   const [caseId, setCaseId] = useState<string | null>(null);
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   // Cell programs the player has touched, keyed by cell id, as JSON text.
@@ -335,15 +348,19 @@ export function JourneyMode({ wasm }: { wasm: WasmModule }) {
   // later edits because the checkpoint embeds its own immutable experiment.
   const [activeExperiment, setActiveExperiment] = useState<Experiment | null>(null);
   const [until, setUntil] = useState(0);
+  const [shareCopied, setShareCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function openCase(id: string) {
+  function openCase(id: string, initProgram?: Program) {
     const next = engine.journeyExperiment(wasm, id);
     const cells = cellsOf(next);
+    const nextEditCell = cells.some((cell) => cell.id === 1) ? 1 : (cells[0]?.id ?? 1);
     setCaseId(id);
     setExperiment(next);
-    setPrograms({});
-    setEditCell(cells.some((cell) => cell.id === 1) ? 1 : (cells[0]?.id ?? 1));
+    setPrograms(
+      initProgram ? { [nextEditCell]: JSON.stringify(initProgram, null, 2) } : {},
+    );
+    setEditCell(nextEditCell);
     setUntil(Math.min(ADVANCE_STEP, numberField(next, "ticks")));
     setReceipt(null);
     setAdvance(null);
@@ -358,12 +375,15 @@ export function JourneyMode({ wasm }: { wasm: WasmModule }) {
       const next = engine.catalog(wasm);
       setCatalog(next);
       const track =
-        next.journeys.find((journey) => journey.id === "continuity") ??
+        next.journeys.find((journey) => journey.id === startJourney) ??
         next.journeys[0];
-      const first = track?.cases[0];
+      const first =
+        initialCase && track?.cases.includes(initialCase)
+          ? initialCase
+          : track?.cases[0];
       if (track && first) {
         setJourneyId(track.id);
-        openCase(first);
+        openCase(first, initialProgram);
       }
     } catch (cause) {
       setError(`The journey catalog could not be loaded: ${message(cause)}`);
@@ -543,6 +563,25 @@ export function JourneyMode({ wasm }: { wasm: WasmModule }) {
       setError(null);
     } catch (cause) {
       setError(message(cause));
+    }
+  }
+
+  async function share() {
+    if (!caseId || !programText.trim()) {
+      setError("Pick a case and edit a program before sharing.");
+      return;
+    }
+    try {
+      const parsed = JSON.parse(programText) as { rules?: unknown };
+      if (typeof parsed !== "object" || parsed === null || !Array.isArray(parsed.rules)) {
+        throw new Error("A program is an object with a rules array.");
+      }
+      const url = await buildPlayUrl({ track: "journeys", case: caseId, program: parsed as Program });
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 1600);
+    } catch (cause) {
+      setError(`Share failed: ${message(cause)}`);
     }
   }
 
@@ -729,6 +768,14 @@ export function JourneyMode({ wasm }: { wasm: WasmModule }) {
               disabled={!receipt && !advance}
             >
               Reset
+            </button>
+            <button
+              className="lab-text-button"
+              type="button"
+              onClick={share}
+              disabled={!experiment || !programText.trim()}
+            >
+              {shareCopied ? "Link copied" : "Copy share link"}
             </button>
           </div>
           {experiment && (
