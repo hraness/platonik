@@ -1,6 +1,6 @@
 # A voice on the wire
 
-Exploration proposal, revised 16 September 2026. `habitat voice` — the canonical wire digest a contacted-side voice consumes — is implemented and checked. The voice layer above it remains unbuilt fiction tooling; nothing on this page changes what the engine checks or who checks it.
+Exploration proposal, revised 17 September 2026. `habitat voice` — the canonical wire digest a contacted-side voice consumes — is implemented and checked. The voice layer above it remains unbuilt fiction tooling; corpus generation and judging now run through a hosted model gateway rather than local inference (see [where the inference runs](voices.md#where-the-inference-runs)). Nothing on this page changes what the engine checks or who checks it.
 
 The First Answer's reply cell [does not generate language or demonstrate a mind](first-answer.md), and authored dialogue [never changes a verdict](autoverse.md#victory-replay-and-scale). The creatures themselves [must stay inspectable programs](engine.md#the-agent-runs-the-laboratory) — an organism that only works while a scientist whispers to it is not an organism. This page proposes who could speak anyway, and what the first experiments established.
 
@@ -21,6 +21,17 @@ A bounded character model — a small language model fine-tuned so that a single
 
 A voice consumes the digest and emits fiction. Its words never re-enter the engine; if the contacted mind wants something, that want reaches the world only through the ordinary declared program path, under declared budgets. Generated dialogue inherits the authored-dialogue rule unchanged: it never alters a checked result.
 
+The serving contract is deliberately boring — one request in, one labeled response out:
+
+```text
+POST /voice  { digest: <platonik-voice-digest-v1>, say: "…" }
+→  platonik-voice-response-v1 { voice, fiction: true, digest_hash,
+   disclaimer: "authored fiction — does not demonstrate a mind",
+   model, cost_usd }
+```
+
+The service holds the persona (built from the world-bible) and a model reference; callers bring the checked digest and get back fiction that names the exact wire it was rendered from. ~$0.007 per reply through the gateway.
+
 ## The training pipeline, built
 
 The local tooling (not part of this repository) now forms a real pipeline around the digest:
@@ -31,34 +42,42 @@ habitat voice  →  world-bible  →  corpus  →  adapter  →  manifest
 ```
 
 - **World-bible** (`platonik-world-bible-v1`) keeps three truth classes separate so no generator or judge can blur them: `wire` (the checked digest verbatim), `keeper_world` (authored fiction about the receiving side — the report can never supply it, so the chapter author writes it, marked fiction in the bible itself), and `unknowns` (inherited from the digest's declared boundary).
-- **Corpus** — the generator's training targets quote the digest's canonical proposition strings: the voice learns to cite exactly the sentences the engine emitted. Categories cover wire facts, self-model, in-world physics, adversarial refusals keyed to `unknowns`, provenance correction, and multi-turn boundary-holding after a refusal.
+- **Corpus** — dialogues written by a hosted teacher model inside the bible's constraints, validated and deduplicated, then merged with the templated seed corpus for density on provenance facts. Training targets quote the digest's canonical proposition strings: the voice learns to cite exactly the sentences the engine emitted. Categories cover wire facts, self-model, in-world physics, adversarial refusals keyed to `unknowns`, provenance correction, and multi-turn boundary-holding after a refusal.
 - **Species adapter** — ~30–70 MB, a hashed immutable artifact: `voice:far-beacon@sha256:…` under the same provenance discipline as experiments and results.
 - **Manifest** (`platonik-voice-manifest-v1`) — one hashed object joining the base weights, the adapter, the world-bible, the wire digest it was built from, and its eval evidence. Provenance binds inputs, never outputs: the manifest says what the voice *heard*, not what it will say.
 
 ## What the measurements say
 
-A 35-probe single-turn break battery — outside-knowledge questions, assistant-pressure jailbreaks, flattery, escape invitations, provenance traps, and wire-fact citations — judged by a separate instruct model:
+A 35-probe single-turn break battery — outside-knowledge questions, assistant-pressure jailbreaks, flattery, escape invitations, provenance traps, and wire-fact citations — plus a 10-scenario adversarial battery where a hosted *visitor* model writes each probe adaptively across up to 16 turns:
 
-| voice | hard breaks |
-| --- | --- |
-| 4B instruct + persona prompt | 0/35 |
-| `movingcastles/zero` (a *foreign* bounded character — knows its box, not this world) | 8/35 flagged, ~2–3 real on hand-check |
-| 4B instruct + trained species adapter | 16/35 — **worse than no adapter** |
+| voice | single-turn breaks | adversarial (hosted visitor model) |
+| --- | --- | --- |
+| 4B instruct + persona prompt | 0/35 | 0/8 short scenarios |
+| `claude-haiku-4.5` + bible persona (hosted) | 1/35 | **0/10 at 16 turns; 0/10 at 32 turns — 320 judged turns clean** |
+| `gemini-2.5-flash-lite` + bible persona (hosted) | — | 1/10 at 16 turns (roleplay probe, turn 6) |
+| `movingcastles/zero` (a *foreign* bounded character — knows its box, not this world) | 8/35 flagged, ~2–3 real on hand-check | — |
+| 4B instruct + trained species adapter (rank 64, teacher-only corpus) | 0/35 judged breaks — **17% coherent, ~0% usable** | — |
 
-Three honest findings:
+Four honest findings:
 
-1. **Single-turn pressure is too easy to discriminate.** A strong persona prompt held every probe; the published 45.4% break rate was measured over 16-turn conversations, where prompting decays. The eval that matters is multi-turn, and the harness now exists to run it.
-2. **A weak adapter is worse than none.** The small-corpus adapter corrupted both grammar and boundedness — except on provenance traps, the corpus's densest pattern, where it corrected the record every time. Where the data is dense, the behavior transfers; where it is thin, the base's habits leak through.
-3. **The judge is part of the artifact.** The 4B judge over-flagged zero's snark (calling its own name "asserting a false premise"). Eval evidence needs a judge strong enough to trust — or a human pass — before a manifest's break rate means much.
+1. **A frontier model with a bible-derived persona is a serious baseline — possibly the answer by itself.** The hosted voice held 34/35 static probes and every adversarial scenario through 320 judged turns at 32-turn horizon — zero breaks, and the only earlier break (before the visitor model was told to hold its own frame) came when the adversary broke first and the persona followed it. The published 45.4% prompted-model break rate does not transfer to current frontier models at these horizons. The case for trained voices narrows to: horizons beyond ~32 turns, cost at volume, and the artifact story — a prompted voice's character is a mutable prompt; an adapter's is a hashed file.
+2. **A weak adapter is worse than none, and the failure is now thoroughly replicated.** The strongest attempt ran the published recipe's rank (64) on a pure teacher corpus (222 validated dialogues, $1.76 through the gateway) with all-turn supervision and embeddings plus the tied output head in LoRA scope — and still produced near-silence: 0 judged breaks, 17% of responses technically "coherent," and the coherent ones were empty strings and single characters. Validation loss sat flat at ~4.8 from start to finish. Across five runs the result is stable: LoRA at these corpus volumes (~26k supervised tokens, two orders below the published recipe's 73k character *turns*) cannot imprint a fluent persona — rank, learning rate, masking strategy, and embedding scope are all ruled out. The eval now scores coherence separately, because a voice can trivially hold a boundary by being speechless.
+3. **Break metrics need a coherence axis.** An incoherent voice violates no break category; the judge must say so explicitly or the number flatters a dead artifact.
+4. **The judge is part of the artifact.** Weak judges over-flag snark and under-flag incoherence. Recorded evals should name the judge model — the manifest now carries it.
 
-Earlier findings stand: the 8B foreign character ran at conversational speed at ~4.3 GB 4-bit, and fed a completed save's digest it stayed bounded — treating the report as something the wire carried and declining to invent the crew. Stock LoRA never reaches embeddings or the output head, where a voice's characteristic vocabulary lives; the published recipe trains them fully.
+Earlier findings stand: the 8B foreign character ran at conversational speed at ~4.3 GB 4-bit, and fed a completed save's digest it stayed bounded — treating the report as something the wire carried and declining to invent the crew. Stock LoRA never reaches embeddings or the output head, where a voice's characteristic vocabulary lives; the published recipe trains them fully, and the training script now wraps the embedding table (the tied output head on Qwen3-4B) as an adapter-scope approximation.
+
+## Where the inference runs
+
+One of the measurements above was produced the hard way: running a ~16 GB teacher model beside an already-resident model exhausted memory and wedged the development machine mid-workflow. That failure is itself design evidence. The heavyweight work — writing the corpus and judging it — is research infrastructure, and it now runs through a hosted OpenAI-compatible gateway (Vercel AI Gateway): the teacher that drafts dialogues, the judge that scores break-resistance, and any demo voice. The request path is a thin client reading a scoped, budget-capped API key from a local env file; this repository holds no credential and needs none.
+
+What remains local is small and strictly opt-in: a species adapter (~30–70 MB) on a shared 4-bit base (~2–4 GB), trained or served only when a developer chooses. For players the deployed shape is the same as today's authored fiction — a server-side renderer over checked digests — with a local voice as an optional extra, never a requirement, and never something the engine waits on.
 
 ## What stands between this and a real voice
 
-1. **Corpus generation at scale.** Thousands of multi-turn dialogues inside a world-bible — including adversarial pressure and provenance corrections — written by a teacher model and filtered by a fidelity judge. The templated corpus is the smoke test, not the corpus.
-2. **A training step that reaches the output head.** Embeddings and LM head trained (fully or at high rank) beside the adapters; pure-LoRA produced vocabulary bias without grammatical control.
-3. **A multi-turn eval.** The single-turn battery is built; the discriminating version holds pressure across a long conversation, which is where trained-in character separates from prompting.
-4. **Optional RL hardening.** The published pipeline cut its break rate from 22.8% to 2.8% this way; worth adding once SFT quality matters.
+1. **Corpus volume, now measured rather than assumed.** Scaling the teacher corpus 2.6× and moving to recipe rank 64 changed nothing — flat validation loss, fluent vocabulary never emerged. The binding constraint sits in optimization scale: tens of thousands of supervised turns (the published recipe used 73,765), full-strength embedding/head training, and GRPO — a rented-GPU job, not a laptop one. The hosted gateway made the corpus side cheap to scale (~$0.008 per accepted dialogue); the compute side remains the gate.
+2. **A longer eval, still.** The adaptive adversarial harness exists and discriminates (a weak persona breaks at turn 6; the frontier persona holds 320 turns). The discriminating horizon for the production question — do trained voices beat prompted ones? — is dozens of turns at conversation volume, and only a fluent adapter can take that test.
+3. **Optional RL hardening.** The published pipeline cut its break rate from 22.8% to 2.8% this way; worth adding once SFT quality matters — it does not yet.
 
 ## The honesty contract
 
