@@ -389,7 +389,11 @@ export function ChallengeMode({
     }
   }
 
-  const presets = FAMILY_PRESETS[info?.family ?? "crossing"] ?? FAMILY_PRESETS.crossing;
+  const familyPresets = FAMILY_PRESETS[info?.family ?? "crossing"] ?? FAMILY_PRESETS.crossing;
+  const presets =
+    info?.witness && !familyPresets.some((preset) => preset.name === info.witness)
+      ? [...familyPresets, { name: info.witness, label: `Witness: ${info.witness}` }]
+      : familyPresets;
 
   return (
     <div>
@@ -504,18 +508,31 @@ export function ChallengeMode({
 
           {submission && (
             <details className="season-entry">
-              <summary>Enter season</summary>
+              <summary>Season entry</summary>
               <p className="lab-note">
-                Season entry happens via GitHub PR: add this submission as{" "}
-                <code>season/entries/&lt;your-login&gt;-&lt;n&gt;.json</code> — see{" "}
-                <code>docs/seasons.md</code>.
+                To enter this submission in the hosted season, fork the repo and add exactly one
+                file: <code>season/entries/&lt;your-login&gt;-&lt;n&gt;.json</code>. See the{" "}
+                <a href="/docs/seasons">season guide</a> for the exact format.
               </p>
               <pre className="agent-prompt" tabIndex={0} aria-label="Season submission JSON">
                 {JSON.stringify(submission, null, 2)}
               </pre>
-              <button className="lab-button secondary" type="button" onClick={copySubmission}>
-                {copied ? "Copied" : "Copy submission"}
-              </button>
+              <div className="play-loaders">
+                <button className="lab-button secondary" type="button" onClick={copySubmission}>
+                  {copied ? "Copied" : "Copy submission"}
+                </button>
+                <a
+                  className="lab-button secondary"
+                  href="https://github.com/hraness/platonik/fork"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Fork on GitHub
+                </a>
+                <a className="lab-button secondary" href="/docs/seasons">
+                  Read the season guide
+                </a>
+              </div>
             </details>
           )}
 
