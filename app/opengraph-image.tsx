@@ -1,9 +1,53 @@
-import { ImageResponse } from "next/og";
+import {
+  createSocialImageResponse,
+  socialImageContentType,
+  socialImageSize,
+} from "@hraness/web-discovery/social-image";
+import { site } from "@/lib/site";
 
 export const alt = "Platonik. Make a creature. See what it becomes. A game in design.";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const size = socialImageSize;
+export const contentType = socialImageContentType;
+
+function PlatonikMark() {
+  return (
+    <svg
+      aria-label="Platonik tetrahedron mark"
+      height="42"
+      role="img"
+      viewBox="0 0 42 42"
+      width="42"
+    >
+      <path
+        d="M21 5 37.5 34 4.5 34Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="3"
+      />
+      <path
+        d="M21 5v20M4.5 34 21 25M37.5 34 21 25"
+        fill="none"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
 
 export default function Image() {
-  return new ImageResponse(<div style={{ background: "#f9f9f6", color: "#262c28", width: "100%", height: "100%", display: "flex", flexDirection: "column", padding: "64px 80px", justifyContent: "space-between" }}><div style={{ fontSize: 32 }}>platonik.</div><div style={{ display: "flex", flexDirection: "column", fontSize: 78, letterSpacing: "-3px", lineHeight: 1.08 }}><div>Make a creature.</div><div>See what it becomes.</div></div><div style={{ display: "flex", fontSize: 25, color: "#526057" }}>Build little creatures with your AI · A game in design · platonik.space</div></div>, size);
+  return createSocialImageResponse({
+    description: site.description,
+    domain: new URL(site.url).hostname,
+    eyebrow: site.name,
+    mark: <PlatonikMark />,
+    theme: {
+      accent: "#1E5AE1",
+      background: "#F8F7F4",
+      foreground: "#1C1917",
+      muted: "#6C665F",
+    },
+    title: "Platonik — a world of algorithmic organisms",
+  });
 }
