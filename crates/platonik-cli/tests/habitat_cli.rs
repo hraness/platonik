@@ -827,6 +827,73 @@ fn first_answer_case_exports_and_readonly_journey_preserve_existing_status() {
 }
 
 #[test]
+fn voice_digest_projects_checked_facts_without_changing_the_save() {
+    use platonik_core::answer_fixtures as answer;
+    let sandbox = Sandbox::new();
+    let source = sandbox.path("voiced-answer");
+    let exp = answer::experiment("answer-one").unwrap();
+    success(init(&source, &exp));
+    success(advance(&source, exp.ticks, 0, "finish"));
+    let before = journal(&source);
+    let (digest, voice_runs) = measured(&["habitat", "voice", text(&source)], None);
+    let (status, status_runs) = measured(&["habitat", "status", text(&source)], None);
+    assert_eq!(digest["schema"], "platonik-voice-digest-v1");
+    assert_eq!(digest["report"]["habitat"], status);
+    assert_eq!(
+        digest["report"]["schema"],
+        "platonik-first-answer-report-v1"
+    );
+    assert_eq!(
+        voice_runs, status_runs,
+        "The digest must reuse one verified snapshot"
+    );
+    assert_eq!(journal(&source), before, "Voice must not append or mutate");
+
+    let facts = digest["facts"].as_array().unwrap();
+    let reply = facts
+        .iter()
+        .find(|fact| fact["cite"]["milestone"] == "matching_reply")
+        .unwrap();
+    let milestone = digest["report"]["journey"]["milestones"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|m| m["kind"] == "matching_reply")
+        .unwrap()
+        .clone();
+    assert_eq!(reply["kind"], "milestone");
+    assert_eq!(
+        reply["proposition"].as_str().unwrap(),
+        format!(
+            "Spark {} returned through the reply cell at tick {} carrying signal {}.",
+            milestone["spark"].as_u64().unwrap(),
+            milestone["tick"].as_u64().unwrap(),
+            milestone["signal"].as_u64().unwrap()
+        )
+    );
+    assert!(
+        digest["boundary"]["carries"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|entry| entry.is_string())
+    );
+    assert!(
+        digest["boundary"]["absent"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|entry| entry == "the identities, intentions, or inner life of the crew")
+    );
+
+    let again = success(cli(&["habitat", "voice", text(&source)], None));
+    assert_eq!(
+        again["digest_hash"], digest["digest_hash"],
+        "The same save must name the same wire"
+    );
+}
+
+#[test]
 fn first_answer_pending_intent_reveals_only_committed_progress_and_recovers_once() {
     let sandbox = Sandbox::new();
     let source = sandbox.path("completed-answer");

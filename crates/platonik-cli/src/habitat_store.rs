@@ -110,6 +110,38 @@ pub struct BloomReport {
     pub bloom: platonik_core::bloom::BloomGrade,
 }
 
+/// One declarative proposition the wire carried. A contacted voice may cite
+/// these; anything beyond them was never sent.
+#[derive(Serialize)]
+pub struct VoiceFact {
+    pub kind: &'static str,
+    pub proposition: String,
+    pub cite: serde_json::Value,
+}
+
+/// The declared epistemic boundary of the wire: the categories of knowledge
+/// the digest carries, and the categories it provably does not. A bounded
+/// voice answers from `carries` and refuses `absent`; the list is data, not a
+/// prompt instruction, so an evaluation can check answers against it.
+#[derive(Serialize)]
+pub struct VoiceBoundary {
+    pub carries: Vec<&'static str>,
+    pub absent: Vec<&'static str>,
+}
+
+/// The canonical document a contacted voice consumes: the freshly checked
+/// journey report, the flattened facts it may cite, and the declared boundary
+/// of what the wire carried. `digest_hash` binds all three, so a voice
+/// manifest can name the exact wire its holder heard.
+#[derive(Serialize)]
+pub struct VoiceDigest {
+    pub schema: &'static str,
+    pub digest_hash: String,
+    pub report: JourneyReport,
+    pub facts: Vec<VoiceFact>,
+    pub boundary: VoiceBoundary,
+}
+
 #[derive(Clone)]
 struct Request {
     until: u32,
@@ -453,6 +485,144 @@ pub fn journey(path: &Path) -> Result<JourneyReport, String> {
         schema: "platonik-first-answer-report-v1",
         habitat: report(snapshot, None)?,
         journey,
+    })
+}
+
+fn voice_facts(report: &JourneyReport) -> Vec<VoiceFact> {
+    use platonik_core::first_answer::MilestoneKind;
+    let journey = &report.journey;
+    let habitat = &report.habitat;
+    let field = |name: &str| serde_json::json!({ "field": name });
+    let mut facts = Vec::new();
+    facts.push(VoiceFact {
+        kind: "outcome",
+        proposition: format!(
+            "The world stands at tick {} of its {}-tick horizon.",
+            journey.tick, journey.horizon
+        ),
+        cite: field("journey.tick"),
+    });
+    facts.push(VoiceFact {
+        kind: "service",
+        proposition: if journey.service_passed {
+            format!(
+                "Service passed: every beacon drain was met through tick {}.",
+                journey.tick
+            )
+        } else {
+            "Service failed: a beacon drain went unmet.".to_string()
+        },
+        cite: field("journey.service_passed"),
+    });
+    for milestone in &journey.milestones {
+        let (proposition, cite) = match milestone.kind {
+            MilestoneKind::KeeperBorn => (
+                format!(
+                    "The keeper cell was born at tick {} at cell {}.",
+                    milestone.tick,
+                    milestone.cell.unwrap_or_default()
+                ),
+                serde_json::json!({"milestone": "keeper_born", "tick": milestone.tick}),
+            ),
+            MilestoneKind::ReplyBorn => (
+                format!(
+                    "The reply cell was born at tick {} at cell {}.",
+                    milestone.tick,
+                    milestone.cell.unwrap_or_default()
+                ),
+                serde_json::json!({"milestone": "reply_born", "tick": milestone.tick}),
+            ),
+            MilestoneKind::CrewSupplied => (
+                format!(
+                    "The crew was supplied at tick {} carrying spark {}.",
+                    milestone.tick,
+                    milestone.spark.unwrap_or_default()
+                ),
+                serde_json::json!({"milestone": "crew_supplied", "tick": milestone.tick}),
+            ),
+            MilestoneKind::MatchingReply => (
+                format!(
+                    "Spark {} returned through the reply cell at tick {} carrying signal {}.",
+                    milestone.spark.unwrap_or_default(),
+                    milestone.tick,
+                    milestone.signal.unwrap_or_default()
+                ),
+                serde_json::json!({"milestone": "matching_reply", "tick": milestone.tick}),
+            ),
+        };
+        facts.push(VoiceFact {
+            kind: "milestone",
+            proposition,
+            cite,
+        });
+    }
+    facts.push(VoiceFact {
+        kind: "outcome",
+        proposition: match journey.phase {
+            platonik_core::first_answer::Phase::Answered => {
+                "The journey is answered: the reply cell returned a matched report.".to_string()
+            }
+            platonik_core::first_answer::Phase::InProgress => {
+                "The journey has not answered; it is still in progress.".to_string()
+            }
+            platonik_core::first_answer::Phase::FinishedWithoutAnswer => {
+                "The journey finished without an answer.".to_string()
+            }
+        },
+        cite: field("journey.answered"),
+    });
+    facts.push(VoiceFact {
+        kind: "fuel",
+        proposition: format!(
+            "{} units of fuel remained unspent in the record.",
+            habitat.remaining_fuel
+        ),
+        cite: field("habitat.remaining_fuel"),
+    });
+    if let Some(answer) = &journey.answer {
+        facts.push(VoiceFact {
+            kind: "authored",
+            proposition: format!("The authored answer reads: {answer}"),
+            cite: field("journey.answer"),
+        });
+    }
+    facts.push(VoiceFact {
+        kind: "identity",
+        proposition: format!(
+            "The wire identifies the experiment as {}, the evidence as {}.",
+            journey.experiment_hash, journey.evidence_hash
+        ),
+        cite: field("journey.evidence_hash"),
+    });
+    facts
+}
+
+pub fn voice(path: &Path) -> Result<VoiceDigest, String> {
+    let report = journey(path)?;
+    let facts = voice_facts(&report);
+    let boundary = VoiceBoundary {
+        carries: vec![
+            "the world's tick-by-tick service outcome through the horizon",
+            "birth ticks and cell positions of the keeper and reply cells",
+            "spark and signal identities that crossed the wire",
+            "the authored answer text",
+            "content identities of the experiment, evidence, and result",
+        ],
+        absent: vec![
+            "the identities, intentions, or inner life of the crew",
+            "the world's terrain or layout beyond the named cells",
+            "any event after the recorded tick",
+            "any fact about the receiving world's interior",
+            "any fact about the sender's world beyond this report",
+        ],
+    };
+    let digest_hash = artifact_hash(&(&report, &facts, &boundary))?;
+    Ok(VoiceDigest {
+        schema: "platonik-voice-digest-v1",
+        digest_hash,
+        report,
+        facts,
+        boundary,
     })
 }
 
