@@ -3,6 +3,14 @@ import Link from "next/link";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
+function TopicIcon({ slug }: Readonly<{ slug: string }>) {
+  // Decorative local SVG; next/image cannot optimize vector sources.
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img className="topic-icon" src={`/icons/${slug}.svg`} alt="" aria-hidden="true" width="44" height="44" loading="lazy" decoding="async" />
+  );
+}
+
 const chapters = [
   ["A spark in the dust", "Help your first companion carry light home. A distant beacon begins to answer."],
   ["The long trail", "Gather a herd of strange specialists. Find a way through worlds no creature can cross alone."],
@@ -26,7 +34,8 @@ export default function HomePage() {
       </div>
 
         <section className="home-section first-world" aria-labelledby="first-world-title">
-          <div className="section-intro"><h2 id="first-world-title">Keep the little light alive.</h2><p>Your first creature carries sparks to a beacon. Then the short way closes. Can you help it find another?</p></div>
+          <div className="section-intro"><TopicIcon slug="keep-light" />
+<h2 id="first-world-title">Keep the little light alive.</h2><p>Your first creature carries sparks to a beacon. Then the short way closes. Can you help it find another?</p></div>
           <figure className="habitat-figure hraness-material-pane">
             <svg className="habitat-map" viewBox="0 0 420 230" role="img" aria-labelledby="habitat-title habitat-description">
               <title id="habitat-title">A spark route with a way around</title>
@@ -57,7 +66,8 @@ export default function HomePage() {
         </section>
 
       <section className="home-section conversation-section" aria-labelledby="conversation-title">
-        <div className="section-intro"><h2 id="conversation-title">Start with “what if.”</h2><p>If you’ve ever asked an AI to build something and felt the thrill of seeing it work, you know where this begins.</p></div>
+        <div className="section-intro"><TopicIcon slug="conversation" />
+<h2 id="conversation-title">Start with “what if.”</h2><p>If you’ve ever asked an AI to build something and felt the thrill of seeing it work, you know where this begins.</p></div>
         <div className="conversation" aria-label="Illustrative player and agent conversation">
           <div className="message"><span className="speaker">You</span><p>I like Moth. Make it less helpless when the road disappears. Keep the original.</p></div>
           <div className="message"><span className="speaker">Agent</span><p>We could teach every cell to turn back, or mix in a few explorers. The explorers may find another route, but spend more of the journey wandering.</p></div>
@@ -69,7 +79,8 @@ export default function HomePage() {
       </section>
 
       <section className="home-section" aria-labelledby="scale-title">
-        <div className="section-intro"><h2 id="scale-title">One companion. A civilization among the stars.</h2><p>Follow the Far Beacon. Each new journey asks more of your herd—and gives an old favorite another way to matter.</p></div>
+        <div className="section-intro"><TopicIcon slug="spark-route" />
+<h2 id="scale-title">One companion. A civilization among the stars.</h2><p>Follow the Far Beacon. Each new journey asks more of your herd—and gives an old favorite another way to matter.</p></div>
         <ol className="chapter-list">{chapters.map(([title, description]) => <li key={title}><h3>{title}</h3><p>{description}</p></li>)}</ol>
         <p>Keep the original. Grow a descendant. Build a place where different habits flourish together. The herd you once led through the dust could become a fleet of living worlds.</p>
         <p className="figure-note">Proposed campaign arc. The first Rust prototype connects courier delivery to local beacon control. Living arks, settlements, and autonomous discovery remain later directions.</p>
@@ -82,16 +93,19 @@ export default function HomePage() {
       </section>
 
       <section className="home-section split-section" aria-labelledby="competition-title">
+        <TopicIcon slug="creature" />
         <h2 id="competition-title">Bring your best strange little thing.</h2>
         <div><p>Race an archived rival through the same world. See where yours gets stuck. Build a response, and take another run at the frontier.</p><p>A first hosted season is already open: your program faces generated cases it never trained on, the evaluator replays every receipt, and the standings are public. The wider in-game competition remains a proposal.</p><Link className="text-link" href="/docs/seasons">Enter the open season <span aria-hidden="true">↗</span></Link> <Link className="text-link" href="/lab/challenges">See the standings <span aria-hidden="true">↗</span></Link></div>
       </section>
 
       <section className="home-section split-section" aria-labelledby="economy-title">
+        <TopicIcon slug="economy" />
         <h2 id="economy-title">Someone needs what yours can do.</h2>
         <div><p>Your creature found a way around a broken road. Another player’s colony is still stuck. A proposed shared expedition board would let them commission help—and let your discovery find a life in someone else’s world.</p><p>Work in your own laboratory. Earn in-game credits for a checked result. Use them to ask another researcher for help. Published creatures would join a library everyone can reuse.</p><Link className="text-link" href="/docs/economy">Explore the proposed economy <span aria-hidden="true">↗</span></Link></div>
       </section>
 
       <section className="home-section split-section" aria-labelledby="research-title">
+        <TopicIcon slug="research" />
         <h2 id="research-title">“Was that a fluke?” is a scientific question.</h2>
         <div><p>A surprising recovery. Two habits that work better together. An old creature finding its way through a new world. Ask your agent to investigate, and keep an experiment someone else can replay.</p><p>Inspired by Michael Levin’s questions about collective behavior, Platonik explores what simple rules can do when given different bodies and environments. Useful programs, repeatable effects, and revealing failures could contribute to research. Each claim has to earn its evidence.</p><Link className="text-link" href="/docs/research">Follow the questions into life, minds, and computation <span aria-hidden="true">↗</span></Link></div>
       </section>
