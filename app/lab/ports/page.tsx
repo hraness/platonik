@@ -7,12 +7,13 @@ import type { ContinuityIndex } from "@/lib/bridge/continuity";
 import "../lab.css";
 import "../bridge/bridge.css";
 import "../habitat/habitat.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "A promise can arrive before its reply",
   description: "Follow two recorded Rust courier commitments through physical handoffs, repeated requests, and delayed acknowledgments.",
   alternates: { canonical: "/lab/ports" },
-  openGraph: { url: "/lab/ports" },
+  openGraph: { url: "/lab/ports", siteName: site.name },
 };
 
 export default async function PortsPage() {

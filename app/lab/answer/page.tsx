@@ -7,12 +7,13 @@ import type { ContinuityIndex } from "@/lib/bridge/continuity";
 import "../lab.css";
 import "../bridge/bridge.css";
 import "../habitat/habitat.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "The First Answer",
   description: "Follow one saved Rust crew as it gathers supplies, builds two companions, and attempts a physically traced reply.",
   alternates: { canonical: "/lab/answer" },
-  openGraph: { url: "/lab/answer" },
+  openGraph: { url: "/lab/answer", siteName: site.name },
 };
 
 export default async function AnswerPage() {

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { videoGameJsonLd } from "@/lib/json-ld";
 import { JsonLd } from "@/components/json-ld";
+import { site } from "@/lib/site";
 
-export const metadata: Metadata = { alternates: { canonical: "/" }, openGraph: { url: "/" } };
+export const metadata: Metadata = { alternates: { canonical: "/" }, openGraph: { url: "/", siteName: site.name } };
 
 function TopicIcon({ slug }: Readonly<{ slug: string }>) {
   // Decorative local SVG; next/image cannot optimize vector sources.

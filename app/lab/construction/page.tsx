@@ -7,12 +7,13 @@ import type { ContinuityIndex } from "@/lib/bridge/continuity";
 import "../lab.css";
 import "../bridge/bridge.css";
 import "../habitat/habitat.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Build the crewmate you need",
   description: "Follow recorded Rust construction: gather material, copy a supplied blueprint, wire a child, and watch it work in the same saved habitat.",
   alternates: { canonical: "/lab/construction" },
-  openGraph: { url: "/lab/construction" },
+  openGraph: { url: "/lab/construction", siteName: site.name },
 };
 
 export default async function ConstructionPage() {

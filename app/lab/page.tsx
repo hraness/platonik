@@ -3,12 +3,13 @@ import Link from "next/link";
 import { Observatory } from "@/components/observatory";
 import { labPages } from "@/lib/lab-pages";
 import "./lab.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "The observatory",
   description: "Explore executable organisms, fuzzy truth landscapes, world budgets, and an Autoverse signal workbench. Four local browser prototypes for Platonik.",
   alternates: { canonical: "/lab" },
-  openGraph: { url: "/lab" },
+  openGraph: { url: "/lab", siteName: site.name },
 };
 
 const recordings = labPages.map(({ path, name, description }) => ({ href: path, name, description }));

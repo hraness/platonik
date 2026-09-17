@@ -7,12 +7,13 @@ import type { ContinuityIndex } from "@/lib/bridge/continuity";
 import "../lab.css";
 import "../bridge/bridge.css";
 import "./habitat.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Keep the same world alive",
   description: "Follow a Rust habitat through changing reports and saved checkpoints. Compare crews and inspect the exact carried state.",
   alternates: { canonical: "/lab/habitat" },
-  openGraph: { url: "/lab/habitat" },
+  openGraph: { url: "/lab/habitat", siteName: site.name },
 };
 
 export default async function HabitatPage() {

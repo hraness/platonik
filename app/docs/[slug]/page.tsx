@@ -15,7 +15,7 @@ type PageProps = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const document = findDocument(slug);
-  return document ? { title: document.title, description: document.description, alternates: { canonical: `/docs/${document.slug}` }, openGraph: { url: `/docs/${document.slug}` } } : {};
+  return document ? { title: document.title, description: document.description, alternates: { canonical: `/docs/${document.slug}` }, openGraph: { url: `/docs/${document.slug}`, siteName: site.name } } : {};
 }
 
 export default async function DocumentPage({ params }: PageProps) {

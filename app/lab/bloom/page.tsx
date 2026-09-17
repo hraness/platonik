@@ -7,12 +7,13 @@ import type { ContinuityIndex } from "@/lib/bridge/continuity";
 import "../lab.css";
 import "../bridge/bridge.css";
 import "../habitat/habitat.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Your creations begin creating",
   description: "Follow two recorded Rust couriers from local program changes through physical trials, selection, and a later confirmation.",
   alternates: { canonical: "/lab/bloom" },
-  openGraph: { url: "/lab/bloom" },
+  openGraph: { url: "/lab/bloom", siteName: site.name },
 };
 
 export default async function BloomPage() {

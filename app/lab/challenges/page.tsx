@@ -3,12 +3,13 @@ import Link from "next/link";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import "../lab.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Generated challenges",
   description: "A deterministic, growing set of worlds that score one submitted program on cases it never trained on. Reference baselines, replayed and ranked.",
   alternates: { canonical: "/lab/challenges" },
-  openGraph: { url: "/lab/challenges" },
+  openGraph: { url: "/lab/challenges", siteName: site.name },
 };
 
 type BoardRow = {
