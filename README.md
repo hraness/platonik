@@ -4,9 +4,13 @@ Platonik is an engineering game in development about making creatures with your 
 
 This repository implements the **website and browser observatory** for [platonik.space](https://platonik.space), using Next.js on Vercel. The observatory has four bounded local experiments: editable courier programs with collectible structural portraits, coupled fuzzy-truth systems, a world-cost calculator, and a signal workbench for circuits and budgeted blueprint assembly. It also implements a **bounded Rust habitat prototype**, a real agent-facing CLI, immutable checked receipts, and a portable play skill. Its [recorded bridge](https://platonik.space/lab/bridge) connects physical delivery, signals, memory, and service routing. The [field expedition](docs/field-expedition.md) adds a persistent collection, checked local saves, scheduled route closure, and frozen transfer trials. The [continuous habitat](docs/continuous-habitat.md) carries cargo, memory, queued reports, service charge, and cumulative work across checked pauses and restoration. A deterministic [generated-challenge eval](docs/challenges.md) and [hosted seasons](docs/seasons.md) are live: entrants open pull requests, the evaluator scores programs on withheld salt-derived cases, and verified results plus standings land in the repository. The complete campaign and in-world breeding remain unimplemented. Older observatory traces come from their separate TypeScript models.
 
+## Play in the browser
+
+Open [platonik.space/play](https://platonik.space/play) to run the deterministic engine in this tab. Your agent can write a program in the Rust CLI, build a shareable content-addressable URL like `https://platonik.space/play/p/<hash>?mode=challenges&case=challenge-0001&program=<base64url-program>`, and send it to you. Opening the link checks the program hash, loads the same case, and replays it. No install or account is required for the browser tracks; the command line remains available for larger, scripted, or offline work.
+
 ## Explore the design
 
-Start in [the observatory](https://platonik.space/lab), or read its [guide](docs/observatory.md). Export a specimen's JSON, ask an external agent to change it, and paste it back to compare the result. The [complexity and scale thesis](docs/complexity-and-scale.md) explains the separate work, memory, and structural costs, the proposed research comparisons, and the limits on larger worlds.
+Start in [the observatory](https://platonik.space/lab), or read its [guide](docs/observatory.md). Export a specimen's JSON, ask an external agent to change it, and paste it back to compare the result. The [complexity and scale thesis](docs/complexity-and-scale.md) explains the separate work, memory, and structural costs, the proposed research comparisons, and the limits of larger worlds.
 
 Begin with the [game design](docs/game-design.md): grow a colony that carries sparks to a beacon, help it recover when a route collapses, and take a favorite descendant into an unfamiliar habitat. The proposed world then expands from cells into tissues, ecologies, and algorithm discovery. Sorting remains a later research habitat.
 
@@ -14,7 +18,7 @@ The proposed campaign, [The Long Trail](docs/campaign.md), follows a first compa
 
 The [Autoverse path](docs/autoverse.md) connects those chapters to transport, signals, memory, programmable control, and construction. The [validation plan](docs/design-validation.md) distinguishes checked browser behaviors from the initial shared-runtime evidence and remaining full campaign, player, and large-world tests. Try the [Autoverse workbench](https://platonik.space/lab#autoverse) to change a circuit, break a connection, and check its behavior under explicit limits.
 
-The [competition model](docs/competition.md) compares organisms under equal execution limits while allowing open-ended discovery effort. A working slice is running today: [generated challenges](docs/challenges.md) score one program on cases it never trained on, [hosted seasons](docs/seasons.md) evaluate pull-request entries against a committed salt, and the [standings board](https://platonik.space/lab/challenges) shows both. The [engine proposal](docs/engine.md) defines an agent-facing Rust CLI and the first playable acceptance criteria. The [research foundations](docs/research.md) connect the design to Michael Levin's minimal systems and distinguish empirical results from mathematical claims.
+The [competition model](docs/competition.md) compares organisms under equal execution limits while allowing open-ended discovery effort. A working slice is running today: [generated challenges](docs/challenges.md) score one program on cases it never trained on, [hosted seasons](docs/seasons.md) evaluate pull-request entries against a committed salt, and the [standings board](https://platonik.space/lab/challenges) shows both. The [engine guide](docs/engine.md) describes the implemented Rust journeys and the agent-facing CLI. The [research foundations](docs/research.md) connect the design to Michael Levin's minimal systems and distinguish empirical results from mathematical claims.
 
 The growing [symbols and facts glossary](docs/symbols-and-facts.md) adds a Wittgenstein-inspired layer: compose descriptions of local situations, breed their parts, and check them against the world. Definitions remain revisable; the proposed mechanics preserve sensory limits and computation costs.
 
@@ -26,13 +30,13 @@ The [shared economy](docs/economy.md) proposes a multiplayer expedition board ar
 
 The full Long Trail is not one playable campaign yet, but five bounded local journeys can be run today:
 
-| Journey | What it connects | Guide |
-| --- | --- | --- |
-| First camp | Persistent collection, ancestry, a closing route, frozen confirmation cases | [Field expedition](docs/field-expedition.md) |
-| The First Answer | Finite construction, continuing service, and a checked contact ending | [Bring a signal home](docs/first-answer.md) |
-| Ark control | Physical input, four-bit arithmetic, retained control, and a payload decision | [Give home a plan](docs/ark-control.md) |
-| Port commitments | Physical custody, lost replies, acknowledgment, service, and finite spares | [Keep a promise](docs/port-commitments.md) |
-| Bloom exchange | Bounded variation, physical selection, a request, delivery, and acknowledgment | [Run the one-lane exchange](docs/composition-v5-gate.md) |
+| Journey | What it connects | Play | Guide |
+| --- | --- | --- | --- |
+| First camp | Persistent collection, ancestry, a closing route, frozen confirmation cases | [Open](https://platonik.space/play?mode=expedition) | [Field expedition](docs/field-expedition.md) |
+| The First Answer | Finite construction, continuing service, and a checked contact ending | [Open](https://platonik.space/play?mode=journeys&case=answer) | [Bring a signal home](docs/first-answer.md) |
+| Ark control | Physical input, four-bit arithmetic, retained control, and a payload decision | [Open](https://platonik.space/play?mode=journeys&case=ark) | [Give home a plan](docs/ark-control.md) |
+| Port commitments | Physical custody, lost replies, acknowledgment, service, and finite spares | [Open](https://platonik.space/play?mode=journeys&case=ports) | [Keep a promise](docs/port-commitments.md) |
+| Bloom exchange | Bounded variation, physical selection, a request, delivery, and acknowledgment | [Open](https://platonik.space/play?mode=journeys&case=exchange) | [Run the one-lane exchange](docs/composition-v5-gate.md) |
 
 They share the deterministic interpreter, checker, cost model, and replay discipline. They do not yet share one continuous campaign progression: finishing one does not unlock the next, the field expedition's trials start separate declared worlds, and moving arks and independent settlements remain proposals.
 
