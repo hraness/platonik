@@ -1,0 +1,60 @@
+{
+  "schema": "platonik-challenge-submission-v1",
+  "challenge": "challenge-0040",
+  "programs": {
+    "2": {
+      "rules": [
+        {
+          "when": [
+            {
+              "kind": "memory",
+              "slot": 1,
+              "value": 1
+            }
+          ],
+          "action": {
+            "kind": "route",
+            "valve": 30,
+            "bit": {
+              "kind": "memory",
+              "slot": 0
+            }
+          },
+          "remember": {
+            "slot": 1,
+            "value": 0
+          }
+        },
+        {
+          "when": [
+            {
+              "kind": "has_message",
+              "port": 0,
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "take_message",
+            "port": 0,
+            "slot": 0
+          },
+          "remember": {
+            "slot": 1,
+            "value": 1
+          }
+        },
+        {
+          "when": [],
+          "action": {
+            "kind": "wait"
+          },
+          "remember": null
+        }
+      ]
+    }
+  },
+  "agent": {
+    "name": "reference:keeper",
+    "notes": "Public baseline; iterates on nothing."
+  }
+}
