@@ -114,13 +114,33 @@ describe("answer", () => {
     }
   });
 
+  test("caches a reply per (model, digest, normalized say)", async () => {
+    let calls = 0;
+    const counting: FetchLike = async () => {
+      calls += 1;
+      return new Response(
+        JSON.stringify({
+          choices: [{ message: { content: "counted reply" } }],
+          usage: { cost: 0.001 },
+        }),
+        { status: 200 },
+      );
+    };
+    const c = { ...config, model: `cache-test-${Math.random()}` };
+    const req = { digest, say: "Cache check question?" };
+    const first = await answer(c, req, counting);
+    const second = await answer(c, { digest, say: "  cache   CHECK question? " }, counting);
+    expect(calls).toBe(1);
+    expect(second).toEqual(first);
+  });
+
   test("maps upstream failure and empty replies to contract errors", async () => {
     const down: FetchLike = () => Promise.reject(new Error("down"));
-    expect(await answer(config, { digest, say: "hi" }, down)).toMatchObject({
+    expect(await answer(config, { digest, say: "down-probe" }, down)).toMatchObject({
       error: "voice_gateway_unreachable",
     });
     const bad: FetchLike = () => Promise.resolve(new Response("x", { status: 500 }));
-    expect(await answer(config, { digest, say: "hi" }, bad)).toMatchObject({
+    expect(await answer(config, { digest, say: "bad-probe" }, bad)).toMatchObject({
       error: "voice_gateway_500",
     });
     const empty: FetchLike = () =>
@@ -129,7 +149,7 @@ describe("answer", () => {
           status: 200,
         }),
       );
-    expect(await answer(config, { digest, say: "hi" }, empty)).toMatchObject({
+    expect(await answer(config, { digest, say: "empty-probe" }, empty)).toMatchObject({
       error: "voice_gateway_empty",
     });
   });
