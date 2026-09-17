@@ -2,15 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { Receipt } from "@/lib/bridge/types";
-import { engine, type Point, type WasmModule } from "@/lib/play/engine";
+import { engine, type Point, type Program, type WasmModule } from "@/lib/play/engine";
 import { OPENING_MISSIONS } from "@/lib/play/missions";
+import { buildPlayUrl } from "@/lib/play/url";
 import { PROGRAM_SCHEMA_HELP } from "@/lib/play/schema-help";
 import { AgentPanel } from "./agent-panel";
 import { ProgramEditor } from "./program-editor";
 import { ReplayStage } from "./replay-stage";
 
-// Minimal read of the fixture experiment JSON — the engine is authoritative;
-// these fields are all the tutorial track needs for editing and summaries.
 type Positioned = { id: number; position: Point };
 
 type ExperimentCell = {
@@ -34,9 +33,6 @@ type ExperimentShape = {
 const GOAL =
   "Get the courier to deliver every source spark to a depot, then keep beacons charged.";
 
-// The cells the player may program, per fixture. Opening worlds have a lone
-// courier; ark-plan-a adds the valve controller (the relay and the corridor
-// body stay fixed).
 const PLAYER_CELLS: Record<string, number[]> = {
   "opening-normal": [1],
   "opening-wounded": [1],
@@ -44,9 +40,9 @@ const PLAYER_CELLS: Record<string, number[]> = {
 };
 
 const COURIER_PRESETS = [
-  { name: "idle", label: "Wait only" },
   { name: "compact", label: "Bounce back" },
   { name: "resilient", label: "Wall follower" },
+  { name: "idle", label: "Wait only" },
 ];
 
 const STATION_PRESETS = [
@@ -54,10 +50,24 @@ const STATION_PRESETS = [
   { name: "controller", label: "Controller" },
 ];
 
+const OPENING_STARTERS: Record<string, Record<number, string>> = {
+  "opening-normal": { 1: "compact" },
+  "opening-wounded": { 1: "resilient" },
+  "ark-plan-a": { 1: "compact", 3: "controller" },
+};
+
+const HINTS: Record<string, string> = {
+  "opening-normal":
+    "Start with the 'Bounce back' courier. Run it, watch it deliver, then edit one rule to see what breaks.",
+  "opening-wounded":
+    "The short way closes. Try the 'Wall follower' preset and see if it finds the longer, still-open route.",
+  "ark-plan-a":
+    "Load a 'Bounce back' courier and a 'Controller' for the valve. The controller must steer the signal bit to the right plan.",
+};
+
 const pretty = (value: unknown) => JSON.stringify(value, null, 2);
 const message = (cause: unknown) => (cause instanceof Error ? cause.message : String(cause));
 
-/** Parse program JSON, throwing a readable error on any malformed input. */
 function parseProgram(text: string): Record<string, unknown> {
   let parsed: unknown;
   try {
@@ -71,7 +81,6 @@ function parseProgram(text: string): Record<string, unknown> {
   return parsed as Record<string, unknown>;
 }
 
-/** Live rule count for the selector: the draft text when it parses, else the fixture program. */
 function ruleCount(cell: ExperimentCell, draft: string | undefined): number {
   if (draft != null) {
     try {
@@ -87,7 +96,6 @@ function ruleCount(cell: ExperimentCell, draft: string | undefined): number {
   return Array.isArray(rules) ? rules.length : 0;
 }
 
-/** A lone wait rule is the idle placeholder — everything else is real behavior. */
 function isNontrivial(cell: ExperimentCell): boolean {
   const rules = cell.program?.rules;
   if (!Array.isArray(rules) || rules.length === 0) return false;
@@ -98,7 +106,6 @@ function isNontrivial(cell: ExperimentCell): boolean {
   return true;
 }
 
-/** The player-facing cells for a mission, filtered to what the world ships. */
 function editableCells(experiment: ExperimentShape, missionKey: string): ExperimentCell[] {
   const cells = experiment.cells ?? [];
   const wanted = PLAYER_CELLS[missionKey];
@@ -112,7 +119,6 @@ function editableCells(experiment: ExperimentShape, missionKey: string): Experim
   return nontrivial.length > 0 ? nontrivial : cells.filter((cell) => cell.program).slice(0, 1);
 }
 
-/** Compact world description handed to the player's own agent. */
 function worldSummary(experiment: ExperimentShape, cellId: number): string {
   const at = (point?: Point) => (point ? `(${point.x},${point.y})` : "(?)");
   const list = (items?: Positioned[]) =>
@@ -130,16 +136,14 @@ function worldSummary(experiment: ExperimentShape, cellId: number): string {
 const totalWork = (costs: Record<string, number>) =>
   Object.values(costs).reduce((sum, value) => sum + value, 0);
 
-/**
- * The tutorial track: pick a fixture world, edit its courier (and controller)
- * program, run the Rust engine in this tab, and watch the verified replay.
- */
 export function OpeningMode({
   wasm,
   initialMission,
+  initialProgram,
 }: {
   wasm: WasmModule;
   initialMission?: string;
+  initialProgram?: Program;
 }) {
   const startMission =
     initialMission && OPENING_MISSIONS.some((m) => m.key === initialMission)
@@ -154,18 +158,35 @@ export function OpeningMode({
   const [verified, setVerified] = useState(false);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
 
   const loadMission = useCallback(
     (key: string) => {
       try {
         const next = engine.tutorialExperiment(wasm, key) as unknown as ExperimentShape;
         const cells = editableCells(next, key);
+        const initial: Record<number, string> = Object.fromEntries(
+          cells.map((cell) => [cell.id, pretty(cell.program)])
+        );
+        const starter = OPENING_STARTERS[key];
+        for (const cell of cells) {
+          if (initialProgram && cell.id === cells[0]?.id) {
+            initial[cell.id] = pretty(initialProgram);
+            continue;
+          }
+          const name = starter?.[cell.id];
+          if (name && !isNontrivial(cell)) {
+            try {
+              initial[cell.id] = pretty(engine.referenceProgram(wasm, name));
+            } catch {
+              // keep the fixture program if the starter is missing
+            }
+          }
+        }
         setExperiment(next);
         setEditable(cells);
         setCellId(cells[0]?.id ?? null);
-        setPrograms(
-          Object.fromEntries(cells.map((cell) => [cell.id, pretty(cell.program)]))
-        );
+        setPrograms(initial);
         setReceipt(null);
         setVerified(false);
         setError(null);
@@ -175,15 +196,17 @@ export function OpeningMode({
         setError(`Could not load mission "${key}": ${message(cause)}`);
       }
     },
-    [wasm]
+    [wasm, initialProgram]
   );
 
   useEffect(() => {
-    loadMission("opening-normal");
-  }, [loadMission]);
+    loadMission(startMission);
+  }, [loadMission, startMission]);
 
   const mission = OPENING_MISSIONS.find((item) => item.key === missionKey);
   const currentText = (cellId != null && programs[cellId]) || "";
+  const currentIndex = OPENING_MISSIONS.findIndex((item) => item.key === missionKey);
+  const nextMission = OPENING_MISSIONS[currentIndex + 1];
 
   function loadPreset(name: string) {
     if (cellId == null) return;
@@ -196,7 +219,6 @@ export function OpeningMode({
     }
   }
 
-  /** AgentPanel callback: adopt a pasted program for the selected cell. */
   function acceptProgram(json: string): string | null {
     if (cellId == null) return "No editable cell is selected.";
     try {
@@ -213,7 +235,6 @@ export function OpeningMode({
     if (!experiment || running) return;
     setError(null);
     setRunning(true);
-    // Defer one tick so the "Running…" state paints before the synchronous run.
     window.setTimeout(() => {
       try {
         const next = {
@@ -235,6 +256,22 @@ export function OpeningMode({
         setRunning(false);
       }
     }, 50);
+  }
+
+  async function share() {
+    if (cellId == null || !currentText.trim()) {
+      setError("No program to share.");
+      return;
+    }
+    try {
+      const program = parseProgram(currentText) as unknown as Program;
+      const url = await buildPlayUrl({ track: "opening", case: missionKey, program });
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 1600);
+    } catch (cause) {
+      setError(`Share failed: ${message(cause)}`);
+    }
   }
 
   return (
@@ -267,6 +304,7 @@ export function OpeningMode({
           <div className="play-controls">
             <h2>{mission?.title ?? "Opening"}</h2>
             <p className="lab-note">{mission?.detail}</p>
+            <p className="lab-note">{HINTS[missionKey]}</p>
 
             {editable.length > 1 && (
               <label className="cell-select">
@@ -288,9 +326,7 @@ export function OpeningMode({
               <ProgramEditor
                 label={`Cell ${cellId} program`}
                 value={currentText}
-                onChange={(value) =>
-                  setPrograms((prev) => ({ ...prev, [cellId]: value }))
-                }
+                onChange={(value) => setPrograms((prev) => ({ ...prev, [cellId]: value }))}
                 presets={cellId === 1 ? COURIER_PRESETS : STATION_PRESETS}
                 onPreset={loadPreset}
               />
@@ -305,7 +341,27 @@ export function OpeningMode({
               >
                 {running ? "Running…" : "Run in browser"}
               </button>
+              <button
+                className="lab-button secondary"
+                type="button"
+                onClick={share}
+                disabled={cellId == null || !currentText.trim()}
+              >
+                {shareCopied ? "Link copied" : "Copy share link"}
+              </button>
             </div>
+
+            {receipt?.result?.outcome?.passed && nextMission && (
+              <div className="play-next">
+                <button
+                  className="lab-button primary"
+                  type="button"
+                  onClick={() => loadMission(nextMission.key)}
+                >
+                  Next mission: {nextMission.title} <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            )}
 
             <AgentPanel
               brief={`${mission?.detail ?? ""} ${GOAL}`}
@@ -334,8 +390,7 @@ export function OpeningMode({
               </>
             ) : (
               <p className="lab-note">
-                Edit the program, then run it — the replay and the mission verdict appear
-                here.
+                Edit the program, then run it — the replay and the mission verdict appear here.
               </p>
             )}
           </div>
