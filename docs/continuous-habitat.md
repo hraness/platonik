@@ -85,6 +85,7 @@ A fuel-exhausted partial tick is terminal. Resuming it would need a separately d
 | `habitat advance <dir> --until <tick> --expect-revision <n> --request-id <id>` | Record intent, continue the same world, and commit the result |
 | `habitat status <dir>` / `habitat verify <dir>` | Reconstruct and check saved state, history, and progress |
 | `habitat journey <dir>` | Check a First Answer save and report its service, construction, contact, and local ending |
+| `habitat voice <dir>` | Emit the canonical wire digest a contacted-side voice may consume: checked report, citeable facts, declared boundary, and a binding hash |
 | `habitat answer <receipt.json\|->` | Freshly verify a standalone First Answer receipt and report the same local objective |
 | `habitat ark <dir>` | Check a saved ark's arithmetic, retained plan, and physical service |
 | `habitat ark-check <receipt.json\|->` | Freshly verify a standalone ark receipt and report its control objective |

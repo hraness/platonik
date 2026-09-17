@@ -126,6 +126,7 @@ const HABITAT_HELP: &str = "Checked continuous Platonik habitats\n\n\
   platonik habitat status <dir>\n\
   platonik habitat verify <dir>\n\
   platonik habitat journey <dir>\n\
+  platonik habitat voice <dir>\n\
   platonik habitat answer <receipt.json|->\n\
   platonik habitat ark <dir>\n\
   platonik habitat ark-check <receipt.json|->\n\
@@ -160,6 +161,11 @@ freshly verifies a standalone receipt and prints the same journey grade. Both\n\
 return exit 0 for valid evidence, including an unfinished or failed journey;\n\
 inspect answered and service_passed separately. The authored ending requires\n\
 the complete successful horizon. These commands do not run the full campaign.\n\n\
+Voice emits the canonical wire digest a contacted-side character model may\n\
+consume: the checked journey report, the flattened facts it may cite, the\n\
+declared boundary of what the wire carried, and a hash binding all three. It\n\
+is a read-only projection; no model output re-enters the engine. The voice\n\
+layer itself is unbuilt fiction tooling, documented in docs/voices.md.\n\n\
 Ark reads checked arithmetic and service progress without changing the save.\n\
 Ark-check freshly verifies a standalone ark receipt. Both return exit 0 for\n\
 valid evidence, including failed control; inspect arithmetic_passed,\n\
@@ -856,6 +862,10 @@ fn execute_habitat(args: &[String]) -> Result<u8, Failure> {
         }
         [command, dir] if command == "journey" => {
             print_json(&habitat_store::journey(Path::new(dir)).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, dir] if command == "voice" => {
+            print_json(&habitat_store::voice(Path::new(dir)).map_err(error)?)?;
             Ok(0)
         }
         [command, input] if command == "answer" => {
