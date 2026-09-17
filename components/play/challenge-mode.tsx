@@ -10,6 +10,7 @@ import {
   type Submission,
   type WasmModule,
 } from "@/lib/play/engine";
+import { buildPlayUrl } from "@/lib/play/url";
 import type { Receipt } from "@/lib/bridge/types";
 import { CHALLENGE_FAMILIES, challengeId } from "@/lib/play/missions";
 import {
@@ -152,11 +153,22 @@ function worldSummary(experiment: ExperimentShape | undefined): string {
  * on its public train cases, then score once against the reserved eval set.
  * Local scores persist in IndexedDB; ranked entry goes through the season PR.
  */
-export function ChallengeMode({ wasm }: { wasm: WasmModule }) {
-  const [selected, setSelected] = useState(1);
+export function ChallengeMode({
+  wasm,
+  initialIndex,
+  initialProgram,
+}: {
+  wasm: WasmModule;
+  initialIndex?: number;
+  initialProgram?: Program;
+}) {
+  const startIndex = initialIndex ?? 1;
+  const [selected, setSelected] = useState(startIndex);
   const [info, setInfo] = useState<ChallengeInfo | null>(null);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
-  const [programText, setProgramText] = useState("");
+  const [programText, setProgramText] = useState(
+    initialProgram ? JSON.stringify(initialProgram, null, 2) : "",
+  );
   const [passed, setPassed] = useState<Set<string>>(new Set());
   const [cases, setCases] = useState<CaseRun[]>([]);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
@@ -165,6 +177,7 @@ export function ChallengeMode({ wasm }: { wasm: WasmModule }) {
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [busy, setBusy] = useState<"practice" | "scoring" | null>(null);
   const [copied, setCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Load saved scores once, and brief the default selection (challenge-0001).
@@ -178,7 +191,7 @@ export function ChallengeMode({ wasm }: { wasm: WasmModule }) {
       })
       .catch(() => {});
     try {
-      const meta = engine.challengeInfo(wasm, 1);
+      const meta = engine.challengeInfo(wasm, startIndex);
       if (!cancelled) setInfo(meta);
     } catch (cause) {
       if (!cancelled) setError(describe(cause));
@@ -364,6 +377,18 @@ export function ChallengeMode({ wasm }: { wasm: WasmModule }) {
     }
   }
 
+  async function share() {
+    try {
+      const program = parseProgram(programText);
+      const url = await buildPlayUrl({ track: "challenges", case: challengeId(selected), program });
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 1600);
+    } catch (cause) {
+      setError(`Share failed: ${describe(cause)}`);
+    }
+  }
+
   const presets = FAMILY_PRESETS[info?.family ?? "crossing"] ?? FAMILY_PRESETS.crossing;
 
   return (
@@ -450,6 +475,14 @@ export function ChallengeMode({ wasm }: { wasm: WasmModule }) {
               onClick={score}
             >
               {busy === "scoring" ? "Scoring…" : "Score (reserved cases)"}
+            </button>
+            <button
+              className="lab-button secondary"
+              type="button"
+              disabled={busy !== null || !info}
+              onClick={share}
+            >
+              {shareCopied ? "Link copied" : "Copy share link"}
             </button>
           </div>
 

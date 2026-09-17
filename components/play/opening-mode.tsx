@@ -134,8 +134,18 @@ const totalWork = (costs: Record<string, number>) =>
  * The tutorial track: pick a fixture world, edit its courier (and controller)
  * program, run the Rust engine in this tab, and watch the verified replay.
  */
-export function OpeningMode({ wasm }: { wasm: WasmModule }) {
-  const [missionKey, setMissionKey] = useState("opening-normal");
+export function OpeningMode({
+  wasm,
+  initialMission,
+}: {
+  wasm: WasmModule;
+  initialMission?: string;
+}) {
+  const startMission =
+    initialMission && OPENING_MISSIONS.some((m) => m.key === initialMission)
+      ? initialMission
+      : "opening-normal";
+  const [missionKey, setMissionKey] = useState(startMission);
   const [experiment, setExperiment] = useState<ExperimentShape | null>(null);
   const [editable, setEditable] = useState<ExperimentCell[]>([]);
   const [cellId, setCellId] = useState<number | null>(null);
