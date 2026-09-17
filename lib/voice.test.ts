@@ -3,11 +3,13 @@ import {
   type FetchLike,
   DISCLAIMER,
   MAX_SAY_CHARS,
+  VOICE_RATE_LIMIT_PER_HOUR,
   VOICE_RESPONSE_SCHEMA,
   answer,
   parseVoiceRequest,
   upstreamBody,
   voiceConfig,
+  voiceRateLimit,
   type VoiceConfig,
 } from "./voice";
 
@@ -44,6 +46,45 @@ describe("voiceConfig", () => {
     expect(cfg?.base).toBe("https://gw.example/v1");
     expect(cfg?.voice).toBe("far-beacon");
     expect(cfg?.persona).toContain("Far Beacon");
+  });
+
+  test("falls back to the deployment OIDC token for gateway auth", () => {
+    const cfg = voiceConfig({
+      VOICE_GATEWAY_BASE: "https://ai-gateway.vercel.sh/v1",
+      VERCEL_OIDC_TOKEN: "oidc-token",
+      VOICE_MODEL: "m",
+    });
+    expect(cfg?.key).toBe("oidc-token");
+    const explicit = voiceConfig({
+      VOICE_GATEWAY_BASE: "https://gw.example/v1",
+      VOICE_GATEWAY_KEY: "scoped-key",
+      VERCEL_OIDC_TOKEN: "oidc-token",
+      VOICE_MODEL: "m",
+    });
+    expect(explicit?.key).toBe("scoped-key");
+  });
+});
+
+describe("voiceRateLimit", () => {
+  test("allows the hourly allowance then denies, and resets the window", () => {
+    const account = `acct-limit-${Math.random()}`;
+    const start = 1_000_000;
+    for (let i = 0; i < VOICE_RATE_LIMIT_PER_HOUR; i += 1) {
+      expect(voiceRateLimit(account, start)).toBe(true);
+    }
+    expect(voiceRateLimit(account, start)).toBe(false);
+    expect(voiceRateLimit(account, start + 3_599_999)).toBe(false);
+    expect(voiceRateLimit(account, start + 3_600_000)).toBe(true);
+  });
+
+  test("tracks accounts independently", () => {
+    const a = `acct-a-${Math.random()}`;
+    const b = `acct-b-${Math.random()}`;
+    for (let i = 0; i < VOICE_RATE_LIMIT_PER_HOUR; i += 1) {
+      voiceRateLimit(a);
+    }
+    expect(voiceRateLimit(a)).toBe(false);
+    expect(voiceRateLimit(b)).toBe(true);
   });
 });
 
