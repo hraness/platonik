@@ -31,7 +31,7 @@ Before reveal, a committed result is still honest evidence: its receipts replay 
 - **No fork execution:** the workflow never checks out the PR head; the submission is bounded data read through the API, pinned to the head SHA.
 - **Approval gate:** every entry waits on the `season-eval` environment's required reviewer before the salt-bearing steps run.
 - **Serialization:** entries evaluate one at a time, so ordinals and quotas can't race.
-- **Protected ledger:** `main` is ruleset-protected — the aggregate `site` gate is required for everyone else, while the evaluator publishes through a dedicated deploy key that is the only bypass actor besides org admins.
+- **Protected ledger:** `main` is ruleset-protected — changes arrive by pull request and the aggregate `site` gate is required for everyone else, while the evaluator publishes through a dedicated deploy key that is the only bypass actor besides org admins.
 - **Self-verification:** the workflow re-verifies the result — derivation and replay — before pushing, re-checks the board artifact afterward, and the published commit still runs the normal `site` gate on `main` as an audit.
 
 ## Commands
