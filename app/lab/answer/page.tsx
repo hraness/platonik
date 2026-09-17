@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "The First Answer",
   description: "Follow one saved Rust crew as it gathers supplies, builds two companions, and attempts a physically traced reply.",
   alternates: { canonical: "/lab/answer" },
+  openGraph: { url: "/lab/answer" },
 };
 
 export default async function AnswerPage() {

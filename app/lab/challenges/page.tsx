@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Generated challenges",
   description: "A deterministic, growing set of worlds that score one submitted program on cases it never trained on. Reference baselines, replayed and ranked.",
   alternates: { canonical: "/lab/challenges" },
+  openGraph: { url: "/lab/challenges" },
 };
 
 type BoardRow = {

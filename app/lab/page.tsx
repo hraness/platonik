@@ -1,25 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Observatory } from "@/components/observatory";
+import { labPages } from "@/lib/lab-pages";
 import "./lab.css";
 
 export const metadata: Metadata = {
   title: "The observatory",
   description: "Explore executable organisms, fuzzy truth landscapes, world budgets, and an Autoverse signal workbench. Four local browser prototypes for Platonik.",
   alternates: { canonical: "/lab" },
+  openGraph: { url: "/lab" },
 };
 
-const recordings = [
-  { href: "/lab/challenges", name: "Challenges", description: "One program against worlds it never saw" },
-  { href: "/lab/bloom", name: "Bloom", description: "Watch creations begin creating" },
-  { href: "/lab/ports", name: "Ports", description: "Keep a promise when the reply goes missing" },
-  { href: "/lab/ark", name: "Ark control", description: "Give home a plan it can carry out" },
-  { href: "/lab/answer", name: "First Answer", description: "Bring a signal home with your crew" },
-  { href: "/lab/construction", name: "Construction", description: "Build the crewmate the habitat needs" },
-  { href: "/lab/navigation", name: "Navigation", description: "Investigate a courier's navigation" },
-  { href: "/lab/habitat", name: "Continuous habitat", description: "Follow a continuous habitat" },
-  { href: "/lab/bridge", name: "Shared habitat", description: "Replay the first shared Rust habitat" },
-];
+const recordings = labPages.map(({ path, name, description }) => ({ href: path, name, description }));
 
 export default function LabPage() {
   return <main id="main" className="lab">

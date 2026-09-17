@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Your creations begin creating",
   description: "Follow two recorded Rust couriers from local program changes through physical trials, selection, and a later confirmation.",
   alternates: { canonical: "/lab/bloom" },
+  openGraph: { url: "/lab/bloom" },
 };
 
 export default async function BloomPage() {

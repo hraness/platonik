@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Keep the same world alive",
   description: "Follow a Rust habitat through changing reports and saved checkpoints. Compare crews and inspect the exact carried state.",
   alternates: { canonical: "/lab/habitat" },
+  openGraph: { url: "/lab/habitat" },
 };
 
 export default async function HabitatPage() {

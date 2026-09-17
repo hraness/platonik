@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "A promise can arrive before its reply",
   description: "Follow two recorded Rust courier commitments through physical handoffs, repeated requests, and delayed acknowledgments.",
   alternates: { canonical: "/lab/ports" },
+  openGraph: { url: "/lab/ports" },
 };
 
 export default async function PortsPage() {

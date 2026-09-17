@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { site } from "@/lib/site";
 import { siteFooterProps } from "@/lib/site-footer";
+import { websiteJsonLd } from "@/lib/json-ld";
+import { JsonLd } from "@/components/json-ld";
 import { appearanceFallback } from "@/lib/appearance";
 import { AppearanceControl, AppearanceProvider } from "@/components/appearance";
 import "@fontsource/newsreader/latin-400.css";
@@ -29,6 +31,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" suppressHydrationWarning>
       <head><style dangerouslySetInnerHTML={{ __html: appearanceFallback }} /></head>
       <body data-hraness-material="lantern">
+        <JsonLd data={websiteJsonLd} />
         <AppearanceProvider>
           <a href="#main" className="skip-link">Skip to content</a>
           <header className="site-header hraness-material-chrome" data-hraness-marketing-preset="minimal">
