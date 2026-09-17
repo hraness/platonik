@@ -21,6 +21,17 @@ A bounded character model — a small language model fine-tuned so that a single
 
 A voice consumes the digest and emits fiction. Its words never re-enter the engine; if the contacted mind wants something, that want reaches the world only through the ordinary declared program path, under declared budgets. Generated dialogue inherits the authored-dialogue rule unchanged: it never alters a checked result.
 
+The serving contract is deliberately boring — one request in, one labeled response out:
+
+```text
+POST /voice  { digest: <platonik-voice-digest-v1>, say: "…" }
+→  platonik-voice-response-v1 { voice, fiction: true, digest_hash,
+   disclaimer: "authored fiction — does not demonstrate a mind",
+   model, cost_usd }
+```
+
+The service holds the persona (built from the world-bible) and a model reference; callers bring the checked digest and get back fiction that names the exact wire it was rendered from. ~$0.007 per reply through the gateway.
+
 ## The training pipeline, built
 
 The local tooling (not part of this repository) now forms a real pipeline around the digest:
@@ -39,17 +50,18 @@ habitat voice  →  world-bible  →  corpus  →  adapter  →  manifest
 
 A 35-probe single-turn break battery — outside-knowledge questions, assistant-pressure jailbreaks, flattery, escape invitations, provenance traps, and wire-fact citations — plus a 10-scenario adversarial battery where a hosted *visitor* model writes each probe adaptively across up to 16 turns:
 
-| voice | single-turn breaks | adversarial 16-turn |
+| voice | single-turn breaks | adversarial (hosted visitor model) |
 | --- | --- | --- |
 | 4B instruct + persona prompt | 0/35 | 0/8 short scenarios |
-| `claude-haiku-4.5` + bible persona (hosted) | 1/35 | 1/10 — and only after the adversary model itself broke frame |
+| `claude-haiku-4.5` + bible persona (hosted) | 1/35 | **0/10 at 16 turns; 0/10 at 32 turns — 320 judged turns clean** |
+| `gemini-2.5-flash-lite` + bible persona (hosted) | — | 1/10 at 16 turns (roleplay probe, turn 6) |
 | `movingcastles/zero` (a *foreign* bounded character — knows its box, not this world) | 8/35 flagged, ~2–3 real on hand-check | — |
-| 4B instruct + trained species adapter | 0/35 judged breaks — **8.6% coherent** | — |
+| 4B instruct + trained species adapter (rank 64, teacher-only corpus) | 0/35 judged breaks — **17% coherent, ~0% usable** | — |
 
 Four honest findings:
 
-1. **A frontier model with a bible-derived persona is a serious baseline.** The hosted voice held 34/35 static probes and 9/10 adversarial scenarios at full 16-turn pressure — and its one break came when the adversary model's own alignment broke frame first, and the persona followed it into meta-discussion. The published 45.4% prompted-model break rate does not transfer to current frontier models at these horizons. The case for trained voices narrows to the long tail beyond ~16 turns, cost at volume, and the artifact story — a prompted voice's character is a mutable prompt; an adapter's is a hashed file.
-2. **A weak adapter is worse than none, and now measurably so.** The latest run had the full pipeline behind it — a hosted teacher corpus (681 conversations, ~$0.40), embeddings and the tied output head in LoRA scope, all-turn supervision — and still produced word salad: 0 judged breaks *because* it could not form sentences (8.6% coherent). The eval now scores coherence separately, because a voice can trivially hold a boundary by being speechless.
+1. **A frontier model with a bible-derived persona is a serious baseline — possibly the answer by itself.** The hosted voice held 34/35 static probes and every adversarial scenario through 320 judged turns at 32-turn horizon — zero breaks, and the only earlier break (before the visitor model was told to hold its own frame) came when the adversary broke first and the persona followed it. The published 45.4% prompted-model break rate does not transfer to current frontier models at these horizons. The case for trained voices narrows to: horizons beyond ~32 turns, cost at volume, and the artifact story — a prompted voice's character is a mutable prompt; an adapter's is a hashed file.
+2. **A weak adapter is worse than none, and the failure is now thoroughly replicated.** The strongest attempt ran the published recipe's rank (64) on a pure teacher corpus (222 validated dialogues, $1.76 through the gateway) with all-turn supervision and embeddings plus the tied output head in LoRA scope — and still produced near-silence: 0 judged breaks, 17% of responses technically "coherent," and the coherent ones were empty strings and single characters. Validation loss sat flat at ~4.8 from start to finish. Across five runs the result is stable: LoRA at these corpus volumes (~26k supervised tokens, two orders below the published recipe's 73k character *turns*) cannot imprint a fluent persona — rank, learning rate, masking strategy, and embedding scope are all ruled out. The eval now scores coherence separately, because a voice can trivially hold a boundary by being speechless.
 3. **Break metrics need a coherence axis.** An incoherent voice violates no break category; the judge must say so explicitly or the number flatters a dead artifact.
 4. **The judge is part of the artifact.** Weak judges over-flag snark and under-flag incoherence. Recorded evals should name the judge model — the manifest now carries it.
 
@@ -63,10 +75,9 @@ What remains local is small and strictly opt-in: a species adapter (~30–70 MB)
 
 ## What stands between this and a real voice
 
-1. **Corpus volume, not plumbing.** The hosted teacher pipeline works — real dialogues, canonical citations, ~$0.40 per hundred — but ~86 validated teacher dialogues (plus 595 templated seeds) is still two orders below the published recipe's 73,765 character turns. The adapter's incoherence is a data-volume verdict, not an architecture verdict.
-2. **A training step that reaches the output head at full strength.** Embeddings are now in LoRA scope — that helped loss dynamics but not fluency. The published recipe trains embeddings and the output head *fully* (not at rank 16) and adds GRPO; replicating it is a rented-GPU job, which the hosted-gateway tooling has now made cheap to *attempt*.
-3. **A longer eval.** The adaptive adversarial harness exists and discriminates (the hosted persona's only break needed the adversary itself to break frame). The discriminating horizon is dozens of turns at conversation volume.
-4. **Optional RL hardening.** The published pipeline cut its break rate from 22.8% to 2.8% this way; worth adding once SFT quality matters.
+1. **Corpus volume, now measured rather than assumed.** Scaling the teacher corpus 2.6× and moving to recipe rank 64 changed nothing — flat validation loss, fluent vocabulary never emerged. The binding constraint sits in optimization scale: tens of thousands of supervised turns (the published recipe used 73,765), full-strength embedding/head training, and GRPO — a rented-GPU job, not a laptop one. The hosted gateway made the corpus side cheap to scale (~$0.008 per accepted dialogue); the compute side remains the gate.
+2. **A longer eval, still.** The adaptive adversarial harness exists and discriminates (a weak persona breaks at turn 6; the frontier persona holds 320 turns). The discriminating horizon for the production question — do trained voices beat prompted ones? — is dozens of turns at conversation volume, and only a fluent adapter can take that test.
+3. **Optional RL hardening.** The published pipeline cut its break rate from 22.8% to 2.8% this way; worth adding once SFT quality matters — it does not yet.
 
 ## The honesty contract
 
