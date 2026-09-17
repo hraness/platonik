@@ -16,3 +16,6 @@ sha2 = "=0.10.9"
 
 [profile.release]
 overflow-checks = true
+
+[workspace.lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(kani)"] }
