@@ -7,7 +7,7 @@ import "../lab/lab.css";
 export const metadata: Metadata = {
   title: "Play",
   description:
-    "Play Platonik in your browser: run the deterministic Rust engine on challenges, a field expedition, and continuous habitats — no install, no account.",
+    "Play Platonik in your browser: open a shareable program link from your agent, or write and run a program right here — no install, no account.",
   alternates: { canonical: "/play" },
   openGraph: { url: "/play", siteName: site.name },
 };
@@ -18,12 +18,14 @@ export default function PlayPage() {
       <header className="lab-header">
         <h1>Play Platonik</h1>
         <p>
-          Write a program, run the deterministic engine in this tab, watch the replay. No install,
-          no account — your saves stay in this browser.
+          Open a link your agent shared, or write a program in this tab and run the deterministic
+          engine. No install, no account — every program hash is checked before it runs, and your
+          saves stay in this browser.
         </p>
         <p className="lab-note">
-          Every run produces a receipt the Rust engine can independently verify — the same engine
-          behind the command line and the hosted seasons.
+          Your agent can send you a content-addressable URL like
+          /play/p/&lt;hash&gt;?mode=challenges&amp;case=challenge-0001&amp;program=…
+          The browser verifies the program against the hash, loads the same case, and replays it.
         </p>
       </header>
       <Suspense fallback={<p role="status">Loading the Platonik engine…</p>}>
