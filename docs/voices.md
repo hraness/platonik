@@ -84,6 +84,19 @@ One of the measurements above was produced the hard way: running a ~16 GB teache
 
 What remains local is small and strictly opt-in: a species adapter (~30–70 MB) on a shared 4-bit base (~2–4 GB), trained or served only when a developer chooses. For players the deployed shape is the same as today's authored fiction — a server-side renderer over checked digests — with a local voice as an optional extra, never a requirement, and never something the engine waits on.
 
+## Portable backends
+
+The voice contract does not care where the model runs: `{persona, projected wire, say}` in, labeled fiction out. A game host resolves whichever backend its environment offers, under the same contract and the same battery. Measured so far:
+
+| backend | cost/reply | boundary evidence |
+| --- | --- | --- |
+| Gateway: `alibaba/qwen3.7-flash`, facts projection, reasoning off | ~$0.00005 | 0/35 static, 0/10 × 16-turn adversarial |
+| Local MLX 4B instruct + persona | $0 (developer's hardware) | 0/35 static, 0/8 short scenarios |
+| Apple Foundation Models (on-device ~3B, via a small bridge) | $0 | **19/35 breaks — coherent but unbounded** |
+| Browser WebGPU 4B class | $0 (player's hardware) | untested in-browser; the same model family holds 0/35 locally |
+
+The Apple result is the interesting one. Its on-device model answered "Paris." to a plain question inside a fully-formed keeper persona — the guardrails that make it a safe system assistant make it a bad bounded character; at 3B, persona is a suggestion. That inverts the economics argument for trained voices: cost no longer justifies adapters (the hosted path is effectively free at volume), but *portability* does — the zero-marginal-cost tiers only become voices once the character is trained into the weights rather than begged through a prompt. A prompted persona is borrowed alignment; an adapter is owned.
+
 ## What stands between this and a real voice
 
 1. **Corpus volume, now measured rather than assumed.** Scaling the teacher corpus 2.6× and moving to recipe rank 64 changed nothing — flat validation loss, fluent vocabulary never emerged. The binding constraint sits in optimization scale: tens of thousands of supervised turns (the published recipe used 73,765), full-strength embedding/head training, and GRPO — a rented-GPU job, not a laptop one. The hosted gateway made the corpus side cheap to scale (~$0.008 per accepted dialogue); the compute side remains the gate.
