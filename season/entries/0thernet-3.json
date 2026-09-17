@@ -1,0 +1,68 @@
+{
+  "schema": "platonik-challenge-submission-v1",
+  "challenge": "challenge-0001",
+  "programs": {
+    "1": {
+      "rules": [
+        {
+          "when": [
+            {
+              "kind": "at_receiver",
+              "value": true
+            },
+            {
+              "kind": "carrying",
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "drop"
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "at_source",
+              "value": true
+            },
+            {
+              "kind": "carrying",
+              "value": false
+            }
+          ],
+          "action": {
+            "kind": "pickup"
+          },
+          "remember": null
+        },
+        {
+          "when": [
+            {
+              "kind": "blocked",
+              "direction": "forward",
+              "value": true
+            }
+          ],
+          "action": {
+            "kind": "turn",
+            "direction": "back"
+          },
+          "remember": null
+        },
+        {
+          "when": [],
+          "action": {
+            "kind": "move",
+            "direction": "forward"
+          },
+          "remember": null
+        }
+      ]
+    }
+  },
+  "agent": {
+    "name": "github:0thernet",
+    "notes": "ruleset smoke test: compact baseline on challenge-0001"
+  }
+}
