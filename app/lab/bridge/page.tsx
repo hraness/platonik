@@ -3,12 +3,13 @@ import Link from "next/link";
 import { BridgeLab } from "@/components/bridge-lab";
 import "../lab.css";
 import "./bridge.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "The first living circuit",
   description: "Replay real Rust experiments connecting a courier, signals, retained memory, and beacon control in one bounded habitat.",
   alternates: { canonical: "/lab/bridge" },
-  openGraph: { url: "/lab/bridge" },
+  openGraph: { url: "/lab/bridge", siteName: site.name },
 };
 
 export default function BridgePage() {

@@ -7,12 +7,13 @@ import type { ContinuityIndex } from "@/lib/bridge/continuity";
 import "../lab.css";
 import "../bridge/bridge.css";
 import "../habitat/habitat.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Home learns to choose",
   description: "Follow a recorded Rust crew as it calculates a five-bit result, remembers a choice, and attempts a physical delivery.",
   alternates: { canonical: "/lab/ark" },
-  openGraph: { url: "/lab/ark" },
+  openGraph: { url: "/lab/ark", siteName: site.name },
 };
 
 export default async function ArkPage() {

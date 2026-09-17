@@ -7,12 +7,13 @@ import type { ContinuityIndex } from "@/lib/bridge/continuity";
 import "../lab.css";
 import "../bridge/bridge.css";
 import "../habitat/habitat.css";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Help a lost courier find its way",
   description: "Compare recorded Rust navigation failures with a checked repair. Inspect each courier's route, deliveries, and work in the same worlds.",
   alternates: { canonical: "/lab/navigation" },
-  openGraph: { url: "/lab/navigation" },
+  openGraph: { url: "/lab/navigation", siteName: site.name },
 };
 
 export default async function NavigationPage() {
