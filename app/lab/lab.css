@@ -159,3 +159,127 @@
   .specimen-toolbar { font-size: 13px; }
   .lab-panel-intro h2, .lab-panel-intro h3 { font-size: 30px; }
 }
+
+/* Browser-playable surface (Phase 0). */
+.play-viewer { display: grid; grid-template-columns: minmax(280px, .75fr) minmax(0, 1.25fr); gap: 40px; align-items: start; }
+.play-controls h2 { font-size: 22px; margin-bottom: 6px; }
+.play-loaders { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 18px; }
+.play-loaders button { font-size: 12px !important; padding: 8px 10px; }
+.play-editor { width: 100%; min-height: 320px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.6; background: var(--surface); border: 1px solid var(--control-border); padding: 14px; color: var(--ink); tab-size: 2; }
+.play-stage figure { margin: 0; }
+.play-stage .bridge-map { width: 100%; height: auto; max-width: 640px; }
+.play-placeholder { min-height: 280px; display: flex; flex-direction: column; justify-content: center; gap: 12px; border: 1px dashed var(--line); border-radius: .75rem; padding: 28px; }
+.play-actions { display: flex; gap: 12px; margin-top: 12px; }
+.play-pass { color: var(--success, #1a7f37); }
+.play-fail { color: var(--danger); }
+.play-error { color: var(--danger); padding: 18px 0; }
+@media (max-width: 850px) {
+  .play-viewer { grid-template-columns: 1fr; gap: 28px; }
+  .play-stage { order: -1; }
+}
+
+/* Full game shell: track rail + mission picker. */
+.play-shell { margin-top: 28px; }
+.play-tracks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 32px; }
+.play-track { text-align: left; border: 1px solid var(--control-border); background: var(--surface); padding: 14px 16px; border-radius: .75rem; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+.play-track.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.play-track-title { font-weight: 600; font-size: 15px; }
+.play-track-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.play-track-body { min-height: 400px; }
+
+.mission-picker { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+.mission-card { text-align: left; border: 1px solid var(--control-border); background: var(--surface); padding: 12px 14px; border-radius: .65rem; cursor: pointer; max-width: 260px; }
+.mission-card.active { border-color: var(--accent); }
+.mission-card .mission-title { font-weight: 600; font-size: 14px; display: block; }
+.mission-card .mission-detail { font-size: 12px; color: var(--muted); display: block; margin-top: 3px; line-height: 1.5; }
+
+.cell-select { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 8px 14px; font-size: 13px; align-items: center; }
+.cell-select button { font-size: 12px !important; padding: 6px 10px; }
+
+.verdict-banner { border: 1px solid var(--control-border); border-left: 4px solid var(--muted); border-radius: .5rem; padding: 14px 16px; margin-block: 16px; font-size: 15px; }
+.verdict-banner.pass { border-left-color: var(--success, #1a7f37); }
+.verdict-banner.fail { border-left-color: var(--danger); }
+.verdict-banner .verdict-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.verified-badge { font-size: 12px; color: var(--success, #1a7f37); }
+
+/* Replay stage. */
+.replay-stage { margin-top: 4px; }
+.replay-map { margin: 0; }
+.replay-map .bridge-map { width: 100%; height: auto; max-width: 640px; }
+.replay-stage figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.replay-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; }
+.replay-controls .lab-button { min-height: 36px; padding: 6px 14px; font-size: 13px !important; }
+.replay-speed { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.replay-speed select { font-size: 12px; padding: 4px 6px; background: var(--surface); color: var(--ink); border: 1px solid var(--control-border); border-radius: 4px; }
+.replay-scrub { width: 100%; margin-top: 10px; }
+.replay-status { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: var(--muted); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.replay-activity { font-size: 12px; color: var(--muted); margin: 10px 0 0; padding-left: 18px; line-height: 1.7; font-variant-numeric: tabular-nums; }
+
+/* Program editor + agent panel. */
+.program-editor-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.program-editor-head h3 { font-size: 16px; margin: 0; }
+.program-diagnostic { font-size: 12px; margin-top: 6px; }
+.program-diagnostic.ok { color: var(--muted); }
+.program-diagnostic.bad { color: var(--danger); }
+.agent-panel { margin-top: 14px; }
+.agent-panel-body { border: 1px solid var(--control-border); border-radius: .65rem; padding: 16px; margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+.agent-prompt { white-space: pre-wrap; font-size: 11.5px; line-height: 1.55; background: var(--wash); border: 1px solid var(--control-border); border-radius: .5rem; padding: 12px; max-height: 260px; overflow: auto; margin: 0; }
+.agent-paste { min-height: 140px; }
+.agent-paste-label { font-size: 13px; font-weight: 600; }
+
+/* Challenge mode. */
+.challenge-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+.challenge-family h3 { font-size: 15px; margin: 0 0 4px; }
+.challenge-family .family-detail { font-size: 12px; color: var(--muted); margin: 0 0 10px; line-height: 1.5; }
+.challenge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.challenge-cell { border: 1px solid var(--control-border); background: var(--surface); font-size: 12px; padding: 7px 4px; border-radius: 6px; cursor: pointer; text-align: center; font-variant-numeric: tabular-nums; }
+.challenge-cell.active { border-color: var(--accent); font-weight: 700; }
+.challenge-cell .cell-pass { color: var(--success, #1a7f37); }
+.case-results { display: flex; flex-direction: column; gap: 6px; margin-block: 14px; }
+.case-row { display: flex; justify-content: space-between; gap: 12px; border: 1px solid var(--control-border); border-radius: 6px; padding: 8px 12px; font-size: 13px; cursor: pointer; background: var(--surface); }
+.case-row.active { border-color: var(--accent); }
+.case-row .case-id { font-variant-numeric: tabular-nums; }
+.season-entry { margin-top: 16px; font-size: 13px; }
+.season-entry pre { font-size: 11px; max-height: 220px; overflow: auto; background: var(--wash); padding: 10px; border-radius: 6px; }
+
+/* Expedition mode. */
+.expedition-start { max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+.expedition-start input[type="text"], .expedition-start select { font-size: 14px; padding: 10px 12px; background: var(--surface); color: var(--ink); border: 1px solid var(--control-border); border-radius: 6px; }
+.campaign-list { display: flex; flex-direction: column; gap: 8px; margin-block: 16px; }
+.campaign-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid var(--control-border); border-radius: 8px; padding: 10px 14px; background: var(--surface); }
+.campaign-row .campaign-name { font-weight: 600; font-size: 14px; }
+.campaign-row .campaign-meta { font-size: 12px; color: var(--muted); }
+.expedition-header { display: flex; flex-wrap: wrap; gap: 18px; font-size: 13px; color: var(--muted); margin-bottom: 14px; font-variant-numeric: tabular-nums; }
+.expedition-header strong { color: var(--ink); }
+.objective-banner { border-left: 4px solid var(--accent); background: var(--wash); padding: 12px 16px; border-radius: 0 8px 8px 0; font-size: 14px; margin-block: 14px; }
+.ending-reply { border: 1px solid var(--success, #1a7f37); background: var(--wash); padding: 16px 18px; border-radius: 8px; font-size: 14.5px; line-height: 1.7; margin-block: 16px; }
+.case-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-block: 10px; }
+.case-chip { font-size: 11.5px; border: 1px solid var(--control-border); border-radius: 999px; padding: 3px 10px; color: var(--muted); }
+.case-chip.done { border-color: var(--success, #1a7f37); color: var(--success, #1a7f37); }
+.case-chip.failed { border-color: var(--danger); color: var(--danger); }
+.roster { display: flex; flex-direction: column; gap: 6px; margin-block: 12px; }
+.roster-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; border: 1px solid var(--control-border); border-radius: 6px; padding: 8px 12px; background: var(--surface); }
+.trial-form, .grow-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin-block: 14px; }
+.trial-form select, .grow-form select, .grow-form input[type="text"] { font-size: 13px; padding: 8px 10px; background: var(--surface); color: var(--ink); border: 1px solid var(--control-border); border-radius: 6px; }
+.expedition-section { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 22px; }
+.expedition-section h3 { font-size: 16px; margin: 0 0 10px; }
+
+/* Journey mode. */
+.journey-rail { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.journey-rail button { border: 1px solid var(--control-border); background: var(--surface); font-size: 13px; padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+.journey-rail button.active { border-color: var(--accent); font-weight: 600; }
+.journey-detail { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+.advance-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-block: 12px; font-size: 13px; }
+.advance-controls input[type="number"] { width: 90px; font-size: 13px; padding: 8px 10px; background: var(--surface); color: var(--ink); border: 1px solid var(--control-border); border-radius: 6px; }
+.milestone-rail { margin-top: 18px; }
+.pending-warning { border: 1px solid var(--specimen-warm); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-block: 10px; }
+
+@media (max-width: 850px) {
+  .play-tracks { grid-template-columns: repeat(2, 1fr); }
+  .challenge-picker { grid-template-columns: 1fr; }
+  .challenge-grid { grid-template-columns: repeat(8, 1fr); }
+}
+@media (max-width: 480px) {
+  .play-tracks { grid-template-columns: 1fr 1fr; }
+  .challenge-grid { grid-template-columns: repeat(4, 1fr); }
+}
