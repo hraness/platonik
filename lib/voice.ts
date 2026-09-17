@@ -20,6 +20,7 @@ export interface VoiceConfig {
   model: string;
   voice: string;
   persona: string;
+  projection: "facts" | "full";
 }
 
 export interface VoiceRequest {
@@ -63,6 +64,11 @@ export function voiceConfig(env: Record<string, string | undefined> = process.en
     model,
     voice: env.VOICE_NAME ?? "far-beacon",
     persona: env.VOICE_PERSONA ?? DEFAULT_PERSONA,
+    // The wire sent upstream is a projection of the checked digest, not the
+    // digest itself: the response still binds digest_hash either way. "facts"
+    // sends only the citeable propositions plus the declared boundary (~4x
+    // smaller); "full" sends the digest verbatim including the report prose.
+    projection: env.VOICE_DIGEST_PROJECTION === "full" ? "full" : "facts",
   };
 }
 
@@ -84,7 +90,18 @@ export function voiceError(error: string): VoiceError {
   return { schema: VOICE_RESPONSE_SCHEMA, error, fiction: true, disclaimer: DISCLAIMER };
 }
 
+export function projectDigest(digest: VoiceRequest["digest"]): unknown {
+  return {
+    schema: digest.schema,
+    digest_hash: digest.digest_hash,
+    facts: digest.facts,
+    boundary: digest.boundary,
+  };
+}
+
 export function upstreamBody(config: VoiceConfig, request: VoiceRequest): string {
+  const wire =
+    config.projection === "full" ? request.digest : projectDigest(request.digest);
   return JSON.stringify({
     model: config.model,
     max_tokens: MAX_REPLY_TOKENS,
@@ -92,7 +109,7 @@ export function upstreamBody(config: VoiceConfig, request: VoiceRequest): string
     messages: [
       {
         role: "system",
-        content: `${config.persona}\n\nWire digest ${request.digest.digest_hash}:\n${JSON.stringify(request.digest)}`,
+        content: `${config.persona}\n\nWire digest ${request.digest.digest_hash}:\n${JSON.stringify(wire)}`,
       },
       { role: "user", content: request.say },
     ],

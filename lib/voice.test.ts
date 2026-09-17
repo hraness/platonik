@@ -25,6 +25,7 @@ const config: VoiceConfig = {
   model: "test-model",
   voice: "far-beacon",
   persona: "Test persona.",
+  projection: "facts",
 };
 
 describe("voiceConfig", () => {
@@ -71,6 +72,22 @@ describe("upstreamBody", () => {
     expect(body.messages[0].content).toContain("Test persona.");
     expect(body.messages[0].content).toContain(digest.digest_hash);
     expect(body.messages[1]).toEqual({ role: "user", content: "hello" });
+  });
+
+  test("projects the digest to facts + boundary by default", () => {
+    const full = {
+      ...digest,
+      report: { journey: { horizon: 128 } },
+      facts: [{ proposition: "spark 6 returned" }],
+    };
+    const body = JSON.parse(upstreamBody(config, { digest: full, say: "hi" }));
+    const wire = body.messages[0].content;
+    expect(wire).toContain("spark 6 returned");
+    expect(wire).not.toContain("journey");
+    const fullBody = JSON.parse(
+      upstreamBody({ ...config, projection: "full" }, { digest: full, say: "hi" }),
+    );
+    expect(fullBody.messages[0].content).toContain("journey");
   });
 });
 
