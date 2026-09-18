@@ -35,7 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <AppearanceProvider>
           <a href="#main" className="skip-link">Skip to content</a>
           <header className="site-header hraness-material-chrome" data-hraness-marketing-preset="minimal">
-            <Link href="/" className="wordmark" aria-label="Platonik home"><Image className="brand-icon" src="/brand.png" width={48} height={48} alt="" aria-hidden="true" />platonik<span aria-hidden="true">.</span></Link>
+            <Link href="/" className="wordmark" aria-label="Platonik home"><Image className="brand-icon" src="/marks/platonik.svg" width={48} height={48} alt="" aria-hidden="true" unoptimized />platonik<span aria-hidden="true">.</span></Link>
             <nav aria-label="Main navigation">
               <Link href="/play">Living world</Link>
               <Link href="/docs">Field guide</Link>
