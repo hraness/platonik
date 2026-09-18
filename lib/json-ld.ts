@@ -27,8 +27,8 @@ export const websiteJsonLd = {
 } as const;
 
 /**
- * The game the homepage presents. The description keeps its honest "a game in
- * design" status; no release date, rating, or platform is claimed.
+ * The game the homepage presents. The description follows the implemented
+ * living-world boundary; no release date, rating, or platform is claimed.
  */
 export const videoGameJsonLd = {
   "@context": "https://schema.org",

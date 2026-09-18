@@ -1,6 +1,6 @@
 # Platonik game design
 
-Living design proposal, revised 11 September 2026. The website and its bounded browser experiments are implemented. A bounded [Rust bridge and agent play guide](rust-bridge.md) are implemented. A [persistent field expedition](field-expedition.md) now preserves collections and verifies trials. The complete campaign and the in-game leaderboard described here remain proposed; a working [hosted season evaluator](seasons.md) already ranks generated-challenge entries. Campaign creatures, dialogue, and results are illustrative unless linked to a specific recorded experiment.
+Living design proposal, revised 18 September 2026. The first living-world protocol, own-agent command loop, and browser renderer are implemented: one Dustlight homestead carries physical state, construction, program interventions, and cumulative work through bounded advances. The earlier [Rust bridge](rust-bridge.md), [field expedition](field-expedition.md), bounded journeys, and hosted [season evaluator](seasons.md) remain available as engineering evidence. Repeatable production, free-form expansion, the complete Long Trail, and in-world rankings remain proposed. Dialogue and outcomes are illustrative unless linked to a specific engine record.
 
 ## The premise
 
@@ -36,7 +36,7 @@ The world should offer small moments the player can recognize: a courier doublin
 
 ## The first fifteen minutes: The Wound
 
-The intended first session is one complete creation-and-rescue story. This interface remains a storyboard, not a playable tutorial. The [field expedition](field-expedition.md) runs the related persistence, failure, ancestry, frozen-selection, and confirmation loop through an external agent and the local CLI.
+The intended first session is one complete creation-and-rescue story. The implemented Dustlight world now provides its trailhead: the agent preserves a local world, advances or changes it through the CLI, and returns a content-addressed browser view. Its two finite light routes and two supplied foundry blueprints are not yet the full rescue, lineage, or open production loop below. The earlier [field expedition](field-expedition.md) separately runs persistence, failure, ancestry, frozen selection, and confirmation cases.
 
 1. **Make something yours.** Name a starter colony and give it a wish: “Get the light there quickly.” The agent shows one plain-language rule change and runs a short, bounded expedition. See a spark reach its destination before learning a metric.
 2. **Watch its habit.** Inspect three compact map snapshots: departure, the decisive moment, and the outcome. Track the same cells between frames. A short explanation connects their movements to the change you requested.

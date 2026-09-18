@@ -3,5 +3,5 @@ export const site = {
   url: "https://platonik.space",
   repository: "https://github.com/hraness/platonik",
   description:
-    "Play an engineering game in your browser with your AI. Run the deterministic Rust engine, share content-addressable program URLs, and explore what small creatures can become.",
+    "Build a persistent automation world with your AI agent, then watch its creatures, resources, construction, and consequences in a deterministic browser renderer.",
 } as const;

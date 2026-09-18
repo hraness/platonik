@@ -12,6 +12,9 @@ declare module "platonik-wasm" {
   export function challenge_info(index: number): string;
   export function evaluate_challenge(challengeJson: string, submissionJson: string): string;
   export function make_submission(challengeJson: string, programsJson: string, agentName?: string): string;
+  export function world_new(name: string): string;
+  export function world_apply(worldJson: string, commandJson: string): string;
+  export function world_report(worldJson: string): string;
   export function reference_program(name: string): string;
   export function journey_catalog(): string;
   export function journey_experiment(caseId: string): string;

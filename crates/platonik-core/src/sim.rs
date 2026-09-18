@@ -659,6 +659,257 @@ pub fn run(experiment: &Experiment) -> Result<RunResult, String> {
     run_through(experiment, experiment.ticks, None)
 }
 
+pub(crate) struct WorldSegment {
+    pub status: RunStatus,
+    pub ticks_completed: u32,
+    pub costs: Costs,
+    pub frames: Vec<Frame>,
+    pub final_state: State,
+}
+
+struct Runtime {
+    status: RunStatus,
+    ticks_completed: u32,
+    meter: Meter,
+    frames: Vec<Frame>,
+    final_state: State,
+}
+
+fn advance_ticks(
+    experiment: &Experiment,
+    runtime: Runtime,
+    through_tick: u32,
+    initial_sparks: u32,
+) -> Result<Runtime, String> {
+    let Runtime {
+        mut status,
+        mut ticks_completed,
+        mut meter,
+        mut frames,
+        final_state: mut state,
+    } = runtime;
+    for tick in ticks_completed + 1..=through_tick {
+        let eligible = active_order(experiment, &state, tick);
+        state.tick = tick;
+        let mut frame = Frame {
+            tick,
+            complete: false,
+            events: Vec::new(),
+            signals: Vec::new(),
+            activations: Vec::new(),
+            state: state.clone(),
+            costs: meter.costs.clone(),
+        };
+        let result = (|| -> Result<(), Stop> {
+            meter.charge(Cat::Scheduling, 1)?;
+            // Old inboxes are transient; only explicit byte registers preserve a received value.
+            for cell in &mut state.cells {
+                for port in &mut cell.inbox {
+                    if let Some(signal) = port.as_ref() {
+                        meter.charge(Cat::Messages, 1)?;
+                        frame.signals.push(SignalEvent {
+                            signal: signal.clone(),
+                            outcome: "expired".into(),
+                        });
+                        *port = None;
+                    }
+                }
+            }
+            for event in experiment.events.iter().filter(|event| event.tick == tick) {
+                let mut next = state.clone();
+                meter.charge(Cat::Checking, 1)?;
+                match event.event {
+                    EventKind::LinkEnabled { id, enabled } => {
+                        meter.charge(Cat::Actions, 1)?;
+                        next.links
+                            .iter_mut()
+                            .find(|link| link.id == id)
+                            .unwrap()
+                            .enabled = enabled;
+                    }
+                    EventKind::ValveEnabled { id, enabled } => {
+                        meter.charge(Cat::Actions, 1)?;
+                        next.valves
+                            .iter_mut()
+                            .find(|valve| valve.id == id)
+                            .unwrap()
+                            .enabled = enabled;
+                    }
+                    EventKind::ClearMemory { cell } => {
+                        meter.charge(Cat::MemoryWrites, 4)?;
+                        let actor = next
+                            .cells
+                            .iter_mut()
+                            .find(|actor| actor.id == cell)
+                            .unwrap();
+                        actor.memory = [0; 4];
+                        actor.evidence = [None; 4];
+                    }
+                    EventKind::EdgeBlocked { edge, blocked } => {
+                        meter.charge(Cat::Checking, next.closed_edges.len() as u64)?;
+                        meter.charge(Cat::Actions, 1)?;
+                        match next.closed_edges.binary_search(&edge) {
+                            Ok(index) if !blocked => {
+                                next.closed_edges.remove(index);
+                            }
+                            Err(index) if blocked => {
+                                next.closed_edges.insert(index, edge);
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+                state = next;
+                frame.events.push(event.event.clone());
+            }
+            let due: Vec<_> = state
+                .pending
+                .iter()
+                .filter(|signal| signal.deliver_tick <= tick)
+                .map(|signal| signal.id)
+                .collect();
+            for id in due {
+                meter.charge(Cat::Messages, 1)?;
+                meter.charge(Cat::Checking, 1)?;
+                let index = state
+                    .pending
+                    .iter()
+                    .position(|signal| signal.id == id)
+                    .unwrap();
+                let signal = state.pending.remove(index);
+                let link = state
+                    .links
+                    .iter()
+                    .find(|link| link.id == signal.link)
+                    .unwrap();
+                let recipient = state
+                    .cells
+                    .iter()
+                    .position(|cell| cell.id == signal.to_cell)
+                    .unwrap();
+                let adjacent = origin_position(experiment, &state, &signal.from)
+                    .distance(state.cells[recipient].position)
+                    == 1;
+                let outcome = if !link.enabled {
+                    "disabled"
+                } else if !adjacent {
+                    "not_adjacent"
+                } else if state.cells[recipient].inbox[signal.to_port as usize].is_some() {
+                    "full"
+                } else {
+                    state.cells[recipient].inbox[signal.to_port as usize] = Some(signal.clone());
+                    "delivered"
+                };
+                frame.signals.push(SignalEvent {
+                    signal,
+                    outcome: outcome.into(),
+                });
+            }
+            for id in eligible {
+                let index = state.cells.iter().position(|cell| cell.id == id).unwrap();
+                let (activation, signals, limit) =
+                    policy::activate(experiment, &mut state, index, &mut meter);
+                frame.activations.push(activation);
+                frame.signals.extend(signals);
+                if let Some(stop) = limit {
+                    if stop == Stop::Fuel {
+                        return Err(stop);
+                    }
+                    status = RunStatus::ActivationLimit;
+                }
+            }
+            for (index, beacon) in experiment.beacons.iter().enumerate() {
+                meter.charge(Cat::Checking, 1)?;
+                if tick % beacon.drain_every == 0 {
+                    meter.charge(Cat::Draining, 1)?;
+                    let drained = state.beacons[index].charge.min(beacon.drain_amount);
+                    state.beacons[index].charge -= drained;
+                    state.beacons[index].drained += drained;
+                    if state.beacons[index].charge == 0 {
+                        state.beacons[index].exhausted = true;
+                    }
+                }
+            }
+            // Reserve modeled checking work before checking identities and beacon energy below.
+            meter.charge(
+                Cat::Checking,
+                state.cells.len() as u64
+                    + state.beacons.len() as u64
+                    + initial_sparks as u64
+                    + state.closed_edges.len() as u64
+                    + construction::state_checking(&state),
+            )?;
+            Ok(())
+        })();
+        if result.is_ok() {
+            check_live_invariants(experiment, &state)?;
+        }
+        frame.complete = result.is_ok();
+        frame.state = state.clone();
+        frame.costs = meter.costs.clone();
+        frames.push(frame);
+        if result.is_err() {
+            status = RunStatus::FuelExhausted;
+            break;
+        }
+        ticks_completed += 1;
+    }
+    Ok(Runtime {
+        status,
+        ticks_completed,
+        meter,
+        frames,
+        final_state: state,
+    })
+}
+
+pub(crate) fn continue_world(
+    experiment: &Experiment,
+    state: &State,
+    costs: &Costs,
+    through_tick: u32,
+    operation_fuel: u64,
+) -> Result<WorldSegment, String> {
+    validate_experiment(experiment)?;
+    require(
+        state.tick < through_tick && through_tick - state.tick <= MAX_TICKS,
+        "World advances require 1–128 later ticks.",
+    )?;
+    check_live_invariants(experiment, state)?;
+    let initial_sparks = experiment
+        .sources
+        .iter()
+        .map(|source| source.sparks.len() as u32)
+        .sum();
+    let fuel = costs
+        .total()
+        .checked_add(operation_fuel)
+        .ok_or("World operation fuel overflow.")?;
+    let runtime = advance_ticks(
+        experiment,
+        Runtime {
+            status: RunStatus::Complete,
+            ticks_completed: state.tick,
+            meter: Meter {
+                costs: costs.clone(),
+                fuel,
+                activation: None,
+            },
+            frames: Vec::new(),
+            final_state: state.clone(),
+        },
+        through_tick,
+        initial_sparks,
+    )?;
+    Ok(WorldSegment {
+        status: runtime.status,
+        ticks_completed: runtime.ticks_completed,
+        costs: runtime.meter.costs,
+        frames: runtime.frames,
+        final_state: runtime.final_state,
+    })
+}
+
 /// The optional prefix is admitted only by continuation's checked replay path.
 /// This crate-private driver never makes a caller-supplied state authoritative.
 pub(crate) fn run_through(
@@ -753,173 +1004,23 @@ pub(crate) fn run_through(
             (state, meter, status, frames, 0)
         };
     if frames.last().unwrap().complete {
-        for tick in ticks_completed + 1..=through_tick {
-            let eligible = active_order(experiment, &state, tick);
-            state.tick = tick;
-            let mut frame = Frame {
-                tick,
-                complete: false,
-                events: Vec::new(),
-                signals: Vec::new(),
-                activations: Vec::new(),
-                state: state.clone(),
-                costs: meter.costs.clone(),
-            };
-            let result = (|| -> Result<(), Stop> {
-                meter.charge(Cat::Scheduling, 1)?;
-                // Old inboxes are transient; only explicit byte registers preserve a received value.
-                for cell in &mut state.cells {
-                    for port in &mut cell.inbox {
-                        if let Some(signal) = port.as_ref() {
-                            meter.charge(Cat::Messages, 1)?;
-                            frame.signals.push(SignalEvent {
-                                signal: signal.clone(),
-                                outcome: "expired".into(),
-                            });
-                            *port = None;
-                        }
-                    }
-                }
-                for event in experiment.events.iter().filter(|event| event.tick == tick) {
-                    let mut next = state.clone();
-                    meter.charge(Cat::Checking, 1)?;
-                    match event.event {
-                        EventKind::LinkEnabled { id, enabled } => {
-                            meter.charge(Cat::Actions, 1)?;
-                            next.links
-                                .iter_mut()
-                                .find(|link| link.id == id)
-                                .unwrap()
-                                .enabled = enabled;
-                        }
-                        EventKind::ValveEnabled { id, enabled } => {
-                            meter.charge(Cat::Actions, 1)?;
-                            next.valves
-                                .iter_mut()
-                                .find(|valve| valve.id == id)
-                                .unwrap()
-                                .enabled = enabled;
-                        }
-                        EventKind::ClearMemory { cell } => {
-                            meter.charge(Cat::MemoryWrites, 4)?;
-                            let actor = next
-                                .cells
-                                .iter_mut()
-                                .find(|actor| actor.id == cell)
-                                .unwrap();
-                            actor.memory = [0; 4];
-                            actor.evidence = [None; 4];
-                        }
-                        EventKind::EdgeBlocked { edge, blocked } => {
-                            meter.charge(Cat::Checking, next.closed_edges.len() as u64)?;
-                            meter.charge(Cat::Actions, 1)?;
-                            match next.closed_edges.binary_search(&edge) {
-                                Ok(index) if !blocked => {
-                                    next.closed_edges.remove(index);
-                                }
-                                Err(index) if blocked => {
-                                    next.closed_edges.insert(index, edge);
-                                }
-                                _ => {}
-                            }
-                        }
-                    }
-                    state = next;
-                    frame.events.push(event.event.clone());
-                }
-                let due: Vec<_> = state
-                    .pending
-                    .iter()
-                    .filter(|signal| signal.deliver_tick <= tick)
-                    .map(|signal| signal.id)
-                    .collect();
-                for id in due {
-                    meter.charge(Cat::Messages, 1)?;
-                    meter.charge(Cat::Checking, 1)?;
-                    let index = state
-                        .pending
-                        .iter()
-                        .position(|signal| signal.id == id)
-                        .unwrap();
-                    let signal = state.pending.remove(index);
-                    let link = state
-                        .links
-                        .iter()
-                        .find(|link| link.id == signal.link)
-                        .unwrap();
-                    let recipient = state
-                        .cells
-                        .iter()
-                        .position(|cell| cell.id == signal.to_cell)
-                        .unwrap();
-                    let adjacent = origin_position(experiment, &state, &signal.from)
-                        .distance(state.cells[recipient].position)
-                        == 1;
-                    let outcome = if !link.enabled {
-                        "disabled"
-                    } else if !adjacent {
-                        "not_adjacent"
-                    } else if state.cells[recipient].inbox[signal.to_port as usize].is_some() {
-                        "full"
-                    } else {
-                        state.cells[recipient].inbox[signal.to_port as usize] =
-                            Some(signal.clone());
-                        "delivered"
-                    };
-                    frame.signals.push(SignalEvent {
-                        signal,
-                        outcome: outcome.into(),
-                    });
-                }
-                for id in eligible {
-                    let index = state.cells.iter().position(|cell| cell.id == id).unwrap();
-                    let (activation, signals, limit) =
-                        policy::activate(experiment, &mut state, index, &mut meter);
-                    frame.activations.push(activation);
-                    frame.signals.extend(signals);
-                    if let Some(stop) = limit {
-                        if stop == Stop::Fuel {
-                            return Err(stop);
-                        }
-                        status = RunStatus::ActivationLimit;
-                    }
-                }
-                for (index, beacon) in experiment.beacons.iter().enumerate() {
-                    meter.charge(Cat::Checking, 1)?;
-                    if tick % beacon.drain_every == 0 {
-                        meter.charge(Cat::Draining, 1)?;
-                        let drained = state.beacons[index].charge.min(beacon.drain_amount);
-                        state.beacons[index].charge -= drained;
-                        state.beacons[index].drained += drained;
-                        if state.beacons[index].charge == 0 {
-                            state.beacons[index].exhausted = true;
-                        }
-                    }
-                }
-                // Reserve modeled checking work before checking identities and beacon energy below.
-                meter.charge(
-                    Cat::Checking,
-                    state.cells.len() as u64
-                        + state.beacons.len() as u64
-                        + initial_sparks as u64
-                        + state.closed_edges.len() as u64
-                        + construction::state_checking(&state),
-                )?;
-                Ok(())
-            })();
-            if result.is_ok() {
-                check_live_invariants(experiment, &state)?;
-            }
-            frame.complete = result.is_ok();
-            frame.state = state.clone();
-            frame.costs = meter.costs.clone();
-            frames.push(frame);
-            if result.is_err() {
-                status = RunStatus::FuelExhausted;
-                break;
-            }
-            ticks_completed += 1;
-        }
+        let runtime = advance_ticks(
+            experiment,
+            Runtime {
+                status,
+                ticks_completed,
+                meter,
+                frames,
+                final_state: state,
+            },
+            through_tick,
+            initial_sparks,
+        )?;
+        state = runtime.final_state;
+        meter = runtime.meter;
+        status = runtime.status;
+        frames = runtime.frames;
+        ticks_completed = runtime.ticks_completed;
     }
     let mut measured_outcome = outcome(experiment, &state, status, initial_sparks);
     measured_outcome.passed &= ticks_completed == experiment.ticks;

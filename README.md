@@ -1,12 +1,23 @@
 # Platonik
 
-Platonik is an engineering game in development about making creatures with your AI, helping them survive, and discovering what else they can do. In the local prototype, you describe a wish in chat; an external agent edits a small program, runs it in a deterministic Rust world, and helps improve it. Deeper play leads to collective behavior and independently checked competition.
+Platonik is an automation game you play with your AI agent. You describe an ambition; the agent changes a checked local Rust world; the browser lets you follow its creatures, supplies, construction, and consequences. The core loop is **wish → build → watch → notice → improve**.
 
-This repository implements the **website and browser observatory** for [platonik.space](https://platonik.space), using Next.js on Vercel. The observatory has four bounded local experiments: editable courier programs with collectible structural portraits, coupled fuzzy-truth systems, a world-cost calculator, and a signal workbench for circuits and budgeted blueprint assembly. It also implements a **bounded Rust habitat prototype**, a real agent-facing CLI, immutable checked receipts, and a portable play skill. Its [recorded bridge](https://platonik.space/lab/bridge) connects physical delivery, signals, memory, and service routing. The [field expedition](docs/field-expedition.md) adds a persistent collection, checked local saves, scheduled route closure, and frozen transfer trials. The [continuous habitat](docs/continuous-habitat.md) carries cargo, memory, queued reports, service charge, and cumulative work across checked pauses and restoration. A deterministic [generated-challenge eval](docs/challenges.md) and [hosted seasons](docs/seasons.md) are live: entrants open pull requests, the evaluator scores programs on withheld salt-derived cases, and verified results plus standings land in the repository. The complete campaign and in-world breeding remain unimplemented. Older observatory traces come from their separate TypeScript models.
+This repository implements the first **living-world protocol**, agent-facing CLI, browser renderer, immutable event history, and portable play skill. A world carries programs, cargo, memory, construction, source stock, beacon charge, and cumulative work across bounded advances. The initial Dustlight homestead has two light routes, two foundry blueprints, and finite material for both constructions. Repeatable production, free-form building, larger maps, and the complete Long Trail remain future engine work. The older observatory, generated challenges, hosted seasons, expeditions, and bounded journeys remain available as engineering evidence rather than parallel foreground games.
 
-## Play in the browser
+## Open the world
 
-Open [platonik.space/play](https://platonik.space/play) to run the deterministic engine in this tab. Your agent can write a program in the Rust CLI, build a shareable content-addressable URL like `https://platonik.space/play/p/<hash>?mode=challenges&case=challenge-0001&program=<base64url-program>`, and send it to you. Opening the link checks the program hash, loads the same case, and replays it. No install or account is required for the browser tracks; the command line remains available for larger, scripted, or offline work.
+Open [platonik.space/play](https://platonik.space/play) to watch Dustlight. The browser recomputes and renders the world, but does not edit or advance it. Give your agent [the play skill](skills/platonik-play/SKILL.md); it preserves the local JSON save, applies bounded commands, and returns a content-addressed `/play/w/<world-hash>?world=…` view. No account or install is required to inspect a view. Changing the world uses the local Rust CLI through your own agent.
+
+```sh
+cargo build --release --locked -p platonik-cli
+./target/release/platonik world new Dustlight > dustlight-r0.world.json
+./target/release/platonik world report dustlight-r0.world.json
+printf '%s' '{"kind":"advance","ticks":32}' \
+  | ./target/release/platonik world act dustlight-r0.world.json - > dustlight-r1.world.json
+./target/release/platonik world link dustlight-r1.world.json
+```
+
+Use a new output file for every action; shell redirection can truncate an input before the CLI reads it.
 
 ## Explore the design
 
@@ -26,17 +37,17 @@ The growing [symbols and facts glossary](docs/symbols-and-facts.md) adds a Wittg
 
 The [shared economy](docs/economy.md) proposes a multiplayer expedition board around local play: commission checked improvements and publish reusable discoveries. The [storage and cost decision](docs/storage.md) compares a small Convex service with SQL alternatives, plus R2 artifacts and cached public views. Credits, escrow, and hosted market services remain unimplemented.
 
-## Run a short journey
+## Inspect the archived engineering journeys
 
-The full Long Trail is not one playable campaign yet, but five bounded local journeys can be run today:
+The living world is the primary game. Five earlier bounded journeys remain runnable as focused engine evidence:
 
 | Journey | What it connects | Play | Guide |
 | --- | --- | --- | --- |
-| First camp | Persistent collection, ancestry, a closing route, frozen confirmation cases | [Open](https://platonik.space/play?mode=expedition) | [Field expedition](docs/field-expedition.md) |
-| The First Answer | Finite construction, continuing service, and a checked contact ending | [Open](https://platonik.space/play?mode=journeys&case=answer) | [Bring a signal home](docs/first-answer.md) |
-| Ark control | Physical input, four-bit arithmetic, retained control, and a payload decision | [Open](https://platonik.space/play?mode=journeys&case=ark) | [Give home a plan](docs/ark-control.md) |
-| Port commitments | Physical custody, lost replies, acknowledgment, service, and finite spares | [Open](https://platonik.space/play?mode=journeys&case=ports) | [Keep a promise](docs/port-commitments.md) |
-| Bloom exchange | Bounded variation, physical selection, a request, delivery, and acknowledgment | [Open](https://platonik.space/play?mode=journeys&case=exchange) | [Run the one-lane exchange](docs/composition-v5-gate.md) |
+| First camp | Persistent collection, ancestry, a closing route, frozen confirmation cases | [Open](https://platonik.space/play/lab?mode=expedition) | [Field expedition](docs/field-expedition.md) |
+| The First Answer | Finite construction, continuing service, and a checked contact ending | [Open](https://platonik.space/play/lab?mode=journeys&case=answer) | [Bring a signal home](docs/first-answer.md) |
+| Ark control | Physical input, four-bit arithmetic, retained control, and a payload decision | [Open](https://platonik.space/play/lab?mode=journeys&case=ark) | [Give home a plan](docs/ark-control.md) |
+| Port commitments | Physical custody, lost replies, acknowledgment, service, and finite spares | [Open](https://platonik.space/play/lab?mode=journeys&case=ports) | [Keep a promise](docs/port-commitments.md) |
+| Bloom exchange | Bounded variation, physical selection, a request, delivery, and acknowledgment | [Open](https://platonik.space/play/lab?mode=journeys&case=exchange) | [Run the one-lane exchange](docs/composition-v5-gate.md) |
 
 They share the deterministic interpreter, checker, cost model, and replay discipline. They do not yet share one continuous campaign progression: finishing one does not unlock the next, the field expedition's trials start separate declared worlds, and moving arks and independent settlements remain proposals.
 

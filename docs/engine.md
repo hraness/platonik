@@ -1,10 +1,10 @@
 # Rust engine and agent interface proposal
 
-Campaign-engine proposal, revised 17 September 2026. The stateless Rust bridge, [persistent field expedition](field-expedition.md), continuous saved habitat, finite construction, [First Answer](first-answer.md), [ark control](ark-control.md), [port commitments](port-commitments.md), Bloom, and one-lane generated-courier exchange are implemented. They preserve ancestry, failures, physical state, costs, and replay under bounded contracts. Automatic open-ended breeding and the full campaign commands below remain future work.
+Campaign-engine proposal, revised 18 September 2026. A first persistent automation-world protocol is implemented alongside the stateless Rust bridge, [field expedition](field-expedition.md), continuous saved habitat, finite construction, [First Answer](first-answer.md), [ark control](ark-control.md), [port commitments](port-commitments.md), Bloom, and one-lane generated-courier exchange. `platonik world` carries one homestead through bounded advances and recorded policy interventions; `/play` recomputes its content-addressed history as a read-only visual world. Repeatable production, free-form construction, automatic open-ended breeding, and the full campaign remain future work.
 
 The implemented [browser observatory](observatory.md) contains separate, bounded TypeScript demonstrators. Its single courier, fuzzy truth maps, cost calculator, and signal workbench do not implement the Rust journeys. Their JSON formats are laboratory formats, not released Rust CLI schemas; the recorded Rust pages display checked artifacts instead of reimplementing the simulation.
 
-The [Autoverse path](autoverse.md) defines the module interfaces and capability dependencies. The current Rust slices now connect transport, signals, memory, construction, arithmetic, control, bounded variation, physical custody, and acknowledgment under one interpreter and ledger. The remaining integration milestone is progression-level: carry selected creations and consequences through a compressed Long Trail rather than resetting between independently declared journeys.
+The [Autoverse path](autoverse.md) defines the module interfaces and capability dependencies. The current Rust slices connect transport, signals, memory, construction, arithmetic, control, bounded variation, physical custody, and acknowledgment under one interpreter and ledger. The living-world protocol establishes progression-level continuity for transport and a finite two-blueprint foundry. The remaining integration work is to make production and construction repeatable, admit new sites and blueprints, and carry those consequences toward a compressed Long Trail instead of resetting between independently declared journeys.
 
 ## The agent runs the laboratory
 
@@ -47,6 +47,21 @@ Keep observer notation separate from executable policy notation. A notebook can 
 Record the expression and definition versions, object bindings, snapshot or trace identity, and check scope with every checked claim. Where evidence is missing, retain an unknown or unassessed status; do not confuse it with a false expression or a failed task. Reject malformed or ill-typed expressions separately as invalid. A compound claim requires compatible scope and evidence for its components. Check records stay attached to their original state and scope when the world advances; unchecked claims are not observations.
 
 Begin with expressions already supported by the transport rules and an observer-side notebook: for example, “carrying a spark and the adjacent route is blocked.” A name for that condition does not add a remote sensor. Open-ended predicates, communication vocabularies, and theorem proving are later proposals, not requirements for the first playable release.
+
+## The living-world command surface
+
+The implemented agent loop uses immutable JSON revisions:
+
+```text
+platonik world new Dustlight
+platonik world report dustlight-r0.world.json
+platonik world act dustlight-r0.world.json advance.json
+platonik world link dustlight-r1.world.json
+```
+
+`act` accepts a 1–128-tick advance or a complete admitted policy replacement for an original cell. Program changes do not move time. Each world records its genesis and intervention/advance endpoints; report and browser rendering freshly replay that compact history. The initial protocol permits 4,096 ticks and 128 events while retaining the engine's 16-cell, local-sensing, material, and execution limits. The homestead provides two construction blueprints and exactly two material units, not a repeatable recipe system.
+
+Use a new output filename for every action. The content-addressed browser URL identifies and contains a compact history; the local JSON remains the agent's authoritative working save. The browser exposes replay, selection, and inspection but no world mutation controls.
 
 ## A small command surface
 

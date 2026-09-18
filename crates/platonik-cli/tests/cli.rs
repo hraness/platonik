@@ -243,6 +243,39 @@ fn redirected_help_and_machine_outputs_have_no_terminal_intro() {
     }
 }
 
+#[test]
+fn agent_world_commands_produce_replayable_browser_views() {
+    let created = cli(&["world", "new", "Rustlight"], None);
+    assert!(created.status.success());
+    let original = InputFile::new(&created.stdout);
+    let command = br#"{"kind":"advance","ticks":32}"#;
+    let advanced = cli(&["world", "act", original.path(), "-"], Some(command));
+    assert!(
+        advanced.status.success(),
+        "{}",
+        String::from_utf8_lossy(&advanced.stderr)
+    );
+    let current = InputFile::new(&advanced.stdout);
+    let report = cli(&["world", "report", current.path()], None);
+    assert!(report.status.success());
+    assert_eq!(json(&report.stdout)["tick"], 32);
+    assert!(
+        json(&report.stdout)["summary"]["deliveries"]
+            .as_u64()
+            .unwrap()
+            > 0
+    );
+    let link = cli(&["world", "link", current.path()], None);
+    assert!(link.status.success());
+    let link = json(&link.stdout);
+    assert_eq!(link["schema"], "platonik-world-link-v1");
+    let url = link["url"].as_str().unwrap();
+    assert!(url.starts_with("https://platonik.space/play/w/"));
+    let opened = cli(&["world", "open-link", url], None);
+    assert!(opened.status.success());
+    assert_eq!(json(&opened.stdout), json(&advanced.stdout));
+}
+
 #[cfg(unix)]
 #[test]
 fn non_utf8_arguments_are_structured_errors_instead_of_panics() {

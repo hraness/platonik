@@ -1,4 +1,4 @@
-use platonik_core::{challenge, check, fixtures, model::Experiment, season, suite};
+use platonik_core::{challenge, check, fixtures, model::Experiment, season, suite, world};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use std::collections::BTreeMap;
@@ -31,6 +31,7 @@ Usage:\n\
   platonik season help              Show hosted season commands\n\
   platonik expedition help          Show durable local expedition commands\n\
   platonik habitat help             Show continuous-habitat checkpoint commands\n\
+  platonik world help               Show persistent automation-world commands\n\
   platonik support                  Show optional development support\n\
   platonik support protocol --json  Read the agent invitation lifecycle\n\
   platonik --metrics <command...>   Emit process execution metrics on stderr\n\
@@ -208,6 +209,25 @@ actual engine executions including history/prefix replays. Reads advance no\n\
 physical time. Objects: 32 MiB; export/import: 64 MiB; local store: 256 MiB.\n\
 Existing expedition-v1 saves remain a separate format.\n";
 
+const WORLD_HELP: &str = "Persistent Platonik automation worlds\n\n\
+  platonik world new [name]                  Print a new homestead world\n\
+  platonik world report <world.json|->       Verify and inspect the current world\n\
+  platonik world act <world.json> <command.json|->\n\
+                                              Apply one bounded command\n\
+  platonik world program <upper|lower>        Print a homestead foundry policy\n\
+  platonik world link <world.json|->         Print a content-addressed browser view\n\
+  platonik world open-link <url>              Recover and verify its compact world JSON\n\n\
+Commands are {\"kind\":\"advance\",\"ticks\":32} or\n\
+{\"kind\":\"set_program\",\"cell\":1,\"program\":{...}}. The world records\n\
+only admitted interventions and bounded advance endpoints; every report freshly\n\
+replays them in the Rust engine. Programs, cargo, memory, construction, supplies,\n\
+beacon charge, and cumulative work carry forward. An advance runs 1–128 ticks;\n\
+the first protocol is capped at 4,096 ticks and 128 events. Use a new output\n\
+filename for act; shell redirection can truncate its input before Platonik reads it.\n\
+The browser link contains the compact world history, verifies its content hash, and\n\
+renders the same recomputed state. The browser is a viewer; use your agent and this\n\
+command surface to change or advance the world.\n";
+
 #[derive(Serialize)]
 struct ErrorReport<'a> {
     schema: &'static str,
@@ -341,6 +361,7 @@ fn execute(args: &[String]) -> Result<u8, Failure> {
         [command, rest @ ..] if command == "season" => execute_season(rest),
         [command, rest @ ..] if command == "expedition" => execute_expedition(rest),
         [command, rest @ ..] if command == "habitat" => execute_habitat(rest),
+        [command, rest @ ..] if command == "world" => execute_world(rest),
         [] => {
             terminal_help::print_root_help(HELP)
                 .map_err(|cause| Failure::new("output_io", cause.to_string()))?;
@@ -828,6 +849,159 @@ fn execute_season(args: &[String]) -> Result<u8, Failure> {
         _ => Err(Failure::new(
             "usage",
             "Unknown season command or arguments. Run 'platonik season help'.",
+        )),
+    }
+}
+
+fn base64url(bytes: &[u8]) -> String {
+    const ALPHABET: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    let mut output = String::with_capacity(bytes.len().div_ceil(3) * 4);
+    for chunk in bytes.chunks(3) {
+        let value = u32::from(chunk[0]) << 16
+            | u32::from(*chunk.get(1).unwrap_or(&0)) << 8
+            | u32::from(*chunk.get(2).unwrap_or(&0));
+        output.push(ALPHABET[((value >> 18) & 63) as usize] as char);
+        output.push(ALPHABET[((value >> 12) & 63) as usize] as char);
+        if chunk.len() > 1 {
+            output.push(ALPHABET[((value >> 6) & 63) as usize] as char);
+        }
+        if chunk.len() > 2 {
+            output.push(ALPHABET[(value & 63) as usize] as char);
+        }
+    }
+    output
+}
+
+fn decode_base64url(value: &str) -> Result<Vec<u8>, Failure> {
+    let mut output = Vec::with_capacity(value.len() * 3 / 4);
+    let mut accumulator = 0_u32;
+    let mut bits = 0_u8;
+    for byte in value.bytes() {
+        let digit = match byte {
+            b'A'..=b'Z' => byte - b'A',
+            b'a'..=b'z' => byte - b'a' + 26,
+            b'0'..=b'9' => byte - b'0' + 52,
+            b'-' => 62,
+            b'_' => 63,
+            _ => return Err(Failure::new("invalid_world", "Invalid world URL encoding.")),
+        };
+        accumulator = (accumulator << 6) | u32::from(digit);
+        bits += 6;
+        if bits >= 8 {
+            bits -= 8;
+            output.push(((accumulator >> bits) & 0xff) as u8);
+            accumulator &= if bits == 0 { 0 } else { (1 << bits) - 1 };
+        }
+    }
+    if bits > 0 && accumulator & ((1 << bits) - 1) != 0 {
+        return Err(Failure::new(
+            "invalid_world",
+            "World URL has non-canonical trailing bits.",
+        ));
+    }
+    Ok(output)
+}
+
+fn execute_world(args: &[String]) -> Result<u8, Failure> {
+    let error = |message| Failure::new("invalid_world", message);
+    match args {
+        [] => {
+            print_text(WORLD_HELP)?;
+            Ok(0)
+        }
+        [command] if matches!(command.as_str(), "help" | "--help" | "-h") => {
+            print_text(WORLD_HELP)?;
+            Ok(0)
+        }
+        [command] if command == "new" => {
+            let value = world::new(
+                "Dustlight".into(),
+                platonik_core::world_fixtures::homestead(),
+            )
+            .map_err(error)?;
+            print_json(&value)?;
+            Ok(0)
+        }
+        [command, name] if command == "new" => {
+            let value = world::new(name.clone(), platonik_core::world_fixtures::homestead())
+                .map_err(error)?;
+            print_json(&value)?;
+            Ok(0)
+        }
+        [command, plan] if command == "program" => {
+            let blueprint = match plan.as_str() {
+                "upper" => 50,
+                "lower" => 51,
+                _ => return Err(error("World foundry plans are upper or lower.".into())),
+            };
+            print_json(&platonik_core::world_fixtures::builder_program(blueprint).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, path] if command == "report" => {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            print_json(&world::report(&value).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, path, input] if command == "act" && path != "-" => {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let command: world::Command = read_json(input, MAX_EXPERIMENT_BYTES)?;
+            print_json(&world::apply(&value, command).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, url] if command == "open-link" => {
+            let rest = url
+                .strip_prefix("https://platonik.space/play/w/")
+                .ok_or_else(|| {
+                    error("World links must come from https://platonik.space/play/w/.".into())
+                })?;
+            let (expected, packed) = rest
+                .split_once("?world=")
+                .ok_or_else(|| error("World link is missing its compact history.".into()))?;
+            if packed.len() > 12_000 || packed.contains('&') || packed.contains('#') {
+                return Err(error(
+                    "World link exceeds its bounded canonical form.".into(),
+                ));
+            }
+            let bytes = decode_base64url(packed)?;
+            let value: world::World = serde_json::from_slice(&bytes)
+                .map_err(|cause| error(format!("Invalid world JSON in link: {cause}")))?;
+            let report = world::report(&value).map_err(error)?;
+            if report.world_hash != expected {
+                return Err(error(
+                    "World link content does not match its path hash.".into(),
+                ));
+            }
+            print_json(&value)?;
+            Ok(0)
+        }
+        [command, path] if command == "link" => {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let report = world::report(&value).map_err(error)?;
+            let bytes = serde_json::to_vec(&value)
+                .map_err(|cause| Failure::new("output_json", cause.to_string()))?;
+            let packed = base64url(&bytes);
+            if packed.len() > 12_000 {
+                return Err(error(
+                    "World history is too large for a browser URL; keep the checked JSON save."
+                        .into(),
+                ));
+            }
+            let url = format!(
+                "https://platonik.space/play/w/{}?world={packed}",
+                report.world_hash
+            );
+            print_json(&serde_json::json!({
+                "schema": "platonik-world-link-v1",
+                "world_hash": report.world_hash,
+                "revision": report.revision,
+                "tick": report.tick,
+                "url": url,
+            }))?;
+            Ok(0)
+        }
+        _ => Err(Failure::new(
+            "usage",
+            "Unknown world command or arguments. Run 'platonik world help'.",
         )),
     }
 }

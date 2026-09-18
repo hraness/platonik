@@ -1,5 +1,7 @@
 "use client";
 
+import type { Frame, Receipt, State } from "@/lib/bridge/types";
+
 // Typed client over the platonik-wasm JSON bridge. The Rust engine is
 // authoritative; every function here is a thin wrapper that parses the JSON
 // envelope and converts JsError throws into EngineError.
@@ -33,6 +35,9 @@ interface WasmModule {
   expedition_apply(stateJson: string, eventJson: string): string;
   expedition_progress(stateJson: string): string;
   expedition_trial_experiment(stateJson: string, commandJson: string): string;
+  world_new(name: string): string;
+  world_apply(worldJson: string, commandJson: string): string;
+  world_report(worldJson: string): string;
 }
 
 let cached: Promise<WasmModule> | null = null;
@@ -218,6 +223,45 @@ export interface ExpeditionProgress {
   reply: string | null;
 }
 
+export interface LivingWorld {
+  schema: "platonik-living-world-v1";
+  name: string;
+  genesis_hash: string;
+  genesis: unknown;
+  revision: number;
+  events: unknown[];
+}
+
+export type WorldCommand =
+  | { kind: "advance"; ticks: number }
+  | { kind: "set_program"; cell: number; program: Program };
+
+export interface WorldSummary {
+  cells: number;
+  constructed_cells: number;
+  deliveries: number;
+  source_sparks: number;
+  depot_sparks: number;
+  carried_sparks: number;
+  material_units: number;
+  beacon_charge: number;
+  beacons_without_charge: number;
+}
+
+export interface WorldReport {
+  schema: "platonik-living-world-report-v1";
+  world_hash: string;
+  name: string;
+  revision: number;
+  tick: number;
+  maximum_tick: number;
+  experiment: Receipt["experiment"];
+  state: State;
+  costs: Record<string, number>;
+  recent_frames: Frame[];
+  summary: WorldSummary;
+}
+
 export interface VerificationReport {
   schema: string;
   verified: boolean;
@@ -232,6 +276,15 @@ export interface VerificationReport {
 // ---- typed wrappers ----
 
 export const engine = {
+  worldNew(wasm: WasmModule, name: string) {
+    return call<LivingWorld>(() => wasm.world_new(name));
+  },
+  worldApply(wasm: WasmModule, world: LivingWorld, command: WorldCommand) {
+    return call<LivingWorld>(() => wasm.world_apply(JSON.stringify(world), JSON.stringify(command)));
+  },
+  worldReport(wasm: WasmModule, world: LivingWorld) {
+    return call<WorldReport>(() => wasm.world_report(JSON.stringify(world)));
+  },
   tutorialExperiment(wasm: WasmModule, id: string) {
     return call<Record<string, unknown>>(() => wasm.tutorial_experiment(id));
   },

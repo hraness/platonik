@@ -403,8 +403,8 @@ export function OpeningMode({
               <div className="opening-complete">
                 <strong>Opening complete.</strong> You can carry a spark, survive a wounded route,
                 and steer a valve. The trail continues —{" "}
-                <Link href="/play?mode=journeys">Journeys</Link> keep one world alive across pauses,
-                and <Link href="/play?mode=challenges">Challenges</Link> score 96 worlds for the
+                <Link href="/play/lab?mode=journeys">Journeys</Link> keep one world alive across pauses,
+                and <Link href="/play/lab?mode=challenges">Challenges</Link> score 96 worlds for the
                 season board.
               </div>
             )}
