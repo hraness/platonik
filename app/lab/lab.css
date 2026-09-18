@@ -311,8 +311,13 @@
   .play-tracks { grid-template-columns: repeat(2, 1fr); }
   .challenge-picker { grid-template-columns: 1fr; }
   .challenge-grid { grid-template-columns: repeat(8, 1fr); }
+  .challenge-scoreboard, .journey-scoreboard { gap: 8px; }
+  .challenge-stat, .challenge-stat-link, .journey-stat, .journey-stat-link { flex: 1 1 100px; padding: 8px 10px; }
 }
 @media (max-width: 480px) {
   .play-tracks { grid-template-columns: 1fr 1fr; }
   .challenge-grid { grid-template-columns: repeat(4, 1fr); }
+  .challenge-scoreboard, .journey-scoreboard { gap: 6px; }
+  .challenge-stat, .challenge-stat-link, .journey-stat, .journey-stat-link { flex: 1 1 80px; min-width: 80px; }
+  .season-board-row { flex-wrap: wrap; }
 }
