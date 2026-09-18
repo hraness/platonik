@@ -13,6 +13,7 @@ import {
 import { buildPlayUrl } from "@/lib/play/url";
 import type { Receipt } from "@/lib/bridge/types";
 import { CHALLENGE_FAMILIES, challengeId } from "@/lib/play/missions";
+import { useSeasonBoard, seasonBestFor } from "@/lib/play/season";
 import {
   allScores,
   getScore,
@@ -418,6 +419,11 @@ export function ChallengeMode({
     () => scores.find((row) => row.challenge === challengeId(selected)),
     [scores, selected],
   );
+  const { board } = useSeasonBoard();
+  const seasonBest = useMemo(
+    () => seasonBestFor(board, challengeId(selected)),
+    [board, selected],
+  );
 
   const clearedCount = passed.size;
 
@@ -461,6 +467,21 @@ export function ChallengeMode({
             <span className="lab-note">No run yet</span>
           </div>
         )}
+        <div className="challenge-stat">
+          <span className="challenge-stat-label">Season best</span>
+          <strong className="challenge-stat-value">
+            {seasonBest ? (
+              <>
+                {number(seasonBest.total_work)} work ·{" "}
+                {seasonBest.entrant.replace(/^github:/, "")}
+              </>
+            ) : board ? (
+              <span className="lab-note">No entry</span>
+            ) : (
+              <span className="lab-note">Loading…</span>
+            )}
+          </strong>
+        </div>
         {nextUnpassed ? (
           <button
             type="button"
