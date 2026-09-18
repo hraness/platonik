@@ -16,6 +16,7 @@ import {
   listCampaigns,
   loadCampaign,
   saveCampaign,
+  saveLastPlay,
   type CampaignSave,
 } from "@/lib/play/saves";
 import { buildPlayUrl } from "@/lib/play/url";
@@ -117,6 +118,11 @@ export function ExpeditionMode({
   const [sharedProgram, setSharedProgram] = useState<Program | null>(
     initialProgram ?? null
   );
+
+  // Remember that the player was here so /play can resume the expedition track.
+  useEffect(() => {
+    void saveLastPlay({ track: "expedition" }).catch(() => {});
+  }, []);
 
   // Last completed trial's receipt + case, for the replay stage.
   const [receipt, setReceipt] = useState<Receipt | null>(null);
