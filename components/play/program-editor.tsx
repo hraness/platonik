@@ -16,9 +16,20 @@ export interface ProgramEditorProps {
  */
 export function ProgramEditor({ value, onChange, presets, onPreset, label }: ProgramEditorProps) {
   const [touched, setTouched] = useState(false);
+  const [copied, setCopied] = useState(false);
   const textarea = useRef<HTMLTextAreaElement | null>(null);
 
   const diagnostic = diagnose(value);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      // Ignore; the text is selectable.
+    }
+  }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key !== "Tab" || event.shiftKey) return;
@@ -39,9 +50,12 @@ export function ProgramEditor({ value, onChange, presets, onPreset, label }: Pro
     <div className="program-editor">
       <div className="program-editor-head">
         <h3>{label}</h3>
-        {presets && presets.length > 0 && (
-          <div className="play-loaders" role="group" aria-label="Load a reference program">
-            {presets.map((preset) => (
+        <div className="play-loaders">
+          <button className="lab-button secondary" type="button" onClick={copy}>
+            {copied ? "Copied" : "Copy"}
+          </button>
+          {presets &&
+            presets.map((preset) => (
               <button
                 key={preset.name}
                 className="lab-button secondary"
@@ -51,8 +65,7 @@ export function ProgramEditor({ value, onChange, presets, onPreset, label }: Pro
                 {preset.label}
               </button>
             ))}
-          </div>
-        )}
+        </div>
       </div>
       <textarea
         ref={textarea}
