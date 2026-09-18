@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export interface AgentPanelProps {
   /** Mission briefing text shown to the player and embedded in the prompt. */
@@ -31,8 +31,24 @@ export function AgentPanel({
   const [copied, setCopied] = useState(false);
   const [pasted, setPasted] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
+  const pasteArea = useRef<HTMLTextAreaElement | null>(null);
 
   const prompt = buildPrompt(brief, worldSummary, schemaHelp, currentProgram);
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== "Tab" || event.shiftKey) return;
+    event.preventDefault();
+    const t = event.currentTarget;
+    const start = t.selectionStart;
+    const end = t.selectionEnd;
+    const nextValue = `${pasted.slice(0, start)}  ${pasted.slice(end)}`;
+    setPasted(nextValue);
+    window.setTimeout(() => {
+      if (pasteArea.current) {
+        pasteArea.current.selectionStart = pasteArea.current.selectionEnd = start + 2;
+      }
+    }, 0);
+  }
 
   async function copyPrompt() {
     try {
@@ -76,10 +92,12 @@ export function AgentPanel({
             Paste the agent's program JSON
           </label>
           <textarea
+            ref={pasteArea}
             id="agent-paste"
             className="play-editor agent-paste"
             value={pasted}
             onChange={(event) => setPasted(event.target.value)}
+            onKeyDown={handleKeyDown}
             rows={8}
             spellCheck={false}
             placeholder='{"rules": [...]}'
