@@ -43,6 +43,18 @@ export function ReplayStage({ receipt }: { receipt: Receipt }) {
     return lines;
   }, [frame]);
 
+  const failedAt = useMemo(() => {
+    for (let i = frames.length - 1; i >= 0; i--) {
+      const f = frames[i];
+      if (!f.complete) return i;
+      if ((f.activations ?? []).some((a) => !a.success)) return i;
+    }
+    return -1;
+  }, [frames]);
+
+  const passed = receipt.result.outcome?.passed ?? false;
+  const status = receipt.result.status;
+
   if (!frame) return null;
 
   return (
@@ -82,6 +94,11 @@ export function ReplayStage({ receipt }: { receipt: Receipt }) {
         <button className="lab-text-button" type="button" onClick={() => setAt(frames.length - 1)}>
           End
         </button>
+        {failedAt >= 0 && (
+          <button className="lab-text-button" type="button" onClick={() => setAt(failedAt)}>
+            Jump to failure
+          </button>
+        )}
         <label className="replay-speed">
           Speed
           <select
@@ -114,6 +131,10 @@ export function ReplayStage({ receipt }: { receipt: Receipt }) {
         <span>
           {receipt.result.ticks_completed} ticks run · {number(work(receipt.result.costs))} modeled
           work
+        </span>
+        <span className={passed ? "replay-pass" : "replay-fail"}>
+          {passed ? "Pass" : "Fail"}
+          {status ? ` · ${status}` : ""}
         </span>
       </div>
       {activity.length > 0 && (
