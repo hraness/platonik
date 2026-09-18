@@ -33,6 +33,12 @@ export function RecordedHabitat({ receipt, frame }: { receipt: Receipt; frame: F
       const position = blueprint.body.cell.position;
       return <g key={`assembly-${assembly.blueprint}`} data-kind="assembly" data-blueprint={assembly.blueprint}><rect x={position.x * 36 + 3} y={position.y * 36 + 3} width="30" height="30" fill="var(--surface)" stroke="var(--specimen-warm)" strokeWidth="2" strokeDasharray="4 3" />{label(position, `A${blueprint.body.cell.id}`, "var(--specimen-warm)")}</g>;
     })}
-    {state.cells.map(cell => <g key={cell.id} data-kind={births.some(birth => birth.body.cell.id === cell.id) ? "born-cell" : "cell"} data-cell={cell.id}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r="11" fill={cell.cargo || cell.material !== undefined ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke="var(--surface)" strokeWidth="2" />{label(cell.position, String(cell.id), cell.cargo || cell.material !== undefined ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>)}
+    {state.cells.map(cell => {
+      const active = frame.activations?.find(a => a.cell === cell.id);
+      const born = births.some(birth => birth.body.cell.id === cell.id);
+      const stroke = active ? (active.success ? "var(--accent)" : "var(--danger)") : "var(--surface)";
+      const strokeWidth = active ? 3 : 2;
+      return <g key={cell.id} data-kind={born ? "born-cell" : active ? (active.success ? "active-cell" : "failed-cell") : "cell"} data-cell={cell.id}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r="11" fill={cell.cargo || cell.material !== undefined ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke={stroke} strokeWidth={strokeWidth} />{label(cell.position, String(cell.id), cell.cargo || cell.material !== undefined ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>;
+    })}
   </svg>;
 }
