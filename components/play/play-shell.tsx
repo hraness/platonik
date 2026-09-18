@@ -170,6 +170,16 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
       </p>
     );
   }
+  // Keep the browser tab in sync with the active track/case.
+  useEffect(() => {
+    const parts = ["Play Platonik"];
+    const trackTitle = TRACKS.find((t) => t.id === track)?.title;
+    if (trackTitle) parts.unshift(trackTitle);
+    if (initial?.case) parts.unshift(initial.case);
+    if (initial?.programHash) parts.unshift(`${initial.programHash.slice(0, 8)}…`);
+    document.title = parts.slice(0, 2).join(" · ");
+  }, [track, initial?.case, initial?.programHash]);
+
   if (!wasm || !initial) {
     return <p role="status">Loading the Platonik engine…</p>;
   }
