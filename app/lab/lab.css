@@ -230,6 +230,13 @@
 .agent-paste-label { font-size: 13px; font-weight: 600; }
 
 /* Challenge mode. */
+.challenge-scoreboard { display: flex; flex-wrap: wrap; gap: 12px; align-items: stretch; margin-bottom: 20px; }
+.challenge-stat, .challenge-stat-link { flex: 1 1 120px; display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--control-border); background: var(--surface); border-radius: 8px; padding: 10px 12px; text-align: center; }
+.challenge-stat-link { cursor: pointer; text-decoration: none; color: inherit; }
+.challenge-stat-link:hover { border-color: var(--accent); }
+.challenge-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.challenge-stat-value { font-size: 15px; color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.challenge-stat-denominator { font-weight: 500; color: var(--muted); }
 .challenge-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
 .challenge-family h3 { font-size: 15px; margin: 0 0 4px; }
 .challenge-family .family-detail { font-size: 12px; color: var(--muted); margin: 0 0 10px; line-height: 1.5; }

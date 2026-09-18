@@ -47,6 +47,9 @@ export function ProgressCard() {
       <span className="progress-item">
         Challenges <strong>{progress.challenges}/{challengeMax}</strong>
       </span>
+      <a className="progress-item" href="/lab/challenges">
+        Season board <span aria-hidden="true">→</span>
+      </a>
     </div>
   );
 }
