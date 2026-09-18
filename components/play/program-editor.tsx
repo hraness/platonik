@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export interface ProgramEditorProps {
   value: string;
@@ -16,8 +16,24 @@ export interface ProgramEditorProps {
  */
 export function ProgramEditor({ value, onChange, presets, onPreset, label }: ProgramEditorProps) {
   const [touched, setTouched] = useState(false);
+  const textarea = useRef<HTMLTextAreaElement | null>(null);
 
   const diagnostic = diagnose(value);
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== "Tab" || event.shiftKey) return;
+    event.preventDefault();
+    const t = event.currentTarget;
+    const start = t.selectionStart;
+    const end = t.selectionEnd;
+    const nextValue = `${value.slice(0, start)}  ${value.slice(end)}`;
+    onChange(nextValue);
+    window.setTimeout(() => {
+      if (textarea.current) {
+        textarea.current.selectionStart = textarea.current.selectionEnd = start + 2;
+      }
+    }, 0);
+  }
 
   return (
     <div className="program-editor">
@@ -39,12 +55,14 @@ export function ProgramEditor({ value, onChange, presets, onPreset, label }: Pro
         )}
       </div>
       <textarea
+        ref={textarea}
         className="play-editor"
         value={value}
         onChange={(event) => {
           setTouched(true);
           onChange(event.target.value);
         }}
+        onKeyDown={handleKeyDown}
         rows={18}
         spellCheck={false}
         aria-label={label}
