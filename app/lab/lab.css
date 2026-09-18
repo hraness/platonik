@@ -306,6 +306,14 @@
 .resume-note { font-size: 13px; color: var(--muted); }
 .progress-card { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-block: 8px 0; }
 .progress-card .progress-item strong { color: var(--ink); font-weight: 600; }
+.season-card { border: 1px solid var(--control-border); background: var(--surface); border-radius: 8px; padding: 12px 14px; margin-block: 12px 0; }
+.season-card-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; margin-bottom: 8px; }
+.season-card-header strong { color: var(--ink); }
+.season-board { display: flex; flex-direction: column; gap: 6px; }
+.season-board-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+.season-rank { font-variant-numeric: tabular-nums; min-width: 22px; color: var(--ink); font-weight: 700; }
+.season-entrant { flex: 1; color: var(--ink); }
+.season-score { font-variant-numeric: tabular-nums; }
 
 @media (max-width: 850px) {
   .play-tracks { grid-template-columns: repeat(2, 1fr); }

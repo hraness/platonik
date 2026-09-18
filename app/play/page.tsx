@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { AgentSetupCard } from "@/components/play/agent-setup";
 import { ProgressCard } from "@/components/play/progress-card";
 import { ResumeCard } from "@/components/play/resume-card";
+import { SeasonCard } from "@/components/play/season-card";
 import { PlayShell } from "@/components/play/play-shell";
 import { site } from "@/lib/site";
 import "../lab/lab.css";
@@ -32,6 +33,7 @@ export default function PlayPage() {
         </p>
         <ResumeCard />
         <ProgressCard />
+        <SeasonCard />
         <AgentSetupCard />
       </header>
       <Suspense fallback={<p role="status">Loading the Platonik engine…</p>}>
