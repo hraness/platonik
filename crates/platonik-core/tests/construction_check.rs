@@ -100,6 +100,7 @@ fn world() -> Experiment {
                 },
             }],
         }),
+        facilities: Vec::new(),
     }
 }
 

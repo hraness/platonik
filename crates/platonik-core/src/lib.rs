@@ -16,6 +16,7 @@ pub mod expedition;
 pub mod expedition_fixtures;
 pub mod first_answer;
 pub mod fixtures;
+pub mod industry;
 pub mod model;
 pub mod policy;
 pub mod port_commitments;

@@ -124,6 +124,7 @@ fn world(bit: bool) -> Experiment {
                 },
             }],
         }),
+        facilities: Vec::new(),
     }
 }
 

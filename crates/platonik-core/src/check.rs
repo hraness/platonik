@@ -2,6 +2,8 @@
 //! Hashes identify the parsed artifacts; verification also executes their pinned model.
 #[path = "check_construction.rs"]
 mod construction;
+#[path = "check_industry.rs"]
+mod industry;
 
 use crate::model::*;
 use crate::sim::{run, validate_experiment};
@@ -157,6 +159,7 @@ fn validate_state(
     initial: &BTreeMap<u32, bool>,
 ) -> Result<(), String> {
     construction::validate_state(experiment, state)?;
+    crate::industry::check_state(experiment, state, true)?;
     ensure(
         state.tick <= experiment.ticks,
         "A state exceeds the declared tick horizon.",
@@ -283,6 +286,11 @@ fn validate_state(
     for cell in &state.cells {
         if let Some(spark) = cell.cargo {
             insert(spark)?;
+        }
+    }
+    for facility in &state.facilities {
+        for spark in facility.sparks.iter().chain(facility.spent_sparks.iter()) {
+            insert(*spark)?;
         }
     }
     for delivery in &state.delivered {
@@ -878,7 +886,7 @@ fn validate_transition(
         Ok((staged + born) as u64)
     };
     let copying_work = |state: &State| {
-        if experiment.version == VARIATION_VERSION {
+        if experiment.version >= VARIATION_VERSION {
             construction::copying_work(experiment, state)
         } else {
             copied_bytes(state)
@@ -891,7 +899,7 @@ fn validate_transition(
         frame.costs.copying - previous.costs.copying >= committed_copying,
         "Committed copied bytes were not charged.",
     )?;
-    if experiment.version == VARIATION_VERSION {
+    if experiment.version >= VARIATION_VERSION {
         let (checking, count) = construction::edit_charges(experiment, &frame.state, frame.tick)?;
         ensure(
             frame.costs.checking - previous.costs.checking >= checking
@@ -1251,6 +1259,9 @@ fn validate_action_effects(
                         frame.tick,
                     )?;
                 }
+                Action::Gather | Action::Supply { .. } | Action::Fetch { .. } => {
+                    industry::apply(experiment, &mut expected, index, &activation.action)?;
+                }
                 Action::Wait | Action::Send { .. } => {}
             }
         } else {
@@ -1276,6 +1287,16 @@ fn validate_action_effects(
             "Movement direction disagrees with its recorded destination.",
         )?;
     }
+    // The world facility step is atomic: its modeled charges precede any
+    // mutation, so an interrupted tick leaves either the untouched or the
+    // fully processed set.
+    let before_tick = expected.facilities.clone();
+    crate::industry::tick(&mut expected);
+    ensure(
+        expected.facilities == frame.state.facilities
+            || (!frame.complete && before_tick == frame.state.facilities),
+        "Recorded actions do not explain the facility transition.",
+    )?;
     ensure(
         expected.sources == frame.state.sources
             && expected.depots == frame.state.depots
@@ -1298,6 +1319,7 @@ fn validate_action_effects(
         ensure(
             expected.cargo == actual.cargo
                 && expected.material == actual.material
+                && expected.part == actual.part
                 && expected.position == actual.position
                 && expected.heading == actual.heading
                 && expected.memory == actual.memory

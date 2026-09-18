@@ -38,7 +38,7 @@ export default function HomePage() {
             <Link href="/play#world-agent-title">Set it up with your agent</Link>
           </div>
           <p className="status-note">
-            The first living-world protocol is available now: one persistent homestead, bounded advances, recorded policy changes, material-dependent construction, and content-addressed browser views.
+            The living-world protocol is available now: one persistent homestead with a working fabricator, repeatable production, placed construction sites, recorded policy changes, and content-addressed browser views.
           </p>
         </section>
       </div>
@@ -66,7 +66,7 @@ export default function HomePage() {
               <text x="210" y="210" className="habitat-label">The second route exists because the first world built it</text>
             </g>
           </svg>
-          <figcaption>The current Dustlight homestead has two finite supply lanes and one checked construction. Open it to watch the exact Rust-engine replay.</figcaption>
+          <figcaption>The current Dustlight homestead keeps two homes lit while a fabricator turns hauled material and light into parts. Open it to watch the exact Rust-engine replay.</figcaption>
         </figure>
         <p>
           A creature can carry light, remember a signal, or assemble a declared body. A useful change stays in the world, along with its costs and history. When something stalls, you can inspect the moment and ask your agent for one understandable improvement.

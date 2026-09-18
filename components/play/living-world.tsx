@@ -138,14 +138,22 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
     );
   }
 
-  const lastEvent = world.events.at(-1) as { kind?: string; cell?: number } | undefined;
+  const lastEvent = world.events.at(-1) as
+    | { kind?: string; cell?: number; facility?: number; name?: string }
+    | undefined;
   const change = lastEvent?.kind === "program_changed"
     ? `${cellName(lastEvent.cell)} has a new working habit.`
-    : report.summary.constructed_cells > 1
-      ? "The foundry added carrying capacity to both routes."
-      : report.summary.constructed_cells > 0
-        ? "The foundry raised a second courier route."
-        : "The homestead's first light route is running.";
+    : lastEvent?.kind === "structure_placed"
+      ? "A new construction site is waiting for its bill."
+      : lastEvent?.kind === "structure_named"
+        ? "A facility has a new name."
+        : report.summary.parts_minted > 0
+          ? "The fabricator is minting parts from the supply chain."
+          : report.summary.constructed_cells > 1
+            ? "The foundry added carrying capacity to both routes."
+            : report.summary.constructed_cells > 0
+              ? "The foundry raised a second courier route."
+              : "The homestead's first light route is running.";
 
   return (
     <main id="main" className="world-page">
@@ -169,7 +177,7 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
           <p className="world-kicker">Your workbench</p>
           <h2 id="world-agent-title">Explore with your agent.</h2>
           <p>
-            Tell it what you want: a steadier route, another courier, less congestion, or a stranger experiment.
+            Tell it what you want: a steadier route, another hauler, a new facility, less congestion, or a stranger experiment.
             It changes the checked local world and sends back a new view. This page never edits or advances it.
           </p>
         </div>

@@ -139,6 +139,7 @@ fn world() -> Experiment {
                 },
             }],
         }),
+        facilities: Vec::new(),
     }
 }
 fn birth(result: &RunResult) -> &Birth {

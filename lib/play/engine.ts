@@ -1,6 +1,6 @@
 "use client";
 
-import type { Frame, Receipt, State } from "@/lib/bridge/types";
+import type { FacilityKind, Frame, Receipt, State } from "@/lib/bridge/types";
 
 // Typed client over the platonik-wasm JSON bridge. The Rust engine is
 // authoritative; every function here is a thin wrapper that parses the JSON
@@ -234,7 +234,9 @@ export interface LivingWorld {
 
 export type WorldCommand =
   | { kind: "advance"; ticks: number }
-  | { kind: "set_program"; cell: number; program: Program };
+  | { kind: "set_program"; cell: number; program: Program }
+  | { kind: "place"; structure: FacilityKind; position: Point }
+  | { kind: "name"; facility: number; name: string };
 
 export interface WorldSummary {
   cells: number;
@@ -246,6 +248,11 @@ export interface WorldSummary {
   material_units: number;
   beacon_charge: number;
   beacons_without_charge: number;
+  facilities: number;
+  ready_facilities: number;
+  facility_sparks: number;
+  parts_minted: number;
+  carried_parts: number;
 }
 
 export interface WorldReport {
@@ -260,6 +267,7 @@ export interface WorldReport {
   costs: Record<string, number>;
   recent_frames: Frame[];
   summary: WorldSummary;
+  names: Record<string, string>;
 }
 
 export interface VerificationReport {

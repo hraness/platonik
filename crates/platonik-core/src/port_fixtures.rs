@@ -353,6 +353,7 @@ pub fn experiment(id: &str) -> Result<Experiment, String> {
         fuel: FUEL,
         activation_fuel: 128,
         construction: None,
+        facilities: Vec::new(),
     };
     let mut floor = vec![];
     for lane in LANES {

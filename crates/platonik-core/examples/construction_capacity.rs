@@ -246,6 +246,7 @@ fn workload(partial: bool) -> Result<Experiment, String> {
         fuel: MAX_FUEL,
         activation_fuel: 128,
         construction: Some(ConstructionSpec { stocks, blueprints }),
+        facilities: Vec::new(),
     };
     validate_experiment(&experiment)?;
     Ok(experiment)

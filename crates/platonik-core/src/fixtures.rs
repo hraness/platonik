@@ -396,6 +396,7 @@ fn world(resilient: bool, wounded: bool, bit: bool, count: u32) -> Experiment {
         fuel: 20_000,
         activation_fuel: 128,
         construction: None,
+        facilities: Vec::new(),
     }
 }
 

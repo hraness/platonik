@@ -41,7 +41,7 @@ fn derived_body(
     edits: &[DirectionEdit],
 ) -> Result<BlueprintBody, String> {
     if edits.len() > MAX_PROGRAM_EDITS
-        || (!edits.is_empty() && experiment.version != VARIATION_VERSION)
+        || (!edits.is_empty() && experiment.version < VARIATION_VERSION)
     {
         return Err("Invalid program edit version or count.".into());
     }
@@ -75,7 +75,7 @@ pub fn edit_count(
     actor: usize,
     blueprint_id: u16,
 ) -> Option<u8> {
-    if experiment.version != VARIATION_VERSION {
+    if experiment.version < VARIATION_VERSION {
         return None;
     }
     let actor = state.cells.get(actor)?;
@@ -223,8 +223,8 @@ pub(crate) fn validate_spec(experiment: &Experiment) -> Result<(), String> {
     let Some(spec) = &experiment.construction else {
         return Ok(());
     };
-    if !matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION) {
-        return Err("Construction requires habitat-v3 or habitat-v4.".into());
+    if experiment.version < CONSTRUCTION_VERSION {
+        return Err("Construction requires habitat-v3 or later.".into());
     }
     if spec.stocks.len() > 4
         || spec.blueprints.is_empty()
@@ -408,7 +408,7 @@ pub(crate) fn execute(
         .map_err(|_| Fault::Action("invalid_edit_history"))?;
     let bytes = serde_json::to_vec(&expected_body).expect("validated blueprint serialization");
     if let Action::EditDirection { rule, slot, .. } = action {
-        if experiment.version != VARIATION_VERSION {
+        if experiment.version < VARIATION_VERSION {
             return Err(Fault::Action("variation_unavailable"));
         }
         let index = assembly_index.ok_or(Fault::Action("assembly_missing"))?;
@@ -559,6 +559,7 @@ pub(crate) fn execute(
         cargo: None,
         inbox: std::array::from_fn(|_| None),
         material: None,
+        part: None,
     });
     state
         .links
@@ -582,7 +583,11 @@ pub(crate) fn execute(
 pub(crate) fn check_state(experiment: &Experiment, state: &State) -> Result<(), String> {
     let Some(spec) = &experiment.construction else {
         return if state.construction.is_none()
-            && state.cells.iter().all(|cell| cell.material.is_none())
+            && state.facilities.is_empty()
+            && state
+                .cells
+                .iter()
+                .all(|cell| cell.material.is_none() && cell.part.is_none())
         {
             Ok(())
         } else {
@@ -609,6 +614,13 @@ pub(crate) fn check_state(experiment: &Experiment, state: &State) -> Result<(), 
         .iter()
         .flat_map(|stock| stock.units.iter().copied())
         .chain(state.cells.iter().filter_map(|cell| cell.material))
+        .chain(state.facilities.iter().flat_map(|facility| {
+            facility
+                .materials
+                .iter()
+                .chain(facility.spent_materials.iter())
+                .copied()
+        }))
         .chain(
             construction
                 .assemblies

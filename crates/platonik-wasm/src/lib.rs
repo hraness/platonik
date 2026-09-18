@@ -152,7 +152,8 @@ pub fn world_report(world_json: &str) -> Result<String, JsError> {
 
 /// Return a named reference program as JSON. Supported names:
 /// `idle`, `compact`, `resilient`, `relay`, `controller`, `switchboard-porter`,
-/// `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, and the
+/// `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, the
+/// `world-surveyor` and `world-hauler` Dustlight roles, and the
 /// `world-builder-upper` or `world-builder-lower` homestead plans.
 #[wasm_bindgen]
 pub fn reference_program(name: &str) -> Result<String, JsError> {
@@ -168,6 +169,8 @@ pub fn reference_program(name: &str) -> Result<String, JsError> {
         "switchboard-relay" => platonik_core::fixtures::switchboard_relay(),
         "switchboard-keeper" => platonik_core::fixtures::switchboard_keeper(),
         "foundry-builder" => platonik_core::fixtures::foundry_builder(),
+        "world-surveyor" => platonik_core::world_fixtures::surveyor_program(),
+        "world-hauler" => platonik_core::world_fixtures::hauler_program(),
         "world-builder-upper" => {
             platonik_core::world_fixtures::builder_program(50).map_err(to_js_error)?
         }

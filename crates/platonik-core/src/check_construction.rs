@@ -80,7 +80,7 @@ fn edited_body(
 ) -> Result<BlueprintBody, String> {
     ensure(
         edits.len() <= MAX_PROGRAM_EDITS
-            && (edits.is_empty() || experiment.version == VARIATION_VERSION),
+            && (edits.is_empty() || experiment.version >= VARIATION_VERSION),
         "Program edits exceed their limit or belong to an older protocol.",
     )?;
     let mut body = declared.body.clone();
@@ -190,13 +190,18 @@ pub(super) fn reserved(experiment: &Experiment, state: &State, point: Point) -> 
 pub(super) fn validate_state(experiment: &Experiment, state: &State) -> Result<(), String> {
     let Some(spec) = &experiment.construction else {
         return ensure(
-            state.construction.is_none() && state.cells.iter().all(|cell| cell.material.is_none()),
-            "Undeclared construction state or material.",
+            state.construction.is_none()
+                && state.facilities.is_empty()
+                && state
+                    .cells
+                    .iter()
+                    .all(|cell| cell.material.is_none() && cell.part.is_none()),
+            "Undeclared construction state, facility, or held item.",
         );
     };
     ensure(
-        matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION),
-        "Construction requires v3 or v4.",
+        experiment.version >= CONSTRUCTION_VERSION,
+        "Construction requires v3 or later.",
     )?;
     let construction = state
         .construction
@@ -220,6 +225,13 @@ pub(super) fn validate_state(experiment: &Experiment, state: &State) -> Result<(
         .iter()
         .flat_map(|stock| stock.units.iter().copied())
         .chain(state.cells.iter().filter_map(|cell| cell.material))
+        .chain(state.facilities.iter().flat_map(|facility| {
+            facility
+                .materials
+                .iter()
+                .chain(facility.spent_materials.iter())
+                .copied()
+        }))
         .chain(
             construction
                 .assemblies
@@ -335,8 +347,15 @@ pub(super) fn validate_initial(experiment: &Experiment, state: &State) -> Result
         )?;
     }
     ensure(
-        state.cells.iter().all(|cell| cell.material.is_none()),
-        "A cell starts with unacquired material.",
+        state
+            .cells
+            .iter()
+            .all(|cell| cell.material.is_none() && cell.part.is_none()),
+        "A cell starts with unacquired material or parts.",
+    )?;
+    ensure(
+        state.facilities == crate::industry::initial_state(experiment),
+        "Facilities start other than declared with empty buffers.",
     )
 }
 
@@ -427,7 +446,7 @@ pub(super) fn apply(
             let bytes = serde_json::to_vec(&body).map_err(|error| error.to_string())?;
             if let Action::EditDirection { rule, slot, .. } = action {
                 ensure(
-                    experiment.version == VARIATION_VERSION && *slot < 4,
+                    experiment.version >= VARIATION_VERSION && *slot < 4,
                     "Direction editing requires v4 and a local register.",
                 )?;
                 let assembly = &mut construction.assemblies
@@ -544,6 +563,7 @@ pub(super) fn apply(
                     cargo: None,
                     inbox: [None, None, None, None],
                     material: None,
+                    part: None,
                 });
                 state
                     .links

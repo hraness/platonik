@@ -21,6 +21,6 @@ export function packWorld(world: LivingWorld): string {
 }
 
 export function unpackWorld(value: string): LivingWorld {
-  if (value.length > 12_000) throw new Error("World URL exceeds the compact view limit.");
+  if (value.length > 16_384) throw new Error("World URL exceeds the compact view limit.");
   return JSON.parse(decode(value)) as LivingWorld;
 }

@@ -8,9 +8,15 @@ import { useReplay } from "@/lib/play/use-replay";
 
 const CELL_NAMES: Record<number, string> = {
   1: "Moth",
+  2: "Ant",
   3: "Moss",
   4: "Lark",
   5: "Foundry",
+};
+
+const FACILITY_NAMES: Record<number, string> = {
+  90: "West Fabricator",
+  91: "Storehouse",
 };
 
 export function WorldStage({ report }: { report: WorldReport }) {
@@ -48,18 +54,29 @@ export function WorldStage({ report }: { report: WorldReport }) {
   const sourceSparks = state.sources.reduce((sum, source) => sum + source.sparks.length, 0);
   const beaconCharge = state.beacons.reduce((sum, beacon) => sum + beacon.charge, 0);
   const built = state.construction?.births.length ?? 0;
+  const facilities = state.facilities ?? [];
+  const minted = facilities.reduce((sum, facility) => sum + facility.minted, 0);
   const activity = frame.activations
     .filter((item) => item.action.kind !== "wait" || !item.success)
     .slice(0, 5)
     .map(describeActivation);
   const routes = [
-    { id: 1, name: "Ridge home" },
     { id: 0, name: "Dustlight home" },
+    { id: 1, name: "East outpost" },
   ].map((route) => ({
     ...route,
     charge: state.beacons.find((beacon) => beacon.id === route.id)?.charge ?? 0,
     waiting: state.sources.find((source) => source.id === route.id)?.sparks.length ?? 0,
     delivered: state.delivered.filter((delivery) => delivery.beacon === route.id).length,
+  }));
+  const facilityRows = facilities.map((facility) => ({
+    id: facility.id,
+    name: report.names[String(facility.id)] ?? FACILITY_NAMES[facility.id] ?? `Facility ${facility.id}`,
+    kind: facility.kind,
+    ready: facility.ready,
+    buffers: `${facility.materials.length}m ${facility.sparks.length}s ${facility.parts.length}p`,
+    needed: facility.ready ? "" : `needs ${facility.needed_material}m ${facility.needed_part}p`,
+    minted: facility.minted,
   }));
 
   function togglePlayback() {
@@ -79,12 +96,14 @@ export function WorldStage({ report }: { report: WorldReport }) {
           frame={frame}
           selectedCell={selectedCell}
           onSelectCell={setSelectedCell}
+          names={report.names}
         />
         <div className="world-vitals" aria-label="World state at this moment">
           <span><strong>{state.delivered.length}</strong> delivered</span>
           <span><strong>{sourceSparks}</strong> waiting</span>
           <span><strong>{state.cells.length}</strong> creatures</span>
           <span><strong>{beaconCharge}</strong> light</span>
+          <span><strong>{minted}</strong> parts minted</span>
         </div>
       </div>
 
@@ -122,6 +141,15 @@ export function WorldStage({ report }: { report: WorldReport }) {
             <span>{route.charge} light</span>
           </div>
         ))}
+        {facilityRows.map((facility) => (
+          <div key={`facility-${facility.id}`}>
+            <span className={`world-flow-light ${facility.ready ? "online" : "dark"}`} aria-hidden="true" />
+            <strong>{facility.name}</strong>
+            <span>{facility.ready ? facility.kind : "construction site"}</span>
+            <span>{facility.ready ? facility.buffers : facility.needed}</span>
+            {facility.minted > 0 && <span>{facility.minted} minted</span>}
+          </div>
+        ))}
       </div>
 
       <div className="world-readout">
@@ -145,6 +173,7 @@ export function WorldStage({ report }: { report: WorldReport }) {
               <p>{cellState(selected, activation)}</p>
               <dl>
                 <div><dt>Position</dt><dd>{selected.position.x}, {selected.position.y}</dd></div>
+                <div><dt>Carrying</dt><dd>{carryingList(selected)}</dd></div>
                 <div><dt>Memory</dt><dd>{selected.memory.join(" · ")}</dd></div>
               </dl>
             </>
@@ -162,6 +191,8 @@ export function WorldStage({ report }: { report: WorldReport }) {
 
 function momentTitle(activity: string[], built: number): string {
   if (activity.some((line) => line.includes("joined"))) return "A new creature joins the world.";
+  if (activity.some((line) => line.includes("supplied"))) return "Industry is being fed.";
+  if (activity.some((line) => line.includes("gathered"))) return "Raw material is coming in.";
   if (activity.some((line) => line.includes("delivered"))) return "Light reaches a home.";
   if (activity.some((line) => line.includes("building"))) return "The foundry is assembling new capacity.";
   if (activity.some((line) => line.includes("blocked"))) return "A route has a bottleneck.";
@@ -178,6 +209,9 @@ function describeActivation(activation: { cell: number; action: { kind: string }
   switch (activation.action.kind) {
     case "pickup": return `${name} picked up a light spark.`;
     case "drop": return `${name} delivered light.`;
+    case "gather": return `${name} gathered material from a deposit.`;
+    case "supply": return `${name} supplied a facility.`;
+    case "fetch": return `${name} collected from a facility.`;
     case "gather_material": return `${name} gathered a construction unit.`;
     case "build": return `${name} is building another creature.`;
     case "activate": return `${name}'s new creature joined the world.`;
@@ -185,10 +219,20 @@ function describeActivation(activation: { cell: number; action: { kind: string }
   }
 }
 
+function carryingList(cell: { cargo: unknown; material?: number; part?: number }): string {
+  const items = [
+    cell.cargo ? "light" : null,
+    cell.material !== undefined ? "material" : null,
+    cell.part !== undefined ? "a part" : null,
+  ].filter(Boolean);
+  return items.length > 0 ? items.join(", ") : "nothing";
+}
+
 function cellState(
-  cell: { cargo: unknown; material?: number },
+  cell: { cargo: unknown; material?: number; part?: number },
   activation?: { action: { kind: string }; success: boolean; error: string | null },
 ): string {
+  if (cell.part !== undefined) return "Carrying a finished part.";
   if (cell.material !== undefined) return "Carrying a construction unit.";
   if (cell.cargo) return "Carrying light toward a home.";
   if (activation && !activation.success) {

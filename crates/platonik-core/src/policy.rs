@@ -114,6 +114,42 @@ fn check_condition(
             .is_some_and(|signal| signal.bit == *value),
         Condition::Heading { direction } => cell.heading == *direction,
         Condition::HasMaterial { value } => cell.material.is_some() == *value,
+        Condition::HasPart { value } => cell.part.is_some() == *value,
+        Condition::AtStock { value } => {
+            meter.charge(
+                Cat::Checking,
+                experiment
+                    .construction
+                    .as_ref()
+                    .map_or(0, |spec| spec.stocks.len()) as u64,
+            )?;
+            experiment.construction.as_ref().is_some_and(|spec| {
+                spec.stocks
+                    .iter()
+                    .any(|stock| stock.position == cell.position)
+            }) == *value
+        }
+        Condition::AtFacility { value } => {
+            meter.charge(Cat::Checking, state.facilities.len() as u64)?;
+            crate::industry::at(state, cell.position).is_some() == *value
+        }
+        Condition::FacilityReady { value } => {
+            meter.charge(Cat::Checking, state.facilities.len() as u64)?;
+            crate::industry::at(state, cell.position).is_some_and(|facility| facility.ready)
+                == *value
+        }
+        Condition::FacilityNeeds { item, value } => {
+            meter.charge(Cat::Checking, state.facilities.len() as u64)?;
+            crate::industry::at(state, cell.position)
+                .is_some_and(|facility| crate::industry::needs(facility, *item))
+                == *value
+        }
+        Condition::FacilityHas { item, value } => {
+            meter.charge(Cat::Checking, state.facilities.len() as u64)?;
+            crate::industry::at(state, cell.position)
+                .is_some_and(|facility| crate::industry::has(facility, *item))
+                == *value
+        }
         Condition::AssemblyStage { blueprint, stage } => {
             construction::stage(experiment, state, index, *blueprint) == Some(*stage)
         }
@@ -193,6 +229,9 @@ fn execute(
         | Action::Activate { .. }
         | Action::EditDirection { .. } => {
             construction::execute(action, experiment, state, index, meter)?
+        }
+        Action::Gather | Action::Supply { .. } | Action::Fetch { .. } => {
+            crate::industry::execute(action, experiment, state, index, meter)?
         }
         Action::Wait => {}
         Action::Move { direction } => {
