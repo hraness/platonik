@@ -602,9 +602,19 @@ export function ChallengeMode({
                   ? `Cleared — ${result.cases_passed}/${result.cases_total} cases, ${number(result.total_work)} work`
                   : `Not yet — ${result.cases_passed}/${result.cases_total}`}
               </strong>
-              <span className="lab-note">
-                Local score — ranked entry goes through the season.
-              </span>
+              {result.passed && seasonBest ? (
+                <span className="lab-note">
+                  {result.total_work < seasonBest.total_work
+                    ? `Under the public season best by ${number(seasonBest.total_work - result.total_work)} work`
+                    : result.total_work === seasonBest.total_work
+                      ? "Tied with the public season best"
+                      : `${number(result.total_work - seasonBest.total_work)} work behind the public season best`}
+                </span>
+              ) : (
+                <span className="lab-note">
+                  Local score — ranked entry goes through the season.
+                </span>
+              )}
             </div>
           )}
 
