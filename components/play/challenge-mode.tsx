@@ -16,6 +16,7 @@ import { CHALLENGE_FAMILIES, challengeId } from "@/lib/play/missions";
 import {
   allScores,
   getScore,
+  saveLastPlay,
   saveScore,
   type ChallengeScore,
 } from "@/lib/play/saves";
@@ -179,6 +180,11 @@ export function ChallengeMode({
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Remember the active challenge so /play can resume here.
+  useEffect(() => {
+    void saveLastPlay({ track: "challenges", case: challengeId(selected) }).catch(() => {});
+  }, [selected]);
 
   // Load saved scores once, and brief the default selection (challenge-0001).
   useEffect(() => {

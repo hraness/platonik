@@ -22,7 +22,7 @@ import {
 import { JOURNEY_DESCRIPTIONS } from "@/lib/play/missions";
 import { PROGRAM_SCHEMA_HELP } from "@/lib/play/schema-help";
 import { buildPlayUrl } from "@/lib/play/url";
-import { allMarks, saveMark } from "@/lib/play/saves";
+import { allMarks, saveLastPlay, saveMark } from "@/lib/play/saves";
 import { AgentPanel } from "./agent-panel";
 import { ProgramEditor } from "./program-editor";
 import { ReplayStage } from "./replay-stage";
@@ -363,6 +363,11 @@ export function JourneyMode({
   const [shareCopied, setShareCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [clearedCases, setClearedCases] = useState<Set<string>>(new Set());
+
+  // Remember the active journey case so /play can resume here.
+  useEffect(() => {
+    if (caseId) void saveLastPlay({ track: "journeys", case: caseId }).catch(() => {});
+  }, [caseId]);
 
   function openCase(id: string, initProgram?: Program) {
     const next = engine.journeyExperiment(wasm, id);
