@@ -233,6 +233,10 @@ export function ExpeditionMode({
 
   // A program shared through a /play/p/<hash>?mode=expedition link stays
   // pending until the player applies or dismisses it in the grow section.
+  useEffect(() => {
+    if (initialProgram) setSharedProgram(initialProgram);
+  }, [initialProgram]);
+
   function applySharedProgram() {
     if (!sharedProgram) return;
     setGrowProgram(JSON.stringify(sharedProgram, null, 2));

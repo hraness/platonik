@@ -6,7 +6,7 @@
 // stores, with IndexedDB standing in for the filesystem.
 
 const DB_NAME = "platonik-saves";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const MEMORY = new Map<string, unknown>();
 
 export interface CampaignSave {
@@ -32,6 +32,12 @@ export interface HabitatSave {
   advances: number;
 }
 
+export interface Mark {
+  key: string; // e.g. "journey:answer-0001", "opening:opening-normal"
+  passed: boolean;
+  updated: number;
+}
+
 export interface ChallengeScore {
   challenge: string;
   index: number;
@@ -55,6 +61,7 @@ function openDb(): Promise<IDBDatabase | null> {
       if (!db.objectStoreNames.contains("campaigns")) db.createObjectStore("campaigns", { keyPath: "id" });
       if (!db.objectStoreNames.contains("habitats")) db.createObjectStore("habitats", { keyPath: "id" });
       if (!db.objectStoreNames.contains("scores")) db.createObjectStore("scores", { keyPath: "challenge" });
+      if (!db.objectStoreNames.contains("marks")) db.createObjectStore("marks", { keyPath: "key" });
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => resolve(null);
@@ -130,5 +137,21 @@ export async function allScores(): Promise<ChallengeScore[]> {
     .map(([, v]) => v as ChallengeScore);
   const merged = new Map<string, ChallengeScore>();
   for (const row of [...(rows ?? []), ...mem]) merged.set(row.challenge, row);
+  return [...merged.values()];
+}
+
+export async function saveMark(mark: Mark): Promise<void> {
+  mark.updated = Date.now();
+  const done = await idb("marks", "readwrite", (s) => s.put(mark));
+  if (done === null) MEMORY.set(memKey("marks", mark.key), mark);
+}
+
+export async function allMarks(): Promise<Mark[]> {
+  const rows = await idb<Mark[]>("marks", "readonly", (s) => s.getAll() as IDBRequest<Mark[]>);
+  const mem = [...MEMORY.entries()]
+    .filter(([k]) => k.startsWith("marks:"))
+    .map(([, v]) => v as Mark);
+  const merged = new Map<string, Mark>();
+  for (const row of [...(rows ?? []), ...mem]) merged.set(row.key, row);
   return [...merged.values()];
 }

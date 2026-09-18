@@ -22,6 +22,7 @@ import {
 import { JOURNEY_DESCRIPTIONS } from "@/lib/play/missions";
 import { PROGRAM_SCHEMA_HELP } from "@/lib/play/schema-help";
 import { buildPlayUrl } from "@/lib/play/url";
+import { allMarks, saveMark } from "@/lib/play/saves";
 import { AgentPanel } from "./agent-panel";
 import { ProgramEditor } from "./program-editor";
 import { ReplayStage } from "./replay-stage";
@@ -361,6 +362,7 @@ export function JourneyMode({
   const [until, setUntil] = useState(0);
   const [shareCopied, setShareCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [clearedCases, setClearedCases] = useState<Set<string>>(new Set());
 
   function openCase(id: string, initProgram?: Program) {
     const next = engine.journeyExperiment(wasm, id);
@@ -381,12 +383,14 @@ export function JourneyMode({
     setError(null);
   }
 
+  // Opens the case the URL points at — including "next journey" and share
+  // links that arrive while this track is already mounted.
   useEffect(() => {
     try {
       const next = engine.catalog(wasm);
       setCatalog(next);
       const track =
-        next.journeys.find((journey) => journey.id === startJourney) ??
+        next.journeys.find((journey) => journey.id === (initialJourney ?? "continuity")) ??
         next.journeys[0];
       const first =
         initialCase && track?.cases.includes(initialCase)
@@ -399,8 +403,23 @@ export function JourneyMode({
     } catch (cause) {
       setError(`The journey catalog could not be loaded: ${message(cause)}`);
     }
-    // Loads the default case once per engine instance; openCase is stable.
-  }, [wasm]);
+    // openCase is stable; the effect re-runs only when the URL state changes.
+  }, [wasm, initialJourney, initialCase, initialProgram]);
+
+  // Load persisted case clears once; a passing outcome records its mark.
+  useEffect(() => {
+    allMarks()
+      .then((marks) =>
+        setClearedCases(
+          new Set(
+            marks
+              .filter((mark) => mark.passed && mark.key.startsWith("journey:"))
+              .map((mark) => mark.key.slice("journey:".length))
+          )
+        )
+      )
+      .catch(() => {});
+  }, []);
 
   const track =
     catalog?.journeys.find((journey) => journey.id === journeyId) ??
@@ -656,33 +675,51 @@ export function JourneyMode({
   const nextCase = nextJourney
     ? catalog?.journeys.find((journey) => journey.id === nextJourney)?.cases[0] ?? null
     : null;
+
+  useEffect(() => {
+    if (!outcome?.outcome?.passed || !caseId) return;
+    void saveMark({ key: `journey:${caseId}`, passed: true, updated: Date.now() }).catch(() => {});
+    setClearedCases((prev) => (prev.has(caseId) ? prev : new Set(prev).add(caseId)));
+  }, [outcome, caseId]);
+
   const brief = `${copy?.detail ?? track?.title ?? "Journey"}${caseId ? ` Case ${caseId}.` : ""} Write the program for cell ${editCell}.`;
 
   return (
     <div className="journey-mode">
       <nav className="journey-rail" aria-label="Journeys">
-        {(catalog?.journeys ?? []).map((journey) => (
-          <button
-            key={journey.id}
-            type="button"
-            className={journey.id === track?.id ? "active" : ""}
-            aria-pressed={journey.id === track?.id}
-            onClick={() => selectJourney(journey.id)}
-          >
-            {JOURNEY_DESCRIPTIONS[journey.id]?.title ?? journey.title}
-          </button>
-        ))}
+        {(catalog?.journeys ?? []).map((journey) => {
+          const allCleared =
+            journey.cases.length > 0 && journey.cases.every((id) => clearedCases.has(id));
+          return (
+            <button
+              key={journey.id}
+              type="button"
+              className={journey.id === track?.id ? "active" : ""}
+              aria-pressed={journey.id === track?.id}
+              onClick={() => selectJourney(journey.id)}
+            >
+              {JOURNEY_DESCRIPTIONS[journey.id]?.title ?? journey.title}
+              {allCleared && (
+                <span className="play-pass" aria-label="all cases cleared">
+                  {" "}
+                  ✓
+                </span>
+              )}
+            </button>
+          );
+        })}
       </nav>
       {track && (
         <div className="case-chips" role="group" aria-label="Journey cases">
           {track.cases.map((id) => {
             const kind = caseKind(track, id);
             const active = id === caseId;
+            const cleared = clearedCases.has(id);
             return (
               <button
                 key={id}
                 type="button"
-                className="case-chip"
+                className={`case-chip${cleared ? " done" : ""}`}
                 aria-pressed={active}
                 onClick={() => selectCase(id)}
                 style={{
@@ -699,6 +736,7 @@ export function JourneyMode({
               >
                 {id}
                 {kind ? ` · ${kind}` : ""}
+                {cleared ? " ✓" : ""}
               </button>
             );
           })}
