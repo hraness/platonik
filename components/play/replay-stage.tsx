@@ -26,6 +26,47 @@ export function ReplayStage({ receipt }: { receipt: Receipt }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [receipt]);
 
+  // Keyboard playback controls: space to play/pause, arrows to step, 1-5 speed.
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.target instanceof HTMLElement && event.target.matches("input, textarea, select")) {
+        return;
+      }
+      switch (event.key) {
+        case " ":
+          event.preventDefault();
+          playing ? stop() : play();
+          break;
+        case "ArrowLeft":
+          event.preventDefault();
+          setAt((v: number) => Math.max(0, v - 1));
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          setAt((v: number) => Math.min(frames.length - 1, v + 1));
+          break;
+        case "Home":
+          event.preventDefault();
+          setAt(0);
+          break;
+        case "End":
+          event.preventDefault();
+          setAt(frames.length - 1);
+          break;
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+          event.preventDefault();
+          setSpeed([2, 4, 8, 16, 32][Number(event.key) - 1] ?? 8);
+          break;
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [playing, play, stop, setAt, setSpeed, frames.length]);
+
   const activity = useMemo(() => {
     if (!frame) return [];
     const lines: string[] = [];
