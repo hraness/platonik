@@ -6,7 +6,7 @@ import type { Receipt } from "@/lib/bridge/types";
 import { engine, type Point, type Program, type WasmModule } from "@/lib/play/engine";
 import { OPENING_MISSIONS } from "@/lib/play/missions";
 import { buildPlayUrl } from "@/lib/play/url";
-import { allMarks, saveMark } from "@/lib/play/saves";
+import { allMarks, saveLastPlay, saveMark } from "@/lib/play/saves";
 import { PROGRAM_SCHEMA_HELP } from "@/lib/play/schema-help";
 import { AgentPanel } from "./agent-panel";
 import { ProgramEditor } from "./program-editor";
@@ -162,6 +162,11 @@ export function OpeningMode({
   const [error, setError] = useState<string | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
   const [cleared, setCleared] = useState<Set<string>>(new Set());
+
+  // Remember where the player is so /play can resume here.
+  useEffect(() => {
+    if (missionKey) void saveLastPlay({ track: "opening", case: missionKey }).catch(() => {});
+  }, [missionKey]);
 
   const loadMission = useCallback(
     (key: string) => {

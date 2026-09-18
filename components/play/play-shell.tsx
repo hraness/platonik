@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loadEngine, type WasmModule, type Program } from "@/lib/play/engine";
 import { unpackProgram, programHash, verifyProgram } from "@/lib/play/url";
+import { loadLastPlay, saveLastPlay } from "@/lib/play/saves";
 import { OpeningMode } from "./opening-mode";
 import { ChallengeMode } from "./challenge-mode";
 import { ExpeditionMode } from "./expedition-mode";
@@ -72,7 +73,8 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
     };
   }, []);
 
-  // Parse and verify URL state once on mount / route change.
+  // Parse and verify URL state once on mount / route change, falling back to
+  // the last played track/case when the URL does not specify one.
   useEffect(() => {
     let cancelled = false;
 
@@ -80,9 +82,12 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
     const caseId = searchParams.get("case") ?? undefined;
     const packed = searchParams.get("program");
     const programUrl = searchParams.get("programUrl");
-    const selected = validateTrack(mode);
 
     async function resolve() {
+      const lastPlay = await loadLastPlay();
+      const selected = mode ? validateTrack(mode) : (lastPlay?.track as Track | undefined) ?? "opening";
+      const resumeCase = mode ? caseId : caseId ?? lastPlay?.case;
+
       if (packed) {
         try {
           const program = unpackProgram(packed);
@@ -92,13 +97,13 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
               setError(
                 `The program does not match the content address ${pathHash.slice(0, 16)}… — it may have been altered.`,
               );
-              setInitial({ track: selected, case: caseId, programHash: pathHash ?? computed });
+              setInitial({ track: selected, case: resumeCase, programHash: pathHash ?? computed });
             }
             return;
           }
           if (!cancelled) {
             setTrack(selected);
-            setInitial({ track: selected, case: caseId, program, programHash: pathHash ?? computed });
+            setInitial({ track: selected, case: resumeCase, program, programHash: pathHash ?? computed });
           }
         } catch (cause) {
           if (!cancelled) setError(`The program URL is malformed: ${String(cause)}`);
@@ -120,7 +125,7 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
           const program = unpackProgram(text);
           if (!cancelled) {
             setTrack(selected);
-            setInitial({ track: selected, case: caseId, program, programHash: pathHash });
+            setInitial({ track: selected, case: resumeCase, program, programHash: pathHash });
           }
         } catch (cause) {
           if (!cancelled) {
@@ -134,7 +139,7 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
 
       if (!cancelled) {
         setTrack(selected);
-        setInitial({ track: selected, case: caseId, programHash: pathHash ?? "" });
+        setInitial({ track: selected, case: resumeCase, programHash: pathHash ?? "" });
       }
     }
 
@@ -143,6 +148,13 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
       cancelled = true;
     };
   }, [searchParams, pathHash]);
+
+  // Remember the last active track so returning to /play lands where the
+  // player left off, unless a fresh URL override is present.
+  useEffect(() => {
+    if (track === "opening") return; // default landing, don't overwrite
+    void saveLastPlay({ track }).catch(() => {});
+  }, [track]);
 
   const programNotice = useMemo(() => {
     if (initial?.programHash) {

@@ -6,7 +6,7 @@
 // stores, with IndexedDB standing in for the filesystem.
 
 const DB_NAME = "platonik-saves";
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const MEMORY = new Map<string, unknown>();
 
 export interface CampaignSave {
@@ -62,6 +62,7 @@ function openDb(): Promise<IDBDatabase | null> {
       if (!db.objectStoreNames.contains("habitats")) db.createObjectStore("habitats", { keyPath: "id" });
       if (!db.objectStoreNames.contains("scores")) db.createObjectStore("scores", { keyPath: "challenge" });
       if (!db.objectStoreNames.contains("marks")) db.createObjectStore("marks", { keyPath: "key" });
+      if (!db.objectStoreNames.contains("last")) db.createObjectStore("last", { keyPath: "id" });
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => resolve(null);
@@ -154,4 +155,22 @@ export async function allMarks(): Promise<Mark[]> {
   const merged = new Map<string, Mark>();
   for (const row of [...(rows ?? []), ...mem]) merged.set(row.key, row);
   return [...merged.values()];
+}
+
+export interface LastPlay {
+  id: "last";
+  track: string;
+  case?: string;
+  updated: number;
+}
+
+export async function saveLastPlay(last: Omit<LastPlay, "id" | "updated">): Promise<void> {
+  const value: LastPlay = { id: "last", ...last, updated: Date.now() };
+  const done = await idb("last", "readwrite", (s) => s.put(value));
+  if (done === null) MEMORY.set("last:last", value);
+}
+
+export async function loadLastPlay(): Promise<LastPlay | null> {
+  const row = await idb<LastPlay>("last", "readonly", (s) => s.get("last"));
+  return row ?? (MEMORY.get("last:last") as LastPlay | undefined) ?? null;
 }
