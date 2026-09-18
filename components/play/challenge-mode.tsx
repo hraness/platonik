@@ -558,11 +558,21 @@ export function ChallengeMode({
                 file: <code>season/entries/&lt;your-login&gt;-&lt;n&gt;.json</code>. See the{" "}
                 <a href="/docs/seasons">season guide</a> for the exact format.
               </p>
+              {!(result?.passed && result.cases_passed === result.cases_total) && (
+                <p className="verdict-banner play-fail" role="status">
+                  Pass every public train case before copying this submission.
+                </p>
+              )}
               <pre className="agent-prompt" tabIndex={0} aria-label="Season submission JSON">
                 {JSON.stringify(submission, null, 2)}
               </pre>
               <div className="play-loaders">
-                <button className="lab-button secondary" type="button" onClick={copySubmission}>
+                <button
+                  className="lab-button secondary"
+                  type="button"
+                  onClick={copySubmission}
+                  disabled={!(result?.passed && result.cases_passed === result.cases_total)}
+                >
                   {copied ? "Copied" : "Copy submission"}
                 </button>
                 <a
