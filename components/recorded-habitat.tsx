@@ -8,6 +8,15 @@ export function RecordedHabitat({ receipt, frame }: { receipt: Receipt; frame: F
   const center = (point: Point) => ({ x: point.x * 36 + 18, y: point.y * 36 + 18 });
   const label = (point: Point, text: string, fill = "var(--specimen-ink)") => <text x={center(point).x} y={center(point).y + 5} textAnchor="middle" fontSize="13" fontWeight="600" fill={fill}>{text}</text>;
   return <svg className="bridge-map" viewBox={`0 0 ${world.width * 36} ${world.height * 36}`} role="img" aria-label={`Recorded habitat at tick ${frame.tick}. ${state.delivered.length} sparks delivered to beacons. S: source, D: depot, V: valve, B: beacon, numbered circles: cells. Exact memory and service values follow below.`}>
+    <defs>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
     <rect width="100%" height="100%" fill="var(--surface)" />
     {world.walls.map(point => <rect key={`${point.x},${point.y}`} x={point.x * 36 + 2} y={point.y * 36 + 2} width="32" height="32" fill="var(--specimen-wall)" />)}
     {links.map(link => {
@@ -38,7 +47,7 @@ export function RecordedHabitat({ receipt, frame }: { receipt: Receipt; frame: F
       const born = births.some(birth => birth.body.cell.id === cell.id);
       const stroke = active ? (active.success ? "var(--accent)" : "var(--danger)") : "var(--surface)";
       const strokeWidth = active ? 3 : 2;
-      return <g key={cell.id} data-kind={born ? "born-cell" : active ? (active.success ? "active-cell" : "failed-cell") : "cell"} data-cell={cell.id}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r="11" fill={cell.cargo || cell.material !== undefined ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke={stroke} strokeWidth={strokeWidth} />{label(cell.position, String(cell.id), cell.cargo || cell.material !== undefined ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>;
+      return <g key={cell.id} filter={active ? "url(#glow)" : undefined} data-kind={born ? "born-cell" : active ? (active.success ? "active-cell" : "failed-cell") : "cell"} data-cell={cell.id}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r="11" fill={cell.cargo || cell.material !== undefined ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke={stroke} strokeWidth={strokeWidth} />{label(cell.position, String(cell.id), cell.cargo || cell.material !== undefined ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>;
     })}
   </svg>;
 }
