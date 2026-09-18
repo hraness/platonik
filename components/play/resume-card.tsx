@@ -31,7 +31,7 @@ export function ResumeCard() {
   if (!last) {
     return (
       <div className="resume-card">
-        <Link className="lab-button primary" href="/play?mode=opening&case=opening-normal">
+        <Link className="lab-button" href="/play?mode=opening&case=opening-normal">
           Start the opening
         </Link>
         <span className="resume-note">Three missions that teach the loop.</span>
@@ -44,7 +44,7 @@ export function ResumeCard() {
 
   return (
     <div className="resume-card">
-      <Link className="lab-button primary" href={`/play${query}`}>
+      <Link className="lab-button" href={`/play${query}`}>
         Continue: {label}
       </Link>
       <span className="resume-note">Picks up where you left off in this browser.</span>
