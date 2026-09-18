@@ -188,7 +188,9 @@ export function PlayShell({ programHash: pathHash }: PlayShellProps) {
             initialProgram={initial.program}
           />
         )}
-        {track === "expedition" && <ExpeditionMode wasm={wasm} />}
+        {track === "expedition" && (
+          <ExpeditionMode wasm={wasm} initialProgram={initial.program} />
+        )}
         {track === "journeys" && (
           <JourneyMode
             wasm={wasm}

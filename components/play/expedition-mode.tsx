@@ -18,6 +18,7 @@ import {
   saveCampaign,
   type CampaignSave,
 } from "@/lib/play/saves";
+import { buildPlayUrl } from "@/lib/play/url";
 import { PROGRAM_SCHEMA_HELP } from "@/lib/play/schema-help";
 import { AgentPanel } from "./agent-panel";
 import { ProgramEditor } from "./program-editor";
@@ -99,11 +100,23 @@ function saveId(): string {
  * planned, applied, and journaled through the engine; saves keep the applied
  * events so the journal can always be replayed.
  */
-export function ExpeditionMode({ wasm }: { wasm: WasmModule }) {
+export function ExpeditionMode({
+  wasm,
+  initialProgram,
+}: {
+  wasm: WasmModule;
+  initialProgram?: Program;
+}) {
   const [saves, setSaves] = useState<CampaignSave[]>([]);
   const [campaign, setCampaign] = useState<LoadedCampaign | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  // A program carried in by a /play/p/<hash>?mode=expedition link waits here
+  // until a campaign is open, then fills the grow editor once.
+  const [sharedProgram, setSharedProgram] = useState<Program | null>(
+    initialProgram ?? null
+  );
 
   // Last completed trial's receipt + case, for the replay stage.
   const [receipt, setReceipt] = useState<Receipt | null>(null);
@@ -217,6 +230,14 @@ export function ExpeditionMode({ wasm }: { wasm: WasmModule }) {
   useEffect(() => {
     setGrowProgram(parentProgram);
   }, [parentProgram]);
+
+  // A program shared through a /play/p/<hash>?mode=expedition link stays
+  // pending until the player applies or dismisses it in the grow section.
+  function applySharedProgram() {
+    if (!sharedProgram) return;
+    setGrowProgram(JSON.stringify(sharedProgram, null, 2));
+    setSharedProgram(null);
+  }
 
   async function persist(next: LoadedCampaign) {
     await saveCampaign({
@@ -417,6 +438,22 @@ export function ExpeditionMode({ wasm }: { wasm: WasmModule }) {
     }
   }
 
+  /** Share the grow program: the URL carries it to another player's grow editor. */
+  async function shareGrowProgram() {
+    try {
+      const program = JSON.parse(growProgram) as Program;
+      if (!program || typeof program !== "object" || !Array.isArray(program.rules)) {
+        throw new Error("A program is an object with a rules array.");
+      }
+      const url = await buildPlayUrl({ track: "expedition", program });
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 1600);
+    } catch (cause) {
+      setError(`Share failed: ${errorText(cause)}`);
+    }
+  }
+
   function chipState(id: string, done: string[], failed: string[]): "done" | "failed" | "missing" {
     if (done.includes(id)) return "done";
     if (failed.includes(id) || failedAttempts.has(id)) return "failed";
@@ -456,6 +493,12 @@ export function ExpeditionMode({ wasm }: { wasm: WasmModule }) {
           ))}
         </select>
         <p className="lab-note">{AMBITIONS.find((item) => item.id === ambition)?.detail}</p>
+        {sharedProgram && (
+          <p className="lab-note">
+            A program shared by URL is loaded — it will fill the grow editor once you open an
+            expedition.
+          </p>
+        )}
         <button
           className="lab-button primary"
           type="button"
@@ -741,6 +784,25 @@ export function ExpeditionMode({ wasm }: { wasm: WasmModule }) {
           {!state.frozen && (
             <section className="expedition-section">
               <h3>Grow a creation</h3>
+              {sharedProgram && (
+                <div className="objective-banner">
+                  <span>A program shared by URL is loaded.</span>
+                  <button
+                    className="lab-button secondary"
+                    type="button"
+                    onClick={applySharedProgram}
+                  >
+                    Use it in the grow editor
+                  </button>
+                  <button
+                    className="lab-text-button"
+                    type="button"
+                    onClick={() => setSharedProgram(null)}
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              )}
               <div className="grow-form">
                 <label>
                   Name
@@ -812,6 +874,14 @@ export function ExpeditionMode({ wasm }: { wasm: WasmModule }) {
                 currentProgram={growProgram}
                 onProgram={acceptAgentProgram}
               />
+              <button
+                className="lab-button secondary"
+                type="button"
+                disabled={busy}
+                onClick={shareGrowProgram}
+              >
+                {shareCopied ? "Link copied" : "Copy share link"}
+              </button>
             </section>
           )}
 
@@ -853,6 +923,19 @@ export function ExpeditionMode({ wasm }: { wasm: WasmModule }) {
               )}
               {freezeBlock && <p className="lab-note">{freezeBlock}</p>}
             </section>
+          )}
+
+          {state.frozen && sharedProgram && (
+            <p className="lab-note">
+              A program shared by URL is loaded, but this expedition is frozen — growth has ended.{" "}
+              <button
+                className="lab-text-button"
+                type="button"
+                onClick={() => setSharedProgram(null)}
+              >
+                Dismiss
+              </button>
+            </p>
           )}
 
           {state.frozen && (
