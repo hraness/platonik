@@ -974,7 +974,7 @@ export function JourneyMode({
             <p className="play-next">
               <Link
                 className="lab-button secondary"
-                href={`/play?mode=journeys&case=${nextCase}`}
+                href={`/play/lab?mode=journeys&case=${nextCase}`}
               >
                 Next: {JOURNEY_DESCRIPTIONS[nextJourney]?.title ?? nextJourney}{" "}
                 <span aria-hidden="true">→</span>

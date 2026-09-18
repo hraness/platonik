@@ -1,12 +1,14 @@
 "use client";
 
+import type { LivingWorld } from "./engine";
+
 // Browser persistence for the game. Campaigns are stored losslessly: the
 // campaign state plus every applied event, so state can always be re-derived
 // by replaying the journal — the same event-sourced semantics as the CLI
 // stores, with IndexedDB standing in for the filesystem.
 
 const DB_NAME = "platonik-saves";
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const MEMORY = new Map<string, unknown>();
 
 export interface CampaignSave {
@@ -30,6 +32,13 @@ export interface HabitatSave {
   experiment: unknown;
   advance: unknown; // latest Advance (paused checkpoint or finished result)
   advances: number;
+}
+
+export interface WorldSave {
+  id: string;
+  kind: "world";
+  updated: number;
+  world: LivingWorld;
 }
 
 export interface Mark {
@@ -56,15 +65,28 @@ function openDb(): Promise<IDBDatabase | null> {
   if (typeof indexedDB === "undefined") return Promise.resolve(null);
   return new Promise((resolve) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
+    let blocked = false;
     request.onupgradeneeded = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains("campaigns")) db.createObjectStore("campaigns", { keyPath: "id" });
       if (!db.objectStoreNames.contains("habitats")) db.createObjectStore("habitats", { keyPath: "id" });
+      if (!db.objectStoreNames.contains("worlds")) db.createObjectStore("worlds", { keyPath: "id" });
       if (!db.objectStoreNames.contains("scores")) db.createObjectStore("scores", { keyPath: "challenge" });
       if (!db.objectStoreNames.contains("marks")) db.createObjectStore("marks", { keyPath: "key" });
       if (!db.objectStoreNames.contains("last")) db.createObjectStore("last", { keyPath: "id" });
     };
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => {
+      if (blocked) {
+        request.result.close();
+        return;
+      }
+      request.result.onversionchange = () => request.result.close();
+      resolve(request.result);
+    };
+    request.onblocked = () => {
+      blocked = true;
+      resolve(null);
+    };
     request.onerror = () => resolve(null);
   });
 }
@@ -118,6 +140,20 @@ export async function saveHabitat(save: HabitatSave): Promise<void> {
 export async function loadHabitat(id: string): Promise<HabitatSave | null> {
   const row = await idb<HabitatSave>("habitats", "readonly", (s) => s.get(id));
   return row ?? (MEMORY.get(memKey("habitats", id)) as HabitatSave | undefined) ?? null;
+}
+
+export async function saveWorld(world: LivingWorld, id: string): Promise<void> {
+  const value: WorldSave = { id, kind: "world", updated: Date.now(), world };
+  const done = await idb("worlds", "readwrite", (store) => store.put(value));
+  if (done === null) MEMORY.set(memKey("worlds", id), value);
+}
+
+export async function latestWorld(): Promise<WorldSave | null> {
+  const rows = await idb<WorldSave[]>("worlds", "readonly", (store) => store.getAll() as IDBRequest<WorldSave[]>);
+  const memory = [...MEMORY.entries()]
+    .filter(([key]) => key.startsWith("worlds:"))
+    .map(([, value]) => value as WorldSave);
+  return [...(rows ?? []), ...memory].sort((a, b) => b.updated - a.updated)[0] ?? null;
 }
 
 export async function saveScore(score: ChallengeScore): Promise<void> {

@@ -127,9 +127,33 @@ pub fn make_submission(
     to_json(&submission)
 }
 
+#[wasm_bindgen]
+pub fn world_new(name: &str) -> Result<String, JsError> {
+    let world =
+        platonik_core::world::new(name.to_string(), platonik_core::world_fixtures::homestead())
+            .map_err(to_js_error)?;
+    to_json(&world)
+}
+
+#[wasm_bindgen]
+pub fn world_apply(world_json: &str, command_json: &str) -> Result<String, JsError> {
+    let world: platonik_core::world::World = from_json(world_json)?;
+    let command: platonik_core::world::Command = from_json(command_json)?;
+    let next = platonik_core::world::apply(&world, command).map_err(to_js_error)?;
+    to_json(&next)
+}
+
+#[wasm_bindgen]
+pub fn world_report(world_json: &str) -> Result<String, JsError> {
+    let world: platonik_core::world::World = from_json(world_json)?;
+    let report = platonik_core::world::report(&world).map_err(to_js_error)?;
+    to_json(&report)
+}
+
 /// Return a named reference program as JSON. Supported names:
 /// `idle`, `compact`, `resilient`, `relay`, `controller`, `switchboard-porter`,
-/// `switchboard-relay`, `switchboard-keeper`, `foundry-builder`.
+/// `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, and the
+/// `world-builder-upper` or `world-builder-lower` homestead plans.
 #[wasm_bindgen]
 pub fn reference_program(name: &str) -> Result<String, JsError> {
     let program = match name {
@@ -144,6 +168,12 @@ pub fn reference_program(name: &str) -> Result<String, JsError> {
         "switchboard-relay" => platonik_core::fixtures::switchboard_relay(),
         "switchboard-keeper" => platonik_core::fixtures::switchboard_keeper(),
         "foundry-builder" => platonik_core::fixtures::foundry_builder(),
+        "world-builder-upper" => {
+            platonik_core::world_fixtures::builder_program(50).map_err(to_js_error)?
+        }
+        "world-builder-lower" => {
+            platonik_core::world_fixtures::builder_program(51).map_err(to_js_error)?
+        }
         _ => return Err(JsError::new(&format!("Unknown reference program: {name}"))),
     };
     to_json(&program)

@@ -8,23 +8,23 @@ web
 
 ## Stack
 
-User-selected: standard Next.js on Vercel. The future game engine is Rust and is separate from the website.
+Next.js on Vercel provides the read-only world renderer. The authoritative deterministic game engine and mutable JSON world run locally in Rust through the player's own agent.
 
 ## Users
 
-People who have felt the thrill of building something with an AI agent, including those without a computer science background. They want to invent, grow attached to their creations, and discover surprising behavior. The immediate reader is reviewing the proposed game through its marketing and documentation website.
+People who enjoy building with an AI agent, including those without a computer science background. They want a persistent system they can understand visually, improve through conversation, and grow attached to without operating a technical puzzle interface.
 
 ## Product Purpose
 
-Present Platonik's proposed play loop, progression, competitive model, and research aims in a browsable form. The website is the current deliverable; the game remains a proposal.
+Make one persistent automation world satisfying to build through an external agent and easy to understand through a visual browser renderer. Grow depth through real transport, production, construction, and coordination in that same world.
 
 ## Positioning
 
-Make a creature with your AI. Watch it find its way, help it recover, and discover what else it can do. External agents translate player wishes into programs for a deterministic engine. Deeper play leads to collective behavior, reproducible experiments, and independently verified competition.
+Build a living automation world with your AI agent. Describe an ambition, watch creatures and resources carry it out, notice a bottleneck, and improve the same saved system. The agent is the workbench; the browser is the verified window.
 
 ## Capabilities and Constraints
 
-The website makes the concept and documentation easy to review. Its observatory offers three bounded, working browser prototypes: editable courier programs with structural portraits and a local specimen drawer, fuzzy truth maps, and a world-cost calculator with optional browser measurement. These TypeScript models are separate from the proposed Rust game. There is no Rust release, public ranking, or installation flow yet. Distinguish authored fiction, measured model behavior, and scientific claims.
+The implemented Dustlight protocol carries one compact Rust world through content-addressed event history, 1–128-tick advances, original-cell policy interventions, finite resources, and a two-blueprint foundry. `/play` recomputes and renders world history without exposing mutation controls. The CLI and play skill are the agent-facing interface. The earlier observatory, challenge seasons, expeditions, and journeys remain evidence and reference surfaces. Repeatable production, arbitrary building placement, larger regions, moving arks, and the complete campaign are not implemented.
 
 ## Brand Commitments
 
@@ -32,7 +32,7 @@ User-confirmed name: Platonik. Domain: platonik.space. Public repository: hranes
 
 ## Evidence on Hand
 
-The documents under docs/ contain the original design proposal and source citations. No gameplay performance, player testimonials, or usage figures exist.
+The repository contains deterministic Rust tests for world continuity, interventions, construction, tamper rejection, and CLI/browser handoff, plus the earlier experiment evidence. No player testimonials, retention data, or claims of open-ended production exist.
 
 ## Product Principles
 
@@ -50,9 +50,9 @@ The Long Trail is a hopeful space western with a singularity arc: a first compan
 
 The player is a frontier engineer of living systems, with a naturalist's curiosity and a trail guide's care, growing into a civilization's steward. Preserve parents, keep favorite lineages visible, and make habitat fit and cooperation mechanically useful. Creatures are companions rather than consumable crafting ingredients. Avoid body horror, compulsory sacrifice or fusion, and neglect penalties while offline. Fictional minds and narrative first contact remain separate from measured software behavior.
 
-## Observatory Direction
+## Renderer Direction
 
-The visitor should be able to collect a recognizable abstract specimen, alter its actual bounded program, and compare what it does. The microscope-like portrait derives from rule structure and memory usage, while the journey view shows execution. Appearance is a lossy encoding with no fitness or novelty guarantee. Retain the minimal site identity; let the computed artifact supply the visual interest. Agent virtuosity comes from inspectable program edits and experiments. Work, program footprint, memory, and demonstrated capability remain distinct. Large ecologies and useful external results require the explicit evidence gates in the complexity and scale proposal.
+The world occupies most of `/play`. Show cargo, stock, construction, route contention, home charge, stable creature identity, and recent events before exposing programs or cost ledgers. Selection, replay, and history navigation are read-only. The computed world supplies the visual interest; the renderer must not invent simulation state or duplicate engine logic. Appearance never changes outcomes. The older observatory remains available for focused technical studies.
 
 ## Shared Economy Direction
 
@@ -60,4 +60,4 @@ Single-player laboratories can participate in a proposed multiplayer expedition 
 
 ## Open Decisions
 
-Game balancing, instruction limits, season constants, and later chapters remain proposals. This website does not freeze those rules.
+The next product gate is repeatable production and construction in the persistent world, followed by reusable blueprints and additional sites. Map scale, recipe balance, larger-world storage, campaign structure, and optional competition remain open until the small automation loop is enjoyable.

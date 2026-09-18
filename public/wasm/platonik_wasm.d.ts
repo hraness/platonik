@@ -103,7 +103,8 @@ export function make_submission(challenge_json: string, programs_json: string, a
 /**
  * Return a named reference program as JSON. Supported names:
  * `idle`, `compact`, `resilient`, `relay`, `controller`, `switchboard-porter`,
- * `switchboard-relay`, `switchboard-keeper`, `foundry-builder`.
+ * `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, and the
+ * `world-builder-upper` or `world-builder-lower` homestead plans.
  */
 export function reference_program(name: string): string;
 
@@ -131,6 +132,12 @@ export function validate_experiment(experiment_json: string): string;
  */
 export function verify_receipt(receipt_json: string): string;
 
+export function world_apply(world_json: string, command_json: string): string;
+
+export function world_new(name: string): string;
+
+export function world_report(world_json: string): string;
+
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
@@ -156,6 +163,9 @@ export interface InitOutput {
     readonly tutorial_experiment: (a: number, b: number) => [number, number, number, number];
     readonly validate_experiment: (a: number, b: number) => [number, number, number, number];
     readonly verify_receipt: (a: number, b: number) => [number, number, number, number];
+    readonly world_apply: (a: number, b: number, c: number, d: number) => [number, number, number, number];
+    readonly world_new: (a: number, b: number) => [number, number, number, number];
+    readonly world_report: (a: number, b: number) => [number, number, number, number];
     readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __externref_table_dealloc: (a: number) => void;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;

@@ -1,17 +1,19 @@
 # The Long Trail
 
-Campaign proposal, revised 17 September 2026. A hopeful space western about a herd becoming an alien civilization. The characters, settings, discoveries, and scenes here are fiction for an unbuilt full campaign. A set of bounded Rust journeys now implements pieces of that trail; none demonstrates the complete progression below.
+Campaign proposal, revised 18 September 2026. A hopeful space western about a herd becoming an alien civilization. Dustlight now implements one persistent automation trailhead operated by an external agent and viewed in the browser. The larger characters, settlements, moving arks, discoveries, and scenes remain fiction for an unbuilt full campaign. Earlier bounded Rust journeys implement additional pieces of the trail; none demonstrates the complete progression below.
 
 ## The playable trailhead
 
-Several short local journeys can be run through the same deterministic Rust interpreter, checker, cost ledger, save format, and replay discipline:
+The primary playable trailhead is Dustlight. `platonik world` preserves one homestead across bounded advances and original-cell policy changes; its foundry has two supplied courier blueprints and exactly two material units. `/play` recomputes a compact content-addressed history and renders it without mutating the agent's local JSON world. It is the first continuous build-and-watch loop, not yet repeatable production or a larger map.
+
+Several earlier short journeys remain available through the same deterministic Rust interpreter, checker, cost ledger, and replay discipline:
 
 - [The field expedition](field-expedition.md) keeps a collection, records a failed crossing, grows a descendant, freezes one courier-controller pair, and checks it unchanged on four confirmation crossings.
 - [The First Answer](first-answer.md) carries one saved habitat through material-dependent construction to a checked local contact ending.
 - [Ark control](ark-control.md) makes physical input drive four-bit arithmetic and a remembered service choice; [port commitments](port-commitments.md) checks two finite handoffs through missing and delayed replies.
 - [The Bloom](bloom.md) grows and tests two bounded variants. The [one-lane exchange](composition-v5-gate.md) then connects a generated winner to a request, physical delivery, custody acknowledgment, and service inside one continuous world.
 
-These are runnable campaign slices, not one campaign save. Completing one does not unlock the next; there is no star map, moving ark, independent settlement network, or six-chapter ending. The field expedition also runs each trial in its own declared world, while the later habitat journeys preserve one physical world across checked pauses. Their integration is technical and causal, not yet progression-level.
+Those earlier slices are not folded into the Dustlight save. Completing one does not unlock another; there is no star map, moving ark, independent settlement network, or six-chapter ending. Dustlight supplies continuity for its two routes and foundry, while the field expedition resets declared trials and the later habitat journeys preserve their own fixed physical worlds. The remaining integration is production- and campaign-level, not a missing navigation tab.
 
 The [observatory](observatory.md) displays bounded browser experiments and recorded Rust evidence. The sections below describe the larger journey these working pieces are intended to earn.
 

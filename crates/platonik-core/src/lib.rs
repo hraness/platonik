@@ -23,5 +23,7 @@ pub mod port_fixtures;
 pub mod season;
 pub mod sim;
 pub mod suite;
+pub mod world;
+pub mod world_fixtures;
 pub use model::{Experiment, PROTOCOL, RunResult};
 pub use sim::{parse_experiment, run, validate_experiment};

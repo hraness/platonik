@@ -20,7 +20,7 @@ import "./marketing.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: "Platonik — a world of algorithmic organisms", template: "%s · Platonik" },
+  title: { default: "Platonik — build a living automation world", template: "%s · Platonik" },
   description: site.description,
   openGraph: { type: "website", siteName: site.name, title: site.name, description: site.description },
   twitter: { card: "summary_large_image", title: site.name, description: site.description },
@@ -37,8 +37,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <header className="site-header hraness-material-chrome" data-hraness-marketing-preset="minimal">
             <Link href="/" className="wordmark" aria-label="Platonik home"><Image className="brand-icon" src="/brand.png" width={48} height={48} alt="" aria-hidden="true" />platonik<span aria-hidden="true">.</span></Link>
             <nav aria-label="Main navigation">
-              <Link href="/lab">Observatory</Link>
-              <Link href="/docs">Documentation</Link>
+              <Link href="/play">Living world</Link>
+              <Link href="/docs">Field guide</Link>
               <a href={site.repository}>GitHub</a>
             </nav>
             <AppearanceControl />

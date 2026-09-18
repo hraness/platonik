@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
-import { AgentSetupCard } from "@/components/play/agent-setup";
-import { ResumeCard } from "@/components/play/resume-card";
 import { PlayShell } from "@/components/play/play-shell";
 import "../../../lab/lab.css";
 
@@ -10,9 +9,10 @@ type PageProps = { params: Promise<{ programHash: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { programHash } = await params;
   return {
-    title: `Play Platonik · ${programHash.slice(0, 16)}…`,
-    description: "Run a content-addressed Platonik program in your browser.",
+    title: `Archived program · ${programHash.slice(0, 16)}…`,
+    description: "Recompute an earlier content-addressed Platonik program in the archived browser laboratory.",
     alternates: { canonical: `/play/p/${programHash}` },
+    robots: { index: false, follow: false },
   };
 }
 
@@ -21,17 +21,10 @@ export default async function ProgramPage({ params }: PageProps) {
   return (
     <main id="main" className="lab">
       <header className="lab-header">
-        <h1>Play Platonik</h1>
-        <p>
-          Write a program, run the deterministic engine in this tab, watch the replay. No install,
-          no account — your saves stay in this browser.
-        </p>
-        <p className="lab-note">
-          Every run produces a receipt the Rust engine can independently verify — the same engine
-          behind the command line and the hosted seasons.
-        </p>
-        <ResumeCard />
-        <AgentSetupCard />
+        <p className="lab-note">Archived program laboratory</p>
+        <h1>Recompute this program</h1>
+        <p>This earlier share link remains runnable. The primary game now follows one persistent world built through your own agent.</p>
+        <p><Link href="/play">Open the living world</Link></p>
       </header>
       <Suspense fallback={<p role="status">Loading the Platonik engine…</p>}>
         <PlayShell programHash={programHash} />

@@ -2,26 +2,21 @@
 
 import { useState } from "react";
 
-const ONE_LINER = `Set up Platonik for me: clone https://github.com/hraness/platonik, read skills/platonik-play/SKILL.md, pick one target (challenge-0001 is fine), and send back a verified https://platonik.space/play/p/<sha256>?mode=challenges&case=challenge-0001&program=<base64url> link. The URL is the save — the browser checks the hash.`;
+const ONE_LINER = `Set up a Platonik living world for us: clone https://github.com/hraness/platonik, read skills/platonik-play/SKILL.md, create and inspect a homestead with \`platonik world new\`, run one bounded improvement, and send me the verified URL from \`platonik world link\`. Keep the JSON save locally; the browser is our renderer.`;
 
-const PROMPT = `Play Platonik with me — a browser game where you program small creatures that carry sparks through a habitat.
+const PROMPT = `Play Platonik with me as my world-building agent.
 
-1. Clone https://github.com/hraness/platonik and read skills/platonik-play/SKILL.md — it documents the Rust CLI and the program schema. (Or just work from the repo's docs/challenges.md + docs/seasons.md if you prefer.)
-2. Pick a target and write a program that passes it:
-   - challenges: 96 generated worlds, ids challenge-0001..challenge-0096 — verify locally with the CLI's eval.
-   - journeys: continuous-habitat cases (continuity, construction, answer, ark, ports, bloom, exchange).
-   - opening: the three tutorial missions (opening-normal, opening-wounded, ark-plan-a).
-3. Send me a link in exactly this form:
-   https://platonik.space/play/p/<sha256>?mode=<track>&case=<id>&program=<base64url>
-   - <track>: opening | challenges | expedition | journeys
-   - <base64url>: the canonical JSON program — object keys sorted recursively, compact separators, UTF-8, base64url without padding
-   - <sha256>: hex SHA-256 of that same canonical string
-   The page verifies the hash, loads the same case, and runs your program in my browser — no server round trip, no account.`;
+1. Clone https://github.com/hraness/platonik, build the CLI, and read skills/platonik-play/SKILL.md.
+2. Run \`platonik world new Dustlight > dustlight-r0.world.json\`, then inspect it with \`platonik world report dustlight-r0.world.json\`.
+3. Preserve that file. Apply one bounded command to a new file: advance 1–128 ticks, or change one admitted creature program and then advance. Explain the visible consequence in plain language rather than leading with hashes or metrics.
+4. Run \`platonik world link <new-world-file>\` and send me its URL. I will watch the exact recomputed world in the browser and tell you what we should build or improve next.
+
+Never overwrite an earlier world file or hide a failed attempt. Keep external-agent effort separate from modeled world work. Ask me about consequential choices—resilient versus efficient, preserve a favorite versus replace its role, improve home versus explore farther—but handle routine CLI details yourself.`;
 
 /**
  * A copyable "set me up" prompt: the player pastes it to their agent and gets
- * back a verified /play/p/<hash> link. One block is all the agent needs —
- * the repo path, the skill, the URL format, and the canonicalization rules.
+ * back a verified living-world link. One block is all the agent needs —
+ * the repo path, the skill, and the bounded world command loop.
  */
 export function AgentSetupCard() {
   const [copied, setCopied] = useState<"one" | "full" | false>(false);

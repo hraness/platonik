@@ -1,6 +1,16 @@
 import type { Frame, Point, Receipt } from "@/lib/bridge/types";
 
-export function RecordedHabitat({ receipt, frame }: { receipt: Receipt; frame: Frame }) {
+export function RecordedHabitat({
+  receipt,
+  frame,
+  selectedCell,
+  onSelectCell,
+}: {
+  receipt: Receipt;
+  frame: Frame;
+  selectedCell?: number;
+  onSelectCell?: (cell: number) => void;
+}) {
   const world = receipt.experiment, state = frame.state;
   const births = state.construction?.births ?? [];
   const links = [...world.links, ...births.flatMap(birth => birth.body.links)];
@@ -45,9 +55,11 @@ export function RecordedHabitat({ receipt, frame }: { receipt: Receipt; frame: F
     {state.cells.map(cell => {
       const active = frame.activations?.find(a => a.cell === cell.id);
       const born = births.some(birth => birth.body.cell.id === cell.id);
-      const stroke = active ? (active.success ? "var(--accent)" : "var(--danger)") : "var(--surface)";
-      const strokeWidth = active ? 3 : 2;
-      return <g key={cell.id} filter={active ? "url(#glow)" : undefined} data-kind={born ? "born-cell" : active ? (active.success ? "active-cell" : "failed-cell") : "cell"} data-cell={cell.id}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r="11" fill={cell.cargo || cell.material !== undefined ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke={stroke} strokeWidth={strokeWidth} />{label(cell.position, String(cell.id), cell.cargo || cell.material !== undefined ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>;
+      const selected = selectedCell === cell.id;
+      const stroke = selected ? "var(--focus)" : active ? (active.success ? "var(--accent)" : "var(--danger)") : "var(--surface)";
+      const strokeWidth = selected || active ? 3 : 2;
+      const select = () => onSelectCell?.(cell.id);
+      return <g key={cell.id} filter={active ? "url(#glow)" : undefined} data-kind={born ? "born-cell" : active ? (active.success ? "active-cell" : "failed-cell") : "cell"} data-cell={cell.id} role={onSelectCell ? "button" : undefined} tabIndex={onSelectCell ? 0 : undefined} aria-label={onSelectCell ? `Inspect cell ${cell.id}` : undefined} aria-pressed={onSelectCell ? selected : undefined} onClick={select} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(); } }}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r={selected ? 13 : 11} fill={cell.cargo || cell.material !== undefined ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke={stroke} strokeWidth={strokeWidth} />{label(cell.position, String(cell.id), cell.cargo || cell.material !== undefined ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>;
     })}
   </svg>;
 }

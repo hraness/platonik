@@ -151,6 +151,25 @@ This section supersedes the light-only colors and Arial body type in the
 original laboratory/documentation record below. The immutable Lantern and
 marketing bundles remain independently checked under `vendor/`.
 
+## Living world renderer
+
+`/play` is a world-first Operate surface. The map occupies the dominant visual
+plane, followed by one compact timeline, a plain-language moment readout, and a
+selection inspector. Program editors, challenge grids, scoreboards, and track
+pickers do not appear in the primary game. They remain in the archived
+`/play/lab` engineering surface.
+
+The renderer uses only Rust-derived experiments, states, frames, and summaries.
+Cargo, construction, active cells, walls, source stock, beacon charge, and
+selection use the shared semantic palette plus textual labels. Appearance does
+not enter the world hash or execution. Pan-by-overflow, playback, scrubbing,
+entity selection, file opening, and export do not mutate the world.
+
+The agent handoff is the only primary action. Shared `.lab-button` presentation
+must produce the same foreground, hover, focus, target, and text-decoration
+behavior on buttons, anchors, and file labels; route-specific CSS may arrange
+those controls but must not redefine their state colors.
+
 ## Shared marketing surface
 
 The homepage now uses Hraness's approved Peopleblade marketing treatment: Instrument Serif 400 display headings, Nebula Sans body text, a restrained continuous gradient with faint grain and cell seams, and more open spacing. The shared preset and its font, texture, license, and validation files live in `vendor/hraness-marketing`; keep that immutable bundle intact and adapt through `app/marketing.css`.

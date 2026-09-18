@@ -171,7 +171,7 @@
   .lab-panel-intro h2, .lab-panel-intro h3 { font-size: 30px; }
 }
 
-/* Browser-playable surface (Phase 0). */
+/* Archived browser laboratory and shared control recipes. */
 .play-viewer { display: grid; grid-template-columns: minmax(280px, .75fr) minmax(0, 1.25fr); gap: 40px; align-items: start; }
 .play-controls h2 { font-size: 22px; margin-bottom: 6px; }
 .play-loaders { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 12px 18px; }
