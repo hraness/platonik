@@ -450,11 +450,11 @@ export function JourneyMode({
     (advance === null || advance.kind === "paused") &&
     advances < MAX_ADVANCES;
 
-  function selectJourney(id: string) {
+  function selectJourney(id: string, targetCase?: string) {
     const next = catalog?.journeys.find((journey) => journey.id === id);
     if (!next || id === track?.id) return;
     setJourneyId(next.id);
-    const first = next.cases[0];
+    const first = targetCase && next.cases.includes(targetCase) ? targetCase : next.cases[0];
     if (first) {
       try {
         openCase(first);
@@ -681,6 +681,25 @@ export function JourneyMode({
     ? catalog?.journeys.find((journey) => journey.id === nextJourney)?.cases[0] ?? null
     : null;
 
+  const journeyStats = useMemo(() => {
+    const all = catalog?.journeys ?? [];
+    const totalCases = all.reduce((sum, journey) => sum + journey.cases.length, 0);
+    const cleared = all.filter(
+      (journey) => journey.cases.length > 0 && journey.cases.every((id) => clearedCases.has(id)),
+    ).length;
+    let next: { journey: string; case: string } | null = null;
+    for (const id of JOURNEY_ORDER) {
+      const journey = all.find((j) => j.id === id);
+      if (!journey) continue;
+      const missing = journey.cases.find((c) => !clearedCases.has(c));
+      if (missing) {
+        next = { journey: journey.id, case: missing };
+        break;
+      }
+    }
+    return { cleared, totalCases, next };
+  }, [catalog, clearedCases]);
+
   useEffect(() => {
     if (!outcome?.outcome?.passed || !caseId) return;
     void saveMark({ key: `journey:${caseId}`, passed: true, updated: Date.now() }).catch(() => {});
@@ -691,6 +710,36 @@ export function JourneyMode({
 
   return (
     <div className="journey-mode">
+      <div className="journey-scoreboard" role="status" aria-label="Journey progress">
+        <div className="journey-stat">
+          <span className="journey-stat-label">Journeys cleared</span>
+          <strong className="journey-stat-value">
+            {journeyStats.cleared}<span className="journey-stat-denominator">/{JOURNEY_ORDER.length}</span>
+          </strong>
+        </div>
+        <div className="journey-stat">
+          <span className="journey-stat-label">Cases cleared</span>
+          <strong className="journey-stat-value">
+            {clearedCases.size}<span className="journey-stat-denominator">/{journeyStats.totalCases}</span>
+          </strong>
+        </div>
+        {journeyStats.next ? (
+          <button
+            type="button"
+            className="journey-stat-link"
+            onClick={() => selectJourney(journeyStats.next!.journey, journeyStats.next!.case)}
+          >
+            <span className="journey-stat-label">Next</span>
+            <strong className="journey-stat-value">{journeyStats.next.case}</strong>
+          </button>
+        ) : (
+          <div className="journey-stat">
+            <span className="journey-stat-label">Next</span>
+            <strong className="journey-stat-value play-pass">All done</strong>
+          </div>
+        )}
+      </div>
+
       <nav className="journey-rail" aria-label="Journeys">
         {(catalog?.journeys ?? []).map((journey) => {
           const allCleared =
