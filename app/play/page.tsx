@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AgentSetupCard } from "@/components/play/agent-setup";
+import { ProgressCard } from "@/components/play/progress-card";
 import { ResumeCard } from "@/components/play/resume-card";
 import { PlayShell } from "@/components/play/play-shell";
 import { site } from "@/lib/site";
@@ -30,6 +31,7 @@ export default function PlayPage() {
           The browser verifies the program against the hash, loads the same case, and replays it.
         </p>
         <ResumeCard />
+        <ProgressCard />
         <AgentSetupCard />
       </header>
       <Suspense fallback={<p role="status">Loading the Platonik engine…</p>}>

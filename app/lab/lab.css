@@ -290,6 +290,8 @@
 .agent-setup pre { white-space: pre-wrap; font-size: 11.5px; line-height: 1.55; background: var(--wash); border: 1px solid var(--control-border); border-radius: .5rem; padding: 12px; max-height: 280px; overflow: auto; margin-block: 10px; }
 .resume-card { display: flex; align-items: center; gap: 12px; margin-block: 14px 0; flex-wrap: wrap; }
 .resume-note { font-size: 13px; color: var(--muted); }
+.progress-card { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-block: 8px 0; }
+.progress-card .progress-item strong { color: var(--ink); font-weight: 600; }
 
 @media (max-width: 850px) {
   .play-tracks { grid-template-columns: repeat(2, 1fr); }
