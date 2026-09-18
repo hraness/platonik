@@ -171,6 +171,7 @@ export function ChallengeMode({
     initialProgram ? JSON.stringify(initialProgram, null, 2) : "",
   );
   const [passed, setPassed] = useState<Set<string>>(new Set());
+  const [scores, setScores] = useState<ChallengeScore[]>([]);
   const [cases, setCases] = useState<CaseRun[]>([]);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [activeRow, setActiveRow] = useState<string | null>(null);
@@ -192,6 +193,7 @@ export function ChallengeMode({
     allScores()
       .then((rows) => {
         if (!cancelled) {
+          setScores(rows);
           setPassed(new Set(rows.filter((row) => row.passed).map((row) => row.challenge)));
         }
       })
@@ -336,6 +338,7 @@ export function ChallengeMode({
         await saveScore(entry);
       }
       const rows = await allScores();
+      setScores(rows);
       setPassed(new Set(rows.filter((row) => row.passed).map((row) => row.challenge)));
     } catch (cause) {
       setError(`Scored, but the local save failed: ${describe(cause)}`);
@@ -411,6 +414,13 @@ export function ChallengeMode({
       ? [...familyPresets, { name: info.witness, label: `Witness: ${info.witness}` }]
       : familyPresets;
 
+  const currentScore = useMemo(
+    () => scores.find((row) => row.challenge === challengeId(selected)),
+    [scores, selected],
+  );
+
+  const clearedCount = passed.size;
+
   // The next uncleared challenge after this one, wrapping to the first gap.
   const nextUnpassed = useMemo(() => {
     for (let index = selected + 1; index <= 96; index++) {
@@ -424,6 +434,50 @@ export function ChallengeMode({
 
   return (
     <div>
+      <div className="challenge-scoreboard" role="status" aria-label="Challenge progress">
+        <div className="challenge-stat">
+          <span className="challenge-stat-label">Cleared</span>
+          <strong className="challenge-stat-value">
+            {clearedCount}<span className="challenge-stat-denominator">/96</span>
+          </strong>
+        </div>
+        {currentScore ? (
+          <div className="challenge-stat">
+            <span className="challenge-stat-label">{challengeId(selected)} best</span>
+            <strong className="challenge-stat-value">
+              {currentScore.passed ? (
+                <>
+                  {number(currentScore.total_work)} work · {currentScore.cases_passed}
+                  <span className="challenge-stat-denominator">/{currentScore.cases_total}</span>
+                </>
+              ) : (
+                <span className="play-fail">Not yet</span>
+              )}
+            </strong>
+          </div>
+        ) : (
+          <div className="challenge-stat">
+            <span className="challenge-stat-label">{challengeId(selected)}</span>
+            <span className="lab-note">No run yet</span>
+          </div>
+        )}
+        {nextUnpassed ? (
+          <button
+            type="button"
+            className="challenge-stat-link"
+            onClick={() => selectChallenge(nextUnpassed)}
+          >
+            <span className="challenge-stat-label">Next</span>
+            <strong className="challenge-stat-value">{challengeId(nextUnpassed)}</strong>
+          </button>
+        ) : (
+          <div className="challenge-stat">
+            <span className="challenge-stat-label">Next</span>
+            <strong className="challenge-stat-value play-pass">All done</strong>
+          </div>
+        )}
+      </div>
+
       <div className="challenge-picker" role="group" aria-label="Choose a challenge">
         {CHALLENGE_FAMILIES.map((family) => (
           <section className="challenge-family" key={family.id}>
