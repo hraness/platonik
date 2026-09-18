@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { AgentSetupCard } from "@/components/play/agent-setup";
+import { ResumeCard } from "@/components/play/resume-card";
 import { PlayShell } from "@/components/play/play-shell";
 import "../../../lab/lab.css";
 
@@ -28,6 +30,8 @@ export default async function ProgramPage({ params }: PageProps) {
           Every run produces a receipt the Rust engine can independently verify — the same engine
           behind the command line and the hosted seasons.
         </p>
+        <ResumeCard />
+        <AgentSetupCard />
       </header>
       <Suspense fallback={<p role="status">Loading the Platonik engine…</p>}>
         <PlayShell programHash={programHash} />
