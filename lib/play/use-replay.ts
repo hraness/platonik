@@ -23,7 +23,10 @@ export function useReplay(frameCount: number) {
   }, [frameCount, at]);
 
   const play = useCallback(() => {
-    if (frameCount <= 1 || playing) return;
+    if (frameCount <= 1) return;
+    // Restart-safe: a stale `playing` flag from a previous run must not block
+    // auto-play for a fresh receipt.
+    if (timer.current) clearInterval(timer.current);
     setPlaying(true);
     timer.current = setInterval(() => {
       setAt((current) => {
@@ -36,7 +39,7 @@ export function useReplay(frameCount: number) {
         return current + 1;
       });
     }, 1000 / speed);
-  }, [frameCount, playing, speed]);
+  }, [frameCount, speed]);
 
   // Restart interval when speed changes mid-play.
   useEffect(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { RecordedHabitat } from "@/components/recorded-habitat";
 import type { Receipt } from "@/lib/bridge/types";
 import { useReplay } from "@/lib/play/use-replay";
@@ -15,8 +15,16 @@ const work = (costs: Record<string, number>) =>
  */
 export function ReplayStage({ receipt }: { receipt: Receipt }) {
   const frames = receipt.result.frames;
-  const { at, setAt, playing, play, stop, speed, setSpeed } = useReplay(frames.length);
+  const { at, setAt, playing, play, stop, speed, setSpeed, reset } = useReplay(frames.length);
   const frame = frames[Math.min(at, frames.length - 1)];
+
+  // A fresh run starts playing from tick zero on its own.
+  useEffect(() => {
+    reset();
+    play();
+    // Intentionally keyed on the receipt object, not the playback callbacks.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [receipt]);
 
   const activity = useMemo(() => {
     if (!frame) return [];

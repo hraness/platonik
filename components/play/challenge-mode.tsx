@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   engine,
   type Challenge,
@@ -201,6 +201,16 @@ export function ChallengeMode({
     };
   }, [wasm]);
 
+  // Follow case/program deep links that arrive while the track is mounted —
+  // a shared /play/p/<hash>?mode=challenges URL switches to its challenge and
+  // loads its program.
+  useEffect(() => {
+    if (initialIndex == null) return;
+    if (initialIndex !== selected) selectChallenge(initialIndex);
+    if (initialProgram) setProgramText(JSON.stringify(initialProgram, null, 2));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialIndex, initialProgram]);
+
   function selectChallenge(index: number) {
     setSelected(index);
     setInfo(null);
@@ -395,6 +405,17 @@ export function ChallengeMode({
       ? [...familyPresets, { name: info.witness, label: `Witness: ${info.witness}` }]
       : familyPresets;
 
+  // The next uncleared challenge after this one, wrapping to the first gap.
+  const nextUnpassed = useMemo(() => {
+    for (let index = selected + 1; index <= 96; index++) {
+      if (!passed.has(challengeId(index))) return index;
+    }
+    for (let index = 1; index <= 96; index++) {
+      if (!passed.has(challengeId(index))) return index;
+    }
+    return null;
+  }, [selected, passed]);
+
   return (
     <div>
       <div className="challenge-picker" role="group" aria-label="Choose a challenge">
@@ -503,6 +524,23 @@ export function ChallengeMode({
               <span className="lab-note">
                 Local score — ranked entry goes through the season.
               </span>
+            </div>
+          )}
+
+          {result?.passed && (
+            <div className="play-next">
+              {nextUnpassed ? (
+                <button
+                  className="lab-button secondary"
+                  type="button"
+                  onClick={() => selectChallenge(nextUnpassed)}
+                >
+                  Next uncleared: {challengeId(nextUnpassed)}{" "}
+                  <span aria-hidden="true">→</span>
+                </button>
+              ) : (
+                <span className="play-pass">All 96 challenges cleared.</span>
+              )}
             </div>
           )}
 

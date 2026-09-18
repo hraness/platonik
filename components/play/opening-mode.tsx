@@ -1,10 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import type { Receipt } from "@/lib/bridge/types";
 import { engine, type Point, type Program, type WasmModule } from "@/lib/play/engine";
 import { OPENING_MISSIONS } from "@/lib/play/missions";
 import { buildPlayUrl } from "@/lib/play/url";
+import { allMarks, saveMark } from "@/lib/play/saves";
 import { PROGRAM_SCHEMA_HELP } from "@/lib/play/schema-help";
 import { AgentPanel } from "./agent-panel";
 import { ProgramEditor } from "./program-editor";
@@ -159,6 +161,7 @@ export function OpeningMode({
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
+  const [cleared, setCleared] = useState<Set<string>>(new Set());
 
   const loadMission = useCallback(
     (key: string) => {
@@ -202,6 +205,27 @@ export function OpeningMode({
   useEffect(() => {
     loadMission(startMission);
   }, [loadMission, startMission]);
+
+  // Load persisted mission clears once; a passing receipt records its mark.
+  useEffect(() => {
+    allMarks()
+      .then((marks) =>
+        setCleared(
+          new Set(
+            marks
+              .filter((mark) => mark.passed && mark.key.startsWith("opening:"))
+              .map((mark) => mark.key.slice("opening:".length))
+          )
+        )
+      )
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!receipt?.result?.outcome?.passed) return;
+    void saveMark({ key: `opening:${missionKey}`, passed: true, updated: Date.now() }).catch(() => {});
+    setCleared((prev) => (prev.has(missionKey) ? prev : new Set(prev).add(missionKey)));
+  }, [receipt, missionKey]);
 
   const mission = OPENING_MISSIONS.find((item) => item.key === missionKey);
   const currentText = (cellId != null && programs[cellId]) || "";
@@ -285,7 +309,14 @@ export function OpeningMode({
             onClick={() => loadMission(item.key)}
             aria-pressed={item.key === missionKey}
           >
-            <span className="mission-card-title">{item.title}</span>
+            <span className="mission-card-title">
+              {item.title}
+              {cleared.has(item.key) && (
+                <span className="mission-check" aria-label="cleared">
+                  ✓
+                </span>
+              )}
+            </span>
             <span className="mission-card-detail">{item.detail}</span>
           </button>
         ))}
@@ -363,6 +394,16 @@ export function OpeningMode({
               </div>
             )}
 
+            {receipt?.result?.outcome?.passed && !nextMission && (
+              <div className="opening-complete">
+                <strong>Opening complete.</strong> You can carry a spark, survive a wounded route,
+                and steer a valve. The trail continues —{" "}
+                <Link href="/play?mode=journeys">Journeys</Link> keep one world alive across pauses,
+                and <Link href="/play?mode=challenges">Challenges</Link> score 96 worlds for the
+                season board.
+              </div>
+            )}
+
             <AgentPanel
               brief={`${mission?.detail ?? ""} ${GOAL}`}
               worldSummary={cellId != null ? worldSummary(experiment, cellId) : ""}
@@ -384,7 +425,7 @@ export function OpeningMode({
                   {receipt.result.outcome.passed ? "Mission passed" : "Mission failed"} —{" "}
                   {receipt.result.ticks_completed} ticks ·{" "}
                   {totalWork(receipt.result.costs).toLocaleString("en-US")} modeled work
-                  {verified && <span className="receipt-verified"> · verified ✓</span>}
+                  {verified && <span className="verified-badge"> · verified ✓</span>}
                 </p>
                 <ReplayStage receipt={receipt} />
               </>

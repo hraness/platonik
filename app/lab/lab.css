@@ -274,6 +274,19 @@
 .milestone-rail { margin-top: 18px; }
 .pending-warning { border: 1px solid var(--specimen-warm); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-block: 10px; }
 
+/* Class-name aliases the components actually emit. */
+.mission-card .mission-card-title { font-weight: 600; font-size: 14px; display: block; }
+.mission-card .mission-card-detail { font-size: 12px; color: var(--muted); display: block; margin-top: 3px; line-height: 1.5; }
+.mission-card .mission-check { color: var(--success, #1a7f37); font-weight: 700; margin-left: 4px; }
+.verdict-banner.play-pass { border-left-color: var(--success, #1a7f37); }
+.verdict-banner.play-fail { border-left-color: var(--danger); }
+.challenge-cell .challenge-check { color: var(--success, #1a7f37); margin-left: 2px; }
+.play-notice { font-size: 13px; margin-block: -14px 18px; }
+.play-next { margin-block: 14px; }
+.opening-complete { border: 1px solid var(--success, #1a7f37); background: var(--wash); padding: 14px 18px; border-radius: 8px; font-size: 14px; line-height: 1.6; margin-block: 16px; }
+.agent-setup { margin-top: 16px; font-size: 13px; }
+.agent-setup pre { white-space: pre-wrap; font-size: 11.5px; line-height: 1.55; background: var(--wash); border: 1px solid var(--control-border); border-radius: .5rem; padding: 12px; max-height: 280px; overflow: auto; margin-block: 10px; }
+
 @media (max-width: 850px) {
   .play-tracks { grid-template-columns: repeat(2, 1fr); }
   .challenge-picker { grid-template-columns: 1fr; }
