@@ -218,10 +218,10 @@ const WORLD_HELP: &str = "Persistent Platonik automation worlds\n\n\
   platonik world program <plan>               Print a stock policy: surveyor,\n\
                                               hauler, upper, or lower\n\
   platonik world organism                     Print the bounded Algal planner organism\n\
-  platonik world propose <world.json> --responses <responses.json|->\n\
-                                              Run it with deterministic responses\n\
-  platonik world propose <world.json> --host <host.json|->\n\
-                                              Run it with an optional model provider\n\
+  platonik world propose <world.json> --responses <responses.json|-> [--goal <wish>]\n\
+                                              Select a compiled action offline\n\
+  platonik world propose <world.json> --host <host.json|-> [--goal <wish>]\n\
+                                              Select one with an optional model\n\
   platonik world accept <world.json> <proposal.json|->\n\
                                               Verify and apply one proposal\n\
   platonik world link <world.json|->           Print a content-addressed browser view\n\
@@ -237,10 +237,11 @@ runs 1–128 ticks; the first protocol is capped at 4,096 ticks and 128 events.\
 Place a fabricator or storehouse on an open tile, or a miner on a material\n\
 deposit: cells must supply its construction bill (material and parts) before\n\
 it becomes ready. A ready drill pulls one unit from its deposit every 12\n\
-ticks into a fetchable buffer. An Algal proposal is read-only until accept; it\n\
-binds the world hash and revision to a replayable provider receipt, then passes\n\
-the proposed command through normal world admission. --host reads an\n\
-algal.host.v1 config; provider credentials stay at Algal's environment boundary.\n\
+ticks into a fetchable buffer. An Algal proposal is read-only until accept: the\n\
+model selects one host-compiled valid action from a compact world view and optional\n\
+--goal. Platonik binds that selection to a replayable receipt and ordinary world\n\
+admission; it offers no new construction while an existing site is unfinished.\n\
+--host reads algal.host.v1; credentials stay at Algal's environment boundary.\n\
 Use a new output filename for act; shell redirection can truncate its input before\n\
 Platonik reads it. The browser link contains the compact world history,\n\
 verifies its content hash, and renders the same recomputed state. The browser\n\
@@ -968,18 +969,55 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
             print_json(&algal_agent::organism().map_err(error)?)?;
             Ok(0)
         }
+        [command, path, mode, input, goal_flag, goal]
+            if command == "propose"
+                && path != "-"
+                && mode == "--responses"
+                && goal_flag == "--goal" =>
+        {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let responses = read_json(input, algal_agent::MAX_CONFIG_BYTES)?;
+            print_json(
+                &algal_agent::propose_scripted(&value, responses, goal.clone()).map_err(error)?,
+            )?;
+            Ok(0)
+        }
+        [command, path, mode, input, goal_flag, goal]
+            if command == "propose" && path != "-" && mode == "--host" && goal_flag == "--goal" =>
+        {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let config = read_json(input, algal_agent::MAX_CONFIG_BYTES)?;
+            print_json(
+                &algal_agent::propose_configured(&value, &config, goal.clone()).map_err(error)?,
+            )?;
+            Ok(0)
+        }
         [command, path, mode, input]
             if command == "propose" && path != "-" && mode == "--responses" =>
         {
             let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
             let responses = read_json(input, algal_agent::MAX_CONFIG_BYTES)?;
-            print_json(&algal_agent::propose_scripted(&value, responses).map_err(error)?)?;
+            print_json(
+                &algal_agent::propose_scripted(
+                    &value,
+                    responses,
+                    algal_agent::default_goal().into(),
+                )
+                .map_err(error)?,
+            )?;
             Ok(0)
         }
         [command, path, mode, input] if command == "propose" && path != "-" && mode == "--host" => {
             let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
             let config = read_json(input, algal_agent::MAX_CONFIG_BYTES)?;
-            print_json(&algal_agent::propose_configured(&value, &config).map_err(error)?)?;
+            print_json(
+                &algal_agent::propose_configured(
+                    &value,
+                    &config,
+                    algal_agent::default_goal().into(),
+                )
+                .map_err(error)?,
+            )?;
             Ok(0)
         }
         [command, path, input] if command == "accept" && path != "-" => {

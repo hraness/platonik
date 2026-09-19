@@ -285,7 +285,7 @@ fn algal_planner_proposals_replay_before_world_admission() {
     let created = cli(&["world", "new", "Algalight"], None);
     assert!(created.status.success());
     let world = InputFile::new(&created.stdout);
-    let responses = InputFile::new(br#"{"planner":{"kind":"advance","ticks":16}}"#);
+    let responses = InputFile::new(br#"{"planner":{"candidate":"advance-16"}}"#);
     let proposed = cli(
         &[
             "world",
@@ -303,6 +303,15 @@ fn algal_planner_proposals_replay_before_world_admission() {
     );
     let proposal = json(&proposed.stdout);
     assert_eq!(proposal["schema"], "platonik-algal-proposal-v1");
+    assert_eq!(
+        proposal["goal"],
+        "Improve the factory safely and finish existing work before expanding."
+    );
+    let planner_view = &proposal["receipt"]["args"]["state"]["world"];
+    assert_eq!(planner_view["schema"], "platonik-world-agent-view-v2");
+    assert!(serde_json::to_vec(planner_view).unwrap().len() <= 16_384);
+    assert!(planner_view.get("experiment").is_none());
+    assert!(planner_view.get("state").is_none());
     assert_eq!(
         proposal["world_hash"],
         json(&cli(&["world", "report", world.path()], None).stdout)["world_hash"]
@@ -359,6 +368,16 @@ fn algal_planner_proposals_replay_before_world_admission() {
     assert_eq!(rejected.status.code(), Some(2));
     assert!(rejected.stdout.is_empty());
 
+    let mut altered_goal = proposal.clone();
+    altered_goal["goal"] = Value::from("A different goal");
+    let altered_goal = InputFile::new(&serde_json::to_vec(&altered_goal).unwrap());
+    let rejected = cli(
+        &["world", "accept", world.path(), altered_goal.path()],
+        None,
+    );
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+
     let mut altered = proposal;
     altered["command"]["ticks"] = Value::from(17);
     let altered = InputFile::new(&serde_json::to_vec(&altered).unwrap());
@@ -373,10 +392,18 @@ fn algal_host_plugins_are_optional_and_process_executors_are_rejected() {
     assert!(created.status.success());
     let world = InputFile::new(&created.stdout);
     let host = InputFile::new(
-        br#"{"contract":"algal.host.v1","executors":{"offline":{"kind":"scripted","responses":{"planner":{"kind":"advance","ticks":8}}}}}"#,
+        br#"{"contract":"algal.host.v1","executors":{"offline":{"kind":"scripted","responses":{"planner":{"candidate":"advance-8"}}}}}"#,
     );
     let proposed = cli(
-        &["world", "propose", world.path(), "--host", host.path()],
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--host",
+            host.path(),
+            "--goal",
+            "Protect beacon service",
+        ],
         None,
     );
     assert!(
@@ -385,6 +412,7 @@ fn algal_host_plugins_are_optional_and_process_executors_are_rejected() {
         String::from_utf8_lossy(&proposed.stderr)
     );
     assert_eq!(json(&proposed.stdout)["command"]["ticks"], 8);
+    assert_eq!(json(&proposed.stdout)["goal"], "Protect beacon service");
 
     let process_host = InputFile::new(
         br#"{"contract":"algal.host.v1","executors":{"process":{"kind":"command","argv":["false"]}}}"#,
@@ -407,7 +435,29 @@ fn algal_host_plugins_are_optional_and_process_executors_are_rejected() {
             .contains("admits only scripted")
     );
 
-    let invalid = InputFile::new(br#"{"planner":{"kind":"advance","ticks":0}}"#);
+    let missing = InputFile::new(br#"{}"#);
+    let rejected = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            missing.path(),
+        ],
+        None,
+    );
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+    let error = json(&rejected.stderr);
+    assert_eq!(error["error"]["code"], "invalid_world");
+    assert!(
+        error["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("EFFECT_UNBOUND")
+    );
+
+    let invalid = InputFile::new(br#"{"planner":{"candidate":"missing"}}"#);
     let rejected = cli(
         &[
             "world",
@@ -415,6 +465,81 @@ fn algal_host_plugins_are_optional_and_process_executors_are_rejected() {
             world.path(),
             "--responses",
             invalid.path(),
+        ],
+        None,
+    );
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+}
+
+#[test]
+fn algal_planner_finishes_existing_construction_before_expanding() {
+    let created = cli(&["world", "new"], None);
+    assert!(created.status.success());
+    let world = InputFile::new(&created.stdout);
+    let placed = cli(
+        &["world", "act", world.path(), "-"],
+        Some(br#"{"kind":"place","structure":"miner","position":{"x":11,"y":13}}"#),
+    );
+    assert!(placed.status.success());
+    let world = InputFile::new(&placed.stdout);
+
+    let competing = InputFile::new(br#"{"planner":{"candidate":"place-storehouse-12-13"}}"#);
+    let rejected = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            competing.path(),
+            "--goal",
+            "Expand storage",
+        ],
+        None,
+    );
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+    assert!(
+        json(&rejected.stderr)["error"]["message"]
+            .as_str()
+            .unwrap()
+            .contains("unknown candidate")
+    );
+
+    let advance = InputFile::new(br#"{"planner":{"candidate":"advance-16"}}"#);
+    let proposed = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            advance.path(),
+            "--goal",
+            "Finish the drill",
+        ],
+        None,
+    );
+    assert!(proposed.status.success());
+    let proposal = json(&proposed.stdout);
+    assert_eq!(proposal["goal"], "Finish the drill");
+    assert_eq!(proposal["command"]["kind"], "advance");
+    assert!(
+        proposal["receipt"]["args"]["state"]["world"]["candidates"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|candidate| !candidate["id"].as_str().unwrap().starts_with("place-"))
+    );
+
+    let rejected = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            advance.path(),
+            "--goal",
+            " ",
         ],
         None,
     );

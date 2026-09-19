@@ -19,17 +19,17 @@ printf '%s' '{"kind":"advance","ticks":32}' \
 
 Use a new output file for every action; shell redirection can truncate an input before the CLI reads it.
 
-The CLI also embeds [Algal](https://github.com/hraness/algal) as an optional planner boundary. `world propose` gives one bounded Algal organism a compact, read-only world view; `world accept` replays its receipt, checks that the full view still matches, and sends the proposed command through ordinary Platonik admission. Scripted responses keep this path deterministic and offline:
+The CLI also embeds [Algal](https://github.com/hraness/algal) as an optional planner boundary. Platonik compiles the current world into a compact read-only view and at most 32 already-valid candidate actions; the model selects one candidate instead of generating engine commands. `world accept` replays the receipt, checks that the full view and player goal still match, and sends the compiled command through ordinary admission. Scripted responses keep this path deterministic and offline:
 
 ```sh
-printf '%s' '{"planner":{"kind":"advance","ticks":16}}' > planner.responses.json
+printf '%s' '{"planner":{"candidate":"advance-16"}}' > planner.responses.json
 ./target/release/platonik world propose dustlight-r0.world.json \
-  --responses planner.responses.json > proposal.json
+  --responses planner.responses.json --goal 'Keep both beacons lit' > proposal.json
 ./target/release/platonik world accept dustlight-r0.world.json proposal.json \
   > dustlight-r1.world.json
 ```
 
-Use `--host <algal.host.v1.json>` instead of `--responses` to opt into a configured generative provider. No model, provider account, or credential is required for the base game; provider keys remain at Algal's executor boundary and never enter the world history. The browser still makes no model calls.
+Use `--host <algal.host.v1.json>` instead of `--responses` to opt into a configured generative provider. A model cannot invent placements or policy shapes, and the compiler withholds new construction choices while an admitted site remains unfinished. No model, provider account, or credential is required for the base game; provider keys remain at Algal's executor boundary and never enter world history. The browser still makes no model calls.
 
 ## Explore the design
 
