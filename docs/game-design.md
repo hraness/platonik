@@ -1,6 +1,6 @@
 # Platonik game design
 
-Living design proposal, revised 19 September 2026. Dustlight implements one persistent automation world with extraction, part and frame production, construction, and automatic crane transfer. An external agent operates the Rust CLI; the browser renders and inspects its history. The [living-world plan](living-world-plan.md) gives the current limits and next milestones. The complete Long Trail, free-form expansion, and in-world rankings remain proposed. Dialogue and outcomes below are illustrative unless linked to an engine record.
+Living design proposal, revised 19 September 2026. Copperwake implements one persistent 32×22 automation frontier with extraction, part and frame production, construction, and automatic crane transfer. Players run, build, and draw haul routes in the browser, or use an external agent through the Rust CLI. Both interfaces share the authoritative Rust engine. The [living-world plan](living-world-plan.md) gives the current limits and next milestones. The complete Long Trail, reusable construction plans, larger regions, and in-world rankings remain proposed. Dialogue and outcomes below are illustrative unless linked to an engine record.
 
 ## The premise
 
@@ -36,7 +36,7 @@ The world should offer small moments the player can recognize: a courier doublin
 
 ## The first fifteen minutes: The Wound
 
-This proposed campaign opening is one complete creation-and-rescue story. Dustlight supplies the current trailhead: the agent preserves a local world, improves its production or routes, and returns a browser view. The immediate goal is to make that factory understandable and worth revisiting before introducing the full rescue and lineage progression below. The earlier [field expedition](field-expedition.md) separately tests persistence, failure, ancestry, frozen selection, and confirmation cases.
+This proposed campaign opening is one complete creation-and-rescue story. Copperwake supplies the current trailhead: the player or agent preserves the same world while improving its production and routes. The immediate goal is to make that factory understandable and worth revisiting before introducing the full rescue and lineage progression below. The earlier [field expedition](field-expedition.md) separately tests persistence, failure, ancestry, frozen selection, and confirmation cases.
 
 1. **Make something yours.** Name a starter colony and give it a wish: “Get the light there quickly.” The agent shows one plain-language rule change and runs a short, bounded expedition. See a spark reach its destination before learning a metric.
 2. **Watch its habit.** Inspect three compact map snapshots: departure, the decisive moment, and the outcome. Track the same cells between frames. A short explanation connects their movements to the change you requested.
@@ -67,7 +67,7 @@ All dialogue and outcomes above are fictional. A real result must name its cases
 
 Chat remains the primary interface. The player describes intent; the agent operates the Rust CLI. A normal response leads with what happened, shows a compact spatial view, and offers a choice. Detailed traces, programs, and statistics sit behind follow-up requests.
 
-The browser is the window into the saved world. Selecting a facility should answer three questions: what does it make or move, what is happening now, and what would let it work? Show its recipe, supplies, remaining construction bill, and observed waiting state beside the map. Carry that selected place and replay tick into a focused agent handoff. Rust supplies the observations; a renderer or narrator cannot infer a delivery, a transfer, or a rescue that the trace does not establish.
+The browser is the workbench and window into the saved world. Run, placement, and route controls call the shared Rust engine; replay and inspection leave time still. Selecting a facility should answer three questions: what does it make or move, what is happening now, and what would let it work? Show its recipe, supplies, remaining construction bill, and observed waiting state beside the map. Carry that selected place and replay tick into a focused agent handoff. Rust supplies the observations; a renderer or narrator cannot infer a delivery, a transfer, or a rescue that the trace does not establish.
 
 Translate wishes into inspectable changes. “Make it brave” might become “try an unexplored adjacent space after repeated failed moves.” The agent explains that interpretation before a consequential experiment; the word itself grants no ability. Respect the player's existing experiment budget and external-agent spending limits. No hidden overnight searches are needed to keep the creature alive.
 

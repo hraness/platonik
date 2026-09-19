@@ -36,6 +36,7 @@ interface WasmModule {
   expedition_progress(stateJson: string): string;
   expedition_trial_experiment(stateJson: string, commandJson: string): string;
   world_new(name: string): string;
+  world_route_program(worldJson: string, cell: number, waypointsJson: string): string;
   world_apply(worldJson: string, commandJson: string): string;
   world_report(worldJson: string): string;
 }
@@ -301,6 +302,9 @@ export interface VerificationReport {
 // ---- typed wrappers ----
 
 export const engine = {
+  worldRouteProgram(wasm: WasmModule, world: LivingWorld, cell: number, waypoints: Point[]) {
+    return call<Program>(() => wasm.world_route_program(JSON.stringify(world), cell, JSON.stringify(waypoints)));
+  },
   worldNew(wasm: WasmModule, name: string) {
     return call<LivingWorld>(() => wasm.world_new(name));
   },

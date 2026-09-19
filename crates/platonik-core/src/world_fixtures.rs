@@ -492,3 +492,252 @@ pub fn homestead() -> Experiment {
         ],
     }
 }
+
+pub const FRONTIER_ASSEMBLER: u16 = 93;
+pub const FRONTIER_CRANE_SITE: Point = Point { x: 8, y: 8 };
+
+/// A supplied, editable factory route, not hidden navigation logic. The four
+/// landmarks make a clockwise circuit: source -> drill -> fabricator ->
+/// assembler. A blocked carrier waits for traffic instead of leaving its lane.
+/// Ordinary supply rules finish sites placed anywhere along that circuit.
+pub(crate) fn frontier_supply_rules() -> Vec<Rule> {
+    let mut rules = hauler_program().rules;
+    rules.truncate(rules.len() - slider_rules().len());
+    // Finished frames enter storage once; this policy never withdraws them.
+    // A new storehouse therefore frees assembler output without ping-pong.
+    rules.insert(
+        1,
+        rule(
+            vec![
+                Condition::HasFrame { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Storehouse,
+                    value: true,
+                },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Frame,
+                    value: true,
+                },
+            ],
+            Action::Supply {
+                item: ItemKind::Frame,
+            },
+        ),
+    );
+    rules
+}
+
+pub fn frontier_hauler_program() -> Program {
+    let mut rules = frontier_supply_rules();
+    for (landmark, heading) in [
+        (Condition::AtSource { value: true }, Direction::North),
+        (Condition::AtStock { value: true }, Direction::East),
+        (
+            Condition::FacilityIs {
+                structure: FacilityKind::Fabricator,
+                value: true,
+            },
+            Direction::South,
+        ),
+        (
+            Condition::FacilityIs {
+                structure: FacilityKind::Assembler,
+                value: true,
+            },
+            Direction::West,
+        ),
+    ] {
+        rules.push(rule(
+            vec![landmark, Condition::Heading { direction: heading }],
+            Action::Turn {
+                direction: Relative::Right,
+            },
+        ));
+    }
+    rules.push(rule(
+        vec![Condition::Blocked {
+            direction: Relative::Forward,
+            value: false,
+        }],
+        Action::Move {
+            direction: Relative::Forward,
+        },
+    ));
+    rules.push(rule(vec![], Action::Wait));
+    Program { rules }
+}
+
+/// A finite frontier with a working first factory and room for deliberate
+/// expansion. The starting freight circuit is small enough to understand and
+/// produces both parts and frames; a crane site at (8,8) can then shorten the
+/// transfer between its two producers. The ridge has north/south passes and
+/// a central opening, so all deposits and the eastern outpost are reachable.
+/// Historical Dustlight worlds keep their original v5 genesis.
+pub fn frontier() -> Experiment {
+    let mut experiment = homestead();
+    experiment.version = INDUSTRY_ACCOUNTING_VERSION;
+    experiment.seed = 751;
+    experiment.width = 32;
+    experiment.height = 22;
+    experiment.walls = (3..=17)
+        .filter(|y| ![9, 10, 11].contains(y))
+        .flat_map(|y| [Point { x: 15, y }, Point { x: 16, y }])
+        .chain((21..=28).filter(|x| *x != 26).map(|x| Point { x, y: 12 }))
+        .chain([
+            Point { x: 22, y: 4 },
+            Point { x: 23, y: 4 },
+            Point { x: 23, y: 5 },
+            Point { x: 4, y: 18 },
+            Point { x: 5, y: 18 },
+            Point { x: 5, y: 19 },
+            Point { x: 11, y: 14 },
+            Point { x: 12, y: 14 },
+        ])
+        .collect();
+    let sparks = |start, count| {
+        (start..start + count)
+            .map(|id| Spark { id, bit: false })
+            .collect()
+    };
+    experiment.sources = vec![
+        Source {
+            id: 0,
+            position: Point { x: 7, y: 3 },
+            sparks: sparks(1, 96),
+        },
+        Source {
+            id: 1,
+            position: Point { x: 0, y: 3 },
+            sparks: sparks(97, 16),
+        },
+        Source {
+            id: 2,
+            position: Point { x: 31, y: 5 },
+            sparks: sparks(113, 16),
+        },
+    ];
+    experiment.beacons = vec![
+        Beacon {
+            id: 0,
+            position: Point { x: 0, y: 18 },
+            accepts: false,
+            initial_charge: 96,
+            drain_every: 32,
+            drain_amount: 1,
+            spark_charge: 8,
+            required_deliveries: 0,
+        },
+        Beacon {
+            id: 1,
+            position: Point { x: 31, y: 18 },
+            accepts: false,
+            initial_charge: 64,
+            drain_every: 24,
+            drain_amount: 1,
+            spark_charge: 8,
+            required_deliveries: 0,
+        },
+    ];
+    experiment.cells = vec![
+        courier(
+            1,
+            Point { x: 0, y: 3 },
+            Direction::South,
+            surveyor_program(),
+        ),
+        courier(
+            HAULER,
+            Point { x: 7, y: 3 },
+            Direction::East,
+            frontier_hauler_program(),
+        ),
+        courier(
+            6,
+            Point { x: 9, y: 5 },
+            Direction::South,
+            frontier_hauler_program(),
+        ),
+        Cell {
+            id: BUILDER,
+            position: Point { x: 3, y: 14 },
+            heading: Direction::West,
+            mobile: false,
+            memory: [0; 4],
+            program: builder_program(BLUEPRINT).expect("known frontier blueprint"),
+        },
+    ];
+    experiment.construction = Some(ConstructionSpec {
+        stocks: vec![
+            MaterialStock {
+                id: STOCK,
+                position: Point { x: 3, y: 14 },
+                units: (1001..=1008).collect(),
+            },
+            MaterialStock {
+                id: EAST_DEPOSIT,
+                position: Point { x: 9, y: 3 },
+                units: (1009..=1104).collect(),
+            },
+            MaterialStock {
+                id: SOUTH_DEPOSIT,
+                position: Point { x: 20, y: 18 },
+                units: (1105..=1168).collect(),
+            },
+            MaterialStock {
+                id: 63,
+                position: Point { x: 26, y: 6 },
+                units: (1169..=1256).collect(),
+            },
+        ],
+        blueprints: vec![
+            Blueprint {
+                id: BLUEPRINT,
+                body: BlueprintBody {
+                    cell: courier(
+                        CHILD,
+                        Point { x: 2, y: 14 },
+                        Direction::West,
+                        surveyor_program(),
+                    ),
+                    links: Vec::new(),
+                },
+            },
+            Blueprint {
+                id: LOWER_BLUEPRINT,
+                body: BlueprintBody {
+                    cell: courier(
+                        LOWER_CHILD,
+                        Point { x: 4, y: 14 },
+                        Direction::East,
+                        hauler_program(),
+                    ),
+                    links: Vec::new(),
+                },
+            },
+        ],
+    });
+    experiment.facilities = vec![
+        FacilityDecl {
+            id: FABRICATOR,
+            kind: FacilityKind::Fabricator,
+            position: Point { x: 9, y: 8 },
+        },
+        FacilityDecl {
+            id: STOREHOUSE,
+            kind: FacilityKind::Storehouse,
+            position: Point { x: 26, y: 16 },
+        },
+        FacilityDecl {
+            id: MINER,
+            kind: FacilityKind::Miner,
+            position: Point { x: 9, y: 3 },
+        },
+        FacilityDecl {
+            id: FRONTIER_ASSEMBLER,
+            kind: FacilityKind::Assembler,
+            position: Point { x: 7, y: 8 },
+        },
+    ];
+    experiment
+}

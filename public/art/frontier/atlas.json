@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "image": "/art/frontier/industry-atlas.png",
+  "width": 1448,
+  "height": 1086,
+  "description": "Twelve original transparent pixel-art sprites for Platonik. Source rectangles are measured individually; do not assume equal grid cells. Anchors are local source-pixel ground-contact positions.",
+  "sprites": {
+    "drill": {
+      "x": 45,
+      "y": 45,
+      "width": 315,
+      "height": 303,
+      "anchorX": 158,
+      "anchorY": 291
+    },
+    "fabricator": {
+      "x": 387,
+      "y": 9,
+      "width": 326,
+      "height": 350,
+      "anchorX": 163,
+      "anchorY": 338
+    },
+    "assembler": {
+      "x": 745,
+      "y": 75,
+      "width": 331,
+      "height": 288,
+      "anchorX": 166,
+      "anchorY": 276
+    },
+    "storehouse": {
+      "x": 1088,
+      "y": 50,
+      "width": 342,
+      "height": 297,
+      "anchorX": 171,
+      "anchorY": 285
+    },
+    "crane": {
+      "x": 43,
+      "y": 379,
+      "width": 350,
+      "height": 340,
+      "anchorX": 175,
+      "anchorY": 328
+    },
+    "outpost": {
+      "x": 399,
+      "y": 386,
+      "width": 326,
+      "height": 328,
+      "anchorX": 163,
+      "anchorY": 316
+    },
+    "beacon": {
+      "x": 795,
+      "y": 354,
+      "width": 236,
+      "height": 374,
+      "anchorX": 118,
+      "anchorY": 362
+    },
+    "foundry": {
+      "x": 1073,
+      "y": 365,
+      "width": 365,
+      "height": 377,
+      "anchorX": 183,
+      "anchorY": 365
+    },
+    "courier": {
+      "x": 51,
+      "y": 740,
+      "width": 298,
+      "height": 291,
+      "anchorX": 149,
+      "anchorY": 279
+    },
+    "ore": {
+      "x": 391,
+      "y": 760,
+      "width": 325,
+      "height": 271,
+      "anchorX": 163,
+      "anchorY": 259
+    },
+    "spark": {
+      "x": 751,
+      "y": 765,
+      "width": 305,
+      "height": 265,
+      "anchorX": 153,
+      "anchorY": 253
+    },
+    "scrub": {
+      "x": 1110,
+      "y": 756,
+      "width": 301,
+      "height": 281,
+      "anchorX": 151,
+      "anchorY": 269
+    }
+  }
+}

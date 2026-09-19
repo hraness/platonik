@@ -1,62 +1,85 @@
 ---
-name: Platonik
-description: Minimal typography and labeled diagrams for the Platonik website and documentation.
+name: "Platonik"
+description: "A tangible factory frontier inside a shared, readable site shell."
 colors:
-  paper: "#f9f9f6"
-  ink: "#262c28"
-  muted: "#616a63"
-  accent: "#304f3d"
-  line: "#d9ddd5"
-  wash: "#edf0e9"
-  selection: "#d6e3ce"
-  accent-hover: "#213d2c"
-  accent-hover-text: "white"
-  policy-a-fill: "#e2e9dc"
-  policy-a-border: "#849981"
-  policy-b-fill: "#f1e9dc"
-  policy-b-border: "#b6a184"
-  wounded-border: "#7a6255"
-  wound-mark: "#765445"
+  paper: "var(--hraness-palette-background)"
+  ink: "var(--hraness-palette-foreground)"
+  muted: "var(--hraness-palette-muted)"
+  accent: "var(--hraness-palette-primary)"
+  accent-foreground: "var(--hraness-palette-primary-foreground)"
+  line: "var(--hraness-palette-line)"
+  control-border: "var(--hraness-palette-control-border)"
+  surface: "var(--hraness-palette-surface)"
+  wash: "var(--hraness-palette-surface-raised)"
+  focus: "var(--hraness-palette-focus)"
+  success: "var(--hraness-palette-success)"
+  warning: "var(--hraness-palette-warning)"
+  danger: "var(--hraness-palette-danger)"
+  warm-plane: "var(--hraness-material-warm-plane)"
+  frontier-soil: "#a69972"
+  frontier-edge: "#687567"
+  frontier-road: "#c3b18a"
+  frontier-label: "#3f4434"
+  frontier-annotation: "#fff5d4"
+  frontier-annotation-edge: "#393d2f"
+  camera-paper: "#f3eedc"
+  camera-ink: "#283c33"
+  camera-line: "#5b6350"
+  camera-hover: "#fff9e7"
+  route-line: "#fff0b0"
+  route-ink: "#263e39"
 typography:
-  display:
-    fontFamily: 'Newsreader, Georgia, "Times New Roman", serif'
-    fontSize: "clamp(56px, 6.3vw, 82px)"
+  marketing-display:
+    fontFamily: "\"Instrument Serif\", Georgia, serif"
+    fontSize: "clamp(2.75rem, 5.1vw, 4rem)"
     fontWeight: 400
-    lineHeight: 1.04
-    letterSpacing: "-.04em"
-  headline:
-    fontFamily: 'Newsreader, Georgia, "Times New Roman", serif'
+    lineHeight: 1.06
+    letterSpacing: "-.025em"
+  marketing-headline:
+    fontFamily: "\"Instrument Serif\", Georgia, serif"
+    fontSize: "clamp(2.4rem, 4vw, 3.25rem)"
+    fontWeight: 400
+    lineHeight: 1.08
+    letterSpacing: "-.02em"
+  document-title:
+    fontFamily: "\"Newsreader\", Georgia, \"Times New Roman\", serif"
     fontSize: "clamp(36px, 4.5vw, 52px)"
     fontWeight: 400
     lineHeight: 1.12
     letterSpacing: "-.035em"
-  section-title:
-    fontFamily: 'Newsreader, Georgia, "Times New Roman", serif'
-    fontSize: "35px"
+  world-title:
+    fontFamily: "\"Newsreader\", Georgia, \"Times New Roman\", serif"
+    fontSize: "clamp(32px, 3.5vw, 46px)"
     fontWeight: 400
-    lineHeight: 1.22
-    letterSpacing: "-.025em"
+    lineHeight: 1.05
+    letterSpacing: "-.03em"
   prose-heading:
-    fontFamily: 'Newsreader, Georgia, "Times New Roman", serif'
+    fontFamily: "\"Newsreader\", Georgia, \"Times New Roman\", serif"
     fontSize: "29px"
     fontWeight: 400
     lineHeight: 1.25
     letterSpacing: "-.02em"
   body:
-    fontFamily: "Arial, Helvetica, sans-serif"
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
     fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.65
   prose:
-    fontFamily: "Arial, Helvetica, sans-serif"
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.85
-  label:
-    fontFamily: "Arial, Helvetica, sans-serif"
+  control:
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.65
+  workshop-title:
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: "-.01em"
   code:
     fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "13px"
@@ -64,247 +87,179 @@ typography:
     lineHeight: 1.75
 rounded:
   inline: "2px"
-  surface: "3px"
-  cell-mobile: "5px"
-  cell: "8px"
+  prose: "3px"
+  marketing-action: ".25rem"
+  camera: "5px"
+  field: "6px"
+  control: ".5rem"
+  marketing-figure: ".625rem"
+  surface: "12px"
 spacing:
-  paragraph: "18px"
-  group: "24px"
-  figure: "30px"
-  hero-copy: "32px"
-  gutter-wide: "44px"
-  gutter-tablet: "28px"
-  gutter-mobile: "22px"
+  compact: "8px"
+  control-gap: "10px"
+  row: "12px"
+  panel: "16px"
+  workshop: "20px"
+  section: "24px"
+  site-gutter: "2rem"
+  reading-gutter: "44px"
+  reading-gutter-tablet: "28px"
+  reading-gutter-mobile: "22px"
 components:
-  primary-link:
+  button-primary:
     backgroundColor: "{colors.accent}"
-    textColor: "{colors.paper}"
-    typography: "{typography.label}"
-    rounded: "{rounded.surface}"
-    padding: "12px 18px"
-  primary-link-hover:
-    backgroundColor: "{colors.accent-hover}"
-    textColor: "{colors.accent-hover-text}"
-  text-link:
+    textColor: "{colors.accent-foreground}"
+    typography: "{typography.control}"
+    rounded: "{rounded.control}"
+    padding: "10px 15px"
+  button-secondary:
+    backgroundColor: "transparent"
     textColor: "{colors.accent}"
-    typography: "{typography.label}"
-  navigation-link:
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
-    padding: "12px 0"
-  documentation-link:
-    textColor: "{colors.muted}"
-    typography: "{typography.label}"
-    padding: "7px 0"
-  policy-a-cell:
-    backgroundColor: "{colors.policy-a-fill}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.cell}"
-    width: "64px"
-  policy-b-cell:
-    backgroundColor: "{colors.policy-b-fill}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.cell}"
-    width: "64px"
-  wounded-cell:
+    typography: "{typography.control}"
+    rounded: "{rounded.control}"
+    padding: "10px 15px"
+  marketing-action:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.accent-foreground}"
+    typography: "{typography.control}"
+    rounded: "{rounded.marketing-action}"
+    padding: "12px 18px"
+  coordinate-field:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.cell}"
-    width: "64px"
-  conversation-row:
+    typography: "{typography.control}"
+    rounded: "{rounded.field}"
+    padding: "10px"
+    width: "70px"
+  camera-button:
+    backgroundColor: "{colors.camera-paper}"
+    textColor: "{colors.camera-ink}"
+    rounded: "{rounded.camera}"
+    padding: "10px 12px"
+  selected-facility:
+    backgroundColor: "{colors.warm-plane}"
     textColor: "{colors.ink}"
-    typography: "{typography.body}"
-    padding: "18px 0"
+    rounded: "{rounded.field}"
+    padding: "8px"
+  world-stage:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.surface}"
   code-block:
     backgroundColor: "{colors.wash}"
     textColor: "{colors.ink}"
     typography: "{typography.code}"
-    rounded: "{rounded.surface}"
+    rounded: "{rounded.prose}"
     padding: "22px"
 ---
 
 # Design System: Platonik
 
-## Shared appearance and observatory
-
-All routes now use the shared design-kit palette and appearance menu. Paper
-with System appearance is the initial preference; the menu is the final header
-action and offers the shared palettes plus Light, Dark, and System. Without
-JavaScript, the initial Paper palette follows the operating system. Preference
-persistence, system changes, menu keyboard behavior, and browser theme color
-belong to the shared provider and control.
-
-The observatory is an Operate surface. Nebula Sans supports compact controls and
-readable measurements; Newsreader remains the heading voice. Reading planes are
-opaque, inputs use the shared inset edge, and selected experiments, views, and
-lineages use Lantern's warm plane. Rich glass is limited to the sticky header.
-The eight recorded Rust studies are grouped in one labeled disclosure before
-the four browser experiment tabs, keeping the working bench close to arrival.
-
-SVG and canvas diagrams use the shared semantic palette. Structural portraits
-retain their rule-derived geometry and memory-dependent tint; truth maps retain
-their exact crossing counts and bounded domain. The map legend describes the
-current palette's early/late colors. Appearance never enters the simulation,
-saved collection, recorded Rust data, playback, or work calculations.
-
-This section supersedes the light-only colors and Arial body type in the
-original laboratory/documentation record below. The immutable Lantern and
-marketing bundles remain independently checked under `vendor/`.
-
-## Living world renderer
-
-`/play` is a world-first Operate surface. A large Rust-derived map and compact
-timeline sit beside a 320px workshop on desktop. Below 800px, the workshop moves
-under the map. The restrained shared palette, Nebula Sans controls, and
-Newsreader page title preserve the existing visual identity; flat reading
-planes and fine dividers replace floating counter pills.
-
-The page opens on the latest settled revision. Replay changes the map, route
-counts, facility status, and inspector together. A placement without a time
-advance gets a display-only current view; it does not invent an engine tick or
-rewrite historical frames. Facility buttons provide full-size selection
-targets on mobile; map facilities and creatures also support keyboard selection.
-Recipe inputs, output, remaining construction bills, and observed production
-blockers come from the Rust report. Cycle countdowns do not promise successful
-future transfers.
-
-The inspector offers one focused question for the player's external agent.
-The handoff carries a content-addressed link to the exact loaded world; when
-the history exceeds the compact link limit, it asks for the downloaded JSON.
-Changing selection, inspecting, replaying, and copying an ask do not mutate the
-world. Program editors, challenge grids, and scoreboards stay in the archived
-`/play/lab` engineering surface.
-
-Shared `.lab-button` styles govern action colors, hover, and focus across
-buttons, anchors, and file labels. Route CSS arranges controls without redefining
-their shared state colors. Appearance never enters simulation or world identity.
-
-## Shared marketing surface
-
-The homepage now uses Hraness's approved Peopleblade marketing treatment: Instrument Serif 400 display headings, Nebula Sans body text, a restrained continuous gradient with faint grain and cell seams, and more open spacing. The shared preset and its font, texture, license, and validation files live in `vendor/hraness-marketing`; keep that immutable bundle intact and adapt through `app/marketing.css`.
-
-This is a Persuade surface. Keep the existing product claims, proposal labels, concept diagram, conversation, and routes. The homepage title uses the shared 44–64px scale, section titles use 38.4–52px, and supporting copy remains 16–17px. The gradient belongs behind the opening story, with an opaque surface beneath the labeled concept diagram.
-
-The public header uses compact Nebula Sans, a 72px minimum height, and the shared blur with an opaque accessibility fallback. Skip-link stacking, document anchor clearance, and sidebar offsets account for this sticky header. Documentation and the observatory retain the reading and operating styles recorded below; their controls, evidence, and diagrams do not inherit homepage display styling.
-
-The following original design record continues to describe those documentation and laboratory surfaces. Its homepage-specific values are superseded by this shared marketing scope.
-
 ## Overview
 
-**Creative North Star: "Minimal styling"**
+**Creative North Star: "A working frontier, clearly observed"**
 
-The website uses an off-white page, dark text, serif headings, and restrained green links. Hierarchy comes from type size, reading width, whitespace, and fine dividers. The user requested minimal styling; this record describes the resulting implementation rather than a new visual direction.
+Platonik gives the game a physical identity: sun-warmed ground, worn copper and teal machines, ore seams, spark crystals, and small courier rovers. The surrounding interface stays quiet enough to inspect their work. The game is an Experience surface with an Operate workshop; it uses the same accessible controls and reading voice as the rest of the site.
 
-The layout stays flat. Small labeled diagrams explain the game concept, and documentation uses the same type and palette as the homepage. There are no decorative animations, gradients, or shadows in the current implementation.
+The shared site system remains intact. The homepage uses the Hraness editorial marketing treatment, documentation uses restrained reading columns, and archived laboratories retain their data-derived diagrams. Original raster art replaces abstract physical-world markers on the current frontier; it does not replace the laboratories' scientific encodings. The surface-specific composition is recorded in `.impeccable/surfaces/app-play.md`.
 
-Captured from [the global stylesheet](app/globals.css), [the page shell](app/layout.tsx), [the homepage](app/page.tsx), and [documentation components](components/markdown.tsx). The saved desktop and mobile review captures were inspected alongside the source. Values in frontmatter describe the default viewport; responsive overrides appear below. This is a website design record, not a design system for the proposed Rust game.
+This record is extracted from the current shared palette package, `app/globals.css`, `app/marketing.css`, `app/lab/lab.css`, `app/play/world.css`, the vendor marketing and Lantern material contracts, and `components/play/frontier-map.tsx`. Frontmatter records effective token bindings rather than superseded declarations earlier in the CSS cascade. It replaces the older light-only laboratory snapshot.
 
 **Key Characteristics:**
 
-- Off-white background with dark text and muted supporting copy.
-- Newsreader headings paired with Arial body text.
-- Flat sections separated by thin rules and generous spacing.
-- Diagrams use labels and marks alongside color.
-- Immediate hover and focus feedback, with no animated transitions.
+- Recognizable machinery and couriers carry the game's visual identity.
+- Shared palette roles and Nebula Sans controls adapt to appearance preference.
+- Instrument Serif tells the homepage story; Newsreader heads the game and field guide.
+- The daylight frontier remains stable while site chrome changes appearance.
+- Production status, selection, cargo, and routes have text or shape cues alongside color.
 
 ## Colors
 
-The core palette comes from the six custom properties in the global stylesheet. Additional colors describe existing selection, link-hover, and cell-diagram states.
-
 ### Primary
 
-`accent` is the dark green used for the primary link background, text links, prose links, the wordmark period, and keyboard focus outlines. `accent-hover` darkens the primary link on hover, paired with `accent-hover-text`.
+The shared `accent` and `accent-foreground` roles own primary actions, links, and their paired text. `focus` follows the shared focus role. They resolve through the active Hraness palette rather than a fixed green. The initial preference is Paper with System appearance; the provider supports the shared palette and Light, Dark, and System choices. The no-JavaScript Paper fallback also follows the operating system.
+
+### Secondary
+
+The frontier's soil, road, landscape edge, pale annotation ink, and dark annotation edge are authored scene colors. Copper, oxidized teal, amber, and dark iron belong to the original raster atlas rather than a second CSS palette for the surrounding interface. Camera controls keep their pale paper, dark ink, and outlined shape on the landscape. Route preview lines use the recorded cream and dark green pair.
 
 ### Neutral
 
-`paper` covers the page and primary-link text. `ink` is the main text color; `muted` serves descriptions, secondary navigation, captions, and status notes. `line` draws section dividers, table rules, and list boundaries. `wash` supplies the quiet background behind quotations and code. `selection` marks selected text while retaining ink-colored characters.
+`paper`, `surface`, and `wash` are the shared page, reading-plane, and raised-surface roles. `ink`, `muted`, `line`, and `control-border` retain their semantic roles in every appearance. The warm plane comes from Lantern's warm tint of the active surface, not from a hard-coded light swatch. Success, warning, and danger remain palette-aware status colors for site and laboratory content.
 
-### Diagram states
+**The Two Surfaces Rule.** Site chrome follows the shared appearance palette; the frontier landscape keeps its authored daylight colors. Do not recolor machine art when the site theme changes.
 
-The two policy fills and borders distinguish A and B cells. These are diagram-specific categories, not general interface status colors. A disabled controller uses the paper background, a dashed `wounded-border`, and a `wound-mark` cross. The letters, cross, caption, and accessible description carry the same information as the color treatments.
+The sidecar's generated tonal ramps are Paper-light previews for the shared roles and fixed-color previews for frontier roles. They are reference strips, not replacement runtime palettes. The CSS-variable bindings in frontmatter remain normative when a user selects another appearance.
 
 ## Typography
 
-Newsreader regular is loaded from the local font package in the root layout. Georgia and Times New Roman are the serif fallbacks. Arial, Helvetica, and sans-serif serve body text and controls. Code uses the platform monospace stack recorded in the tokens.
+Nebula Sans is self-hosted through the shared design kit and supplies body copy, controls, navigation, and measurements. Newsreader regular is loaded from the local font package for document, laboratory, and game headings. The homepage alone uses the vendor's Instrument Serif display face. The header wordmark is compact Nebula Sans, not the previous Newsreader treatment. Code retains the platform monospace stack.
 
-The display role belongs to the homepage headline; headline belongs to document titles. Section-title describes homepage section headings, while prose-heading describes document section headings. Body text is airy; document prose uses a smaller size with more leading. Headings use balanced wrapping, paragraphs use pretty wrapping, and document prose permits long words to break.
+Homepage display and section sizes use the marketing clamps in frontmatter; supporting copy is 17px with 1.6 leading, becoming 16px on narrow screens. Document title and prose roles preserve the reading site's sizes. At widths up to 480px, body text becomes 16px, prose 15px, document title 38px, and prose section headings 27px.
 
-The wordmark is lowercase Newsreader with a green period (29px, line height 1, letter spacing -.04em). The homepage introduction uses larger sans-serif text (24px, line height 1.5). Status notes and figure notes use smaller muted text (12px); navigation and ordinary link labels use the label role. Document bold text and the active navigation entry use weight 600.
-
-At widths up to 480px, the body becomes 16px, document prose 15px, homepage headline 57px, document title 38px, homepage section heading 31px, and document section heading 27px. The wordmark becomes 26px and the homepage introduction becomes 21px. These are existing overrides, not a generated type scale.
+The world title uses the recorded desktop clamp and a 38px override at widths up to 800px. Workshop headings are semibold sans; labels and observed values stay compact, with tabular numerals for counts and ticks. Shared action buttons render at 14px because the shared button rule intentionally wins route-local size declarations. Headings wrap with balance, paragraphs with pretty wrapping, and long names can break without widening the page.
 
 ## Layout
 
-The header and documentation shell share a maximum width of 1160px. Their wide-screen horizontal gutter uses `gutter-wide`. The site footer is the shared `@hraness/site-footer` package in document flow; it owns its own layout, the “Built by Hraness” organization attribution, network links, and responsive behavior, and this site adds no second footer bar. The centered homepage is at most 900px wide, with a hero capped at 780px. Supporting hero text remains within 590px. Ordinary homepage paragraphs may span 70ch; conversation text is capped at 60ch.
+The shared header has a 72px minimum height, is sticky on wide screens, and becomes ordinary document flow at widths up to 760px so wrapped navigation does not cover anchored content. Its desktop gutter is at least 32px. Documentation keeps a 190px sidebar, 60px gap, 740px reading column, and 1160px shell. It stacks at 800px; reading gutters step through the recorded wide, tablet, and mobile values. Code and wide tables scroll inside their own containers.
 
-The desktop documentation layout has a 190px navigation column, a 60px gap, and a content column capped at 740px. Its sidebar is sticky, 32px from the top. Split homepage sections use a 260px heading column and a 54px gap. The initial hero has 64px top and 76px bottom padding; subsequent homepage sections use 52px top and 56px bottom padding.
+Homepage story sections use the vendor's 70rem content measure plus shared gutters and 5rem section rhythm. The hero has its own 4rem/3rem vertical spacing, becoming 2.75rem/2rem at 760px. The factory illustration is a raster composition inside the existing opaque figure plane; conversation rows and chapter lists retain their existing responsive reading structure.
 
-At widths up to 800px, the gutters become `gutter-tablet`, split sections stack, and documentation switches to a single column. The documentation navigation becomes a wrapping horizontal row between rules; it is no longer sticky.
+The frontier shell grows to 1560px with 20px side clearance. Its scene and 292px workshop share one bordered stage; the workshop becomes 260px at 1000px and stacks below the scene at 800px. The map height is `clamp(420px, 56vh, 660px)` on desktop and 460px on smaller screens. Phone width changes the camera scale rather than fitting the entire region into unreadably small tiles. The world page uses 12px side clearance below 800px.
 
-At widths up to 480px, gutters become `gutter-mobile`. Hero links stack, chapter labels sit above descriptions, and section spacing tightens. The conversation speaker column shrinks from 64px to 42px. Tables and code blocks scroll within their own containers; tables retain their 560px minimum width. The table region is keyboard-focusable.
+Run controls precede the scene. A short current objective sits above it, the machine bar below it, and the inspector beside or after it. The camera supports pointer dragging, arrow-key panning, plus/minus zoom, and explicit Home and Map controls. The minimap locates the current camera within the finite world. Coordinate fields provide a precise alternative for construction and route points. Historical playback controls stay separate from live simulation controls.
 
 ## Elevation & Depth
 
-There are no box shadows or elevation tokens. Whitespace and fine borders distinguish sections; the wash surface groups code and quotations. Hover states change color or underline immediately. No animation or transition durations are defined. The reduced-motion rule retains automatic scrolling.
+Reading planes and the workshop use opaque surfaces, fine perimeter borders, and restrained tonal grouping. The scene's sprite shading supplies physical depth without adding floating UI cards over every machine. The shared Lantern material owns subtle inset fields, raised material planes where requested, and header chrome. Header translucency uses blur with an opaque fallback; it is not a general panel treatment.
+
+The sidecar retains the actual Lantern inset, lift, and chrome shadow formulas. Their paint changes with palette variables. The homepage keeps its established continuous material wall with supplied grain and cell seams; this decoration stays behind story content. The new frontier soil marks are map texture, and its tile grid is a placement aid.
+
+The production marker alternates only while Rust reports work, using a 1.1-second stepped animation. Reduced-motion preference disables it. Camera motion is user-driven. The shared Lantern duration remains 160ms where its material rules use it; do not interpret that token as an instruction to animate every control.
 
 ## Shapes
 
-The page consists of open rectangular sections. Primary links, code blocks, and quotations use the subtle surface radius. Inline code and focus outlines use the smaller inline radius. Cell diagrams use larger corners, with the observed mobile radius at narrow widths.
+The system uses open reading sections and distinct functional radii: subtle code/prose corners, compact marketing actions, 6px selection and coordinate-field corners, 8px shared action controls, and 12px stage and panel corners. One-pixel seams divide working regions. Selected construction tools receive an inset two-pixel outline; keyboard focus remains visible with an offset outline.
 
-Dividers are one-pixel solid lines. Cell borders use policy-specific colors; the disabled cell switches to a dashed border. Cells are square, with values centered and policy labels at the bottom. Small plain arrow characters accompany navigational links; they are hidden from assistive technology when decorative.
+Frontier objects use their authored raster silhouettes with native transparency. They are not masked into geometric icons. Tile outlines, route lines, corner numbers, selection marks, and the minimap are precise geometry laid over that world. The avatar-free illustrative conversation and the old scientific diagrams retain their own existing form language.
 
 ## Components
 
-### Primary and text links
+### Actions and fields
 
-The primary action is an anchor styled as a compact green rectangle. It uses the primary-link tokens, an arrow separated by a 24px gap, and no underline. Hover uses the recorded darker state. Text links remain green and underlined; ordinary links inherit their surrounding text color and become green on hover.
+Primary game actions use the shared filled action style with paired primary text and a minimum 44px height. Secondary actions retain the accent border and transparent background, becoming a raised surface on hover. Their edge paint comes from Lantern. Disabled controls remain labeled and do not invite a click; active async commands are disabled until the engine returns.
 
-Links and keyboard-focusable regions receive a two-pixel green outline with a five-pixel offset. There are no distinct pressed, loading, or disabled variants in the current site. The top-level skip link becomes visible when focused and moves directly to the main content.
+Coordinate fields use a 70px width, 10px padding, 42px minimum height, six-pixel corners, and the shared control border. Laboratory text fields keep the shared inset surface and caret color. Focus outlines use the semantic focus color; forced-color rules preserve visible selected and boundary states.
 
-### Navigation
+### Navigation and reading
 
-The header pairs the wordmark with two text links. Its default navigation gap is 29px. Header links are unadorned at rest and underlined on hover. Documentation navigation uses muted links; the current page is dark and weight 600, exposed with `aria-current="page"`. It changes layout at the documented breakpoint without adding a menu overlay.
+The shared header contains the wordmark, Living world, Field guide, repository link, and final appearance control. Navigation wraps into a full-width row on narrow screens. The shared footer remains in document flow and owns its attribution and network links. Documentation navigation keeps a text hierarchy with an exposed current-page state. Linked document rows, code blocks, tables, and conversation rows keep the readable patterns already established on those surfaces.
 
-### Documentation rows and prose
+### Frontier and machine workshop
 
-The documentation index presents full-width linked rows separated by rules. Each row has a serif heading and arrow, a question, and a muted description; hovering underlines the heading. These are linked reading rows, without separate card surfaces or shadows.
+One original atlas supplies drills, fabricators, assemblers, storehouses, cranes, outposts, beacons, foundries, courier rovers, ore, sparks, and scrub. `public/art/frontier/atlas.json` owns measured crop rectangles; nominal equal grid cells would clip some sprites. `provenance.md` and the PNG's embedded prompt preserve generation intent. Pixel data and native alpha remain unchanged by metadata embedding.
 
-Document headings, paragraphs, lists, quotations, code, and comparison tables share the prose rhythm. Code blocks use the wash surface, monospace text, and horizontal overflow; their padding reduces to 16px at the narrow breakpoint. Quotations use the same wash without a decorative left border. Table headings and cells are left-aligned and separated by horizontal rules.
+The build bar pairs each machine image with its name. Selection is exposed with `aria-pressed`; a construction ghost follows the selected tile and admission remains authoritative. A route preview shows its numbered corners. Facilities are selectable both on the map and through full-width workshop buttons with names and status. Couriers also have text-labeled crew controls. The inspector shows recipe, stored items, missing bill, and work or waiting state in ordinary text.
 
-### Cell diagram
+**The Evidence Rule.** Only Rust-derived state may change a machine's work marker, cargo label, construction state, or production count. Decorative terrain does not imply a resource or route.
 
-Eight numbered cells form a static row, with A/B policy labels and one disabled-controller cross. The row uses a ten-pixel gap on wide screens and six pixels on mobile. Mobile cell width is calculated from the available row width so all eight fit. A single accessible description explains values, policies, and the disabled cell; visual child elements are hidden from assistive technology to avoid duplicate readings. The caption explicitly identifies the figure as a concept illustration.
-
-### Conversation and chapters
-
-Conversation entries place a small semibold speaker label beside a paragraph, with fine horizontal rules between turns. They are illustrative text, without message bubbles, avatars, or interactive chat controls. Chapter rows similarly separate a concise label from its description and stack those fields on narrow screens.
-
-The sidecar contains standalone examples of the primary link, header navigation, documentation navigation, cell diagram, conversation, and code block. These reproduce existing patterns; the website has no input fields, chips, dialogs, or game controls to document.
+Save/import controls, current-world handoff, legacy-world notice, errors, and loading states use the shared shell. A saved revision and a historical replay tick remain visually distinguishable. Appearance, decorative art, selection, and camera state never enter simulation identity. The older observatory remains available for actual data-derived portraits, truth maps, circuits, and recorded journeys.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- Do preserve the off-white page, dark text, green accent, and fine dividers.
-- Do use Newsreader regular for large headings and Arial for body text and navigation.
-- Do retain visible keyboard focus and the skip link.
-- Do label diagram categories and disabled controllers with text or marks as well as color.
-- Do keep wide code and tables scrollable within the reading column.
-- Do identify concept illustrations and illustrative conversation as proposals.
+- Do preserve the shared palette bindings, installed typefaces, appearance control, and keyboard focus.
+- Do use the original atlas and its measured crop rectangles for the frontier's machines, couriers, resources, and scrub.
+- Do keep the scene dominant and the workshop available without shrinking the whole world to phone width.
+- Do pair machine colors and animation with written status, cargo labels, or selection outlines.
+- Do preserve the reading and laboratory layouts outside the scoped frontier surface.
+- Do keep generation provenance embedded in shipping raster metadata and preserve native alpha.
 
 ### Don't:
 
-- Don't add decorative motion, shadows, or gradients when extending this minimally styled surface.
-- Keep the campaign illustrations labeled as proposals; the observatory's interactive controls belong to its separate browser models.
-- Don't rely on color alone to convey policy or controller state.
-- Don't describe this captured website system as an implemented game interface.
-
-## Observatory extension
-
-The user requested interactive prototypes and abstract microscope-like algorithm portraits. The `/lab` surface inherits the paper, ink, Newsreader, fine dividers, and minimal styling of the reading site. Its mode is Operate: choose a program, inspect a computed form or replay, compare a variation, and keep or export a specimen. Four keyboard-operable tabs separate specimens, truth landscapes, world budgets, and the Autoverse signal workbench. Tabs wrap on narrow screens.
-
-The desktop bench places a large computed artifact beside its controls; mobile stacks the artifact and controls. The artifact supplies visual interest through actual data: summed rule fields form a membrane-like portrait, exact trajectories draw journeys, and threshold counts color truth maps. Those fields are visualization encodings rather than decorative backgrounds. Portraits are static; motion occurs only during an explicitly requested bounded replay. The specimen drawer is an open collection of thumbnails and names separated by rules.
-
-Inputs, buttons, selectors, and expandable editors use the existing paper/wash surfaces, green action color, and visible focus outlines. Errors use a dark warm tone with text. Disabled actions remain labeled. Tab changes and control feedback are immediate, with no decorative transitions. The observation legend and numeric/text results accompany visual encodings so appearance never carries the only explanation.
-
-The Autoverse workbench extends these same open sections. Its circuit drawing encodes actual nodes, connections, and binary states; the layout is a diagram, not physical distance. A selected trace step and text outputs accompany it. Capability checks and construction results report finite model evidence without turning the proposed campaign into a fake completion meter.
+- Don't restore the superseded green-only palette, Arial body type, or abstract-shape frontier as current design defaults.
+- Don't invent simulation outcomes through animation, labels, terrain decoration, or agent narration.
+- Don't let the game's fixed earth colors override semantic text and control colors in the shared shell.
+- Don't spread the marketing wall treatment or header blur into reading planes and machine inspectors.
+- Don't remove accessible list selection or keyboard camera controls when refining map interactions.

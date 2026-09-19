@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js on Vercel provides the read-only world renderer. The authoritative deterministic game engine and mutable JSON world run locally in Rust through the player's own agent.
+Next.js on Vercel provides the playable browser world. One authoritative deterministic Rust engine runs through WASM in the browser and through the native CLI for the player's own agent. Both operate portable JSON histories locally.
 
 ## Users
 
@@ -16,15 +16,15 @@ People who enjoy building with an AI agent, including those without a computer s
 
 ## Product Purpose
 
-Make one persistent automation world satisfying to build through an external agent and easy to understand through a visual browser renderer. Grow depth through real transport, production, construction, and coordination in that same world.
+Make one persistent automation world satisfying to build directly and with an external agent. Give the player tangible machines, useful routes, visible bottlenecks, and room to expand. Grow depth through real transport, production, construction, and coordination in that same world.
 
 ## Positioning
 
-Build a living automation world with your AI agent. Describe an ambition, watch creatures and resources carry it out, notice a bottleneck, and improve the same saved system. The agent is the workbench; the browser is the verified window.
+Build a living automation world in your browser and with your AI agent. Place a machine, connect its supplies, run the factory, notice a bottleneck, and improve the same saved system. Direct controls make the first decisions immediate; the agent helps shape more detailed behavior.
 
 ## Capabilities and Constraints
 
-Dustlight carries one 24×14 Rust world through immutable event history, 1–128-tick advances, original-cell policy changes, finite resources, and a two-blueprint foundry. Five facility kinds support extraction, storage, part and frame recipes, supplied construction sites, and automatic crane transfer. `/play` recomputes the history and lets the player inspect facilities and replay their work without changing the world. The CLI and play skill are the agent-facing interface; an optional Algal planner selects from admitted actions. The current envelope is 4,096 ticks, 128 events, 16 cells, and 12 facilities. Larger regions, reusable player-authored construction blueprints, moving arks, and the complete campaign remain proposed. Earlier laboratories and seasons remain evidence and reference surfaces.
+Copperwake carries one 32×22 Rust v6 world through immutable event history, 1–128-tick advances, original-cell policy changes, 256 finite material units, and a two-blueprint foundry. Five facility kinds support extraction, storage, part and frame recipes, supplied construction sites, and automatic crane transfer. `/play` supports running and pausing the world, placing machines, drawing bounded haul routes, local persistence, import/export, facility inspection, and historical replay. Camera movement reveals the finite region; it does not generate new terrain. The CLI and play skill remain the agent-facing interface; an optional Algal planner selects from admitted actions. The current envelope is 4,096 ticks, 128 events, 16 cells, and 12 facilities. Existing v5 histories preserve their original mechanics and costs. Larger regions, reusable player-authored construction blueprints, moving arks, and the complete campaign remain proposed. Earlier laboratories and seasons remain evidence and reference surfaces.
 
 ## Brand Commitments
 
@@ -52,7 +52,7 @@ The player is a frontier engineer of living systems, with a naturalist's curiosi
 
 ## Renderer Direction
 
-The world occupies most of `/play`. Show cargo, stock, construction, route contention, home charge, stable creature identity, and recent events before exposing programs or cost ledgers. Selection, replay, and history navigation are read-only. The computed world supplies the visual interest; the renderer must not invent simulation state or duplicate engine logic. Appearance never changes outcomes. The older observatory remains available for focused technical studies.
+The world occupies most of `/play`. Recognizable machinery, courier rovers, ore seams, spark crystals, and frontier vegetation give the region a physical identity. Show cargo, stock, construction, route contention, beacon charge, stable creature identity, and recent events before exposing programs or cost ledgers. Run, placement, and routing controls submit commands to Rust; selection and historical replay do not move time. Keep waiting, working, and unfinished machines distinguishable. The renderer must not invent simulation state or duplicate engine logic. Appearance never changes outcomes. The older observatory remains available for focused technical studies.
 
 ## Shared Economy Direction
 
@@ -60,4 +60,4 @@ Single-player laboratories can participate in a proposed multiplayer expedition 
 
 ## Open Decisions
 
-The next product gate is a legible production loop: the player can identify a waiting facility, see its missing supply, ask the agent for a specific change, and inspect the result in the same world. The [living-world plan](docs/living-world-plan.md) separates the implemented foundation from proposed routing, progression, and scale work. Recipe balance, larger-world storage, campaign structure, and optional competition remain open until that small loop is enjoyable.
+The next product gate is a worthwhile second factory: players should see a useful destination for surplus production and choose how to reach it. The [living-world plan](docs/living-world-plan.md) separates the implemented frontier and direct controls from proposed recipe depth, reusable construction, and scale work. Recipe balance, larger-world storage, campaign structure, and optional competition remain open. Automated execution and replay checks do not establish player enjoyment.

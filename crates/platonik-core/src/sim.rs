@@ -108,6 +108,12 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     Condition::HasMessage { port, .. } | Condition::MessageBit { port, .. } => {
                         *port < 4
                     }
+                    Condition::AtPosition { position } => {
+                        experiment.version >= INDUSTRY_ACCOUNTING_VERSION
+                            && position.x < experiment.width
+                            && position.y < experiment.height
+                            && !experiment.walls.contains(position)
+                    }
                     Condition::HasMaterial { .. } => experiment.version >= CONSTRUCTION_VERSION,
                     Condition::HasPart { .. }
                     | Condition::HasFrame { .. }
@@ -890,10 +896,7 @@ fn advance_ticks(
             // Facilities run once per tick after cells act: the modeled work is
             // charged before mutation so an exhausted step leaves either an
             // untouched or a fully processed set, never a partial recipe.
-            let (facility_checking, facility_work) = crate::industry::tick_work(experiment, &state);
-            meter.charge(Cat::Checking, facility_checking)?;
-            meter.charge(Cat::Construction, facility_work)?;
-            crate::industry::tick(experiment, &mut state);
+            crate::industry::advance(experiment, &mut state, &mut meter)?;
             for (index, beacon) in experiment.beacons.iter().enumerate() {
                 meter.charge(Cat::Checking, 1)?;
                 if tick % beacon.drain_every == 0 {

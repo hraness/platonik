@@ -1,229 +1,11 @@
 use platonik_core::{
     check,
-    model::{
-        Action, Beacon, Condition, ConstructionSpec, Direction, FacilityDecl, FacilityKind,
-        ItemKind, MaterialStock, Point, Program, Relative, Rule, Source, Spark,
-    },
-    world_fixtures,
+    model::{FacilityDecl, FacilityKind, MaterialStock, Point},
 };
 
-fn rule(when: Vec<Condition>, action: Action) -> Rule {
-    Rule {
-        when,
-        action,
-        remember: None,
-    }
-}
-
-fn courier() -> Program {
-    Program {
-        rules: vec![
-            rule(
-                vec![
-                    Condition::HasPart { value: true },
-                    Condition::HasMaterial { value: true },
-                    Condition::AtFacility { value: true },
-                    Condition::FacilityIs {
-                        structure: FacilityKind::Assembler,
-                        value: true,
-                    },
-                    Condition::FacilityNeeds {
-                        item: ItemKind::Material,
-                        value: true,
-                    },
-                ],
-                Action::Supply {
-                    item: ItemKind::Material,
-                },
-            ),
-            rule(
-                vec![
-                    Condition::HasPart { value: true },
-                    Condition::Carrying { value: true },
-                    Condition::AtFacility { value: true },
-                    Condition::FacilityIs {
-                        structure: FacilityKind::Assembler,
-                        value: true,
-                    },
-                    Condition::FacilityNeeds {
-                        item: ItemKind::Spark,
-                        value: true,
-                    },
-                ],
-                Action::Supply {
-                    item: ItemKind::Spark,
-                },
-            ),
-            rule(
-                vec![
-                    Condition::HasPart { value: true },
-                    Condition::AtFacility { value: true },
-                    Condition::FacilityIs {
-                        structure: FacilityKind::Assembler,
-                        value: true,
-                    },
-                    Condition::FacilityNeeds {
-                        item: ItemKind::Part,
-                        value: true,
-                    },
-                ],
-                Action::Supply {
-                    item: ItemKind::Part,
-                },
-            ),
-            rule(
-                vec![
-                    Condition::HasPart { value: false },
-                    Condition::AtFacility { value: true },
-                    Condition::FacilityIs {
-                        structure: FacilityKind::Fabricator,
-                        value: true,
-                    },
-                    Condition::FacilityHas {
-                        item: ItemKind::Part,
-                        value: true,
-                    },
-                ],
-                Action::Fetch {
-                    item: ItemKind::Part,
-                },
-            ),
-            rule(
-                vec![
-                    Condition::HasMaterial { value: true },
-                    Condition::HasPart { value: false },
-                    Condition::AtFacility { value: true },
-                    Condition::FacilityNeeds {
-                        item: ItemKind::Material,
-                        value: true,
-                    },
-                ],
-                Action::Supply {
-                    item: ItemKind::Material,
-                },
-            ),
-            rule(
-                vec![
-                    Condition::AtStock { value: true },
-                    Condition::HasMaterial { value: false },
-                ],
-                Action::Gather,
-            ),
-            rule(
-                vec![
-                    Condition::Carrying { value: true },
-                    Condition::HasPart { value: false },
-                    Condition::AtFacility { value: true },
-                    Condition::FacilityNeeds {
-                        item: ItemKind::Spark,
-                        value: true,
-                    },
-                ],
-                Action::Supply {
-                    item: ItemKind::Spark,
-                },
-            ),
-            rule(
-                vec![
-                    Condition::AtSource { value: true },
-                    Condition::Carrying { value: false },
-                ],
-                Action::Pickup,
-            ),
-            rule(
-                vec![Condition::Blocked {
-                    direction: Relative::Forward,
-                    value: false,
-                }],
-                Action::Move {
-                    direction: Relative::Forward,
-                },
-            ),
-            rule(
-                vec![Condition::Blocked {
-                    direction: Relative::Right,
-                    value: false,
-                }],
-                Action::Turn {
-                    direction: Relative::Right,
-                },
-            ),
-            rule(
-                vec![],
-                Action::Turn {
-                    direction: Relative::Left,
-                },
-            ),
-        ],
-    }
-}
-
+// Frozen before the v6 correction, independent of evolving default worlds.
 fn chain_experiment() -> platonik_core::model::Experiment {
-    let mut experiment = world_fixtures::homestead();
-    experiment.width = 5;
-    experiment.height = 5;
-    experiment.walls.clear();
-    experiment.sources = vec![Source {
-        id: 0,
-        position: Point { x: 0, y: 0 },
-        sparks: (1..=16).map(|id| Spark { id, bit: false }).collect(),
-    }];
-    experiment.depots.clear();
-    experiment.beacons = vec![Beacon {
-        id: 0,
-        position: Point { x: 4, y: 4 },
-        accepts: false,
-        initial_charge: 100,
-        drain_every: 128,
-        drain_amount: 1,
-        spark_charge: 8,
-        required_deliveries: 0,
-    }];
-    experiment.valves.clear();
-    experiment.cells = vec![platonik_core::model::Cell {
-        id: 1,
-        position: Point { x: 0, y: 0 },
-        heading: Direction::East,
-        mobile: true,
-        memory: [0; 4],
-        program: courier(),
-    }];
-    experiment.links.clear();
-    experiment.events.clear();
-    let mut blueprint = experiment.construction.as_ref().unwrap().blueprints[0].clone();
-    blueprint.body.cell.position = Point { x: 2, y: 2 };
-    experiment.construction = Some(ConstructionSpec {
-        stocks: vec![MaterialStock {
-            id: 50,
-            position: Point { x: 1, y: 0 },
-            units: (1001..=1008).collect(),
-        }],
-        blueprints: vec![blueprint],
-    });
-    experiment.facilities = vec![
-        FacilityDecl {
-            id: 90,
-            kind: FacilityKind::Fabricator,
-            position: Point { x: 2, y: 0 },
-        },
-        FacilityDecl {
-            id: 91,
-            kind: FacilityKind::Assembler,
-            position: Point { x: 3, y: 0 },
-        },
-        FacilityDecl {
-            id: 92,
-            kind: FacilityKind::Crane,
-            position: Point { x: 3, y: 1 },
-        },
-        FacilityDecl {
-            id: 93,
-            kind: FacilityKind::Storehouse,
-            position: Point { x: 4, y: 1 },
-        },
-    ];
-
-    experiment
+    serde_json::from_str(include_str!("fixtures/industry-v5-chain.json")).unwrap()
 }
 
 #[test]
@@ -261,6 +43,12 @@ fn v5_charges_from_before_a_same_tick_crane_becomes_eligible() {
     let mut experiment = chain_experiment();
     experiment.version = platonik_core::model::INDUSTRY_VERSION;
     let receipt = check::make_receipt(&experiment).unwrap();
+    assert_eq!(
+        receipt.result_hash,
+        "sha256:a78bb2d41c3eb8c650648cc440bd6c783bcd907ce78e921e1f5ba819e1e0e51b",
+        "historical v5 states, costs, and receipt bytes must remain unchanged",
+    );
+    check::verify_receipt(&receipt).unwrap();
     let transition = receipt
         .result
         .frames
@@ -303,6 +91,179 @@ fn v5_charges_from_before_a_same_tick_crane_becomes_eligible() {
     assert_eq!(
         transition[1].costs.construction - transition[0].costs.construction,
         1,
-        "preserve the recorded v5 accounting limitation until a versioned correction",
+        "preserve the recorded v5 accounting limitation under its original protocol",
     );
+}
+
+// Loading itself charges the canonical input bytes. Changing fuel can change
+// its digit count, so compensate for that before targeting a phase boundary.
+fn fuel_boundary(
+    experiment: &platonik_core::model::Experiment,
+    work: u64,
+    allowance: u64,
+) -> platonik_core::model::Experiment {
+    let loading = serde_json::to_vec(experiment).unwrap().len() as u64;
+    let mut bounded = experiment.clone();
+    for _ in 0..4 {
+        let bytes = serde_json::to_vec(&bounded).unwrap().len() as u64;
+        let fuel = work - loading + bytes + allowance;
+        if bounded.fuel == fuel {
+            return bounded;
+        }
+        bounded.fuel = fuel;
+    }
+    panic!("fuel input byte width should stabilize");
+}
+
+#[test]
+fn v6_charges_the_producer_and_newly_eligible_crane() {
+    let mut experiment = chain_experiment();
+    experiment.version = platonik_core::model::INDUSTRY_ACCOUNTING_VERSION;
+    let receipt = check::make_receipt(&experiment).unwrap();
+    check::verify_receipt(&receipt).unwrap();
+    assert_eq!(receipt.protocol, "platonik-habitat-v6");
+    let transition = receipt
+        .result
+        .frames
+        .windows(2)
+        .find(|frames| {
+            let before = &frames[0].state.facilities;
+            let after = &frames[1].state.facilities;
+            before[1].progress == 1
+                && after[1].minted == before[1].minted + 1
+                && before[2].progress == 0
+                && after[2].progress == platonik_core::model::CRANE_PERIOD
+        })
+        .unwrap();
+    assert_eq!(
+        transition[1].costs.construction - transition[0].costs.construction,
+        2
+    );
+
+    // Both operations commit together, even though the second is enabled by
+    // the first. A one-unit-short fuel budget must not mint an uncharged frame.
+    let start = transition[1].activations.last().unwrap().work_after;
+    for (allowance, committed) in [(4, false), (5, true)] {
+        let bounded = fuel_boundary(&experiment, start, allowance);
+        let interrupted = check::make_receipt(&bounded).unwrap();
+        check::verify_receipt(&interrupted).unwrap();
+        assert_eq!(
+            interrupted.result.status,
+            platonik_core::model::RunStatus::FuelExhausted
+        );
+        assert_eq!(interrupted.result.costs.total(), bounded.fuel);
+        let actual = &interrupted.result.final_state;
+        let expected = &transition[usize::from(committed)].state;
+        assert_eq!(actual.facilities, expected.facilities);
+        assert_eq!(actual.construction, expected.construction);
+        assert_eq!(actual.tick, transition[1].tick);
+    }
+}
+
+fn extraction_chain() -> platonik_core::model::Experiment {
+    let mut experiment = chain_experiment();
+    experiment.version = platonik_core::model::INDUSTRY_ACCOUNTING_VERSION;
+    experiment.ticks = 32;
+    experiment.cells[0].program = platonik_core::fixtures::idle_program();
+    experiment.construction.as_mut().unwrap().stocks = vec![
+        MaterialStock {
+            id: 50,
+            position: Point { x: 1, y: 0 },
+            units: vec![1001, 1002, 1003],
+        },
+        MaterialStock {
+            id: 51,
+            position: Point { x: 2, y: 1 },
+            units: vec![1004, 1005, 1006],
+        },
+    ];
+    experiment.facilities = vec![
+        FacilityDecl {
+            id: 90,
+            kind: FacilityKind::Miner,
+            position: Point { x: 1, y: 0 },
+        },
+        FacilityDecl {
+            id: 91,
+            kind: FacilityKind::Miner,
+            position: Point { x: 2, y: 1 },
+        },
+        FacilityDecl {
+            id: 92,
+            kind: FacilityKind::Crane,
+            position: Point { x: 2, y: 0 },
+        },
+        FacilityDecl {
+            id: 93,
+            kind: FacilityKind::Storehouse,
+            position: Point { x: 3, y: 0 },
+        },
+    ];
+    experiment
+}
+
+#[test]
+fn v6_charges_completion_and_restart_and_rolls_back_deposit_effects_on_exhaustion() {
+    let experiment = extraction_chain();
+    let receipt = check::make_receipt(&experiment).unwrap();
+    check::verify_receipt(&receipt).unwrap();
+    let before = &receipt.result.frames[12];
+    let after = &receipt.result.frames[13];
+    // Each drill extracts and restarts, then the later crane starts: five jobs.
+    assert_eq!(after.costs.construction - before.costs.construction, 5);
+    assert_eq!(after.state.facilities[0].materials, vec![1001]);
+    assert_eq!(after.state.facilities[1].materials, vec![1004]);
+    assert_eq!(
+        after.state.facilities[2].progress,
+        platonik_core::model::CRANE_PERIOD
+    );
+    // On its next turn the crane transfers one unit and starts its next job.
+    let before_crane = &receipt.result.frames[20];
+    let after_crane = &receipt.result.frames[21];
+    assert_eq!(
+        after_crane.costs.construction - before_crane.costs.construction,
+        2
+    );
+    assert_eq!(after_crane.state.facilities[3].materials, vec![1001]);
+    assert_eq!(
+        after_crane.state.facilities[2].progress,
+        platonik_core::model::CRANE_PERIOD
+    );
+
+    // Exercise every interruption within checking and work, plus exact commit.
+    // Deposits and every facility must agree on the same atomic boundary.
+    let start = after.activations.last().unwrap().work_after;
+    for allowance in 0..=8 {
+        let bounded = fuel_boundary(&experiment, start, allowance);
+        let interrupted = check::make_receipt(&bounded).unwrap();
+        check::verify_receipt(&interrupted).unwrap();
+        assert_eq!(
+            interrupted.result.status,
+            platonik_core::model::RunStatus::FuelExhausted
+        );
+        assert_eq!(interrupted.result.costs.total(), bounded.fuel);
+        let expected = if allowance == 8 { after } else { before };
+        assert_eq!(
+            interrupted.result.final_state.facilities,
+            expected.state.facilities
+        );
+        assert_eq!(
+            interrupted.result.final_state.construction,
+            expected.state.construction
+        );
+        assert_eq!(interrupted.result.final_state.tick, 13);
+    }
+}
+
+#[test]
+fn v6_changes_accounting_without_changing_fully_funded_physical_replay() {
+    let mut experiment = extraction_chain();
+    let exact = check::make_receipt(&experiment).unwrap();
+    experiment.version = platonik_core::model::INDUSTRY_VERSION;
+    let historical = check::make_receipt(&experiment).unwrap();
+    assert_eq!(exact.result.final_state, historical.result.final_state);
+    assert!(exact.result.costs.construction > historical.result.costs.construction);
+    for (exact, historical) in exact.result.frames.iter().zip(&historical.result.frames) {
+        assert_eq!(exact.state, historical.state);
+    }
 }

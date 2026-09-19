@@ -1,137 +1,565 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-11T02:06:06Z",
+  "generatedAt": "2026-09-19T16:11:14.283842Z",
   "title": "Design System: Platonik",
   "extensions": {
     "colorMeta": {
-      "accent": {
-        "role": "primary",
-        "displayName": "Dark green"
-      },
       "paper": {
         "role": "neutral",
-        "displayName": "Off-white paper"
+        "displayName": "Paper",
+        "tonalRamp": [
+          "oklch(0.1500 0.00412 91.446)",
+          "oklch(0.2643 0.00412 91.446)",
+          "oklch(0.3786 0.00412 91.446)",
+          "oklch(0.4929 0.00412 91.446)",
+          "oklch(0.6071 0.00412 91.446)",
+          "oklch(0.7214 0.00412 91.446)",
+          "oklch(0.8357 0.00412 91.446)",
+          "oklch(0.9500 0.00412 91.446)"
+        ]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Dark ink"
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(0.1500 0.00613 56.043)",
+          "oklch(0.2643 0.00613 56.043)",
+          "oklch(0.3786 0.00613 56.043)",
+          "oklch(0.4929 0.00613 56.043)",
+          "oklch(0.6071 0.00613 56.043)",
+          "oklch(0.7214 0.00613 56.043)",
+          "oklch(0.8357 0.00613 56.043)",
+          "oklch(0.9500 0.00613 56.043)"
+        ]
       },
       "muted": {
         "role": "neutral",
-        "displayName": "Muted text"
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(0.1500 0.01324 71.767)",
+          "oklch(0.2643 0.01324 71.767)",
+          "oklch(0.3786 0.01324 71.767)",
+          "oklch(0.4929 0.01324 71.767)",
+          "oklch(0.6071 0.01324 71.767)",
+          "oklch(0.7214 0.01324 71.767)",
+          "oklch(0.8357 0.01324 71.767)",
+          "oklch(0.9500 0.01324 71.767)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent",
+        "tonalRamp": [
+          "oklch(0.1500 0.21443 263.017)",
+          "oklch(0.2643 0.21443 263.017)",
+          "oklch(0.3786 0.21443 263.017)",
+          "oklch(0.4929 0.21443 263.017)",
+          "oklch(0.6071 0.21443 263.017)",
+          "oklch(0.7214 0.21443 263.017)",
+          "oklch(0.8357 0.21443 263.017)",
+          "oklch(0.9500 0.21443 263.017)"
+        ]
+      },
+      "accent-foreground": {
+        "role": "neutral",
+        "displayName": "Accent Foreground",
+        "tonalRamp": [
+          "oklch(0.1500 0.00412 91.446)",
+          "oklch(0.2643 0.00412 91.446)",
+          "oklch(0.3786 0.00412 91.446)",
+          "oklch(0.4929 0.00412 91.446)",
+          "oklch(0.6071 0.00412 91.446)",
+          "oklch(0.7214 0.00412 91.446)",
+          "oklch(0.8357 0.00412 91.446)",
+          "oklch(0.9500 0.00412 91.446)"
+        ]
       },
       "line": {
         "role": "neutral",
-        "displayName": "Fine divider"
+        "displayName": "Line",
+        "tonalRamp": [
+          "oklch(0.1500 0.01315 75.339)",
+          "oklch(0.2643 0.01315 75.339)",
+          "oklch(0.3786 0.01315 75.339)",
+          "oklch(0.4929 0.01315 75.339)",
+          "oklch(0.6071 0.01315 75.339)",
+          "oklch(0.7214 0.01315 75.339)",
+          "oklch(0.8357 0.01315 75.339)",
+          "oklch(0.9500 0.01315 75.339)"
+        ]
+      },
+      "control-border": {
+        "role": "neutral",
+        "displayName": "Control Border",
+        "tonalRamp": [
+          "oklch(0.1500 0.01843 70.393)",
+          "oklch(0.2643 0.01843 70.393)",
+          "oklch(0.3786 0.01843 70.393)",
+          "oklch(0.4929 0.01843 70.393)",
+          "oklch(0.6071 0.01843 70.393)",
+          "oklch(0.7214 0.01843 70.393)",
+          "oklch(0.8357 0.01843 70.393)",
+          "oklch(0.9500 0.01843 70.393)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "tonalRamp": [
+          "oklch(0.1500 0.00537 95.097)",
+          "oklch(0.2643 0.00537 95.097)",
+          "oklch(0.3786 0.00537 95.097)",
+          "oklch(0.4929 0.00537 95.097)",
+          "oklch(0.6071 0.00537 95.097)",
+          "oklch(0.7214 0.00537 95.097)",
+          "oklch(0.8357 0.00537 95.097)",
+          "oklch(0.9500 0.00537 95.097)"
+        ]
       },
       "wash": {
         "role": "neutral",
-        "displayName": "Quotation and code wash"
+        "displayName": "Wash",
+        "tonalRamp": [
+          "oklch(0.1500 0.00537 95.097)",
+          "oklch(0.2643 0.00537 95.097)",
+          "oklch(0.3786 0.00537 95.097)",
+          "oklch(0.4929 0.00537 95.097)",
+          "oklch(0.6071 0.00537 95.097)",
+          "oklch(0.7214 0.00537 95.097)",
+          "oklch(0.8357 0.00537 95.097)",
+          "oklch(0.9500 0.00537 95.097)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Focus",
+        "tonalRamp": [
+          "oklch(0.1500 0.21443 263.017)",
+          "oklch(0.2643 0.21443 263.017)",
+          "oklch(0.3786 0.21443 263.017)",
+          "oklch(0.4929 0.21443 263.017)",
+          "oklch(0.6071 0.21443 263.017)",
+          "oklch(0.7214 0.21443 263.017)",
+          "oklch(0.8357 0.21443 263.017)",
+          "oklch(0.9500 0.21443 263.017)"
+        ]
+      },
+      "success": {
+        "role": "neutral",
+        "displayName": "Success",
+        "tonalRamp": [
+          "oklch(0.1500 0.10834 154.001)",
+          "oklch(0.2643 0.10834 154.001)",
+          "oklch(0.3786 0.10834 154.001)",
+          "oklch(0.4929 0.10834 154.001)",
+          "oklch(0.6071 0.10834 154.001)",
+          "oklch(0.7214 0.10834 154.001)",
+          "oklch(0.8357 0.10834 154.001)",
+          "oklch(0.9500 0.10834 154.001)"
+        ]
+      },
+      "warning": {
+        "role": "neutral",
+        "displayName": "Warning",
+        "tonalRamp": [
+          "oklch(0.1500 0.11850 62.592)",
+          "oklch(0.2643 0.11850 62.592)",
+          "oklch(0.3786 0.11850 62.592)",
+          "oklch(0.4929 0.11850 62.592)",
+          "oklch(0.6071 0.11850 62.592)",
+          "oklch(0.7214 0.11850 62.592)",
+          "oklch(0.8357 0.11850 62.592)",
+          "oklch(0.9500 0.11850 62.592)"
+        ]
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "Danger",
+        "tonalRamp": [
+          "oklch(0.1500 0.15486 27.568)",
+          "oklch(0.2643 0.15486 27.568)",
+          "oklch(0.3786 0.15486 27.568)",
+          "oklch(0.4929 0.15486 27.568)",
+          "oklch(0.6071 0.15486 27.568)",
+          "oklch(0.7214 0.15486 27.568)",
+          "oklch(0.8357 0.15486 27.568)",
+          "oklch(0.9500 0.15486 27.568)"
+        ]
+      },
+      "warm-plane": {
+        "role": "neutral",
+        "displayName": "Warm Plane",
+        "tonalRamp": [
+          "oklch(0.1500 0.01809 92.045)",
+          "oklch(0.2643 0.01809 92.045)",
+          "oklch(0.3786 0.01809 92.045)",
+          "oklch(0.4929 0.01809 92.045)",
+          "oklch(0.6071 0.01809 92.045)",
+          "oklch(0.7214 0.01809 92.045)",
+          "oklch(0.8357 0.01809 92.045)",
+          "oklch(0.9500 0.01809 92.045)"
+        ]
+      },
+      "frontier-soil": {
+        "role": "secondary",
+        "displayName": "Frontier Soil",
+        "tonalRamp": [
+          "oklch(0.1500 0.05600 91.815)",
+          "oklch(0.2643 0.05600 91.815)",
+          "oklch(0.3786 0.05600 91.815)",
+          "oklch(0.4929 0.05600 91.815)",
+          "oklch(0.6071 0.05600 91.815)",
+          "oklch(0.7214 0.05600 91.815)",
+          "oklch(0.8357 0.05600 91.815)",
+          "oklch(0.9500 0.05600 91.815)"
+        ]
+      },
+      "frontier-edge": {
+        "role": "secondary",
+        "displayName": "Frontier Edge",
+        "tonalRamp": [
+          "oklch(0.1500 0.02645 143.244)",
+          "oklch(0.2643 0.02645 143.244)",
+          "oklch(0.3786 0.02645 143.244)",
+          "oklch(0.4929 0.02645 143.244)",
+          "oklch(0.6071 0.02645 143.244)",
+          "oklch(0.7214 0.02645 143.244)",
+          "oklch(0.8357 0.02645 143.244)",
+          "oklch(0.9500 0.02645 143.244)"
+        ]
+      },
+      "frontier-road": {
+        "role": "secondary",
+        "displayName": "Frontier Road",
+        "tonalRamp": [
+          "oklch(0.1500 0.05665 86.085)",
+          "oklch(0.2643 0.05665 86.085)",
+          "oklch(0.3786 0.05665 86.085)",
+          "oklch(0.4929 0.05665 86.085)",
+          "oklch(0.6071 0.05665 86.085)",
+          "oklch(0.7214 0.05665 86.085)",
+          "oklch(0.8357 0.05665 86.085)",
+          "oklch(0.9500 0.05665 86.085)"
+        ]
+      },
+      "frontier-label": {
+        "role": "secondary",
+        "displayName": "Frontier Label",
+        "tonalRamp": [
+          "oklch(0.1500 0.02711 121.802)",
+          "oklch(0.2643 0.02711 121.802)",
+          "oklch(0.3786 0.02711 121.802)",
+          "oklch(0.4929 0.02711 121.802)",
+          "oklch(0.6071 0.02711 121.802)",
+          "oklch(0.7214 0.02711 121.802)",
+          "oklch(0.8357 0.02711 121.802)",
+          "oklch(0.9500 0.02711 121.802)"
+        ]
+      },
+      "frontier-annotation": {
+        "role": "secondary",
+        "displayName": "Frontier Annotation",
+        "tonalRamp": [
+          "oklch(0.1500 0.04424 93.091)",
+          "oklch(0.2643 0.04424 93.091)",
+          "oklch(0.3786 0.04424 93.091)",
+          "oklch(0.4929 0.04424 93.091)",
+          "oklch(0.6071 0.04424 93.091)",
+          "oklch(0.7214 0.04424 93.091)",
+          "oklch(0.8357 0.04424 93.091)",
+          "oklch(0.9500 0.04424 93.091)"
+        ]
+      },
+      "frontier-annotation-edge": {
+        "role": "secondary",
+        "displayName": "Frontier Annotation Edge",
+        "tonalRamp": [
+          "oklch(0.1500 0.02403 120.597)",
+          "oklch(0.2643 0.02403 120.597)",
+          "oklch(0.3786 0.02403 120.597)",
+          "oklch(0.4929 0.02403 120.597)",
+          "oklch(0.6071 0.02403 120.597)",
+          "oklch(0.7214 0.02403 120.597)",
+          "oklch(0.8357 0.02403 120.597)",
+          "oklch(0.9500 0.02403 120.597)"
+        ]
+      },
+      "camera-paper": {
+        "role": "secondary",
+        "displayName": "Camera Paper",
+        "tonalRamp": [
+          "oklch(0.1500 0.02439 94.072)",
+          "oklch(0.2643 0.02439 94.072)",
+          "oklch(0.3786 0.02439 94.072)",
+          "oklch(0.4929 0.02439 94.072)",
+          "oklch(0.6071 0.02439 94.072)",
+          "oklch(0.7214 0.02439 94.072)",
+          "oklch(0.8357 0.02439 94.072)",
+          "oklch(0.9500 0.02439 94.072)"
+        ]
+      },
+      "camera-ink": {
+        "role": "secondary",
+        "displayName": "Camera Ink",
+        "tonalRamp": [
+          "oklch(0.1500 0.03017 165.024)",
+          "oklch(0.2643 0.03017 165.024)",
+          "oklch(0.3786 0.03017 165.024)",
+          "oklch(0.4929 0.03017 165.024)",
+          "oklch(0.6071 0.03017 165.024)",
+          "oklch(0.7214 0.03017 165.024)",
+          "oklch(0.8357 0.03017 165.024)",
+          "oklch(0.9500 0.03017 165.024)"
+        ]
+      },
+      "camera-line": {
+        "role": "secondary",
+        "displayName": "Camera Line",
+        "tonalRamp": [
+          "oklch(0.1500 0.03110 126.128)",
+          "oklch(0.2643 0.03110 126.128)",
+          "oklch(0.3786 0.03110 126.128)",
+          "oklch(0.4929 0.03110 126.128)",
+          "oklch(0.6071 0.03110 126.128)",
+          "oklch(0.7214 0.03110 126.128)",
+          "oklch(0.8357 0.03110 126.128)",
+          "oklch(0.9500 0.03110 126.128)"
+        ]
+      },
+      "camera-hover": {
+        "role": "secondary",
+        "displayName": "Camera Hover",
+        "tonalRamp": [
+          "oklch(0.1500 0.02446 91.609)",
+          "oklch(0.2643 0.02446 91.609)",
+          "oklch(0.3786 0.02446 91.609)",
+          "oklch(0.4929 0.02446 91.609)",
+          "oklch(0.6071 0.02446 91.609)",
+          "oklch(0.7214 0.02446 91.609)",
+          "oklch(0.8357 0.02446 91.609)",
+          "oklch(0.9500 0.02446 91.609)"
+        ]
+      },
+      "route-line": {
+        "role": "secondary",
+        "displayName": "Route Line",
+        "tonalRamp": [
+          "oklch(0.1500 0.08273 96.508)",
+          "oklch(0.2643 0.08273 96.508)",
+          "oklch(0.3786 0.08273 96.508)",
+          "oklch(0.4929 0.08273 96.508)",
+          "oklch(0.6071 0.08273 96.508)",
+          "oklch(0.7214 0.08273 96.508)",
+          "oklch(0.8357 0.08273 96.508)",
+          "oklch(0.9500 0.08273 96.508)"
+        ]
+      },
+      "route-ink": {
+        "role": "secondary",
+        "displayName": "Route Ink",
+        "tonalRamp": [
+          "oklch(0.1500 0.03126 179.775)",
+          "oklch(0.2643 0.03126 179.775)",
+          "oklch(0.3786 0.03126 179.775)",
+          "oklch(0.4929 0.03126 179.775)",
+          "oklch(0.6071 0.03126 179.775)",
+          "oklch(0.7214 0.03126 179.775)",
+          "oklch(0.8357 0.03126 179.775)",
+          "oklch(0.9500 0.03126 179.775)"
+        ]
       }
     },
     "typographyMeta": {
-      "display": {
-        "displayName": "Homepage headline",
-        "purpose": "The large homepage heading."
+      "marketing-display": {
+        "displayName": "Marketing Display",
+        "purpose": "Homepage headline only; vendor editorial preset."
       },
-      "headline": {
-        "displayName": "Document title",
-        "purpose": "Documentation page headings."
+      "marketing-headline": {
+        "displayName": "Marketing Headline",
+        "purpose": "Homepage section headings."
+      },
+      "document-title": {
+        "displayName": "Document Title",
+        "purpose": "Field-guide title."
+      },
+      "world-title": {
+        "displayName": "World Title",
+        "purpose": "Compact frontier title."
+      },
+      "prose-heading": {
+        "displayName": "Prose Heading",
+        "purpose": "Field-guide section headings."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Homepage body text and shared copy."
+        "purpose": "Shared Nebula Sans body text."
       },
       "prose": {
-        "displayName": "Document prose",
-        "purpose": "Long-form documentation."
+        "displayName": "Prose",
+        "purpose": "Long-form reading text."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Shared action text at the effective 14px size."
+      },
+      "workshop-title": {
+        "displayName": "Workshop Title",
+        "purpose": "Compact semibold game inspector title."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Literal commands and records."
       }
     },
+    "shadows": [
+      {
+        "name": "material-inset",
+        "value": "inset 2px 3px 6px color-mix(in oklch, black 9%, transparent), inset -1px -1px 2px color-mix(in oklch, white 12%, transparent)",
+        "purpose": "Shared laboratory fields and explicitly inset Lantern planes."
+      },
+      {
+        "name": "material-lift",
+        "value": "inset 0 1px 0 var(--hraness-material-edge), -3px -3px 10px color-mix(in oklch, white 4%, transparent), 2px 4px 8px color-mix(in oklch, black 7%, transparent), 8px 18px 40px color-mix(in oklch, black 9%, transparent)",
+        "purpose": "Only Lantern planes explicitly requesting raised depth."
+      },
+      {
+        "name": "header-chrome",
+        "value": "inset 0 1px 0 var(--hraness-material-edge), 0 4px 12px color-mix(in oklch, black 4%, transparent)",
+        "purpose": "The shared header enclosure."
+      }
+    ],
+    "motion": [
+      {
+        "name": "material-duration",
+        "value": "160ms",
+        "purpose": "Existing Lantern material transitions; not a global animation rule."
+      },
+      {
+        "name": "frontier-work",
+        "value": "1.1s steps(2) infinite",
+        "purpose": "Engine-reported working marker; disabled by reduced-motion preference."
+      }
+    ],
     "breakpoints": [
       {
-        "name": "single-column",
+        "name": "frontier-compact-workshop",
+        "value": "1000px"
+      },
+      {
+        "name": "laboratory-compact",
+        "value": "850px"
+      },
+      {
+        "name": "stacked-world-and-docs",
         "value": "800px"
       },
       {
-        "name": "narrow",
+        "name": "flow-header-and-marketing",
+        "value": "760px"
+      },
+      {
+        "name": "compact-replay",
+        "value": "520px"
+      },
+      {
+        "name": "narrow-reading",
         "value": "480px"
       }
     ]
   },
   "components": [
     {
-      "name": "Primary link",
-      "kind": "custom",
-      "refersTo": "primary-link",
-      "description": "A navigational anchor for the main reading action, with an immediate hover state and keyboard outline.",
-      "html": "<a class=\"ds-primary-link\" href=\"/docs/game-design\">Explore the game design <span aria-hidden=\"true\">↗</span></a>",
-      "css": ".ds-primary-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--paper, #f9f9f6); background: var(--accent, #304f3d); padding: 12px 18px; border-radius: 3px; text-decoration: none; font-size: 14px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-primary-link:hover { background: #213d2c; color: white; } .ds-primary-link:focus-visible { outline: 2px solid var(--accent, #304f3d); outline-offset: 5px; border-radius: 2px; }"
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shared engine action; labels change with the current operation.",
+      "html": "<button class=\"ds-button\">Run factory</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--accent);border-radius:.5rem;background:var(--accent);color:var(--hraness-palette-primary-foreground);padding:10px 15px;font:14px/1.65 var(--body);cursor:pointer;background-image:linear-gradient(to bottom,var(--hraness-material-edge),transparent 2px)}.ds-button:hover:not(:disabled){background:color-mix(in oklch,var(--accent) 92%,var(--ink));color:var(--hraness-palette-primary-foreground)}.ds-button:focus-visible{outline:2px solid var(--focus);outline-offset:3px}.ds-button:disabled{opacity:.5;cursor:default;background-image:none}"
     },
     {
-      "name": "Header navigation",
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Save, cancel, and secondary world actions.",
+      "html": "<button class=\"ds-button ds-secondary\">Save to file</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--accent);border-radius:.5rem;background:var(--accent);color:var(--hraness-palette-primary-foreground);padding:10px 15px;font:14px/1.65 var(--body);cursor:pointer;background-image:linear-gradient(to bottom,var(--hraness-material-edge),transparent 2px)}.ds-button:hover:not(:disabled){background:color-mix(in oklch,var(--accent) 92%,var(--ink));color:var(--hraness-palette-primary-foreground)}.ds-button:focus-visible{outline:2px solid var(--focus);outline-offset:3px}.ds-button:disabled{opacity:.5;cursor:default;background-image:none}.ds-secondary{background:transparent;color:var(--accent)}.ds-secondary:hover:not(:disabled){background:var(--wash);color:var(--accent)}"
+    },
+    {
+      "name": "Coordinate field",
+      "kind": "input",
+      "refersTo": "coordinate-field",
+      "description": "Precise alternative to choosing a world tile by pointer.",
+      "html": "<label class=\"ds-coordinate\">X<input type=\"number\" value=\"8\" min=\"0\" max=\"31\" aria-label=\"Site X\"></label>",
+      "css": ".ds-coordinate{display:grid;gap:5px;color:var(--muted);font:12px/1.65 var(--body)}.ds-coordinate input{width:70px;box-sizing:border-box;padding:10px;min-height:42px;border:1px solid var(--control-border);background:var(--paper);color:var(--ink);border-radius:6px;font:14px var(--body)}.ds-coordinate input:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
+    },
+    {
+      "name": "Site navigation",
       "kind": "nav",
-      "refersTo": "navigation-link",
-      "description": "The two header links retain plain text styling, with an underline on hover.",
-      "html": "<nav class=\"ds-header-nav\" aria-label=\"Main navigation\"><a href=\"/docs\">Documentation</a><a href=\"https://github.com/hraness/platonik\">GitHub</a></nav>",
-      "css": ".ds-header-nav { display: flex; gap: 29px; font-size: 14px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-header-nav a { color: var(--ink, #262c28); text-decoration: none; padding-block: 12px; text-underline-offset: .22em; text-decoration-thickness: 1px; } .ds-header-nav a:hover { color: var(--accent, #304f3d); text-decoration: underline; } .ds-header-nav a:focus-visible { outline: 2px solid var(--accent, #304f3d); outline-offset: 5px; border-radius: 2px; } @media (max-width: 480px) { .ds-header-nav { font-size: 12px; gap: 18px; } }"
+      "description": "Shared text navigation; appearance control is owned by the design-kit provider.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><a href=\"/play\">Living world</a><a href=\"/docs\">Field guide</a></nav>",
+      "css": ".ds-nav{display:flex;flex-wrap:wrap;gap:29px;font:14px/1.65 var(--body)}.ds-nav a{padding:12px 0;color:var(--ink);text-decoration:none}.ds-nav a:hover{color:var(--accent);text-decoration:underline;text-underline-offset:.22em}.ds-nav a:focus-visible{outline:2px solid var(--focus);outline-offset:5px}"
     },
     {
-      "name": "Documentation navigation",
-      "kind": "nav",
-      "refersTo": "documentation-link",
-      "description": "A vertical link list with an explicit current page; it wraps horizontally on smaller screens.",
-      "html": "<nav class=\"ds-doc-nav\" aria-label=\"Documentation\"><a href=\"/docs\">Overview</a><a href=\"/docs/game-design\" aria-current=\"page\">The game</a><a href=\"/docs/competition\">Competition</a><a href=\"/docs/engine\">Agents &amp; engine</a><a href=\"/docs/research\">Research foundations</a></nav>",
-      "css": ".ds-doc-nav { display: flex; flex-direction: column; gap: 6px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-doc-nav a { font-size: 14px; padding: 7px 0; text-decoration: none; color: var(--muted, #616a63); text-underline-offset: .22em; text-decoration-thickness: 1px; } .ds-doc-nav a:hover { text-decoration: underline; color: var(--ink, #262c28); } .ds-doc-nav a[aria-current=page] { color: var(--ink, #262c28); font-weight: 600; } .ds-doc-nav a:focus-visible { outline: 2px solid var(--accent, #304f3d); outline-offset: 5px; border-radius: 2px; } @media (max-width: 800px) { .ds-doc-nav { flex-direction: row; flex-wrap: wrap; gap: 2px 22px; } .ds-doc-nav a { font-size: 13px; } }"
+      "name": "Selected facility row",
+      "kind": "button",
+      "refersTo": "selected-facility",
+      "description": "The text and state portion of a machine row; the live game also displays its atlas sprite.",
+      "html": "<button class=\"ds-facility\" aria-pressed=\"true\"><strong>Workshop</strong><span>Waiting for material</span></button>",
+      "css": ".ds-facility{display:grid;gap:3px;text-align:left;min-height:58px;width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--hraness-material-warm-plane);color:var(--ink);font:13px/1.4 var(--body);cursor:pointer}.ds-facility strong{font-weight:600}.ds-facility span{color:var(--muted);font-size:11px}.ds-facility:hover{background:var(--wash)}.ds-facility:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
     },
     {
-      "name": "Cell diagram",
-      "kind": "custom",
-      "refersTo": "policy-a-cell",
-      "description": "Eight static cells use values, A/B labels, a dashed border, and a cross to explain policy and controller state.",
-      "html": "<figure class=\"ds-cell-figure\"><div class=\"ds-cell-row\" role=\"img\" aria-label=\"Illustrative cells by value and policy: 3 B, 1 A, 6 A, 2 B, 8 A, 4 A, 7 B, 5 A. Cell 6 has a disabled controller. A and B are two local policies.\"><div class=\"ds-cell ds-cell-second\" aria-hidden=\"true\"><span>3</span><span class=\"ds-cell-policy\">B</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>1</span><span class=\"ds-cell-policy\">A</span></div><div class=\"ds-cell ds-cell-wounded\" aria-hidden=\"true\"><span>6</span><span class=\"ds-cell-policy\">A</span><span class=\"ds-wound-mark\">×</span></div><div class=\"ds-cell ds-cell-second\" aria-hidden=\"true\"><span>2</span><span class=\"ds-cell-policy\">B</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>8</span><span class=\"ds-cell-policy\">A</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>4</span><span class=\"ds-cell-policy\">A</span></div><div class=\"ds-cell ds-cell-second\" aria-hidden=\"true\"><span>7</span><span class=\"ds-cell-policy\">B</span></div><div class=\"ds-cell\" aria-hidden=\"true\"><span>5</span><span class=\"ds-cell-policy\">A</span></div></div><figcaption>A and B: two local policies. ×: a disabled controller.<br>Can the colony restore order?<br><span>Concept illustration · not a simulation result</span></figcaption></figure>",
-      "css": ".ds-cell-figure { margin: 30px 0; color: var(--ink, #262c28); font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-cell-row { display: flex; align-items: center; gap: 10px; max-width: 620px; } .ds-cell { border: 1px solid #849981; background: #e2e9dc; width: 64px; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 20px; position: relative; border-radius: 8px; font-variant-numeric: tabular-nums; line-height: 1.65; } .ds-cell-second { background: #f1e9dc; border-color: #b6a184; } .ds-cell-policy { position: absolute; bottom: 2px; font-size: 9px; line-height: 1; } .ds-cell-wounded { background: var(--paper, #f9f9f6); border-style: dashed; border-color: #7a6255; } .ds-wound-mark { position: absolute; top: -9px; right: -5px; background: var(--paper, #f9f9f6); color: #765445; width: 16px; font-size: 16px; line-height: 1; text-align: center; } .ds-cell-figure figcaption { margin-top: 22px; font-size: 14px; line-height: 1.6; } .ds-cell-figure figcaption > span { color: var(--muted, #616a63); font-size: 12px; } @media (max-width: 480px) { .ds-cell-row { gap: 6px; } .ds-cell { width: calc((100% - 42px) / 8); font-size: 16px; border-radius: 5px; } .ds-wound-mark { font-size: 14px; width: 13px; top: -7px; } }"
+      "name": "Camera action",
+      "kind": "button",
+      "refersTo": "camera-button",
+      "description": "Fixed daylight control colors remain legible over the landscape.",
+      "html": "<button class=\"ds-camera\">Home</button>",
+      "css": ".ds-camera{background:#f3eedc;color:#283c33;border:1px solid #5b6350;border-radius:5px;font:600 12px var(--body);padding:10px 12px;min-width:40px;min-height:40px;cursor:pointer}.ds-camera:hover{background:#fff9e7}.ds-camera:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
     },
     {
-      "name": "Illustrative conversation",
-      "kind": "custom",
-      "refersTo": "conversation-row",
-      "description": "Labeled turns separated by rules, reproducing the homepage conversation without interactive chat controls.",
-      "html": "<div class=\"ds-conversation\" aria-label=\"Illustrative player and agent conversation\"><div class=\"ds-message\"><span class=\"ds-speaker\">You</span><p>Keep the quick one. Breed for recovery. I want to know what changes.</p></div><div class=\"ds-message\"><span class=\"ds-speaker\">Agent</span><p>The offspring spends longer on healthy arrays, but gets around the stalled cell. I can disable its detour rule and compare both versions.</p></div><div class=\"ds-message\"><span class=\"ds-speaker\">You</span><p>Do that. Then try a world it hasn’t seen.</p></div></div><p class=\"ds-figure-note\">An example of intended play. The Rust engine and agent skills are still to be built.</p>",
-      "css": ".ds-conversation { margin-top: 28px; max-width: 730px; color: var(--ink, #262c28); font-size: 17px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } .ds-message { display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line, #d9ddd5); } .ds-message:last-child { border-bottom: 1px solid var(--line, #d9ddd5); } .ds-speaker { font-size: 13px; font-weight: 600; padding-top: 3px; } .ds-message p { margin: 0; max-width: 60ch; text-wrap: pretty; } .ds-figure-note { margin: 14px 0 0; color: var(--muted, #616a63); font-size: 12px; line-height: 1.65; font-family: var(--body, Arial, Helvetica, sans-serif); } @media (max-width: 480px) { .ds-message { grid-template-columns: 42px 1fr; gap: 12px; } .ds-message p { font-size: 15px; } }"
-    },
-    {
-      "name": "Documentation code block",
+      "name": "Code block",
       "kind": "custom",
       "refersTo": "code-block",
-      "description": "Monospace proposal commands on the wash surface, with local horizontal scrolling. The example is not an installable CLI.",
-      "html": "<pre class=\"ds-code-block\"><code>platonik status --json\nplatonik inspect starter-a --json</code></pre>",
-      "css": ".ds-code-block { color: var(--ink, #262c28); background: var(--wash, #edf0e9); padding: 22px; border-radius: 3px; overflow-x: auto; font-size: 13px; line-height: 1.75; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; } .ds-code-block code { padding: 0; background: transparent; font-size: inherit; font-family: inherit; white-space: pre; } @media (max-width: 480px) { .ds-code-block { padding: 16px; } }"
+      "description": "Scrollable reference output in the field guide.",
+      "html": "<pre class=\"ds-code\"><code>platonik world report copperwake.world.json</code></pre>",
+      "css": ".ds-code{max-width:100%;overflow-x:auto;background:var(--wash);color:var(--ink);padding:22px;border-radius:3px;font:13px/1.75 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.ds-code code{font:inherit}"
     }
   ],
   "narrative": {
-    "northStar": "Minimal styling",
-    "overview": "The website uses an off-white page, dark text, serif headings, and restrained green links. Hierarchy comes from type size, reading width, whitespace, and fine dividers. The user requested minimal styling; this record describes the resulting implementation rather than a new visual direction.\n\nThe layout stays flat. Small labeled diagrams explain the game concept, and documentation uses the same type and palette as the homepage. There are no decorative animations, gradients, or shadows in the current implementation.",
+    "northStar": "A working frontier, clearly observed",
+    "overview": "Platonik gives the game a physical identity: sun-warmed ground, worn copper and teal machines, ore seams, spark crystals, and small courier rovers. The surrounding interface stays quiet enough to inspect their work. The game is an Experience surface with an Operate workshop; it uses the same accessible controls and reading voice as the rest of the site.\n\nThe shared site system remains intact. The homepage uses the Hraness editorial marketing treatment, documentation uses restrained reading columns, and archived laboratories retain their data-derived diagrams. Original raster art replaces abstract physical-world markers on the current frontier; it does not replace the laboratories' scientific encodings. The surface-specific composition is recorded in `.impeccable/surfaces/app-play.md`.",
     "keyCharacteristics": [
-      "Off-white background with dark text and muted supporting copy.",
-      "Newsreader headings paired with Arial body text.",
-      "Flat sections separated by thin rules and generous spacing.",
-      "Diagrams use labels and marks alongside color.",
-      "Immediate hover and focus feedback, with no animated transitions."
+      "Recognizable machinery and couriers carry the game's visual identity.",
+      "Shared palette roles and Nebula Sans controls adapt to appearance preference.",
+      "Instrument Serif tells the homepage story; Newsreader heads the game and field guide.",
+      "The daylight frontier remains stable while site chrome changes appearance.",
+      "Production status, selection, cargo, and routes have text or shape cues alongside color."
     ],
-    "rules": [],
+    "rules": [
+      {
+        "name": "The Two Surfaces Rule",
+        "body": "Site chrome follows the shared appearance palette; the frontier landscape keeps its authored daylight colors. Do not recolor machine art when the site theme changes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Evidence Rule",
+        "body": "Only Rust-derived state may change a machine's work marker, cargo label, construction state, or production count. Decorative terrain does not imply a resource or route.",
+        "section": "components"
+      }
+    ],
     "dos": [
-      "Do preserve the off-white page, dark text, green accent, and fine dividers.",
-      "Do use Newsreader regular for large headings and Arial for body text and navigation.",
-      "Do retain visible keyboard focus and the skip link.",
-      "Do label diagram categories and disabled controllers with text or marks as well as color.",
-      "Do keep wide code and tables scrollable within the reading column.",
-      "Do identify concept illustrations and illustrative conversation as proposals."
+      "Do preserve the shared palette bindings, installed typefaces, appearance control, and keyboard focus.",
+      "Do use the original atlas and its measured crop rectangles for the frontier's machines, couriers, resources, and scrub.",
+      "Do keep the scene dominant and the workshop available without shrinking the whole world to phone width.",
+      "Do pair machine colors and animation with written status, cargo labels, or selection outlines.",
+      "Do preserve the reading and laboratory layouts outside the scoped frontier surface.",
+      "Do keep generation provenance embedded in shipping raster metadata and preserve native alpha."
     ],
     "donts": [
-      "Don't add decorative motion, shadows, or gradients when extending this minimally styled surface.",
-      "Don't substitute interactive game controls for the current static illustrations.",
-      "Don't rely on color alone to convey policy or controller state.",
-      "Don't describe this captured website system as an implemented game interface."
+      "Don't restore the superseded green-only palette, Arial body type, or abstract-shape frontier as current design defaults.",
+      "Don't invent simulation outcomes through animation, labels, terrain decoration, or agent narration.",
+      "Don't let the game's fixed earth colors override semantic text and control colors in the shared shell.",
+      "Don't spread the marketing wall treatment or header blur into reading planes and machine inspectors.",
+      "Don't remove accessible list selection or keyboard camera controls when refining map interactions."
     ]
   }
 }

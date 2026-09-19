@@ -104,7 +104,7 @@ export function make_submission(challenge_json: string, programs_json: string, a
  * Return a named reference program as JSON. Supported names:
  * `idle`, `compact`, `resilient`, `relay`, `controller`, `switchboard-porter`,
  * `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, the
- * `world-surveyor` and `world-hauler` Dustlight roles, and the
+ * `world-surveyor` and `world-hauler` Dustlight roles, `frontier-hauler`, and the
  * `world-builder-upper` or `world-builder-lower` homestead plans.
  */
 export function reference_program(name: string): string;
@@ -139,6 +139,11 @@ export function world_new(name: string): string;
 
 export function world_report(world_json: string): string;
 
+/**
+ * Compile a bounded drawn route; applying its Program is a separate world command.
+ */
+export function world_route_program(world_json: string, cell: number, waypoints_json: string): string;
+
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
@@ -167,6 +172,7 @@ export interface InitOutput {
     readonly world_apply: (a: number, b: number, c: number, d: number) => [number, number, number, number];
     readonly world_new: (a: number, b: number) => [number, number, number, number];
     readonly world_report: (a: number, b: number) => [number, number, number, number];
+    readonly world_route_program: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
     readonly __wbindgen_externrefs: WebAssembly.Table;
     readonly __externref_table_dealloc: (a: number) => void;
     readonly __wbindgen_free: (a: number, b: number, c: number) => void;

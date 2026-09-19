@@ -130,7 +130,7 @@ pub fn make_submission(
 #[wasm_bindgen]
 pub fn world_new(name: &str) -> Result<String, JsError> {
     let world =
-        platonik_core::world::new(name.to_string(), platonik_core::world_fixtures::homestead())
+        platonik_core::world::new(name.to_string(), platonik_core::world_fixtures::frontier())
             .map_err(to_js_error)?;
     to_json(&world)
 }
@@ -143,6 +143,20 @@ pub fn world_apply(world_json: &str, command_json: &str) -> Result<String, JsErr
     to_json(&next)
 }
 
+/// Compile a bounded drawn route; applying its Program is a separate world command.
+#[wasm_bindgen]
+pub fn world_route_program(
+    world_json: &str,
+    cell: u16,
+    waypoints_json: &str,
+) -> Result<String, JsError> {
+    let world: platonik_core::world::World = from_json(world_json)?;
+    let points: Vec<platonik_core::model::Point> = from_json(waypoints_json)?;
+    let program =
+        platonik_core::freight_route::compile(&world, cell, &points).map_err(to_js_error)?;
+    to_json(&program)
+}
+
 #[wasm_bindgen]
 pub fn world_report(world_json: &str) -> Result<String, JsError> {
     let world: platonik_core::world::World = from_json(world_json)?;
@@ -153,7 +167,7 @@ pub fn world_report(world_json: &str) -> Result<String, JsError> {
 /// Return a named reference program as JSON. Supported names:
 /// `idle`, `compact`, `resilient`, `relay`, `controller`, `switchboard-porter`,
 /// `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, the
-/// `world-surveyor` and `world-hauler` Dustlight roles, and the
+/// `world-surveyor` and `world-hauler` Dustlight roles, `frontier-hauler`, and the
 /// `world-builder-upper` or `world-builder-lower` homestead plans.
 #[wasm_bindgen]
 pub fn reference_program(name: &str) -> Result<String, JsError> {
@@ -171,6 +185,7 @@ pub fn reference_program(name: &str) -> Result<String, JsError> {
         "foundry-builder" => platonik_core::fixtures::foundry_builder(),
         "world-surveyor" => platonik_core::world_fixtures::surveyor_program(),
         "world-hauler" => platonik_core::world_fixtures::hauler_program(),
+        "frontier-hauler" => platonik_core::world_fixtures::frontier_hauler_program(),
         "world-builder-upper" => {
             platonik_core::world_fixtures::builder_program(50).map_err(to_js_error)?
         }
