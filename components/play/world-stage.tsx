@@ -116,6 +116,8 @@ export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom
             {playing ? "Pause" : at >= frames.length - 1 ? "Replay" : "Play"}
           </button>
           <input type="range" min={0} max={Math.max(0, frames.length - 1)} value={at}
+            onPointerDown={() => { pauseForReplay(); stop(); }}
+            onKeyDown={(event) => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) { pauseForReplay(); stop(); } }}
             onChange={(event) => { pauseForReplay(); stop(); setAt(Number(event.target.value)); }}
             aria-label="World timeline" aria-valuetext={`Tick ${frame.tick}${view.current ? ", current revision" : ", replay"}`} />
           <span>Tick {frame.tick}{view.current ? " · now" : " · replay"}</span>
