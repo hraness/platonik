@@ -800,6 +800,7 @@ dependencies = [
  "algal",
  "hraness-support-foundation",
  "libc",
+ "miniz_oxide",
  "platonik-core",
  "serde",
  "serde_json",

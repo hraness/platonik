@@ -14,6 +14,7 @@ path = "src/main.rs"
 [dependencies]
 algal = { git = "https://github.com/hraness/algal", rev = "584d839b93cbf4e2f1e3ec53242243c8745fb485", version = "0.2.0" }
 hraness-support-foundation = { git = "https://github.com/hraness/support-foundation", rev = "b32c1c81bb2444f50509ed54388758ecfab1f1c0" }
+miniz_oxide = "=0.8.9"
 platonik-core = { path = "../platonik-core" }
 serde.workspace = true
 serde_json.workspace = true

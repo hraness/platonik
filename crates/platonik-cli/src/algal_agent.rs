@@ -53,7 +53,7 @@ fn manifest() -> Result<Manifest, String> {
                 "id": "planner",
                 "kind": "agent",
                 "inputs": {"world": "json"},
-                "prompt": "Choose one useful next action for this Platonik automation world that best serves world.goal. The host has already compiled and validated every available action. Return only {\"candidate\":\"ID\"} using one exact ID from world.candidates. Prefer finishing existing construction before expansion. Do not invent an ID or command fields.",
+                "prompt": "Choose one useful next action for this Platonik automation world that best serves world.goal. The host has already compiled and validated every available action. Take explicit production terms literally: choose an assembler candidate for assembler, frame, or second-tier goals, and a crane candidate for crane or automatic-transfer goals, when that candidate exists. Return only {\"candidate\":\"ID\"} using one exact ID from world.candidates. Prefer finishing existing construction before expansion. Do not invent an ID or command fields.",
                 "view": {"inputs": ["world"]},
                 "output": {
                     "kind": "json",
@@ -237,11 +237,23 @@ fn planning_input(
             Point { x: 0, y: 8 },
             Point { x: 12, y: 0 },
         ];
+        let assembler_sites = [
+            Point { x: 0, y: 6 },
+            Point { x: 12, y: 13 },
+            Point { x: 23, y: 6 },
+            Point { x: 0, y: 8 },
+        ];
         for (kind, label) in [
             (FacilityKind::Storehouse, "storehouse"),
             (FacilityKind::Fabricator, "fabricator"),
+            (FacilityKind::Assembler, "assembler"),
         ] {
-            if let Some(position) = preferred_sites.iter().copied().find(|position| {
+            let sites = if kind == FacilityKind::Assembler {
+                &assembler_sites
+            } else {
+                &preferred_sites
+            };
+            if let Some(position) = sites.iter().copied().find(|position| {
                 industry::validate_placement(&report.experiment, &report.state, kind, *position)
                     .is_ok()
             }) {
@@ -249,16 +261,62 @@ fn planning_input(
                     &mut commands,
                     &mut choices,
                     format!("place-{label}-{}-{}", position.x, position.y),
-                    format!(
-                        "Open a {label} construction site at ({}, {}).",
-                        position.x, position.y
-                    ),
+                    if kind == FacilityKind::Assembler && position == (Point { x: 0, y: 6 }) {
+                        "Open the frame-producing second-tier assembler at (0, 6), leaving (0, 5) for a crane from the west fabricator.".into()
+                    } else if kind == FacilityKind::Fabricator {
+                        format!(
+                            "Open another first-tier fabricator site at ({}, {}).",
+                            position.x, position.y
+                        )
+                    } else {
+                        format!(
+                            "Open a {label} construction site at ({}, {}).",
+                            position.x, position.y
+                        )
+                    },
                     Command::Place {
                         structure: kind,
                         position,
                     },
                 );
             }
+        }
+        let crane_site = (0..report.experiment.height).find_map(|y| {
+            (0..report.experiment.width)
+                .map(|x| Point { x, y })
+                .find(|position| {
+                    report
+                        .state
+                        .facilities
+                        .iter()
+                        .filter(|facility| {
+                            facility.ready && facility.position.distance(*position) == 1
+                        })
+                        .count()
+                        >= 2
+                        && industry::validate_placement(
+                            &report.experiment,
+                            &report.state,
+                            FacilityKind::Crane,
+                            *position,
+                        )
+                        .is_ok()
+                })
+        });
+        if let Some(position) = crane_site {
+            add_candidate(
+                &mut commands,
+                &mut choices,
+                format!("place-crane-{}-{}", position.x, position.y),
+                format!(
+                    "Open an automatic crane site between ready facilities at ({}, {}).",
+                    position.x, position.y
+                ),
+                Command::Place {
+                    structure: FacilityKind::Crane,
+                    position,
+                },
+            );
         }
     }
 

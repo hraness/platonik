@@ -1,20 +1,22 @@
 //! First-class facilities (habitat-v5). Declared facilities start active;
-//! admitted sites finish once creatures deliver their material and part bill.
-//! A fabricator burns one material token and one carried spark into a minted
-//! part; a storehouse buffers items. Consumed tokens stay accountable in the
-//! facility's `spent_*` lists so conservation ledgers remain exact.
+//! admitted sites finish once creatures deliver their complete item bill.
+//! Fabricators mint parts, assemblers mint frames, drills extract, cranes move,
+//! and storehouses buffer. Consumed tokens stay accountable in the facility's
+//! `spent_*` lists so conservation ledgers remain exact.
 use crate::construction;
 use crate::model::*;
 use crate::policy::Fault;
 use crate::sim::{Cat, Meter};
 use std::collections::BTreeSet;
 
-/// The construction bill a placed site must receive before it turns ready.
-pub fn bill(kind: FacilityKind) -> (u8, u8) {
+/// A site's required material, part, and frame units.
+pub fn bill(kind: FacilityKind) -> (u8, u8, u8) {
     match kind {
-        FacilityKind::Fabricator => (3, 2),
-        FacilityKind::Storehouse => (2, 1),
-        FacilityKind::Miner => (2, 1),
+        FacilityKind::Fabricator => (3, 2, 0),
+        FacilityKind::Storehouse => (2, 1, 0),
+        FacilityKind::Miner => (2, 1, 0),
+        FacilityKind::Assembler => (4, 2, 0),
+        FacilityKind::Crane => (1, 1, 1),
     }
 }
 
@@ -35,12 +37,15 @@ pub(crate) fn initial_state(experiment: &Experiment) -> Vec<FacilityState> {
             ready: true,
             needed_material: 0,
             needed_part: 0,
+            needed_frame: 0,
             materials: Vec::new(),
             sparks: Vec::new(),
             parts: Vec::new(),
+            frames: Vec::new(),
             spent_materials: Vec::new(),
             spent_sparks: Vec::new(),
             spent_parts: Vec::new(),
+            spent_frames: Vec::new(),
             progress: 0,
             minted: 0,
         })
@@ -49,7 +54,7 @@ pub(crate) fn initial_state(experiment: &Experiment) -> Vec<FacilityState> {
 
 /// An admitted site starts unready and holds nothing but its bill history.
 pub fn site(id: u16, kind: FacilityKind, position: Point) -> FacilityState {
-    let (material, part) = bill(kind);
+    let (material, part, frame) = bill(kind);
     FacilityState {
         id,
         kind,
@@ -57,12 +62,15 @@ pub fn site(id: u16, kind: FacilityKind, position: Point) -> FacilityState {
         ready: false,
         needed_material: material,
         needed_part: part,
+        needed_frame: frame,
         materials: Vec::new(),
         sparks: Vec::new(),
         parts: Vec::new(),
+        frames: Vec::new(),
         spent_materials: Vec::new(),
         spent_sparks: Vec::new(),
         spent_parts: Vec::new(),
+        spent_frames: Vec::new(),
         progress: 0,
         minted: 0,
     }
@@ -81,6 +89,16 @@ fn held(facility: &FacilityState, item: ItemKind) -> &[u32] {
         ItemKind::Material => &facility.materials,
         ItemKind::Spark => &[],
         ItemKind::Part => &facility.parts,
+        ItemKind::Frame => &facility.frames,
+    }
+}
+
+fn held_mut(facility: &mut FacilityState, item: ItemKind) -> &mut Vec<u32> {
+    match item {
+        ItemKind::Material => &mut facility.materials,
+        ItemKind::Spark => unreachable!("sparks are not unit items"),
+        ItemKind::Part => &mut facility.parts,
+        ItemKind::Frame => &mut facility.frames,
     }
 }
 
@@ -91,15 +109,22 @@ fn held_len(facility: &FacilityState, item: ItemKind) -> usize {
     }
 }
 
-/// What a ready facility accepts as input: fabricators take recipe inputs,
-/// storehouses take anything, and miners are pure producers with no inputs.
+/// What a ready facility accepts as input: producers take their recipe
+/// ingredients, a storehouse takes anything, and miners and cranes are
+/// pure movers with no input slots.
 pub fn accepts(facility: &FacilityState, item: ItemKind) -> bool {
     if !facility.ready {
         return false;
     }
-    let usable = !matches!(
+    let usable = matches!(
         (facility.kind, item),
-        (FacilityKind::Fabricator, ItemKind::Part) | (FacilityKind::Miner, _)
+        (
+            FacilityKind::Fabricator,
+            ItemKind::Material | ItemKind::Spark
+        ) | (
+            FacilityKind::Assembler,
+            ItemKind::Material | ItemKind::Part | ItemKind::Spark
+        ) | (FacilityKind::Storehouse, _)
     );
     usable && held_len(facility, item) < FACILITY_ITEM_LIMIT
 }
@@ -111,15 +136,15 @@ pub fn needs(facility: &FacilityState, item: ItemKind) -> bool {
         return match item {
             ItemKind::Material => facility.needed_material > 0,
             ItemKind::Part => facility.needed_part > 0,
+            ItemKind::Frame => facility.needed_frame > 0,
             ItemKind::Spark => false,
         };
     }
     accepts(facility, item)
 }
 
-/// Whether the facility has a fetchable item: fabricators yield only their
-/// minted parts, miners yield extracted material, and storehouses yield
-/// whatever they hold.
+/// Whether the facility has a fetchable item: producers yield only their
+/// own outputs, and a storehouse yields whatever it holds.
 pub fn has(facility: &FacilityState, item: ItemKind) -> bool {
     if !facility.ready {
         return false;
@@ -127,13 +152,14 @@ pub fn has(facility: &FacilityState, item: ItemKind) -> bool {
     match (facility.kind, item) {
         (FacilityKind::Fabricator, ItemKind::Part) => !facility.parts.is_empty(),
         (FacilityKind::Miner, ItemKind::Material) => !facility.materials.is_empty(),
+        (FacilityKind::Assembler, ItemKind::Frame) => !facility.frames.is_empty(),
         (FacilityKind::Storehouse, item) => held_len(facility, item) > 0,
         _ => false,
     }
 }
 
 fn finish(facility: &mut FacilityState) {
-    if facility.needed_material == 0 && facility.needed_part == 0 {
+    if facility.needed_material == 0 && facility.needed_part == 0 && facility.needed_frame == 0 {
         facility.ready = true;
     }
 }
@@ -204,6 +230,29 @@ fn supply(
             }
             state.cells[actor].part = None;
         }
+        ItemKind::Frame => {
+            let frame = state.cells[actor]
+                .frame
+                .ok_or(Fault::Action("item_missing"))?;
+            if !facility.ready {
+                if facility.needed_frame == 0 {
+                    return Err(Fault::Action("facility_rejects"));
+                }
+                meter.charge(Cat::Transfers, 1)?;
+                meter.charge(Cat::Construction, 1)?;
+                let facility = &mut state.facilities[index];
+                facility.needed_frame -= 1;
+                facility.spent_frames.push(frame);
+                finish(facility);
+            } else {
+                if !accepts(facility, ItemKind::Frame) {
+                    return Err(Fault::Action("facility_rejects"));
+                }
+                meter.charge(Cat::Transfers, 1)?;
+                state.facilities[index].frames.push(frame);
+            }
+            state.cells[actor].frame = None;
+        }
     }
     Ok(())
 }
@@ -243,6 +292,13 @@ fn fetch(
             }
             meter.charge(Cat::Transfers, 1)?;
             state.cells[actor].part = state.facilities[index].parts.pop();
+        }
+        ItemKind::Frame => {
+            if state.cells[actor].frame.is_some() {
+                return Err(Fault::Action("frame_full"));
+            }
+            meter.charge(Cat::Transfers, 1)?;
+            state.cells[actor].frame = state.facilities[index].frames.pop();
         }
     }
     Ok(())
@@ -344,6 +400,55 @@ fn spec_stock_index(experiment: &Experiment, position: Point) -> Option<usize> {
         .position(|stock| stock.position == position)
 }
 
+fn crane_arms(state: &State, position: Point) -> Vec<usize> {
+    let mut arms: Vec<usize> = state
+        .facilities
+        .iter()
+        .enumerate()
+        .filter(|(_, facility)| facility.position.distance(position) == 1)
+        .map(|(index, _)| index)
+        .collect();
+    arms.sort_by_key(|index| state.facilities[*index].id);
+    arms
+}
+
+fn crane_move(state: &State, position: Point) -> Option<(usize, usize, ItemKind)> {
+    let arms = crane_arms(state, position);
+    for &source in &arms {
+        for item in [
+            ItemKind::Part,
+            ItemKind::Frame,
+            ItemKind::Material,
+            ItemKind::Spark,
+        ] {
+            if !has(&state.facilities[source], item) {
+                continue;
+            }
+            for &destination in &arms {
+                if state.facilities[destination].id > state.facilities[source].id
+                    && accepts(&state.facilities[destination], item)
+                {
+                    return Some((source, destination, item));
+                }
+            }
+        }
+    }
+    None
+}
+
+fn transfer(state: &mut State, source: usize, destination: usize, item: ItemKind) {
+    match item {
+        ItemKind::Spark => {
+            let spark = state.facilities[source].sparks.pop().unwrap();
+            state.facilities[destination].sparks.push(spark);
+        }
+        _ => {
+            let unit = held_mut(&mut state.facilities[source], item).pop().unwrap();
+            held_mut(&mut state.facilities[destination], item).push(unit);
+        }
+    }
+}
+
 /// The modeled work one facility step will do, charged before any mutation so
 /// an exhausted tick leaves either an untouched or a fully processed set.
 pub(crate) fn tick_work(experiment: &Experiment, state: &State) -> (u64, u64) {
@@ -368,11 +473,34 @@ pub(crate) fn tick_work(experiment: &Experiment, state: &State) -> (u64, u64) {
                     construction += 1;
                 }
             }
+            FacilityKind::Assembler => {
+                checking += 1;
+                if facility.progress > 0 {
+                    if facility.progress == 1 {
+                        construction += 1;
+                    }
+                } else if !facility.materials.is_empty()
+                    && !facility.parts.is_empty()
+                    && !facility.sparks.is_empty()
+                    && facility.frames.len() < FACILITY_ITEM_LIMIT
+                    && facility.minted < 0xFFFF
+                {
+                    construction += 1;
+                }
+            }
             FacilityKind::Miner => {
                 checking += 1;
                 if facility.progress == 1
                     || (facility.progress == 0
                         && can_extract(experiment, state.construction.as_ref(), facility))
+                {
+                    construction += 1;
+                }
+            }
+            FacilityKind::Crane => {
+                checking += 1;
+                if facility.progress == 1
+                    || (facility.progress == 0 && crane_move(state, facility.position).is_some())
                 {
                     construction += 1;
                 }
@@ -384,8 +512,9 @@ pub(crate) fn tick_work(experiment: &Experiment, state: &State) -> (u64, u64) {
 }
 
 /// One deterministic facility step: in-flight recipes finish and mint, idle
-/// fabricators with inputs and output room consume into a new job, and miners
-/// pull one unit from their deposit every MINER_PERIOD ticks while it lasts.
+/// producers with inputs and output room consume into a new job, miners pull
+/// one unit from their deposit every MINER_PERIOD ticks while it lasts, and
+/// cranes move one item between adjacent ready facilities every CRANE_PERIOD.
 pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
     for index in 0..state.facilities.len() {
         let facility = &state.facilities[index];
@@ -411,6 +540,26 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     facility.progress = FACILITY_RECIPE_TICKS;
                 }
             }
+            FacilityKind::Assembler => {
+                let facility = &mut state.facilities[index];
+                if facility.progress > 0 {
+                    facility.progress -= 1;
+                    if facility.progress == 0 {
+                        facility.frames.push(part_id(facility, facility.minted));
+                        facility.minted += 1;
+                    }
+                } else if !facility.materials.is_empty()
+                    && !facility.parts.is_empty()
+                    && !facility.sparks.is_empty()
+                    && facility.frames.len() < FACILITY_ITEM_LIMIT
+                    && facility.minted < 0xFFFF
+                {
+                    facility.spent_materials.push(facility.materials.remove(0));
+                    facility.spent_parts.push(facility.parts.remove(0));
+                    facility.spent_sparks.push(facility.sparks.remove(0));
+                    facility.progress = ASSEMBLER_RECIPE_TICKS;
+                }
+            }
             FacilityKind::Miner => {
                 if facility.progress > 0 {
                     state.facilities[index].progress -= 1;
@@ -426,6 +575,23 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     )
                 {
                     state.facilities[index].progress = MINER_PERIOD;
+                }
+            }
+            FacilityKind::Crane => {
+                if state.facilities[index].progress > 0 {
+                    state.facilities[index].progress -= 1;
+                    if state.facilities[index].progress == 0
+                        && let Some((source, destination, item)) =
+                            crane_move(state, state.facilities[index].position)
+                    {
+                        transfer(state, source, destination, item);
+                        state.facilities[index].minted += 1;
+                    }
+                }
+                if state.facilities[index].progress == 0
+                    && crane_move(state, state.facilities[index].position).is_some()
+                {
+                    state.facilities[index].progress = CRANE_PERIOD;
                 }
             }
             FacilityKind::Storehouse => {}
@@ -521,11 +687,20 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
     let mut positions = BTreeSet::new();
     let mut expected_parts = BTreeSet::new();
     let mut actual_parts = BTreeSet::new();
+    let mut expected_frames = BTreeSet::new();
+    let mut actual_frames = BTreeSet::new();
     let mut insert_part = |part: u32| -> Result<(), String> {
         if actual_parts.insert(part) {
             Ok(())
         } else {
             Err("Duplicate part token.".into())
+        }
+    };
+    let mut insert_frame = |frame: u32| -> Result<(), String> {
+        if actual_frames.insert(frame) {
+            Ok(())
+        } else {
+            Err("Duplicate frame token.".into())
         }
     };
     for facility in &state.facilities {
@@ -543,11 +718,13 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
         if facility.materials.len() > FACILITY_ITEM_LIMIT
             || facility.sparks.len() > FACILITY_ITEM_LIMIT
             || facility.parts.len() > FACILITY_ITEM_LIMIT
+            || facility.frames.len() > FACILITY_ITEM_LIMIT
             || facility.progress
-                > if facility.kind == FacilityKind::Miner {
-                    MINER_PERIOD
-                } else {
-                    FACILITY_RECIPE_TICKS
+                > match facility.kind {
+                    FacilityKind::Miner => MINER_PERIOD,
+                    FacilityKind::Assembler => ASSEMBLER_RECIPE_TICKS,
+                    FacilityKind::Crane => CRANE_PERIOD,
+                    _ => FACILITY_RECIPE_TICKS,
                 }
             || facility.minted > 0xFFFF
         {
@@ -564,24 +741,32 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
         } else if strict {
             return Err("An undeclared facility appears in a receipt.".into());
         }
-        let (bill_material, bill_part) = if declared.is_some() {
-            (0, 0)
+        let (bill_material, bill_part, bill_frame) = if declared.is_some() {
+            (0, 0, 0)
         } else {
             bill(facility.kind)
         };
-        // Only a fabricator consumes items per job: a miner's progress is an
-        // extraction countdown and its minted counts material pulled, not
-        // parts minted, so neither shows up in its spent ledgers.
-        let consumed = if facility.kind == FacilityKind::Fabricator {
+        // Only producers consume inputs per job: a miner's progress is an
+        // extraction countdown, and a crane's minted counts moved items, so
+        // neither shows up in spent-input ledgers.
+        let consumed = if matches!(
+            facility.kind,
+            FacilityKind::Fabricator | FacilityKind::Assembler
+        ) {
             facility.minted as usize + usize::from(facility.progress > 0)
         } else {
             0
         };
+        // Inputs burned per job: material, part, spark.
+        let (burn_material, burn_part, burn_spark) = match facility.kind {
+            FacilityKind::Fabricator => (1, 0, 1),
+            FacilityKind::Assembler => (1, 1, 1),
+            _ => (0, 0, 0),
+        };
         match (facility.kind, facility.ready) {
-            (FacilityKind::Fabricator, _)
-            | (FacilityKind::Storehouse, true)
-            | (FacilityKind::Miner, true) => {}
-            (FacilityKind::Storehouse, false) | (FacilityKind::Miner, false) => {
+            (FacilityKind::Fabricator | FacilityKind::Assembler, _)
+            | (FacilityKind::Storehouse | FacilityKind::Miner | FacilityKind::Crane, true) => {}
+            (FacilityKind::Storehouse | FacilityKind::Miner | FacilityKind::Crane, false) => {
                 if facility.minted != 0 || facility.progress != 0 {
                     return Err("An unbuilt facility produced work.".into());
                 }
@@ -595,25 +780,40 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
         if facility.kind == FacilityKind::Miner
             && (!facility.sparks.is_empty()
                 || !facility.parts.is_empty()
-                || !facility.spent_sparks.is_empty())
+                || !facility.spent_sparks.is_empty()
+                || !facility.frames.is_empty())
         {
-            return Err("A drill cannot hold sparks or parts.".into());
+            return Err("A drill cannot hold sparks, parts, or frames.".into());
+        }
+        if facility.kind == FacilityKind::Crane
+            && (!facility.materials.is_empty()
+                || !facility.sparks.is_empty()
+                || !facility.parts.is_empty()
+                || !facility.frames.is_empty())
+        {
+            return Err("A crane holds nothing between transfers.".into());
         }
         let material_ok = if facility.ready {
             facility.needed_material == 0
                 && facility.needed_part == 0
-                && facility.spent_materials.len() == usize::from(bill_material) + consumed
-                && facility.spent_parts.len() == usize::from(bill_part)
-                && facility.spent_sparks.len() == consumed
+                && facility.needed_frame == 0
+                && facility.spent_materials.len()
+                    == usize::from(bill_material) + consumed * burn_material
+                && facility.spent_parts.len() == usize::from(bill_part) + consumed * burn_part
+                && facility.spent_frames.len() == usize::from(bill_frame)
+                && facility.spent_sparks.len() == consumed * burn_spark
         } else {
             facility.materials.is_empty()
                 && facility.sparks.is_empty()
                 && facility.parts.is_empty()
+                && facility.frames.is_empty()
                 && facility.progress == 0
                 && usize::from(facility.needed_material) + facility.spent_materials.len()
                     == usize::from(bill_material)
                 && usize::from(facility.needed_part) + facility.spent_parts.len()
                     == usize::from(bill_part)
+                && usize::from(facility.needed_frame) + facility.spent_frames.len()
+                    == usize::from(bill_frame)
                 && facility.spent_sparks.is_empty()
         };
         if !material_ok {
@@ -624,13 +824,24 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
                 expected_parts.insert(part_id(facility, serial));
             }
         }
+        if facility.kind == FacilityKind::Assembler {
+            for serial in 0..facility.minted {
+                expected_frames.insert(part_id(facility, serial));
+            }
+        }
         for part in facility.parts.iter().chain(&facility.spent_parts) {
             insert_part(*part)?;
+        }
+        for frame in facility.frames.iter().chain(&facility.spent_frames) {
+            insert_frame(*frame)?;
         }
     }
     for cell in &state.cells {
         if let Some(part) = cell.part {
             insert_part(part)?;
+        }
+        if let Some(frame) = cell.frame {
+            insert_frame(frame)?;
         }
     }
     for decl in &experiment.facilities {
@@ -645,6 +856,9 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
     if expected_parts != actual_parts {
         return Err("Part inventory changed.".into());
     }
+    if expected_frames != actual_frames {
+        return Err("Frame inventory changed.".into());
+    }
     Ok(())
 }
 
@@ -658,15 +872,127 @@ pub(crate) fn state_checking(state: &State) -> u64 {
             1 + facility.materials.len()
                 + facility.sparks.len()
                 + facility.parts.len()
+                + facility.frames.len()
                 + facility.spent_materials.len()
                 + facility.spent_sparks.len()
                 + facility.spent_parts.len()
-                + facility.minted as usize
+                + facility.spent_frames.len()
+                + if facility.kind == FacilityKind::Crane {
+                    0
+                } else {
+                    facility.minted as usize
+                }
         })
         .sum::<usize>()
         + state
             .cells
             .iter()
             .filter(|cell| cell.part.is_some())
+            .count()
+        + state
+            .cells
+            .iter()
+            .filter(|cell| cell.frame.is_some())
             .count()) as u64
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{world, world_fixtures};
+
+    fn state_with(facilities: Vec<FacilityDecl>) -> (Experiment, State) {
+        let mut experiment = world_fixtures::homestead();
+        experiment.facilities = facilities;
+        let state = world::report(&world::new("Industry".into(), experiment.clone()).unwrap())
+            .unwrap()
+            .state;
+        (experiment, state)
+    }
+
+    #[test]
+    fn assembler_mints_a_conserved_frame_from_three_inputs() {
+        let (experiment, mut state) = state_with(vec![
+            FacilityDecl {
+                id: 90,
+                kind: FacilityKind::Fabricator,
+                position: Point { x: 0, y: 4 },
+            },
+            FacilityDecl {
+                id: 93,
+                kind: FacilityKind::Assembler,
+                position: Point { x: 12, y: 13 },
+            },
+        ]);
+        let part = part_id(&state.facilities[0], 0);
+        state.facilities[0].minted = 1;
+        state.facilities[0].spent_materials.push(2001);
+        state.facilities[0].spent_sparks.push(Spark {
+            id: 201,
+            bit: false,
+        });
+        state.facilities[1].materials.push(2002);
+        state.facilities[1].parts.push(part);
+        state.facilities[1].sparks.push(Spark {
+            id: 202,
+            bit: false,
+        });
+
+        for _ in 0..=ASSEMBLER_RECIPE_TICKS {
+            tick(&experiment, &mut state);
+        }
+
+        assert_eq!(state.facilities[1].minted, 1);
+        assert_eq!(
+            state.facilities[1].frames,
+            vec![part_id(&state.facilities[1], 0)]
+        );
+        assert_eq!(state.facilities[1].spent_parts, vec![part]);
+        check_state(&experiment, &state, true).unwrap();
+    }
+
+    #[test]
+    fn crane_moves_one_item_between_adjacent_ready_facilities() {
+        let (experiment, mut state) = state_with(vec![
+            FacilityDecl {
+                id: 90,
+                kind: FacilityKind::Storehouse,
+                position: Point { x: 10, y: 5 },
+            },
+            FacilityDecl {
+                id: 91,
+                kind: FacilityKind::Crane,
+                position: Point { x: 11, y: 5 },
+            },
+            FacilityDecl {
+                id: 92,
+                kind: FacilityKind::Storehouse,
+                position: Point { x: 12, y: 5 },
+            },
+        ]);
+        state.facilities[0].materials.push(2001);
+
+        for _ in 0..=CRANE_PERIOD {
+            tick(&experiment, &mut state);
+        }
+
+        assert!(state.facilities[0].materials.is_empty());
+        assert_eq!(state.facilities[2].materials, vec![2001]);
+        assert_eq!(state.facilities[1].minted, 1);
+        for _ in 0..=CRANE_PERIOD {
+            tick(&experiment, &mut state);
+        }
+        assert!(state.facilities[0].materials.is_empty());
+        assert_eq!(state.facilities[2].materials, vec![2001]);
+        assert_eq!(state.facilities[1].minted, 1);
+        check_state(&experiment, &state, true).unwrap();
+    }
+
+    #[test]
+    fn crane_site_requires_a_frame() {
+        let crane = site(93, FacilityKind::Crane, Point { x: 12, y: 13 });
+        assert!(!crane.ready);
+        assert_eq!(bill(FacilityKind::Crane), (1, 1, 1));
+        assert_eq!(crane.needed_frame, 1);
+    }
 }

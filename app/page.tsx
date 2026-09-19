@@ -16,7 +16,7 @@ function TopicIcon({ slug }: Readonly<{ slug: string }>) {
 
 const progression = [
   ["Running now", "A homestead, two light routes, persistent supplies, and a foundry that builds a second courier."],
-  ["Build next", "Repeatable production, reusable blueprints, visible queues, and new outposts in the same saved world."],
+  ["Build next", "Assemble frames, automate transfer with cranes, and expand outposts in the same saved world."],
   ["Grow outward", "Specialized settlements and larger networks whose old creatures and infrastructure still matter."],
 ];
 
@@ -38,7 +38,7 @@ export default function HomePage() {
             <Link href="/play#world-agent-title">Set it up with your agent</Link>
           </div>
           <p className="status-note">
-            The living-world protocol is available now: one persistent homestead with a working fabricator, an automated deposit drill, repeatable production, placed construction sites, recorded policy changes, and content-addressed browser views.
+            The living-world protocol is available now: one persistent homestead with extraction, part and frame production, automatic crane transfer, creature-built sites, recorded policy changes, and content-addressed browser views.
           </p>
         </section>
       </div>
@@ -66,7 +66,7 @@ export default function HomePage() {
               <text x="210" y="210" className="habitat-label">The second route exists because the first world built it</text>
             </g>
           </svg>
-          <figcaption>The current Dustlight homestead keeps two homes lit while a fabricator turns hauled material and light into parts. Open it to watch the exact Rust-engine replay.</figcaption>
+          <figcaption>Dustlight keeps two homes lit while creatures extract material, mint parts, assemble frames, and automate transfers. Open it to watch the exact Rust-engine replay.</figcaption>
         </figure>
         <p>
           A creature can carry light, remember a signal, or assemble a declared body. A useful change stays in the world, along with its costs and history. When something stalls, you can inspect the moment and ask your agent for one understandable improvement.
