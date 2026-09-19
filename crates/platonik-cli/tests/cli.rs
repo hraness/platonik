@@ -276,6 +276,152 @@ fn agent_world_commands_produce_replayable_browser_views() {
     assert_eq!(json(&opened.stdout), json(&advanced.stdout));
 }
 
+#[test]
+fn algal_planner_proposals_replay_before_world_admission() {
+    let organism = cli(&["world", "organism"], None);
+    assert!(organism.status.success());
+    assert_eq!(json(&organism.stdout)["contract"], "algal.organism.v1");
+
+    let created = cli(&["world", "new", "Algalight"], None);
+    assert!(created.status.success());
+    let world = InputFile::new(&created.stdout);
+    let responses = InputFile::new(br#"{"planner":{"kind":"advance","ticks":16}}"#);
+    let proposed = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            responses.path(),
+        ],
+        None,
+    );
+    assert!(
+        proposed.status.success(),
+        "{}",
+        String::from_utf8_lossy(&proposed.stderr)
+    );
+    let proposal = json(&proposed.stdout);
+    assert_eq!(proposal["schema"], "platonik-algal-proposal-v1");
+    assert_eq!(
+        proposal["world_hash"],
+        json(&cli(&["world", "report", world.path()], None).stdout)["world_hash"]
+    );
+    assert_eq!(
+        proposal["command"],
+        json(br#"{"kind":"advance","ticks":16}"#)
+    );
+    assert_eq!(proposal["receipt"]["contract"], "algal.run.v1");
+    assert_eq!(proposal["receipt"]["outcome"], "complete");
+
+    let proposal_file = InputFile::new(&proposed.stdout);
+    let accepted = cli(
+        &["world", "accept", world.path(), proposal_file.path()],
+        None,
+    );
+    assert!(
+        accepted.status.success(),
+        "{}",
+        String::from_utf8_lossy(&accepted.stderr)
+    );
+    assert_eq!(json(&accepted.stdout)["revision"], 1);
+    let accepted_world = InputFile::new(&accepted.stdout);
+    let report = cli(&["world", "report", accepted_world.path()], None);
+    assert!(report.status.success());
+    let accepted_report = json(&report.stdout);
+    assert_eq!(accepted_report["tick"], 16);
+
+    let stale = cli(
+        &[
+            "world",
+            "accept",
+            accepted_world.path(),
+            proposal_file.path(),
+        ],
+        None,
+    );
+    assert_eq!(stale.status.code(), Some(2));
+    assert!(stale.stdout.is_empty());
+
+    let mut transplanted = proposal.clone();
+    transplanted["world_hash"] = accepted_report["world_hash"].clone();
+    transplanted["revision"] = Value::from(1);
+    let transplanted = InputFile::new(&serde_json::to_vec(&transplanted).unwrap());
+    let rejected = cli(
+        &[
+            "world",
+            "accept",
+            accepted_world.path(),
+            transplanted.path(),
+        ],
+        None,
+    );
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+
+    let mut altered = proposal;
+    altered["command"]["ticks"] = Value::from(17);
+    let altered = InputFile::new(&serde_json::to_vec(&altered).unwrap());
+    let rejected = cli(&["world", "accept", world.path(), altered.path()], None);
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+}
+
+#[test]
+fn algal_host_plugins_are_optional_and_process_executors_are_rejected() {
+    let created = cli(&["world", "new"], None);
+    assert!(created.status.success());
+    let world = InputFile::new(&created.stdout);
+    let host = InputFile::new(
+        br#"{"contract":"algal.host.v1","executors":{"offline":{"kind":"scripted","responses":{"planner":{"kind":"advance","ticks":8}}}}}"#,
+    );
+    let proposed = cli(
+        &["world", "propose", world.path(), "--host", host.path()],
+        None,
+    );
+    assert!(
+        proposed.status.success(),
+        "{}",
+        String::from_utf8_lossy(&proposed.stderr)
+    );
+    assert_eq!(json(&proposed.stdout)["command"]["ticks"], 8);
+
+    let process_host = InputFile::new(
+        br#"{"contract":"algal.host.v1","executors":{"process":{"kind":"command","argv":["false"]}}}"#,
+    );
+    let rejected = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--host",
+            process_host.path(),
+        ],
+        None,
+    );
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+    assert!(
+        String::from_utf8(rejected.stderr)
+            .unwrap()
+            .contains("admits only scripted")
+    );
+
+    let invalid = InputFile::new(br#"{"planner":{"kind":"advance","ticks":0}}"#);
+    let rejected = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            invalid.path(),
+        ],
+        None,
+    );
+    assert_eq!(rejected.status.code(), Some(2));
+    assert!(rejected.stdout.is_empty());
+}
+
 #[cfg(unix)]
 #[test]
 fn non_utf8_arguments_are_structured_errors_instead_of_panics() {

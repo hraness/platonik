@@ -19,6 +19,18 @@ printf '%s' '{"kind":"advance","ticks":32}' \
 
 Use a new output file for every action; shell redirection can truncate an input before the CLI reads it.
 
+The CLI also embeds [Algal](https://github.com/hraness/algal) as an optional planner boundary. `world propose` gives one bounded Algal organism a compact, read-only world view; `world accept` replays its receipt, checks that the full view still matches, and sends the proposed command through ordinary Platonik admission. Scripted responses keep this path deterministic and offline:
+
+```sh
+printf '%s' '{"planner":{"kind":"advance","ticks":16}}' > planner.responses.json
+./target/release/platonik world propose dustlight-r0.world.json \
+  --responses planner.responses.json > proposal.json
+./target/release/platonik world accept dustlight-r0.world.json proposal.json \
+  > dustlight-r1.world.json
+```
+
+Use `--host <algal.host.v1.json>` instead of `--responses` to opt into a configured generative provider. No model, provider account, or credential is required for the base game; provider keys remain at Algal's executor boundary and never enter the world history. The browser still makes no model calls.
+
 ## Explore the design
 
 Start in [the observatory](https://platonik.space/lab), or read its [guide](docs/observatory.md). Export a specimen's JSON, ask an external agent to change it, and paste it back to compare the result. The [complexity and scale thesis](docs/complexity-and-scale.md) explains the separate work, memory, and structural costs, the proposed research comparisons, and the limits of larger worlds.
