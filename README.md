@@ -29,7 +29,7 @@ printf '%s' '{"planner":{"candidate":"advance-16"}}' > planner.responses.json
   > dustlight-r1.world.json
 ```
 
-Use `--host <algal.host.v1.json>` instead of `--responses` to opt into a configured generative provider. A model cannot invent placements or policy shapes, and the compiler withholds new construction choices while an admitted site remains unfinished. No model, provider account, or credential is required for the base game; provider keys remain at Algal's executor boundary and never enter world history. The browser still makes no model calls.
+Use `--host <algal.host.v1.json>` instead of `--responses` to opt into a configured generative provider. A model cannot invent placements or policy shapes; the compiler withholds new construction while a site remains unfinished and rejects policy choices that would remove the last live surveyor or hauler. No model, provider account, or credential is required for the base game; provider keys remain at Algal's executor boundary and never enter world history. The browser still makes no model calls.
 
 ## Explore the design
 
