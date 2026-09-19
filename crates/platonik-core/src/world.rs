@@ -84,6 +84,7 @@ pub struct WorldSummary {
     pub ready_facilities: usize,
     pub facility_sparks: usize,
     pub parts_minted: usize,
+    pub material_extracted: usize,
     pub carried_parts: usize,
 }
 
@@ -242,8 +243,12 @@ fn replay(world: &World) -> Result<Snapshot, String> {
                 structure,
                 position,
             } => {
-                let expected =
-                    industry::validate_placement(&snapshot.experiment, &snapshot.state, *position)?;
+                let expected = industry::validate_placement(
+                    &snapshot.experiment,
+                    &snapshot.state,
+                    *structure,
+                    *position,
+                )?;
                 require(
                     expected == *id,
                     "A recorded site id does not match its placement order.",
@@ -336,7 +341,12 @@ pub fn apply(world: &World, command: Command) -> Result<World, String> {
             structure,
             position,
         } => {
-            let id = industry::validate_placement(&snapshot.experiment, &snapshot.state, position)?;
+            let id = industry::validate_placement(
+                &snapshot.experiment,
+                &snapshot.state,
+                structure,
+                position,
+            )?;
             WorldEvent::StructurePlaced {
                 id,
                 structure,
@@ -440,6 +450,14 @@ pub fn report(world: &World) -> Result<Report, String> {
             .state
             .facilities
             .iter()
+            .filter(|facility| facility.kind == FacilityKind::Fabricator)
+            .map(|facility| facility.minted as usize)
+            .sum(),
+        material_extracted: snapshot
+            .state
+            .facilities
+            .iter()
+            .filter(|facility| facility.kind == FacilityKind::Miner)
             .map(|facility| facility.minted as usize)
             .sum(),
         carried_parts: snapshot

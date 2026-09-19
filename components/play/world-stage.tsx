@@ -17,6 +17,13 @@ const CELL_NAMES: Record<number, string> = {
 const FACILITY_NAMES: Record<number, string> = {
   90: "West Fabricator",
   91: "Storehouse",
+  92: "East Drill",
+};
+
+const FACILITY_LABELS: Record<string, string> = {
+  fabricator: "fabricator",
+  storehouse: "storehouse",
+  miner: "drill",
 };
 
 export function WorldStage({ report }: { report: WorldReport }) {
@@ -55,7 +62,10 @@ export function WorldStage({ report }: { report: WorldReport }) {
   const beaconCharge = state.beacons.reduce((sum, beacon) => sum + beacon.charge, 0);
   const built = state.construction?.births.length ?? 0;
   const facilities = state.facilities ?? [];
-  const minted = facilities.reduce((sum, facility) => sum + facility.minted, 0);
+  const minted = facilities.reduce(
+    (sum, facility) => sum + (facility.kind === "fabricator" ? facility.minted : 0),
+    0,
+  );
   const activity = frame.activations
     .filter((item) => item.action.kind !== "wait" || !item.success)
     .slice(0, 5)
@@ -77,6 +87,10 @@ export function WorldStage({ report }: { report: WorldReport }) {
     buffers: `${facility.materials.length}m ${facility.sparks.length}s ${facility.parts.length}p`,
     needed: facility.ready ? "" : `needs ${facility.needed_material}m ${facility.needed_part}p`,
     minted: facility.minted,
+    production:
+      facility.kind === "miner"
+        ? `${facility.minted} extracted`
+        : `${facility.minted} minted`,
   }));
 
   function togglePlayback() {
@@ -145,9 +159,9 @@ export function WorldStage({ report }: { report: WorldReport }) {
           <div key={`facility-${facility.id}`}>
             <span className={`world-flow-light ${facility.ready ? "online" : "dark"}`} aria-hidden="true" />
             <strong>{facility.name}</strong>
-            <span>{facility.ready ? facility.kind : "construction site"}</span>
+            <span>{facility.ready ? FACILITY_LABELS[facility.kind] ?? facility.kind : "construction site"}</span>
             <span>{facility.ready ? facility.buffers : facility.needed}</span>
-            {facility.minted > 0 && <span>{facility.minted} minted</span>}
+            {facility.minted > 0 && <span>{facility.production}</span>}
           </div>
         ))}
       </div>

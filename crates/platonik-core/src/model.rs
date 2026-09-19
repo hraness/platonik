@@ -17,6 +17,7 @@ pub const MAX_BLUEPRINT_BYTES: usize = 4096;
 pub const MAX_FACILITIES: usize = 12;
 pub const FACILITY_ITEM_LIMIT: usize = 8;
 pub const FACILITY_RECIPE_TICKS: u32 = 6;
+pub const MINER_PERIOD: u32 = 12;
 pub fn protocol_for_version(version: u32) -> Option<&'static str> {
     match version {
         MODEL_VERSION => Some(PROTOCOL),
@@ -149,6 +150,10 @@ pub enum Condition {
         item: ItemKind,
         value: bool,
     },
+    FacilityIs {
+        structure: FacilityKind,
+        value: bool,
+    },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
@@ -189,6 +194,7 @@ pub enum ItemKind {
 pub enum FacilityKind {
     Fabricator,
     Storehouse,
+    Miner,
 }
 /// Declared industry: an active facility that exists from genesis.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

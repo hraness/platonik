@@ -150,6 +150,12 @@ fn check_condition(
                 .is_some_and(|facility| crate::industry::has(facility, *item))
                 == *value
         }
+        Condition::FacilityIs { structure, value } => {
+            meter.charge(Cat::Checking, state.facilities.len() as u64)?;
+            crate::industry::at(state, cell.position)
+                .is_some_and(|facility| facility.kind == *structure)
+                == *value
+        }
         Condition::AssemblyStage { blueprint, stage } => {
             construction::stage(experiment, state, index, *blueprint) == Some(*stage)
         }

@@ -18,7 +18,9 @@ fn supply(item: ItemKind, index: usize, actor: usize, state: &mut State) -> Resu
         ItemKind::Spark => {
             let spark = state.cells[actor].cargo.ok_or("Supply carries no spark.")?;
             ensure(
-                facility.ready && facility.sparks.len() < FACILITY_ITEM_LIMIT,
+                facility.ready
+                    && facility.kind != FacilityKind::Miner
+                    && facility.sparks.len() < FACILITY_ITEM_LIMIT,
                 "A facility accepted a spark it has no room or use for.",
             )?;
             state.facilities[index].sparks.push(spark);
@@ -30,7 +32,8 @@ fn supply(item: ItemKind, index: usize, actor: usize, state: &mut State) -> Resu
                 .ok_or("Supply carries no material.")?;
             if facility.ready {
                 ensure(
-                    facility.materials.len() < FACILITY_ITEM_LIMIT,
+                    facility.kind != FacilityKind::Miner
+                        && facility.materials.len() < FACILITY_ITEM_LIMIT,
                     "A facility accepted material past its buffer.",
                 )?;
                 state.facilities[index].materials.push(material);
@@ -52,7 +55,7 @@ fn supply(item: ItemKind, index: usize, actor: usize, state: &mut State) -> Resu
             let part = state.cells[actor].part.ok_or("Supply carries no part.")?;
             if facility.ready {
                 ensure(
-                    facility.kind != FacilityKind::Fabricator
+                    facility.kind == FacilityKind::Storehouse
                         && facility.parts.len() < FACILITY_ITEM_LIMIT,
                     "A facility accepted a part it has no room or use for.",
                 )?;
@@ -92,7 +95,10 @@ fn fetch(item: ItemKind, index: usize, actor: usize, state: &mut State) -> Resul
         }
         ItemKind::Material => {
             ensure(
-                facility.kind == FacilityKind::Storehouse && !facility.materials.is_empty(),
+                matches!(
+                    facility.kind,
+                    FacilityKind::Storehouse | FacilityKind::Miner
+                ) && !facility.materials.is_empty(),
                 "Fetch takes material the facility does not offer.",
             )?;
             ensure(

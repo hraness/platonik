@@ -8,6 +8,7 @@ pub const EAST_DEPOSIT: u16 = 61;
 pub const SOUTH_DEPOSIT: u16 = 62;
 pub const FABRICATOR: u16 = 90;
 pub const STOREHOUSE: u16 = 91;
+pub const MINER: u16 = 92;
 
 fn rule(when: Vec<Condition>, action: Action) -> Rule {
     Rule {
@@ -87,9 +88,10 @@ pub fn surveyor_program() -> Program {
 
 /// The general-purpose supply-chain program every Dustlight hauler runs:
 /// parts go only to unfinished sites, material goes to any facility that
-/// needs it, sparks fuel facilities and beacons, and deposits are gathered
-/// on sight. Withdrawal is left to agent-written programs, so the default
-/// loop never ping-pongs items back and forth on one tile.
+/// needs it, sparks fuel facilities and beacons, drill output is collected,
+/// and deposits are gathered on sight. Withdrawal beyond drill pickup is
+/// left to agent-written programs, so the default loop never ping-pongs
+/// items back and forth on one tile.
 pub fn hauler_program() -> Program {
     let mut rules = vec![
         rule(
@@ -129,6 +131,23 @@ pub fn hauler_program() -> Program {
                 },
             ],
             Action::Supply {
+                item: ItemKind::Material,
+            },
+        ),
+        rule(
+            vec![
+                Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Miner,
+                    value: true,
+                },
+                Condition::FacilityHas {
+                    item: ItemKind::Material,
+                    value: true,
+                },
+                Condition::HasMaterial { value: false },
+            ],
+            Action::Fetch {
                 item: ItemKind::Material,
             },
         ),
@@ -212,10 +231,11 @@ fn courier(id: u16, position: Point, heading: Direction, program: Program) -> Ce
 
 /// Dustlight: one open 24×14 region. The west edge holds the homestead — a
 /// light source, a working fabricator, and the home beacon. The east edge
-/// holds a second light field and an outpost beacon that dies in a few
-/// hundred ticks without a supply line. Material deposits sit on the north
-/// and south rims; a storehouse guards the midland ridge. Two interior
-/// ridges shape routes without sealing the map.
+/// holds a second light field, an outpost beacon that dies in a few hundred
+/// ticks without a supply line, and a drill already working the northeast
+/// deposit. A south deposit waits for a second drill; a storehouse guards
+/// the midland ridge. Two interior ridges shape routes without sealing the
+/// map.
 pub fn homestead() -> Experiment {
     let walls = {
         let mut walls = Vec::new();
@@ -359,6 +379,11 @@ pub fn homestead() -> Experiment {
                 id: STOREHOUSE,
                 kind: FacilityKind::Storehouse,
                 position: Point { x: 9, y: 6 },
+            },
+            FacilityDecl {
+                id: MINER,
+                kind: FacilityKind::Miner,
+                position: Point { x: 17, y: 0 },
             },
         ],
     }

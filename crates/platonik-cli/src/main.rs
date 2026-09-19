@@ -226,8 +226,10 @@ only admitted interventions and bounded advance endpoints; every report freshly\
 replays them in the Rust engine. Programs, cargo, memory, construction, supplies,\n\
 beacon charge, facility buffers, and cumulative work carry forward. An advance\n\
 runs 1–128 ticks; the first protocol is capped at 4,096 ticks and 128 events.\n\
-Place a fabricator or storehouse on an open tile: cells must supply its\n\
-construction bill (material and parts) before it becomes ready. Use a new\n\
+Place a fabricator or storehouse on an open tile, or a miner on a material\n\
+deposit: cells must supply its construction bill (material and parts) before\n\
+it becomes ready. A ready drill pulls one unit from its deposit every 12\n\
+ticks into a fetchable buffer. Use a new\n\
 output filename for act; shell redirection can truncate its input before\n\
 Platonik reads it. The browser link contains the compact world history,\n\
 verifies its content hash, and renders the same recomputed state. The browser\n\

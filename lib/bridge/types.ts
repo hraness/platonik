@@ -3,7 +3,7 @@ export type Point = { x: number; y: number };
 export type Signal = { id: number; link: number; bit: boolean; sent_tick: number; deliver_tick: number; receipt_spark: number | null };
 export type Cell = { id: number; position: Point; heading: string; mobile: boolean };
 export type CellState = { id: number; position: Point; memory: number[]; evidence: (number | null)[]; cargo: { id: number; bit: boolean } | null; inbox: (Signal | null)[]; material?: number; part?: number };
-export type FacilityKind = "fabricator" | "storehouse";
+export type FacilityKind = "fabricator" | "storehouse" | "miner";
 export type FacilityState = {
   id: number; kind: FacilityKind; position: Point; ready: boolean;
   needed_material: number; needed_part: number;

@@ -14,6 +14,7 @@ pub fn bill(kind: FacilityKind) -> (u8, u8) {
     match kind {
         FacilityKind::Fabricator => (3, 2),
         FacilityKind::Storehouse => (2, 1),
+        FacilityKind::Miner => (2, 1),
     }
 }
 
@@ -90,9 +91,21 @@ fn held_len(facility: &FacilityState, item: ItemKind) -> usize {
     }
 }
 
+/// What a ready facility accepts as input: fabricators take recipe inputs,
+/// storehouses take anything, and miners are pure producers with no inputs.
+pub fn accepts(facility: &FacilityState, item: ItemKind) -> bool {
+    if !facility.ready {
+        return false;
+    }
+    let usable = !matches!(
+        (facility.kind, item),
+        (FacilityKind::Fabricator, ItemKind::Part) | (FacilityKind::Miner, _)
+    );
+    usable && held_len(facility, item) < FACILITY_ITEM_LIMIT
+}
+
 /// Whether the facility here accepts that item right now: a site accepts only
-/// remaining bill items, a fabricator accepts spark/material inputs, and a
-/// storehouse accepts anything it has room for.
+/// remaining bill items, and a ready facility accepts its input set.
 pub fn needs(facility: &FacilityState, item: ItemKind) -> bool {
     if !facility.ready {
         return match item {
@@ -101,22 +114,21 @@ pub fn needs(facility: &FacilityState, item: ItemKind) -> bool {
             ItemKind::Spark => false,
         };
     }
-    match (facility.kind, item) {
-        (FacilityKind::Fabricator, ItemKind::Part) => false,
-        _ => held_len(facility, item) < FACILITY_ITEM_LIMIT,
-    }
+    accepts(facility, item)
 }
 
 /// Whether the facility has a fetchable item: fabricators yield only their
-/// minted parts; storehouses yield whatever they hold.
+/// minted parts, miners yield extracted material, and storehouses yield
+/// whatever they hold.
 pub fn has(facility: &FacilityState, item: ItemKind) -> bool {
     if !facility.ready {
         return false;
     }
     match (facility.kind, item) {
         (FacilityKind::Fabricator, ItemKind::Part) => !facility.parts.is_empty(),
-        (FacilityKind::Fabricator, _) => false,
+        (FacilityKind::Miner, ItemKind::Material) => !facility.materials.is_empty(),
         (FacilityKind::Storehouse, item) => held_len(facility, item) > 0,
+        _ => false,
     }
 }
 
@@ -139,7 +151,7 @@ fn supply(
             let spark = state.cells[actor]
                 .cargo
                 .ok_or(Fault::Action("item_missing"))?;
-            if !facility.ready || facility.sparks.len() >= FACILITY_ITEM_LIMIT {
+            if !accepts(facility, ItemKind::Spark) {
                 return Err(Fault::Action("facility_rejects"));
             }
             meter.charge(Cat::Transfers, 1)?;
@@ -161,7 +173,7 @@ fn supply(
                 facility.spent_materials.push(material);
                 finish(facility);
             } else {
-                if facility.materials.len() >= FACILITY_ITEM_LIMIT {
+                if !accepts(facility, ItemKind::Material) {
                     return Err(Fault::Action("facility_rejects"));
                 }
                 meter.charge(Cat::Transfers, 1)?;
@@ -184,9 +196,7 @@ fn supply(
                 facility.spent_parts.push(part);
                 finish(facility);
             } else {
-                if facility.kind == FacilityKind::Fabricator
-                    || facility.parts.len() >= FACILITY_ITEM_LIMIT
-                {
+                if !accepts(facility, ItemKind::Part) {
                     return Err(Fault::Action("facility_rejects"));
                 }
                 meter.charge(Cat::Transfers, 1)?;
@@ -292,60 +302,143 @@ pub(crate) fn execute(
     }
 }
 
+/// Whether a miner can move another unit out of its deposit: buffer room and
+/// a non-empty stock under the drill.
+fn can_extract(
+    experiment: &Experiment,
+    construction: Option<&crate::model::ConstructionState>,
+    facility: &FacilityState,
+) -> bool {
+    if facility.materials.len() >= FACILITY_ITEM_LIMIT {
+        return false;
+    }
+    let (Some(spec), Some(state)) = (experiment.construction.as_ref(), construction) else {
+        return false;
+    };
+    spec.stocks
+        .iter()
+        .position(|stock| stock.position == facility.position)
+        .is_some_and(|index| !state.stocks[index].units.is_empty())
+}
+
+fn extract(experiment: &Experiment, index: usize, state: &mut State) {
+    let facility = &state.facilities[index];
+    if !can_extract(experiment, state.construction.as_ref(), facility) {
+        return;
+    }
+    let stock = spec_stock_index(experiment, facility.position).unwrap();
+    let unit = state.construction.as_mut().unwrap().stocks[stock]
+        .units
+        .remove(0);
+    let facility = &mut state.facilities[index];
+    facility.materials.push(unit);
+    facility.minted += 1;
+}
+
+fn spec_stock_index(experiment: &Experiment, position: Point) -> Option<usize> {
+    experiment
+        .construction
+        .as_ref()?
+        .stocks
+        .iter()
+        .position(|stock| stock.position == position)
+}
+
 /// The modeled work one facility step will do, charged before any mutation so
 /// an exhausted tick leaves either an untouched or a fully processed set.
-pub(crate) fn tick_work(state: &State) -> (u64, u64) {
+pub(crate) fn tick_work(experiment: &Experiment, state: &State) -> (u64, u64) {
     let mut checking = 0;
     let mut construction = 0;
     for facility in &state.facilities {
-        if !facility.ready || facility.kind != FacilityKind::Fabricator {
+        if !facility.ready {
             continue;
         }
-        checking += 1;
-        if facility.progress > 0 {
-            if facility.progress == 1 {
-                construction += 1;
+        match facility.kind {
+            FacilityKind::Fabricator => {
+                checking += 1;
+                if facility.progress > 0 {
+                    if facility.progress == 1 {
+                        construction += 1;
+                    }
+                } else if !facility.materials.is_empty()
+                    && !facility.sparks.is_empty()
+                    && facility.parts.len() < FACILITY_ITEM_LIMIT
+                    && facility.minted < 0xFFFF
+                {
+                    construction += 1;
+                }
             }
-        } else if !facility.materials.is_empty()
-            && !facility.sparks.is_empty()
-            && facility.parts.len() < FACILITY_ITEM_LIMIT
-            && facility.minted < 0xFFFF
-        {
-            construction += 1;
+            FacilityKind::Miner => {
+                checking += 1;
+                if facility.progress == 1
+                    || (facility.progress == 0
+                        && can_extract(experiment, state.construction.as_ref(), facility))
+                {
+                    construction += 1;
+                }
+            }
+            FacilityKind::Storehouse => {}
         }
     }
     (checking, construction)
 }
 
 /// One deterministic facility step: in-flight recipes finish and mint, idle
-/// fabricators with inputs and output room consume into a new job.
-pub(crate) fn tick(state: &mut State) {
-    for facility in &mut state.facilities {
-        if !facility.ready || facility.kind != FacilityKind::Fabricator {
+/// fabricators with inputs and output room consume into a new job, and miners
+/// pull one unit from their deposit every MINER_PERIOD ticks while it lasts.
+pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
+    for index in 0..state.facilities.len() {
+        let facility = &state.facilities[index];
+        if !facility.ready {
             continue;
         }
-        if facility.progress > 0 {
-            facility.progress -= 1;
-            if facility.progress == 0 {
-                facility.parts.push(part_id(facility, facility.minted));
-                facility.minted += 1;
+        match facility.kind {
+            FacilityKind::Fabricator => {
+                let facility = &mut state.facilities[index];
+                if facility.progress > 0 {
+                    facility.progress -= 1;
+                    if facility.progress == 0 {
+                        facility.parts.push(part_id(facility, facility.minted));
+                        facility.minted += 1;
+                    }
+                } else if !facility.materials.is_empty()
+                    && !facility.sparks.is_empty()
+                    && facility.parts.len() < FACILITY_ITEM_LIMIT
+                    && facility.minted < 0xFFFF
+                {
+                    facility.spent_materials.push(facility.materials.remove(0));
+                    facility.spent_sparks.push(facility.sparks.remove(0));
+                    facility.progress = FACILITY_RECIPE_TICKS;
+                }
             }
-        } else if !facility.materials.is_empty()
-            && !facility.sparks.is_empty()
-            && facility.parts.len() < FACILITY_ITEM_LIMIT
-            && facility.minted < 0xFFFF
-        {
-            facility.spent_materials.push(facility.materials.remove(0));
-            facility.spent_sparks.push(facility.sparks.remove(0));
-            facility.progress = FACILITY_RECIPE_TICKS;
+            FacilityKind::Miner => {
+                if facility.progress > 0 {
+                    state.facilities[index].progress -= 1;
+                    if state.facilities[index].progress == 0 {
+                        extract(experiment, index, state);
+                    }
+                }
+                if state.facilities[index].progress == 0
+                    && can_extract(
+                        experiment,
+                        state.construction.as_ref(),
+                        &state.facilities[index],
+                    )
+                {
+                    state.facilities[index].progress = MINER_PERIOD;
+                }
+            }
+            FacilityKind::Storehouse => {}
         }
     }
 }
 
 /// Validate admitting a new facility site; returns the id it must carry.
+/// A drill is the only kind allowed on a deposit — and it must sit on one.
 pub fn validate_placement(
     experiment: &Experiment,
     state: &State,
+    kind: FacilityKind,
     position: Point,
 ) -> Result<u16, String> {
     if experiment.version < INDUSTRY_VERSION {
@@ -364,6 +457,14 @@ pub fn validate_placement(
     };
     if !usable(position) {
         return Err("A site needs an open traversable position.".into());
+    }
+    let on_stock = experiment
+        .construction
+        .iter()
+        .flat_map(|spec| spec.stocks.iter())
+        .any(|stock| stock.position == position);
+    if kind == FacilityKind::Miner && !on_stock {
+        return Err("A drill must sit on a material deposit.".into());
     }
     let station = experiment
         .sources
@@ -384,7 +485,7 @@ pub fn validate_placement(
                 .map(|blueprint| blueprint.body.cell.position)
         }))
         .any(|point| point == position);
-    if station || at(state, position).is_some() {
+    if (station && !(kind == FacilityKind::Miner && on_stock)) || at(state, position).is_some() {
         return Err("A site cannot overlap another structure or reservation.".into());
     }
     if construction::reserved(experiment, state, position)
@@ -442,7 +543,12 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
         if facility.materials.len() > FACILITY_ITEM_LIMIT
             || facility.sparks.len() > FACILITY_ITEM_LIMIT
             || facility.parts.len() > FACILITY_ITEM_LIMIT
-            || facility.progress > FACILITY_RECIPE_TICKS
+            || facility.progress
+                > if facility.kind == FacilityKind::Miner {
+                    MINER_PERIOD
+                } else {
+                    FACILITY_RECIPE_TICKS
+                }
             || facility.minted > 0xFFFF
         {
             return Err("A facility exceeds its bounded buffers.".into());
@@ -463,12 +569,21 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
         } else {
             bill(facility.kind)
         };
-        let in_flight = usize::from(facility.progress > 0);
+        // Only a fabricator consumes items per job: a miner's progress is an
+        // extraction countdown and its minted counts material pulled, not
+        // parts minted, so neither shows up in its spent ledgers.
+        let consumed = if facility.kind == FacilityKind::Fabricator {
+            facility.minted as usize + usize::from(facility.progress > 0)
+        } else {
+            0
+        };
         match (facility.kind, facility.ready) {
-            (FacilityKind::Fabricator, _) | (FacilityKind::Storehouse, true) => {}
-            (FacilityKind::Storehouse, false) => {
+            (FacilityKind::Fabricator, _)
+            | (FacilityKind::Storehouse, true)
+            | (FacilityKind::Miner, true) => {}
+            (FacilityKind::Storehouse, false) | (FacilityKind::Miner, false) => {
                 if facility.minted != 0 || facility.progress != 0 {
-                    return Err("An unbuilt storehouse produced work.".into());
+                    return Err("An unbuilt facility produced work.".into());
                 }
             }
         }
@@ -477,18 +592,19 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
         {
             return Err("A storehouse cannot burn sparks or mint parts.".into());
         }
+        if facility.kind == FacilityKind::Miner
+            && (!facility.sparks.is_empty()
+                || !facility.parts.is_empty()
+                || !facility.spent_sparks.is_empty())
+        {
+            return Err("A drill cannot hold sparks or parts.".into());
+        }
         let material_ok = if facility.ready {
             facility.needed_material == 0
                 && facility.needed_part == 0
-                && facility.spent_materials.len()
-                    == usize::from(bill_material) + facility.minted as usize + in_flight
+                && facility.spent_materials.len() == usize::from(bill_material) + consumed
                 && facility.spent_parts.len() == usize::from(bill_part)
-                && facility.spent_sparks.len()
-                    == if facility.kind == FacilityKind::Fabricator {
-                        facility.minted as usize + in_flight
-                    } else {
-                        0
-                    }
+                && facility.spent_sparks.len() == consumed
         } else {
             facility.materials.is_empty()
                 && facility.sparks.is_empty()
@@ -503,8 +619,10 @@ pub fn check_state(experiment: &Experiment, state: &State, strict: bool) -> Resu
         if !material_ok {
             return Err("A facility's item or construction ledger does not balance.".into());
         }
-        for serial in 0..facility.minted {
-            expected_parts.insert(part_id(facility, serial));
+        if facility.kind == FacilityKind::Fabricator {
+            for serial in 0..facility.minted {
+                expected_parts.insert(part_id(facility, serial));
+            }
         }
         for part in facility.parts.iter().chain(&facility.spent_parts) {
             insert_part(*part)?;
