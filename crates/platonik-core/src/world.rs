@@ -84,8 +84,11 @@ pub struct WorldSummary {
     pub ready_facilities: usize,
     pub facility_sparks: usize,
     pub parts_minted: usize,
+    pub frames_minted: usize,
     pub material_extracted: usize,
+    pub items_moved: usize,
     pub carried_parts: usize,
+    pub carried_frames: usize,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
@@ -453,6 +456,13 @@ pub fn report(world: &World) -> Result<Report, String> {
             .filter(|facility| facility.kind == FacilityKind::Fabricator)
             .map(|facility| facility.minted as usize)
             .sum(),
+        frames_minted: snapshot
+            .state
+            .facilities
+            .iter()
+            .filter(|facility| facility.kind == FacilityKind::Assembler)
+            .map(|facility| facility.minted as usize)
+            .sum(),
         material_extracted: snapshot
             .state
             .facilities
@@ -460,11 +470,24 @@ pub fn report(world: &World) -> Result<Report, String> {
             .filter(|facility| facility.kind == FacilityKind::Miner)
             .map(|facility| facility.minted as usize)
             .sum(),
+        items_moved: snapshot
+            .state
+            .facilities
+            .iter()
+            .filter(|facility| facility.kind == FacilityKind::Crane)
+            .map(|facility| facility.minted as usize)
+            .sum(),
         carried_parts: snapshot
             .state
             .cells
             .iter()
             .filter(|cell| cell.part.is_some())
+            .count(),
+        carried_frames: snapshot
+            .state
+            .cells
+            .iter()
+            .filter(|cell| cell.frame.is_some())
             .count(),
     };
     Ok(Report {

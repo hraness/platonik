@@ -24,6 +24,8 @@ const FACILITY_LABELS: Record<string, string> = {
   fabricator: "fabricator",
   storehouse: "storehouse",
   miner: "drill",
+  assembler: "assembler",
+  crane: "crane",
 };
 
 export function WorldStage({ report }: { report: WorldReport }) {
@@ -62,8 +64,16 @@ export function WorldStage({ report }: { report: WorldReport }) {
   const beaconCharge = state.beacons.reduce((sum, beacon) => sum + beacon.charge, 0);
   const built = state.construction?.births.length ?? 0;
   const facilities = state.facilities ?? [];
-  const minted = facilities.reduce(
+  const partsMinted = facilities.reduce(
     (sum, facility) => sum + (facility.kind === "fabricator" ? facility.minted : 0),
+    0,
+  );
+  const framesMinted = facilities.reduce(
+    (sum, facility) => sum + (facility.kind === "assembler" ? facility.minted : 0),
+    0,
+  );
+  const itemsMoved = facilities.reduce(
+    (sum, facility) => sum + (facility.kind === "crane" ? facility.minted : 0),
     0,
   );
   const activity = frame.activations
@@ -84,13 +94,17 @@ export function WorldStage({ report }: { report: WorldReport }) {
     name: report.names[String(facility.id)] ?? FACILITY_NAMES[facility.id] ?? `Facility ${facility.id}`,
     kind: facility.kind,
     ready: facility.ready,
-    buffers: `${facility.materials.length}m ${facility.sparks.length}s ${facility.parts.length}p`,
-    needed: facility.ready ? "" : `needs ${facility.needed_material}m ${facility.needed_part}p`,
+    buffers: `${facility.materials.length}m ${facility.sparks.length}s ${facility.parts.length}p ${facility.frames?.length ?? 0}f`,
+    needed: facility.ready ? "" : `needs ${facility.needed_material}m ${facility.needed_part}p ${facility.needed_frame ?? 0}f`,
     minted: facility.minted,
     production:
       facility.kind === "miner"
         ? `${facility.minted} extracted`
-        : `${facility.minted} minted`,
+        : facility.kind === "crane"
+          ? `${facility.minted} moved`
+          : facility.kind === "assembler"
+            ? `${facility.minted} frames`
+            : `${facility.minted} minted`,
   }));
 
   function togglePlayback() {
@@ -117,7 +131,9 @@ export function WorldStage({ report }: { report: WorldReport }) {
           <span><strong>{sourceSparks}</strong> waiting</span>
           <span><strong>{state.cells.length}</strong> creatures</span>
           <span><strong>{beaconCharge}</strong> light</span>
-          <span><strong>{minted}</strong> parts minted</span>
+          <span><strong>{partsMinted}</strong> parts</span>
+          <span><strong>{framesMinted}</strong> frames</span>
+          <span><strong>{itemsMoved}</strong> auto-moved</span>
         </div>
       </div>
 
@@ -233,19 +249,21 @@ function describeActivation(activation: { cell: number; action: { kind: string }
   }
 }
 
-function carryingList(cell: { cargo: unknown; material?: number; part?: number }): string {
+function carryingList(cell: { cargo: unknown; material?: number; part?: number; frame?: number }): string {
   const items = [
     cell.cargo ? "light" : null,
     cell.material !== undefined ? "material" : null,
     cell.part !== undefined ? "a part" : null,
+    cell.frame !== undefined ? "a frame" : null,
   ].filter(Boolean);
   return items.length > 0 ? items.join(", ") : "nothing";
 }
 
 function cellState(
-  cell: { cargo: unknown; material?: number; part?: number },
+  cell: { cargo: unknown; material?: number; part?: number; frame?: number },
   activation?: { action: { kind: string }; success: boolean; error: string | null },
 ): string {
+  if (cell.frame !== undefined) return "Carrying an assembled frame.";
   if (cell.part !== undefined) return "Carrying a finished part.";
   if (cell.material !== undefined) return "Carrying a construction unit.";
   if (cell.cargo) return "Carrying light toward a home.";

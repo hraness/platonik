@@ -87,13 +87,79 @@ pub fn surveyor_program() -> Program {
 }
 
 /// The general-purpose supply-chain program every Dustlight hauler runs:
-/// parts go only to unfinished sites, material goes to any facility that
-/// needs it, sparks fuel facilities and beacons, drill output is collected,
-/// and deposits are gathered on sight. Withdrawal beyond drill pickup is
-/// left to agent-written programs, so the default loop never ping-pongs
-/// items back and forth on one tile.
+/// frames and parts go only to unfinished sites, material goes to any facility
+/// that needs it, sparks fuel facilities and beacons, and producer output is
+/// collected. Withdrawal beyond producers is left to agent-written programs,
+/// so the default loop never ping-pongs items back and forth on one tile.
 pub fn hauler_program() -> Program {
     let mut rules = vec![
+        rule(
+            vec![
+                Condition::HasFrame { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Frame,
+                    value: true,
+                },
+                Condition::FacilityReady { value: false },
+            ],
+            Action::Supply {
+                item: ItemKind::Frame,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasFrame { value: false },
+                Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Assembler,
+                    value: true,
+                },
+                Condition::FacilityHas {
+                    item: ItemKind::Frame,
+                    value: true,
+                },
+            ],
+            Action::Fetch {
+                item: ItemKind::Frame,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasPart { value: true },
+                Condition::HasMaterial { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Assembler,
+                    value: true,
+                },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Material,
+                    value: true,
+                },
+            ],
+            Action::Supply {
+                item: ItemKind::Material,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasPart { value: true },
+                Condition::Carrying { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Assembler,
+                    value: true,
+                },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Spark,
+                    value: true,
+                },
+            ],
+            Action::Supply {
+                item: ItemKind::Spark,
+            },
+        ),
         rule(
             vec![
                 Condition::HasPart { value: true },
@@ -103,6 +169,41 @@ pub fn hauler_program() -> Program {
                     value: true,
                 },
                 Condition::FacilityReady { value: false },
+            ],
+            Action::Supply {
+                item: ItemKind::Part,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasPart { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Assembler,
+                    value: true,
+                },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Part,
+                    value: true,
+                },
+            ],
+            Action::Supply {
+                item: ItemKind::Part,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasPart { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Storehouse,
+                    value: true,
+                },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Part,
+                    value: true,
+                },
+                Condition::FacilityReady { value: true },
             ],
             Action::Supply {
                 item: ItemKind::Part,
@@ -124,6 +225,21 @@ pub fn hauler_program() -> Program {
         rule(
             vec![
                 Condition::HasMaterial { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Material,
+                    value: true,
+                },
+                Condition::FacilityReady { value: false },
+            ],
+            Action::Supply {
+                item: ItemKind::Material,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasMaterial { value: true },
+                Condition::HasPart { value: false },
                 Condition::AtFacility { value: true },
                 Condition::FacilityNeeds {
                     item: ItemKind::Material,
@@ -161,6 +277,7 @@ pub fn hauler_program() -> Program {
         rule(
             vec![
                 Condition::Carrying { value: true },
+                Condition::HasPart { value: false },
                 Condition::AtFacility { value: true },
                 Condition::FacilityNeeds {
                     item: ItemKind::Spark,

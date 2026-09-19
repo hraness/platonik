@@ -18,6 +18,8 @@ pub const MAX_FACILITIES: usize = 12;
 pub const FACILITY_ITEM_LIMIT: usize = 8;
 pub const FACILITY_RECIPE_TICKS: u32 = 6;
 pub const MINER_PERIOD: u32 = 12;
+pub const ASSEMBLER_RECIPE_TICKS: u32 = 10;
+pub const CRANE_PERIOD: u32 = 8;
 pub fn protocol_for_version(version: u32) -> Option<&'static str> {
     match version {
         MODEL_VERSION => Some(PROTOCOL),
@@ -133,6 +135,9 @@ pub enum Condition {
     HasPart {
         value: bool,
     },
+    HasFrame {
+        value: bool,
+    },
     AtStock {
         value: bool,
     },
@@ -188,6 +193,7 @@ pub enum ItemKind {
     Spark,
     Material,
     Part,
+    Frame,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -195,6 +201,8 @@ pub enum FacilityKind {
     Fabricator,
     Storehouse,
     Miner,
+    Assembler,
+    Crane,
 }
 /// Declared industry: an active facility that exists from genesis.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -215,12 +223,18 @@ pub struct FacilityState {
     pub ready: bool,
     pub needed_material: u8,
     pub needed_part: u8,
+    #[serde(default, skip_serializing_if = "is_zero_u8")]
+    pub needed_frame: u8,
     pub materials: Vec<u32>,
     pub sparks: Vec<Spark>,
     pub parts: Vec<u32>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub frames: Vec<u32>,
     pub spent_materials: Vec<u32>,
     pub spent_sparks: Vec<Spark>,
     pub spent_parts: Vec<u32>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub spent_frames: Vec<u32>,
     pub progress: u32,
     pub minted: u32,
 }
@@ -452,6 +466,9 @@ pub struct Costs {
 fn is_zero(value: &u64) -> bool {
     *value == 0
 }
+fn is_zero_u8(value: &u8) -> bool {
+    *value == 0
+}
 impl Costs {
     pub fn total(&self) -> u64 {
         self.loading
@@ -496,6 +513,8 @@ pub struct CellState {
     pub material: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub part: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub frame: Option<u32>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

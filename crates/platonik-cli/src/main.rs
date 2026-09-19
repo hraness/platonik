@@ -234,10 +234,12 @@ only admitted interventions and bounded advance endpoints; every report freshly\
 replays them in the Rust engine. Programs, cargo, memory, construction, supplies,\n\
 beacon charge, facility buffers, and cumulative work carry forward. An advance\n\
 runs 1–128 ticks; the first protocol is capped at 4,096 ticks and 128 events.\n\
-Place a fabricator or storehouse on an open tile, or a miner on a material\n\
-deposit: cells must supply its construction bill (material and parts) before\n\
-it becomes ready. A ready drill pulls one unit from its deposit every 12\n\
-ticks into a fetchable buffer. An Algal proposal is read-only until accept: the\n\
+Place a fabricator, storehouse, assembler, or crane on an open tile, or a\n\
+miner on a material deposit. Cells supply construction bills of materials,\n\
+parts, and (for a crane) one assembled frame. Fabricators mint parts; assemblers\n\
+mint frames; drills extract material; cranes move items every 8 ticks from a\n\
+lower-ID adjacent ready facility into a higher-ID one. An Algal proposal is\n\
+read-only until accept: the\n\
 model selects one host-compiled valid action from a compact world view and optional\n\
 --goal. Platonik binds that selection to a replayable receipt and ordinary world\n\
 admission; it offers no new construction while an existing site is unfinished.\n\
@@ -1051,7 +1053,16 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
                     "World link exceeds its bounded canonical form.".into(),
                 ));
             }
-            let bytes = decode_base64url(packed)?;
+            let bytes = if let Some(compressed) = packed.strip_prefix('z') {
+                let compressed = decode_base64url(compressed)?;
+                miniz_oxide::inflate::decompress_to_vec_zlib_with_limit(
+                    &compressed,
+                    world::MAX_WORLD_BYTES,
+                )
+                .map_err(|cause| error(format!("Invalid compressed world in link: {cause}")))?
+            } else {
+                decode_base64url(packed)?
+            };
             let value: world::World = serde_json::from_slice(&bytes)
                 .map_err(|cause| error(format!("Invalid world JSON in link: {cause}")))?;
             let report = world::report(&value).map_err(error)?;
@@ -1068,7 +1079,8 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
             let report = world::report(&value).map_err(error)?;
             let bytes = serde_json::to_vec(&value)
                 .map_err(|cause| Failure::new("output_json", cause.to_string()))?;
-            let packed = base64url(&bytes);
+            let compressed = miniz_oxide::deflate::compress_to_vec_zlib(&bytes, 10);
+            let packed = format!("z{}", base64url(&compressed));
             if packed.len() > 16_384 {
                 return Err(error(
                     "World history is too large for a browser URL; keep the checked JSON save."

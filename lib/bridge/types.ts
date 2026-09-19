@@ -2,13 +2,13 @@
 export type Point = { x: number; y: number };
 export type Signal = { id: number; link: number; bit: boolean; sent_tick: number; deliver_tick: number; receipt_spark: number | null };
 export type Cell = { id: number; position: Point; heading: string; mobile: boolean };
-export type CellState = { id: number; position: Point; memory: number[]; evidence: (number | null)[]; cargo: { id: number; bit: boolean } | null; inbox: (Signal | null)[]; material?: number; part?: number };
-export type FacilityKind = "fabricator" | "storehouse" | "miner";
+export type CellState = { id: number; position: Point; memory: number[]; evidence: (number | null)[]; cargo: { id: number; bit: boolean } | null; inbox: (Signal | null)[]; material?: number; part?: number; frame?: number };
+export type FacilityKind = "fabricator" | "storehouse" | "miner" | "assembler" | "crane";
 export type FacilityState = {
   id: number; kind: FacilityKind; position: Point; ready: boolean;
-  needed_material: number; needed_part: number;
-  materials: number[]; sparks: { id: number; bit: boolean }[]; parts: number[];
-  spent_materials: number[]; spent_sparks: { id: number; bit: boolean }[]; spent_parts: number[];
+  needed_material: number; needed_part: number; needed_frame?: number;
+  materials: number[]; sparks: { id: number; bit: boolean }[]; parts: number[]; frames?: number[];
+  spent_materials: number[]; spent_sparks: { id: number; bit: boolean }[]; spent_parts: number[]; spent_frames?: number[];
   progress: number; minted: number;
 };
 export type ConstructionLink = { id: number; from: { kind: string; id: number; port?: number }; to_cell: number; to_port: number; delay: number; enabled: boolean };

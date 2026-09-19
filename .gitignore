@@ -1,5 +1,6 @@
 /target/
 /.platonik/
+/.algal/
 /node_modules/
 /.next/
 /.vercel/

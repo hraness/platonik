@@ -465,7 +465,7 @@ fn validate_frames(experiment: &Experiment, frames: &[Frame]) -> Result<PrefixSu
         )?;
         validate_state(experiment, &frame.state, frame.complete, &initial)?;
         ensure(
-            matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
+            experiment.version >= CONSTRUCTION_VERSION
                 || (frame.costs.copying == 0 && frame.costs.construction == 0),
             "Older protocols contain construction costs.",
         )?;
@@ -1320,6 +1320,7 @@ fn validate_action_effects(
             expected.cargo == actual.cargo
                 && expected.material == actual.material
                 && expected.part == actual.part
+                && expected.frame == actual.frame
                 && expected.position == actual.position
                 && expected.heading == actual.heading
                 && expected.memory == actual.memory
