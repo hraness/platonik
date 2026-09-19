@@ -16,6 +16,7 @@ pub mod expedition;
 pub mod expedition_fixtures;
 pub mod first_answer;
 pub mod fixtures;
+pub mod freight_route;
 pub mod industry;
 pub mod industry_report;
 pub mod model;

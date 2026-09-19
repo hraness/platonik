@@ -59,6 +59,15 @@ fn json(bytes: &[u8]) -> Value {
     serde_json::from_slice(bytes).unwrap()
 }
 
+fn legacy_dustlight() -> InputFile {
+    let world = platonik_core::world::new(
+        "Legacy Dustlight".into(),
+        platonik_core::world_fixtures::homestead(),
+    )
+    .unwrap();
+    InputFile::new(&serde_json::to_vec(&world).unwrap())
+}
+
 fn base64url(bytes: &[u8]) -> String {
     const ALPHABET: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     let mut output = String::new();
@@ -518,9 +527,7 @@ fn algal_host_plugins_are_optional_and_process_executors_are_rejected() {
 
 #[test]
 fn algal_planner_builds_an_assembler_then_discovers_its_crane_gap() {
-    let created = cli(&["world", "new"], None);
-    assert!(created.status.success());
-    let world = InputFile::new(&created.stdout);
+    let world = legacy_dustlight();
     let responses = InputFile::new(br#"{"planner":{"candidate":"place-assembler-0-6"}}"#);
     let proposed = cli(
         &[
@@ -593,9 +600,7 @@ fn algal_planner_builds_an_assembler_then_discovers_its_crane_gap() {
 
 #[test]
 fn algal_planner_finishes_existing_construction_before_expanding() {
-    let created = cli(&["world", "new"], None);
-    assert!(created.status.success());
-    let world = InputFile::new(&created.stdout);
+    let world = legacy_dustlight();
     let placed = cli(
         &["world", "act", world.path(), "-"],
         Some(br#"{"kind":"place","structure":"miner","position":{"x":11,"y":13}}"#),
@@ -668,9 +673,7 @@ fn algal_planner_finishes_existing_construction_before_expanding() {
 
 #[test]
 fn algal_planner_preserves_last_roles_until_children_take_them_over() {
-    let created = cli(&["world", "new"], None);
-    assert!(created.status.success());
-    let world = InputFile::new(&created.stdout);
+    let world = legacy_dustlight();
     for candidate in ["cell-1-hauler", "cell-2-surveyor"] {
         let responses = InputFile::new(
             serde_json::to_string(&serde_json::json!({"planner":{"candidate":candidate}}))
@@ -800,4 +803,65 @@ fn an_unconnected_fifo_is_rejected_without_waiting_for_a_writer() {
         assert!(output.stdout.is_empty());
         assert_eq!(json(&output.stderr)["error"]["code"], "invalid_input");
     }
+}
+
+#[test]
+fn frontier_routes_compile_through_cli_and_keep_planner_roles_visible() {
+    let created = cli(&["world", "new"], None);
+    assert!(created.status.success());
+    assert_eq!(json(&created.stdout)["name"], "Copperwake");
+    assert_eq!(json(&created.stdout)["genesis"]["version"], 6);
+    let world = InputFile::new(&created.stdout);
+    let route = cli(
+        &["world", "route", world.path(), "2", "-"],
+        Some(br#"[{"x":7,"y":3},{"x":9,"y":3},{"x":9,"y":8},{"x":7,"y":8}]"#),
+    );
+    assert!(
+        route.status.success(),
+        "{}",
+        String::from_utf8_lossy(&route.stderr)
+    );
+    let program: platonik_core::model::Program = serde_json::from_slice(&route.stdout).unwrap();
+    assert!(
+        program
+            .rules
+            .iter()
+            .any(|rule| rule.when.iter().any(|condition| matches!(
+                condition,
+                platonik_core::model::Condition::AtPosition { .. }
+            )))
+    );
+    let responses = InputFile::new(br#"{"planner":{"candidate":"advance-8"}}"#);
+    let proposal = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            responses.path(),
+        ],
+        None,
+    );
+    assert!(
+        proposal.status.success(),
+        "{}",
+        String::from_utf8_lossy(&proposal.stderr)
+    );
+    let value = json(&proposal.stdout);
+    let view = &value["receipt"]["args"]["state"]["world"];
+    assert_eq!(view["liveRoles"]["haulers"], 2);
+    assert!(
+        view["cells"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|cell| cell["policy"] == "frontier-hauler")
+    );
+    assert!(
+        !view["candidates"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|candidate| candidate["id"] == "cell-1-hauler")
+    );
 }

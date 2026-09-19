@@ -1,4 +1,5 @@
-//! First-class facilities (habitat-v5). Declared facilities start active;
+//! First-class facilities (habitat-v5), with exact staged accounting in v6.
+//! Declared facilities start active;
 //! admitted sites finish once creatures deliver their complete item bill.
 //! Fabricators mint parts, assemblers mint frames, drills extract, cranes move,
 //! and storehouses buffer. Consumed tokens stay accountable in the facility's
@@ -377,10 +378,10 @@ pub(crate) fn can_extract(
         .is_some_and(|index| !state.stocks[index].units.is_empty())
 }
 
-fn extract(experiment: &Experiment, index: usize, state: &mut State) {
+fn extract(experiment: &Experiment, index: usize, state: &mut State) -> bool {
     let facility = &state.facilities[index];
     if !can_extract(experiment, state.construction.as_ref(), facility) {
-        return;
+        return false;
     }
     let stock = spec_stock_index(experiment, facility.position).unwrap();
     let unit = state.construction.as_mut().unwrap().stocks[stock]
@@ -389,6 +390,7 @@ fn extract(experiment: &Experiment, index: usize, state: &mut State) {
     let facility = &mut state.facilities[index];
     facility.materials.push(unit);
     facility.minted += 1;
+    true
 }
 
 fn spec_stock_index(experiment: &Experiment, position: Point) -> Option<usize> {
@@ -449,8 +451,8 @@ fn transfer(state: &mut State, source: usize, destination: usize, item: ItemKind
     }
 }
 
-/// The modeled work one facility step will do, charged before any mutation so
-/// an exhausted tick leaves either an untouched or a fully processed set.
+/// Historical v5 estimate from the state before the sequential step. Preserve
+/// this estimate for old receipts, including its missed same-tick work.
 pub(crate) fn tick_work(experiment: &Experiment, state: &State) -> (u64, u64) {
     let mut checking = 0;
     let mut construction = 0;
@@ -515,11 +517,18 @@ pub(crate) fn tick_work(experiment: &Experiment, state: &State) -> (u64, u64) {
 /// producers with inputs and output room consume into a new job, miners pull
 /// one unit from their deposit every MINER_PERIOD ticks while it lasts, and
 /// cranes move one item between adjacent ready facilities every CRANE_PERIOD.
-pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
+/// Return the exact checks and operations performed, including a completion
+/// and restart in the same tick. Countdown alone has no construction charge.
+pub(crate) fn tick(experiment: &Experiment, state: &mut State) -> (u64, u64) {
+    let mut checking = 0;
+    let mut work = 0;
     for index in 0..state.facilities.len() {
         let facility = &state.facilities[index];
         if !facility.ready {
             continue;
+        }
+        if facility.kind != FacilityKind::Storehouse {
+            checking += 1;
         }
         match facility.kind {
             FacilityKind::Fabricator => {
@@ -529,6 +538,7 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     if facility.progress == 0 {
                         facility.parts.push(part_id(facility, facility.minted));
                         facility.minted += 1;
+                        work += 1;
                     }
                 } else if !facility.materials.is_empty()
                     && !facility.sparks.is_empty()
@@ -538,6 +548,7 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     facility.spent_materials.push(facility.materials.remove(0));
                     facility.spent_sparks.push(facility.sparks.remove(0));
                     facility.progress = FACILITY_RECIPE_TICKS;
+                    work += 1;
                 }
             }
             FacilityKind::Assembler => {
@@ -547,6 +558,7 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     if facility.progress == 0 {
                         facility.frames.push(part_id(facility, facility.minted));
                         facility.minted += 1;
+                        work += 1;
                     }
                 } else if !facility.materials.is_empty()
                     && !facility.parts.is_empty()
@@ -558,13 +570,14 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     facility.spent_parts.push(facility.parts.remove(0));
                     facility.spent_sparks.push(facility.sparks.remove(0));
                     facility.progress = ASSEMBLER_RECIPE_TICKS;
+                    work += 1;
                 }
             }
             FacilityKind::Miner => {
                 if facility.progress > 0 {
                     state.facilities[index].progress -= 1;
-                    if state.facilities[index].progress == 0 {
-                        extract(experiment, index, state);
+                    if state.facilities[index].progress == 0 && extract(experiment, index, state) {
+                        work += 1;
                     }
                 }
                 if state.facilities[index].progress == 0
@@ -575,6 +588,7 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     )
                 {
                     state.facilities[index].progress = MINER_PERIOD;
+                    work += 1;
                 }
             }
             FacilityKind::Crane => {
@@ -586,17 +600,44 @@ pub(crate) fn tick(experiment: &Experiment, state: &mut State) {
                     {
                         transfer(state, source, destination, item);
                         state.facilities[index].minted += 1;
+                        work += 1;
                     }
                 }
                 if state.facilities[index].progress == 0
                     && crane_move(state, state.facilities[index].position).is_some()
                 {
                     state.facilities[index].progress = CRANE_PERIOD;
+                    work += 1;
                 }
             }
             FacilityKind::Storehouse => {}
         }
     }
+    (checking, work)
+}
+
+/// Charge an entire facility phase before committing any of its effects. V6
+/// stages the sequential execution so eligibility changes within the phase and
+/// finish-and-restart operations cannot escape the work ledger. Failed charges
+/// retain their ordinary fuel accounting but discard every staged effect.
+pub(crate) fn advance(
+    experiment: &Experiment,
+    state: &mut State,
+    meter: &mut Meter,
+) -> Result<(), crate::sim::Stop> {
+    if experiment.version >= INDUSTRY_ACCOUNTING_VERSION {
+        let mut staged = state.clone();
+        let (checking, work) = tick(experiment, &mut staged);
+        meter.charge(Cat::Checking, checking)?;
+        meter.charge(Cat::Construction, work)?;
+        *state = staged;
+    } else {
+        let (checking, work) = tick_work(experiment, state);
+        meter.charge(Cat::Checking, checking)?;
+        meter.charge(Cat::Construction, work)?;
+        tick(experiment, state);
+    }
+    Ok(())
 }
 
 /// Validate admitting a new facility site; returns the id it must carry.

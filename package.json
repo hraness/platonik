@@ -14,7 +14,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "check:content": "bun scripts/check-content.ts",
     "test:lab": "bun test lib/observatory",
-    "test:site": "bun test lib/site-footer.test.ts lib/play/world-url.test.ts lib/play/world-view.test.ts",
+    "test:site": "bun test lib/site-footer.test.ts lib/play/world-url.test.ts lib/play/world-view.test.ts lib/play/saves.test.ts",
     "check:theme": "node vendor/hraness-marketing/check.mjs && node vendor/hraness-lantern/check.mjs",
     "check:web": "bun run check:theme && bun run check:content && bun run test:lab && bun run test:site && bun run typecheck && bun run build",
     "check:rust": "bun scripts/check-rust.ts",

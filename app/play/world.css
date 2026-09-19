@@ -112,3 +112,119 @@
   .world-stage, .world-agent, .world-error { border: 1px solid CanvasText; }
   .world-facility[aria-pressed=true] { border: 2px solid Highlight; }
 }
+
+/* The frontier is a physical play surface inside the shared site shell. */
+.world-page { width: min(calc(100% - 40px), 1560px); }
+.world-header { padding: 26px 0 20px; gap: 20px; }
+.world-header h1 { font-size: clamp(32px, 3.5vw, 46px); }
+.world-header p { margin-top: 6px; }
+.world-header-actions, .world-run-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.world-header-actions .lab-button, .world-session .lab-button { padding: 10px 14px; min-height: 44px; font-size: 13px; }
+.world-session { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 16px; }
+.world-run-controls > span { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.world-session-details { position: relative; font-size: 13px; }
+.world-session-details summary { padding: 12px 8px; cursor: pointer; }
+.world-session-details > div { position: absolute; z-index: 5; right: 0; top: 100%; width: min(400px, 88vw); display: grid; gap: 12px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.world-session-details label { display: grid; gap: 8px; }
+.world-session-details select { padding: 10px; width: 100%; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 6px; font: inherit; }
+.world-session-details > div > span { color: var(--muted); font-size: 12px; }
+.world-legacy-notice, .world-action-error { padding: 14px 18px; background: var(--wash); margin: 0 0 16px; font-size: 14px; border: 1px solid var(--line); border-radius: 8px; }
+.world-action-error { color: var(--danger); }
+.world-legacy-notice button { color: var(--accent); background: none; border: 0; text-decoration: underline; font: inherit; cursor: pointer; margin-left: 8px; }
+.world-workspace { grid-template-columns: minmax(0, 1fr) 292px; }
+.frontier-objective { display: flex; align-items: center; gap: 20px; padding: 16px 20px; background: var(--hraness-material-warm-plane, var(--wash)); }
+.frontier-objective > div { flex: 1; }
+.frontier-objective strong { font-size: 15px; }
+.frontier-objective p { font-size: 13px; line-height: 1.45; color: var(--muted); margin: 4px 0 0; max-width: 75ch; }
+.frontier-objective > span { font: 12px var(--body); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.frontier-objective .lab-button { font-size: 12px; padding: 9px 12px; }
+.frontier-map { width: 100%; height: clamp(420px, 56vh, 660px); position: relative; background: #a69972; overflow: hidden; }
+.frontier-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; user-select: none; }
+.frontier-canvas:active { cursor: grabbing; }
+.frontier-canvas.is-building { cursor: crosshair; }
+.frontier-canvas [role=button] { cursor: pointer; outline: none; }
+.frontier-canvas [role=button]:focus-visible > rect, .frontier-canvas [role=button]:focus-visible > ellipse { stroke: #fff4d2; stroke-width: .1; }
+.frontier-sprite { pointer-events: auto; }
+.frontier-rock { filter: saturate(.22) brightness(.76); }
+.frontier-region { font-family: var(--body); fill: #3f4434; text-anchor: middle; font-size: max(.32px, calc(var(--frontier-pixel) * 14)); font-weight: 600; letter-spacing: .015px; }
+.frontier-quantity, .frontier-state, .frontier-cargo { font-family: var(--body); fill: #fff5d4; paint-order: stroke; stroke: #393d2f; stroke-width: .06; stroke-linejoin: round; text-anchor: middle; font-size: max(.2px, calc(var(--frontier-pixel) * 12)); font-weight: 600; }
+.frontier-state { font-size: max(.21px, calc(var(--frontier-pixel) * 12)); }
+.frontier-working { animation: frontier-work 1.1s steps(2) infinite; }
+@keyframes frontier-work { 50% { fill: #769c76; } }
+.frontier-map-tools { position: absolute; top: 14px; left: 14px; display: flex; gap: 4px; }
+.frontier-map-tools button { background: #f3eedc; color: #283c33; border: 1px solid #5b6350; border-radius: 5px; font: 600 12px var(--body); padding: 10px 12px; min-width: 40px; min-height: 40px; cursor: pointer; }
+.frontier-map-tools button:hover { background: #fff9e7; }
+.frontier-camera-hint { position: absolute; bottom: 14px; left: 14px; padding: 5px 8px; border-radius: 4px; background: #f3eedc; color: #354337; font-size: 11px; pointer-events: none; }
+.frontier-minimap { position: absolute; right: 14px; bottom: 14px; width: 130px; background: #526451; border: 1px solid #f3eedc; border-radius: 5px; overflow: hidden; }
+.frontier-buildbar { display: flex; gap: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--wash); padding: 6px 12px; }
+.frontier-buildbar button { display: flex; align-items: center; justify-content: center; flex: 1; gap: 4px; min-width: 0; min-height: 58px; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--ink); font: 12px var(--body); cursor: pointer; }
+.frontier-buildbar button:hover, .frontier-buildbar button[aria-pressed=true] { background: var(--surface); border-color: var(--line); }
+.frontier-buildbar button[aria-pressed=true] { outline: 2px solid var(--accent); outline-offset: -2px; }
+.frontier-buildbar button:disabled { opacity: .55; cursor: default; }
+.frontier-placement { padding: 20px; display: grid; gap: 14px; border-bottom: 1px solid var(--line); }
+.frontier-placement strong { font-size: 16px; }
+.frontier-placement p { margin: 5px 0 0; font-size: 13px; color: var(--muted); line-height: 1.55; }
+.frontier-coordinates, .frontier-route-actions { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+.frontier-coordinates label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; }
+.frontier-coordinates input { width: 70px; padding: 10px; min-height: 42px; border: 1px solid var(--control-border); background: var(--paper); color: var(--ink); border-radius: 6px; font: 14px var(--body); }
+.frontier-coordinates .lab-button, .frontier-route-actions .lab-button { padding: 10px 12px; font-size: 13px; }
+.frontier-route-points { margin: 0; padding-left: 24px; display: flex; flex-wrap: wrap; gap: 6px 32px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.world-vitals { justify-content: start; padding: 14px 18px; }
+.world-workshop { padding: 20px 16px; }
+.world-workshop h2 { font-size: 17px; }
+.world-facilities { max-height: 270px; }
+.world-facility { display: flex; align-items: center; gap: 10px; padding: 8px; min-height: 58px; }
+.world-facility > svg { flex: none; }
+.world-facility > span { display: grid; gap: 3px; }
+.world-facility > span strong { color: var(--ink); font-size: 13px; }
+.world-facility > span > span { color: var(--muted); font-size: 11px; }
+.frontier-crew { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.frontier-crew button { display: flex; gap: 3px; align-items: center; padding: 4px 8px 4px 0; border: 1px solid transparent; background: none; border-radius: 6px; font: 12px var(--body); color: var(--ink); cursor: pointer; }
+.frontier-crew button[aria-pressed=true], .frontier-crew button:hover { border-color: var(--line); background: var(--wash); }
+.frontier-crew svg { width: 32px; height: 32px; }
+.world-inspector { margin-top: 14px; padding-top: 16px; }
+.world-inspector .lab-button { margin-top: 14px; padding: 10px 12px; font-size: 12px; }
+.world-timeline { gap: 10px; }
+.world-observation { display: block; padding: 14px 18px; }
+.world-observation summary { color: var(--muted); cursor: pointer; }
+.world-observation > div { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding-top: 12px; }
+.world-save-status { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
+.world-agent { margin-top: 28px; padding: 24px; }
+.world-agent h2 { font-size: 30px; }
+.world-agent p { font-size: 14px; }
+.world-legacy { font-size: 12px; }
+@media (max-width: 1000px) {
+  .world-workspace { grid-template-columns: minmax(0, 1fr) 260px; }
+  .frontier-buildbar button { flex-direction: column; gap: 0; font-size: 11px; }
+  .frontier-objective { flex-wrap: wrap; gap: 10px; }
+  .frontier-objective > div { flex-basis: 80%; }
+}
+@media (max-width: 800px) {
+  .world-page { width: calc(100% - 24px); }
+  .world-header { padding: 20px 2px 16px; gap: 14px; }
+  .world-header h1 { font-size: 38px; }
+  .world-header p { font-size: 14px; line-height: 1.45; }
+  .world-workspace { grid-template-columns: 1fr; }
+  .world-workshop { border-left: 0; border-top: 1px solid var(--line); padding: 20px; }
+  .world-facilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .world-session { gap: 4px; }
+  .world-session-details > div { right: auto; left: 0; }
+  .world-header-actions .lab-button { min-height: 40px; font-size: 12px; padding: 8px 12px; }
+  .frontier-map { height: 460px; }
+  .frontier-buildbar { padding: 4px; }
+  .frontier-buildbar button { min-height: 65px; }
+  .frontier-objective { padding: 14px; }
+  .frontier-objective p { font-size: 12px; }
+  .frontier-minimap { width: 92px; bottom: 44px; right: 10px; }
+  .frontier-camera-hint { left: 10px; bottom: 10px; font-size: 10px; }
+  .world-timeline { grid-template-columns: auto minmax(40px, 1fr) auto; gap: 8px; }
+  .world-timeline select { display: none; }
+  .world-timeline > span { font-size: 11px; }
+  .world-vitals { gap: 8px 16px; font-size: 11px; }
+  .frontier-placement { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .frontier-working { animation: none; } }
+
+.frontier-crew button { min-height: 44px; }
+.frontier-site-blocked { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.frontier-site-blocked p { margin: 0; flex: 1 1 200px; }

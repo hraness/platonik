@@ -211,12 +211,14 @@ physical time. Objects: 32 MiB; export/import: 64 MiB; local store: 256 MiB.\n\
 Existing expedition-v1 saves remain a separate format.\n";
 
 const WORLD_HELP: &str = "Persistent Platonik automation worlds\n\n\
-  platonik world new [name]                  Print a new homestead world\n\
+  platonik world new [name]                  Print a new Copperwake frontier\n\
   platonik world report <world.json|->       Verify and inspect the current world\n\
   platonik world act <world.json> <command.json|->\n\
                                               Apply one bounded command\n\
   platonik world program <plan>               Print a stock policy: surveyor,\n\
-                                              hauler, upper, or lower\n\
+                                              hauler, frontier-hauler, upper, or lower\n\
+  platonik world route <world.json> <cell> <waypoints.json|->\n\
+                                              Compile a closed freight loop policy\n\
   platonik world organism                     Print the bounded Algal planner organism\n\
   platonik world propose <world.json> --responses <responses.json|-> [--goal <wish>]\n\
                                               Select a compiled action offline\n\
@@ -937,15 +939,15 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
         }
         [command] if command == "new" => {
             let value = world::new(
-                "Dustlight".into(),
-                platonik_core::world_fixtures::homestead(),
+                "Copperwake".into(),
+                platonik_core::world_fixtures::frontier(),
             )
             .map_err(error)?;
             print_json(&value)?;
             Ok(0)
         }
         [command, name] if command == "new" => {
-            let value = world::new(name.clone(), platonik_core::world_fixtures::homestead())
+            let value = world::new(name.clone(), platonik_core::world_fixtures::frontier())
                 .map_err(error)?;
             print_json(&value)?;
             Ok(0)
@@ -954,13 +956,15 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
             let program = match plan.as_str() {
                 "surveyor" => platonik_core::world_fixtures::surveyor_program(),
                 "hauler" => platonik_core::world_fixtures::hauler_program(),
+                "frontier-hauler" => platonik_core::world_fixtures::frontier_hauler_program(),
                 "upper" | "lower" => {
                     let blueprint = if plan == "upper" { 50 } else { 51 };
                     platonik_core::world_fixtures::builder_program(blueprint).map_err(error)?
                 }
                 _ => {
                     return Err(error(
-                        "World programs are surveyor, hauler, upper, or lower.".into(),
+                        "World programs are surveyor, hauler, frontier-hauler, upper, or lower."
+                            .into(),
                     ));
                 }
             };
@@ -1031,6 +1035,18 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
         [command, path] if command == "report" => {
             let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
             print_json(&world::report(&value).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, path, cell, input] if command == "route" && path != "-" => {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let cell = cell
+                .parse::<u16>()
+                .map_err(|_| error("Carrier ID must be an unsigned integer.".into()))?;
+            let waypoints =
+                read_json::<Vec<platonik_core::model::Point>>(input, MAX_EXPERIMENT_BYTES)?;
+            print_json(
+                &platonik_core::freight_route::compile(&value, cell, &waypoints).map_err(error)?,
+            )?;
             Ok(0)
         }
         [command, path, input] if command == "act" && path != "-" => {
