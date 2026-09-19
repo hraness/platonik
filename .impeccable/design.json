@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-19T16:11:14.283842Z",
+  "generatedAt": "2026-09-19T17:11:51.465629Z",
   "title": "Design System: Platonik",
   "extensions": {
     "colorMeta": {
@@ -409,6 +409,18 @@
       "code": {
         "displayName": "Code",
         "purpose": "Literal commands and records."
+      },
+      "frontier-annotation": {
+        "displayName": "Frontier annotation",
+        "purpose": "SVG quantity and cargo labels with a 12-screen-pixel floor. Construction state uses a .21px world-space base with the same floor."
+      },
+      "frontier-region": {
+        "displayName": "Frontier region",
+        "purpose": "SVG region names with a 14-screen-pixel floor; --frontier-pixel converts screen pixels to world units."
+      },
+      "factory-process": {
+        "displayName": "Factory process",
+        "purpose": "Homepage production labels in ordinary four-column HTML, independent of illustration scaling."
       }
     },
     "shadows": [
@@ -522,6 +534,13 @@
       "description": "Scrollable reference output in the field guide.",
       "html": "<pre class=\"ds-code\"><code>platonik world report copperwake.world.json</code></pre>",
       "css": ".ds-code{max-width:100%;overflow-x:auto;background:var(--wash);color:var(--ink);padding:22px;border-radius:3px;font:13px/1.75 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.ds-code code{font:inherit}"
+    },
+    {
+      "name": "Factory process labels",
+      "kind": "custom",
+      "description": "Readable sequence labels beneath the homepage machine illustration. They do not scale with the SVG.",
+      "html": "<div class=\"ds-factory-process\" aria-label=\"Production sequence\"><span>Extract</span><span>Smelt</span><span>Assemble</span><span>Transfer</span></div>",
+      "css": ".ds-factory-process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;width:100%;max-width:840px;color:var(--ink);font:12px/1.5 var(--body);text-align:center}"
     }
   ],
   "narrative": {
@@ -541,6 +560,11 @@
         "section": "colors"
       },
       {
+        "name": "The Screen Legibility Rule",
+        "body": "World annotations retain a screen-size floor as the camera zooms: 12px for quantities, cargo, construction state, and route indices; 14px for region names. Homepage production labels remain ordinary HTML text outside the scaling illustration.",
+        "section": "typography"
+      },
+      {
         "name": "The Evidence Rule",
         "body": "Only Rust-derived state may change a machine's work marker, cargo label, construction state, or production count. Decorative terrain does not imply a resource or route.",
         "section": "components"
@@ -551,6 +575,7 @@
       "Do use the original atlas and its measured crop rectangles for the frontier's machines, couriers, resources, and scrub.",
       "Do keep the scene dominant and the workshop available without shrinking the whole world to phone width.",
       "Do pair machine colors and animation with written status, cargo labels, or selection outlines.",
+      "Do preserve the screen-size floors for world annotations and keep informative homepage labels outside the scaling artwork.",
       "Do preserve the reading and laboratory layouts outside the scoped frontier surface.",
       "Do keep generation provenance embedded in shipping raster metadata and preserve native alpha."
     ],

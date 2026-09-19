@@ -60,6 +60,7 @@ p { text-wrap: pretty; }
 .habitat-map { display: block; width: min(100%, 420px); height: auto; color: var(--accent); font-family: var(--body); font-size: 19px; }
 .habitat-path { stroke: var(--specimen-ink); }
 .habitat-block { stroke: var(--specimen-warm); }
+.factory-process { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; width: 100%; max-width: 840px; color: var(--ink); font-size: 12px; line-height: 1.5; text-align: center; }
 .habitat-label { fill: var(--muted); font-size: 17px; }
 figcaption { margin-top: 22px; font-size: 14px; line-height: 1.6; }
 figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }

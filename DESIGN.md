@@ -80,6 +80,20 @@ typography:
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "-.01em"
+  frontier-annotation:
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
+    fontSize: "max(.2px, calc(var(--frontier-pixel) * 12))"
+    fontWeight: 600
+  frontier-region:
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
+    fontSize: "max(.32px, calc(var(--frontier-pixel) * 14))"
+    fontWeight: 600
+    letterSpacing: ".015px"
+  factory-process:
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
+    fontSize: "12px"
+    fontWeight: 400
+    lineHeight: 1.5
   code:
     fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
     fontSize: "13px"
@@ -199,11 +213,15 @@ Homepage display and section sizes use the marketing clamps in frontmatter; supp
 
 The world title uses the recorded desktop clamp and a 38px override at widths up to 800px. Workshop headings are semibold sans; labels and observed values stay compact, with tabular numerals for counts and ticks. Shared action buttons render at 14px because the shared button rule intentionally wins route-local size declarations. Headings wrap with balance, paragraphs with pretty wrapping, and long names can break without widening the page.
 
+**The Screen Legibility Rule.** World annotations retain a screen-size floor as the camera zooms: 12px for quantities, cargo, construction state, and route indices; 14px for region names. Homepage production labels remain ordinary HTML text outside the scaling illustration.
+
+The scene converts one screen pixel into world coordinates through `--frontier-pixel`, derived from camera width divided by measured viewport width. Quantity and cargo labels use the annotation token; construction state uses a slightly larger world-space base (`.21px`) with the same 12-screen-pixel floor. Route corner circles retain at least a 10-screen-pixel radius. These values are camera-aware SVG dimensions, not literal CSS font sizes for the surrounding interface.
+
 ## Layout
 
 The shared header has a 72px minimum height, is sticky on wide screens, and becomes ordinary document flow at widths up to 760px so wrapped navigation does not cover anchored content. Its desktop gutter is at least 32px. Documentation keeps a 190px sidebar, 60px gap, 740px reading column, and 1160px shell. It stacks at 800px; reading gutters step through the recorded wide, tablet, and mobile values. Code and wide tables scroll inside their own containers.
 
-Homepage story sections use the vendor's 70rem content measure plus shared gutters and 5rem section rhythm. The hero has its own 4rem/3rem vertical spacing, becoming 2.75rem/2rem at 760px. The factory illustration is a raster composition inside the existing opaque figure plane; conversation rows and chapter lists retain their existing responsive reading structure.
+Homepage story sections use the vendor's 70rem content measure plus shared gutters and 5rem section rhythm. The hero has its own 4rem/3rem vertical spacing, becoming 2.75rem/2rem at 760px. The factory illustration is a raster composition inside the existing opaque figure plane. Its four production labels form a separate four-column HTML row with 12px text and a 4px gap, so shrinking the art does not shrink its informative labels. Conversation rows and chapter lists retain their existing responsive reading structure.
 
 The frontier shell grows to 1560px with 20px side clearance. Its scene and 292px workshop share one bordered stage; the workshop becomes 260px at 1000px and stacks below the scene at 800px. The map height is `clamp(420px, 56vh, 660px)` on desktop and 460px on smaller screens. Phone width changes the camera scale rather than fitting the entire region into unreadably small tiles. The world page uses 12px side clearance below 800px.
 
@@ -253,6 +271,7 @@ Save/import controls, current-world handoff, legacy-world notice, errors, and lo
 - Do use the original atlas and its measured crop rectangles for the frontier's machines, couriers, resources, and scrub.
 - Do keep the scene dominant and the workshop available without shrinking the whole world to phone width.
 - Do pair machine colors and animation with written status, cargo labels, or selection outlines.
+- Do preserve the screen-size floors for world annotations and keep informative homepage labels outside the scaling artwork.
 - Do preserve the reading and laboratory layouts outside the scoped frontier surface.
 - Do keep generation provenance embedded in shipping raster metadata and preserve native alpha.
 

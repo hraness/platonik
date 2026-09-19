@@ -57,13 +57,9 @@ export default function HomePage() {
               <Machine kind="assembler" x={428} y={47} width={196} height={168} />
               <Machine kind="crane" x={634} y={24} width={184} height={192} />
               <Machine kind="courier" x={377} y={216} width={72} height={72} />
-              <g fill="var(--ink)" textAnchor="middle" fontSize="18">
-                <text x="120" y="252">Extract</text>
-                <text x="312" y="252">Smelt</text>
-                <text x="526" y="252">Assemble</text>
-                <text x="726" y="252">Transfer</text>
-              </g>
+
             </svg>
+            <div className="factory-process" aria-label="Production sequence"><span>Extract</span><span>Smelt</span><span>Assemble</span><span>Transfer</span></div>
             <figcaption>Start with a working supply loop. Build the crane that makes its next connection.</figcaption>
           </figure>
           <p className="status-note">

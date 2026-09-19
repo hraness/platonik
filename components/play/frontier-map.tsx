@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { FacilityKind, Frame, Point } from "@/lib/bridge/types";
 import type { WorldReport } from "@/lib/play/engine";
 import atlas from "@/public/art/frontier/atlas.json";
@@ -28,6 +28,7 @@ export function FrontierMap({ report, frame, selection, onSelect, building, targ
   const svg = useRef<SVGSVGElement>(null);
   const viewport = useRef<HTMLDivElement>(null);
   const [ratio, setRatio] = useState(1.65);
+  const [viewportWidth, setViewportWidth] = useState(1000);
   const [camera, setCamera] = useState<Camera>({ x: 0, y: 0, width: 19 });
   const [hover, setHover] = useState<Point>();
   const drag = useRef<{ x: number; y: number; camera: Camera; selection?: Selection } | null>(null);
@@ -36,6 +37,7 @@ export function FrontierMap({ report, frame, selection, onSelect, building, targ
   const frontier = experiment.seed === 751 && experiment.width === 32 && experiment.height === 22;
   const state = frame.state;
   const height = camera.width / ratio;
+  const screenPixel = camera.width / viewportWidth;
   function clamp(next: Camera): Camera {
     const width = Math.min(Math.max(next.width, 7), Math.max(experiment.width + 2, (experiment.height + 2) * ratio));
     return { width, x: Math.max(-1, Math.min(next.x, experiment.width - width + 1)), y: Math.max(-1, Math.min(next.y, experiment.height - width / ratio + 1)) };
@@ -47,7 +49,11 @@ export function FrontierMap({ report, frame, selection, onSelect, building, targ
   }
   useEffect(() => {
     if (!viewport.current) return;
-    const observer = new ResizeObserver(([entry]) => setRatio(entry.contentRect.width / entry.contentRect.height));
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry.contentRect.width || !entry.contentRect.height) return;
+      setRatio(entry.contentRect.width / entry.contentRect.height);
+      setViewportWidth(entry.contentRect.width);
+    });
     observer.observe(viewport.current);
     return () => observer.disconnect();
   }, []);
@@ -66,7 +72,7 @@ export function FrontierMap({ report, frame, selection, onSelect, building, targ
   const ghostBlocked = occupied.has(`${ghost.x},${ghost.y}`);
   return <div className="frontier-map-shell">
     <div className="frontier-map" ref={viewport}>
-      <svg ref={svg} className={building ? "frontier-canvas is-building" : "frontier-canvas"} viewBox={`${camera.x} ${camera.y} ${camera.width} ${height}`} preserveAspectRatio="none" tabIndex={0}
+      <svg ref={svg} className={building ? "frontier-canvas is-building" : "frontier-canvas"} viewBox={`${camera.x} ${camera.y} ${camera.width} ${height}`} preserveAspectRatio="none" tabIndex={0} style={{ "--frontier-pixel": `${screenPixel}px` } as CSSProperties}
         role="group" aria-label="Factory world. Drag to explore. Arrow keys pan; plus and minus zoom. Select machinery to inspect it."
         onKeyDown={(event) => {
           const directions: Record<string, [number, number]> = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
@@ -146,7 +152,7 @@ export function FrontierMap({ report, frame, selection, onSelect, building, targ
             {(cell.material !== undefined || cell.part !== undefined || cell.frame !== undefined || cell.cargo) && <text className="frontier-cargo" x={cell.position.x + .5} y={cell.position.y - .12}>{cell.frame !== undefined ? "FRAME" : cell.part !== undefined ? "PART" : cell.material !== undefined ? "ORE" : "SPARK"}</text>}
           </g>;
         })}
-        {routing && routePoints.length > 0 && <g pointerEvents="none"><polyline points={[...routePoints, routePoints[0]].map((point) => `${point.x + .5},${point.y + .5}`).join(" ")} fill="none" stroke="#fff0b0" strokeWidth=".09" strokeDasharray=".16 .08" />{routePoints.map((point, index) => <g key={index}><circle cx={point.x + .5} cy={point.y + .5} r=".25" fill="#263e39" /><text x={point.x + .5} y={point.y + .58} textAnchor="middle" fontSize=".23" fill="#fff0b0">{index + 1}</text></g>)}</g>}
+        {routing && routePoints.length > 0 && <g pointerEvents="none"><polyline points={[...routePoints, routePoints[0]].map((point) => `${point.x + .5},${point.y + .5}`).join(" ")} fill="none" stroke="#fff0b0" strokeWidth=".09" strokeDasharray=".16 .08" />{routePoints.map((point, index) => <g key={index}><circle cx={point.x + .5} cy={point.y + .5} r={Math.max(.25, screenPixel * 10)} fill="#263e39" /><text x={point.x + .5} y={point.y + .5} dominantBaseline="central" textAnchor="middle" style={{ fontSize: Math.max(.23, screenPixel * 12) }} fill="#fff0b0">{index + 1}</text></g>)}</g>}
         {building && <g pointerEvents="none"><rect x={target.x} y={target.y} width="1" height="1" fill="none" stroke="#263e39" strokeWidth=".08" strokeDasharray=".12 .07" /><g opacity=".55"><Sprite kind={building} x={ghost.x - .4} y={ghost.y - .65} size={1.8} /></g><rect x={ghost.x} y={ghost.y} width="1" height="1" fill={ghostBlocked ? "#b46345" : "#e6dfb6"} fillOpacity=".2" stroke={ghostBlocked ? "#652d21" : "#263e39"} strokeWidth=".05" /></g>}
       </svg>
       <div className="frontier-map-tools" aria-label="Map camera"><button type="button" onClick={() => zoom(.8)} aria-label="Zoom in">+</button><button type="button" onClick={() => zoom(1.25)} aria-label="Zoom out">−</button><button type="button" onClick={home}>Home</button><button type="button" onClick={() => setCamera(clamp({ x: -1, y: -1, width: Math.max(experiment.width + 2, (experiment.height + 2) * ratio) }))}>Map</button></div>

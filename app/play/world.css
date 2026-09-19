@@ -146,9 +146,9 @@
 .frontier-canvas [role=button]:focus-visible > rect, .frontier-canvas [role=button]:focus-visible > ellipse { stroke: #fff4d2; stroke-width: .1; }
 .frontier-sprite { pointer-events: auto; }
 .frontier-rock { filter: saturate(.22) brightness(.76); }
-.frontier-region { font-family: var(--body); fill: #3f4434; text-anchor: middle; font-size: .32px; font-weight: 600; letter-spacing: .015px; }
-.frontier-quantity, .frontier-state, .frontier-cargo { font-family: var(--body); fill: #fff5d4; paint-order: stroke; stroke: #393d2f; stroke-width: .06; stroke-linejoin: round; text-anchor: middle; font-size: .2px; font-weight: 600; }
-.frontier-state { font-size: .21px; }
+.frontier-region { font-family: var(--body); fill: #3f4434; text-anchor: middle; font-size: max(.32px, calc(var(--frontier-pixel) * 14)); font-weight: 600; letter-spacing: .015px; }
+.frontier-quantity, .frontier-state, .frontier-cargo { font-family: var(--body); fill: #fff5d4; paint-order: stroke; stroke: #393d2f; stroke-width: .06; stroke-linejoin: round; text-anchor: middle; font-size: max(.2px, calc(var(--frontier-pixel) * 12)); font-weight: 600; }
+.frontier-state { font-size: max(.21px, calc(var(--frontier-pixel) * 12)); }
 .frontier-working { animation: frontier-work 1.1s steps(2) infinite; }
 @keyframes frontier-work { 50% { fill: #769c76; } }
 .frontier-map-tools { position: absolute; top: 14px; left: 14px; display: flex; gap: 4px; }
