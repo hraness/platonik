@@ -427,6 +427,7 @@ pub fn experiment(id: &str) -> Result<Experiment, String> {
             stocks: Vec::new(),
             blueprints: Vec::new(),
         }),
+        facilities: Vec::new(),
     };
     world.cells.push(cell(
         SELECTOR,

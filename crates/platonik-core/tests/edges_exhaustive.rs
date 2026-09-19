@@ -112,6 +112,7 @@ fn all_two_by_two_closures_positions_headings_and_relative_moves_match_an_indepe
                             fuel: 10_000,
                             activation_fuel: 128,
                             construction: None,
+                            facilities: Vec::new(),
                         };
                         let result = run(&experiment).unwrap();
                         let context = format!(

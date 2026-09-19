@@ -108,17 +108,21 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     Condition::HasMessage { port, .. } | Condition::MessageBit { port, .. } => {
                         *port < 4
                     }
-                    Condition::HasMaterial { .. } => {
-                        matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
-                    }
+                    Condition::HasMaterial { .. } => experiment.version >= CONSTRUCTION_VERSION,
+                    Condition::HasPart { .. }
+                    | Condition::AtStock { .. }
+                    | Condition::AtFacility { .. }
+                    | Condition::FacilityReady { .. }
+                    | Condition::FacilityNeeds { .. }
+                    | Condition::FacilityHas { .. } => experiment.version >= INDUSTRY_VERSION,
                     Condition::AssemblyStage { blueprint, .. } => {
-                        matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
+                        experiment.version >= CONSTRUCTION_VERSION
                             && experiment.construction.as_ref().is_some_and(|spec| {
                                 spec.blueprints.iter().any(|entry| entry.id == *blueprint)
                             })
                     }
                     Condition::AssemblyEdits { blueprint, count } => {
-                        experiment.version == VARIATION_VERSION
+                        experiment.version >= VARIATION_VERSION
                             && usize::from(*count) <= MAX_PROGRAM_EDITS
                             && experiment.construction.as_ref().is_some_and(|spec| {
                                 spec.blueprints.iter().any(|entry| entry.id == *blueprint)
@@ -138,14 +142,24 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     valid_bit(bit) && experiment.valves.iter().any(|entry| entry.id == *valve)
                 }
                 Action::GatherMaterial { stock } => {
-                    matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
+                    experiment.version >= CONSTRUCTION_VERSION
                         && experiment
                             .construction
                             .as_ref()
                             .is_some_and(|spec| spec.stocks.iter().any(|entry| entry.id == *stock))
                 }
+                Action::Gather => {
+                    experiment.version >= INDUSTRY_VERSION
+                        && experiment
+                            .construction
+                            .as_ref()
+                            .is_some_and(|spec| !spec.stocks.is_empty())
+                }
+                Action::Supply { .. } | Action::Fetch { .. } => {
+                    experiment.version >= INDUSTRY_VERSION
+                }
                 Action::Build { blueprint } | Action::Activate { blueprint } => {
-                    matches!(experiment.version, CONSTRUCTION_VERSION | VARIATION_VERSION)
+                    experiment.version >= CONSTRUCTION_VERSION
                         && experiment.construction.as_ref().is_some_and(|spec| {
                             spec.blueprints.iter().any(|entry| entry.id == *blueprint)
                         })
@@ -155,7 +169,7 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     rule,
                     slot,
                 } => {
-                    experiment.version == VARIATION_VERSION
+                    experiment.version >= VARIATION_VERSION
                         && *rule < 32
                         && *slot < 4
                         && experiment.construction.as_ref().is_some_and(|spec| {
@@ -188,7 +202,7 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
     require(
         (1..=MAX_TICKS).contains(&experiment.ticks)
             && experiment.fuel <= MAX_FUEL
-            && (1..=if experiment.version == VARIATION_VERSION {
+            && (1..=if experiment.version >= VARIATION_VERSION {
                 MAX_VARIATION_ACTIVATION_FUEL
             } else {
                 1024
@@ -369,6 +383,36 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
         )?;
     }
     construction::validate_spec(experiment)?;
+    require(
+        experiment.facilities.len() <= MAX_FACILITIES
+            && (experiment.facilities.is_empty() || experiment.version >= INDUSTRY_VERSION)
+            && (experiment.facilities.is_empty() || experiment.construction.is_some()),
+        "Facilities need habitat-v5 and a declared material economy.",
+    )?;
+    let mut facility_ids = BTreeSet::new();
+    for facility in &experiment.facilities {
+        require(
+            usable(facility.position)
+                && !stations.contains(&(facility.position.x, facility.position.y))
+                && !positions.contains(&(facility.position.x, facility.position.y))
+                && facility_ids.insert(facility.id)
+                && positions.insert((facility.position.x, facility.position.y)),
+            "Facilities need distinct open positions away from stations and cells.",
+        )?;
+        require(
+            experiment
+                .construction
+                .iter()
+                .flat_map(|spec| spec.stocks.iter().map(|stock| stock.position))
+                .chain(experiment.construction.iter().flat_map(|spec| {
+                    spec.blueprints
+                        .iter()
+                        .map(|blueprint| blueprint.body.cell.position)
+                }))
+                .all(|point| point != facility.position),
+            "A facility cannot overlap a material stock or blueprint reservation.",
+        )?;
+    }
     Ok(())
 }
 
@@ -506,6 +550,7 @@ fn initial_state(experiment: &Experiment) -> State {
                 cargo: None,
                 inbox: std::array::from_fn(|_| None),
                 material: None,
+                part: None,
             })
             .collect(),
         sources: experiment
@@ -559,6 +604,7 @@ fn initial_state(experiment: &Experiment) -> State {
             .construction
             .as_ref()
             .map(construction::initial_state),
+        facilities: crate::industry::initial_state(experiment),
     }
 }
 fn outcome(experiment: &Experiment, state: &State, status: RunStatus, initial: u32) -> Outcome {
@@ -577,6 +623,11 @@ fn outcome(experiment: &Experiment, state: &State, status: RunStatus, initial: u
             .iter()
             .filter(|cell| cell.cargo.is_some())
             .count()
+        + state
+            .facilities
+            .iter()
+            .map(|facility| facility.sparks.len() + facility.spent_sparks.len())
+            .sum::<usize>()
         + state.delivered.len();
     let all_beacons_positive = state
         .beacons
@@ -598,6 +649,7 @@ fn outcome(experiment: &Experiment, state: &State, status: RunStatus, initial: u
 
 fn check_live_invariants(experiment: &Experiment, state: &State) -> Result<(), String> {
     construction::check_state(experiment, state)?;
+    crate::industry::check_state(experiment, state, false)?;
     require(
         state.closed_edges.len() <= experiment.events.len()
             && state.closed_edges.windows(2).all(|pair| pair[0] < pair[1])
@@ -622,6 +674,12 @@ fn check_live_invariants(experiment: &Experiment, state: &State) -> Result<(), S
         .flat_map(|source| &source.sparks)
         .chain(state.depots.iter().flat_map(|depot| &depot.sparks))
         .chain(state.cells.iter().filter_map(|cell| cell.cargo.as_ref()))
+        .chain(
+            state
+                .facilities
+                .iter()
+                .flat_map(|facility| facility.sparks.iter().chain(&facility.spent_sparks)),
+        )
         .chain(state.delivered.iter().map(|delivery| &delivery.spark))
     {
         require(
@@ -818,6 +876,13 @@ fn advance_ticks(
                     status = RunStatus::ActivationLimit;
                 }
             }
+            // Facilities run once per tick after cells act: the modeled work is
+            // charged before mutation so an exhausted step leaves either an
+            // untouched or a fully processed set, never a partial recipe.
+            let (facility_checking, facility_work) = crate::industry::tick_work(&state);
+            meter.charge(Cat::Checking, facility_checking)?;
+            meter.charge(Cat::Construction, facility_work)?;
+            crate::industry::tick(&mut state);
             for (index, beacon) in experiment.beacons.iter().enumerate() {
                 meter.charge(Cat::Checking, 1)?;
                 if tick % beacon.drain_every == 0 {
@@ -837,7 +902,8 @@ fn advance_ticks(
                     + state.beacons.len() as u64
                     + initial_sparks as u64
                     + state.closed_edges.len() as u64
-                    + construction::state_checking(&state),
+                    + construction::state_checking(&state)
+                    + crate::industry::state_checking(&state),
             )?;
             Ok(())
         })();
@@ -1116,6 +1182,7 @@ mod tests {
             fuel: MAX_FUEL,
             activation_fuel: 256,
             construction: None,
+            facilities: Vec::new(),
         }
     }
     fn bridge(bit: bool) -> Experiment {

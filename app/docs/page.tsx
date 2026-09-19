@@ -29,7 +29,7 @@ export default function DocsPage() {
           <p>Platonik is now one persistent automation world operated by your agent and observed in the browser. Start with the world; open technical detail only when it helps.</p>
         </header>
         <p className="proposal-note">
-          The Dustlight world, agent CLI, bounded interventions, construction, replay, and content-addressed views are implemented. Repeatable production, free-form expansion, larger regions, and the complete Long Trail remain in design.
+          The Dustlight world, agent CLI, bounded interventions, facility placement, repeatable production, replay, and content-addressed views are implemented. Deeper recipe trees, more facility kinds, larger regions, and the complete Long Trail remain in design.
         </p>
         <section className="doc-next-step">
           <h2>Start here</h2>

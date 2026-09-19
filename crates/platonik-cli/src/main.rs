@@ -214,19 +214,25 @@ const WORLD_HELP: &str = "Persistent Platonik automation worlds\n\n\
   platonik world report <world.json|->       Verify and inspect the current world\n\
   platonik world act <world.json> <command.json|->\n\
                                               Apply one bounded command\n\
-  platonik world program <upper|lower>        Print a homestead foundry policy\n\
+  platonik world program <plan>               Print a stock policy: surveyor,\n\
+                                              hauler, upper, or lower\n\
   platonik world link <world.json|->         Print a content-addressed browser view\n\
   platonik world open-link <url>              Recover and verify its compact world JSON\n\n\
-Commands are {\"kind\":\"advance\",\"ticks\":32} or\n\
-{\"kind\":\"set_program\",\"cell\":1,\"program\":{...}}. The world records\n\
+Commands are {\"kind\":\"advance\",\"ticks\":32},\n\
+{\"kind\":\"set_program\",\"cell\":1,\"program\":{...}},\n\
+{\"kind\":\"place\",\"structure\":\"storehouse\",\"position\":{\"x\":12,\"y\":13}},\n\
+or {\"kind\":\"name\",\"facility\":92,\"name\":\"South Depot\"}. The world records\n\
 only admitted interventions and bounded advance endpoints; every report freshly\n\
 replays them in the Rust engine. Programs, cargo, memory, construction, supplies,\n\
-beacon charge, and cumulative work carry forward. An advance runs 1–128 ticks;\n\
-the first protocol is capped at 4,096 ticks and 128 events. Use a new output\n\
-filename for act; shell redirection can truncate its input before Platonik reads it.\n\
-The browser link contains the compact world history, verifies its content hash, and\n\
-renders the same recomputed state. The browser is a viewer; use your agent and this\n\
-command surface to change or advance the world.\n";
+beacon charge, facility buffers, and cumulative work carry forward. An advance\n\
+runs 1–128 ticks; the first protocol is capped at 4,096 ticks and 128 events.\n\
+Place a fabricator or storehouse on an open tile: cells must supply its\n\
+construction bill (material and parts) before it becomes ready. Use a new\n\
+output filename for act; shell redirection can truncate its input before\n\
+Platonik reads it. The browser link contains the compact world history,\n\
+verifies its content hash, and renders the same recomputed state. The browser\n\
+is a viewer; use your agent and this command surface to change or advance the\n\
+world.\n";
 
 #[derive(Serialize)]
 struct ErrorReport<'a> {
@@ -929,12 +935,20 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
             Ok(0)
         }
         [command, plan] if command == "program" => {
-            let blueprint = match plan.as_str() {
-                "upper" => 50,
-                "lower" => 51,
-                _ => return Err(error("World foundry plans are upper or lower.".into())),
+            let program = match plan.as_str() {
+                "surveyor" => platonik_core::world_fixtures::surveyor_program(),
+                "hauler" => platonik_core::world_fixtures::hauler_program(),
+                "upper" | "lower" => {
+                    let blueprint = if plan == "upper" { 50 } else { 51 };
+                    platonik_core::world_fixtures::builder_program(blueprint).map_err(error)?
+                }
+                _ => {
+                    return Err(error(
+                        "World programs are surveyor, hauler, upper, or lower.".into(),
+                    ));
+                }
             };
-            print_json(&platonik_core::world_fixtures::builder_program(blueprint).map_err(error)?)?;
+            print_json(&program)?;
             Ok(0)
         }
         [command, path] if command == "report" => {
@@ -957,7 +971,7 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
             let (expected, packed) = rest
                 .split_once("?world=")
                 .ok_or_else(|| error("World link is missing its compact history.".into()))?;
-            if packed.len() > 12_000 || packed.contains('&') || packed.contains('#') {
+            if packed.len() > 16_384 || packed.contains('&') || packed.contains('#') {
                 return Err(error(
                     "World link exceeds its bounded canonical form.".into(),
                 ));
@@ -980,7 +994,7 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
             let bytes = serde_json::to_vec(&value)
                 .map_err(|cause| Failure::new("output_json", cause.to_string()))?;
             let packed = base64url(&bytes);
-            if packed.len() > 12_000 {
+            if packed.len() > 16_384 {
                 return Err(error(
                     "World history is too large for a browser URL; keep the checked JSON save."
                         .into(),

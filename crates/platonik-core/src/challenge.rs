@@ -334,6 +334,7 @@ fn draw_case(rng: &mut Rng, band: u32) -> Option<Experiment> {
         fuel: 24_000 + rng.below(24_000),
         activation_fuel: 128,
         construction: None,
+        facilities: Vec::new(),
     })
 }
 
@@ -684,6 +685,7 @@ fn draw_switchboard(rng: &mut Rng, band: u32) -> Option<Experiment> {
         fuel: 20_000 + rng.below(20_000),
         activation_fuel: 128,
         construction: None,
+        facilities: Vec::new(),
     })
 }
 
@@ -1010,6 +1012,7 @@ fn draw_foundry(rng: &mut Rng, band: u32) -> Option<Experiment> {
             }],
             blueprints,
         }),
+        facilities: Vec::new(),
     })
 }
 

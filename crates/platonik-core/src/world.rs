@@ -1,8 +1,10 @@
 use crate::check::artifact_hash;
 use crate::continuation::{self, Advance};
-use crate::model::{Costs, Experiment, Frame, Program, RunStatus, State};
+use crate::industry;
+use crate::model::{Costs, Experiment, FacilityKind, Frame, Point, Program, RunStatus, State};
 use crate::sim;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 pub const WORLD_SCHEMA: &str = "platonik-living-world-v1";
 pub const WORLD_REPORT_SCHEMA: &str = "platonik-living-world-report-v1";
@@ -34,13 +36,37 @@ pub enum WorldEvent {
     Advanced {
         through_tick: u32,
     },
+    /// An admitted facility site: unready until creatures supply its bill.
+    StructurePlaced {
+        id: u16,
+        structure: FacilityKind,
+        position: Point,
+    },
+    /// A display name for a facility, kept in the report's name registry.
+    StructureNamed {
+        facility: u16,
+        name: String,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Command {
-    SetProgram { cell: u16, program: Program },
-    Advance { ticks: u32 },
+    SetProgram {
+        cell: u16,
+        program: Program,
+    },
+    Advance {
+        ticks: u32,
+    },
+    Place {
+        structure: FacilityKind,
+        position: Point,
+    },
+    Name {
+        facility: u16,
+        name: String,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
@@ -54,6 +80,11 @@ pub struct WorldSummary {
     pub material_units: usize,
     pub beacon_charge: u64,
     pub beacons_without_charge: usize,
+    pub facilities: usize,
+    pub ready_facilities: usize,
+    pub facility_sparks: usize,
+    pub parts_minted: usize,
+    pub carried_parts: usize,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
@@ -69,6 +100,8 @@ pub struct Report {
     pub costs: Costs,
     pub recent_frames: Vec<Frame>,
     pub summary: WorldSummary,
+    /// Facility display names admitted by `structure_named` events.
+    pub names: BTreeMap<u16, String>,
 }
 
 struct Snapshot {
@@ -76,6 +109,7 @@ struct Snapshot {
     state: State,
     costs: Costs,
     recent_frames: Vec<Frame>,
+    names: BTreeMap<u16, String>,
 }
 
 fn require(condition: bool, message: &str) -> Result<(), String> {
@@ -122,6 +156,7 @@ fn initial_snapshot(experiment: &Experiment) -> Result<Snapshot, String> {
         state: frame.state.clone(),
         costs: frame.costs.clone(),
         recent_frames: vec![frame],
+        names: BTreeMap::new(),
     })
 }
 
@@ -132,6 +167,13 @@ fn program_mut(experiment: &mut Experiment, cell: u16) -> Result<&mut Program, S
         .find(|entry| entry.id == cell)
         .map(|entry| &mut entry.program)
         .ok_or_else(|| format!("Cell {cell} is not an original programmable cell."))
+}
+
+fn valid_name(name: &str) -> bool {
+    !name.is_empty()
+        && name.chars().count() <= 32
+        && name.trim() == name
+        && name.chars().all(|character| !character.is_control())
 }
 
 fn replay(world: &World) -> Result<Snapshot, String> {
@@ -194,6 +236,38 @@ fn replay(world: &World) -> Result<Snapshot, String> {
                 snapshot.state = segment.final_state;
                 snapshot.costs = segment.costs;
                 snapshot.recent_frames = segment.frames;
+            }
+            WorldEvent::StructurePlaced {
+                id,
+                structure,
+                position,
+            } => {
+                let expected =
+                    industry::validate_placement(&snapshot.experiment, &snapshot.state, *position)?;
+                require(
+                    expected == *id,
+                    "A recorded site id does not match its placement order.",
+                )?;
+                snapshot
+                    .state
+                    .facilities
+                    .push(industry::site(*id, *structure, *position));
+                industry::check_state(&snapshot.experiment, &snapshot.state, false)?;
+            }
+            WorldEvent::StructureNamed { facility, name } => {
+                require(
+                    valid_name(name),
+                    "Structure names need 1–32 printable characters.",
+                )?;
+                require(
+                    snapshot
+                        .state
+                        .facilities
+                        .iter()
+                        .any(|entry| entry.id == *facility),
+                    "A named structure does not exist in the world.",
+                )?;
+                snapshot.names.insert(*facility, name.clone());
             }
         }
     }
@@ -258,6 +332,32 @@ pub fn apply(world: &World, command: Command) -> Result<World, String> {
             )?;
             WorldEvent::Advanced { through_tick }
         }
+        Command::Place {
+            structure,
+            position,
+        } => {
+            let id = industry::validate_placement(&snapshot.experiment, &snapshot.state, position)?;
+            WorldEvent::StructurePlaced {
+                id,
+                structure,
+                position,
+            }
+        }
+        Command::Name { facility, name } => {
+            require(
+                valid_name(&name),
+                "Structure names need 1–32 printable characters.",
+            )?;
+            require(
+                snapshot
+                    .state
+                    .facilities
+                    .iter()
+                    .any(|entry| entry.id == facility),
+                "A named structure does not exist in the world.",
+            )?;
+            WorldEvent::StructureNamed { facility, name }
+        }
     };
     let mut next = world.clone();
     next.events.push(event);
@@ -304,6 +404,12 @@ pub fn report(world: &World) -> Result<Report, String> {
                     .iter()
                     .filter(|cell| cell.material.is_some())
                     .count()
+                + snapshot
+                    .state
+                    .facilities
+                    .iter()
+                    .map(|facility| facility.materials.len() + facility.spent_materials.len())
+                    .sum::<usize>()
         }),
         beacon_charge: snapshot
             .state
@@ -316,6 +422,31 @@ pub fn report(world: &World) -> Result<Report, String> {
             .beacons
             .iter()
             .filter(|beacon| beacon.charge == 0)
+            .count(),
+        facilities: snapshot.state.facilities.len(),
+        ready_facilities: snapshot
+            .state
+            .facilities
+            .iter()
+            .filter(|facility| facility.ready)
+            .count(),
+        facility_sparks: snapshot
+            .state
+            .facilities
+            .iter()
+            .map(|facility| facility.sparks.len() + facility.spent_sparks.len())
+            .sum(),
+        parts_minted: snapshot
+            .state
+            .facilities
+            .iter()
+            .map(|facility| facility.minted as usize)
+            .sum(),
+        carried_parts: snapshot
+            .state
+            .cells
+            .iter()
+            .filter(|cell| cell.part.is_some())
             .count(),
     };
     Ok(Report {
@@ -330,5 +461,6 @@ pub fn report(world: &World) -> Result<Report, String> {
         costs: snapshot.costs,
         recent_frames: snapshot.recent_frames,
         summary,
+        names: snapshot.names,
     })
 }

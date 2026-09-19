@@ -8,16 +8,22 @@ pub const CONSTRUCTION_VERSION: u32 = 3;
 pub const CONSTRUCTION_PROTOCOL: &str = "platonik-habitat-v3";
 pub const VARIATION_VERSION: u32 = 4;
 pub const VARIATION_PROTOCOL: &str = "platonik-habitat-v4";
+pub const INDUSTRY_VERSION: u32 = 5;
+pub const INDUSTRY_PROTOCOL: &str = "platonik-habitat-v5";
 pub const MAX_PROGRAM_EDITS: usize = 8;
 pub const MAX_VARIATION_ACTIVATION_FUEL: u32 = 16_384;
 pub const COPY_BYTES: usize = 32;
 pub const MAX_BLUEPRINT_BYTES: usize = 4096;
+pub const MAX_FACILITIES: usize = 12;
+pub const FACILITY_ITEM_LIMIT: usize = 8;
+pub const FACILITY_RECIPE_TICKS: u32 = 6;
 pub fn protocol_for_version(version: u32) -> Option<&'static str> {
     match version {
         MODEL_VERSION => Some(PROTOCOL),
         HAZARD_VERSION => Some(HAZARD_PROTOCOL),
         CONSTRUCTION_VERSION => Some(CONSTRUCTION_PROTOCOL),
         VARIATION_VERSION => Some(VARIATION_PROTOCOL),
+        INDUSTRY_VERSION => Some(INDUSTRY_PROTOCOL),
         _ => None,
     }
 }
@@ -123,6 +129,26 @@ pub enum Condition {
         blueprint: u16,
         count: u8,
     },
+    HasPart {
+        value: bool,
+    },
+    AtStock {
+        value: bool,
+    },
+    AtFacility {
+        value: bool,
+    },
+    FacilityReady {
+        value: bool,
+    },
+    FacilityNeeds {
+        item: ItemKind,
+        value: bool,
+    },
+    FacilityHas {
+        item: ItemKind,
+        value: bool,
+    },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
@@ -147,6 +173,50 @@ pub enum Action {
     Build { blueprint: u16 },
     Activate { blueprint: u16 },
     EditDirection { blueprint: u16, rule: u8, slot: u8 },
+    Gather,
+    Supply { item: ItemKind },
+    Fetch { item: ItemKind },
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ItemKind {
+    Spark,
+    Material,
+    Part,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum FacilityKind {
+    Fabricator,
+    Storehouse,
+}
+/// Declared industry: an active facility that exists from genesis.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FacilityDecl {
+    pub id: u16,
+    pub kind: FacilityKind,
+    pub position: Point,
+}
+/// One facility's live state. `needed_*` is the remaining construction bill on
+/// an admitted site; `spent_*` keeps consumed tokens accountable forever.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FacilityState {
+    pub id: u16,
+    pub kind: FacilityKind,
+    pub position: Point,
+    pub ready: bool,
+    pub needed_material: u8,
+    pub needed_part: u8,
+    pub materials: Vec<u32>,
+    pub sparks: Vec<Spark>,
+    pub parts: Vec<u32>,
+    pub spent_materials: Vec<u32>,
+    pub spent_sparks: Vec<Spark>,
+    pub spent_parts: Vec<u32>,
+    pub progress: u32,
+    pub minted: u32,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -349,6 +419,9 @@ pub struct Experiment {
     pub activation_fuel: u32,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub construction: Option<ConstructionSpec>,
+    /// Declared industry; empty keeps habitat-v1..v4 bytes unchanged.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub facilities: Vec<FacilityDecl>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -415,6 +488,8 @@ pub struct CellState {
     pub inbox: [Option<Signal>; 4],
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub material: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub part: Option<u32>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -468,6 +543,9 @@ pub struct State {
     pub closed_edges: Vec<Edge>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub construction: Option<ConstructionState>,
+    /// Declared facilities plus sites admitted by living-world commands.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub facilities: Vec<FacilityState>,
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

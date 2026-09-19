@@ -1,9 +1,13 @@
 use crate::construction_fixtures::{BLUEPRINT, BUILDER, CHILD, STOCK};
-use crate::fixtures::compact_courier;
 use crate::model::*;
 
 pub const LOWER_BLUEPRINT: u16 = 51;
 pub const LOWER_CHILD: u16 = 4;
+pub const HAULER: u16 = 2;
+pub const EAST_DEPOSIT: u16 = 61;
+pub const SOUTH_DEPOSIT: u16 = 62;
+pub const FABRICATOR: u16 = 90;
+pub const STOREHOUSE: u16 = 91;
 
 fn rule(when: Vec<Condition>, action: Action) -> Rule {
     Rule {
@@ -11,6 +15,153 @@ fn rule(when: Vec<Condition>, action: Action) -> Rule {
         action,
         remember: None,
     }
+}
+
+/// Wall-slider movement: run straight until blocked, then turn to slide
+/// along the face. A wall-follow preference rule spins forever in open
+/// ground; this survey pattern crosses open ground and circulates the rim,
+/// so perimeter stations are reached in order.
+fn slider_rules() -> Vec<Rule> {
+    vec![
+        rule(
+            vec![Condition::Blocked {
+                direction: Relative::Forward,
+                value: false,
+            }],
+            Action::Move {
+                direction: Relative::Forward,
+            },
+        ),
+        rule(
+            vec![Condition::Blocked {
+                direction: Relative::Right,
+                value: false,
+            }],
+            Action::Turn {
+                direction: Relative::Right,
+            },
+        ),
+        rule(
+            vec![Condition::Blocked {
+                direction: Relative::Left,
+                value: false,
+            }],
+            Action::Turn {
+                direction: Relative::Left,
+            },
+        ),
+        rule(
+            vec![],
+            Action::Turn {
+                direction: Relative::Back,
+            },
+        ),
+    ]
+}
+
+fn service_rules() -> Vec<Rule> {
+    vec![
+        rule(
+            vec![
+                Condition::AtReceiver { value: true },
+                Condition::Carrying { value: true },
+            ],
+            Action::Drop,
+        ),
+        rule(
+            vec![
+                Condition::AtSource { value: true },
+                Condition::Carrying { value: false },
+            ],
+            Action::Pickup,
+        ),
+    ]
+}
+
+/// The beacon courier: spark service plus the wall slider.
+pub fn surveyor_program() -> Program {
+    let mut rules = service_rules();
+    rules.extend(slider_rules());
+    Program { rules }
+}
+
+/// The general-purpose supply-chain program every Dustlight hauler runs:
+/// parts go only to unfinished sites, material goes to any facility that
+/// needs it, sparks fuel facilities and beacons, and deposits are gathered
+/// on sight. Withdrawal is left to agent-written programs, so the default
+/// loop never ping-pongs items back and forth on one tile.
+pub fn hauler_program() -> Program {
+    let mut rules = vec![
+        rule(
+            vec![
+                Condition::HasPart { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Part,
+                    value: true,
+                },
+                Condition::FacilityReady { value: false },
+            ],
+            Action::Supply {
+                item: ItemKind::Part,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasPart { value: false },
+                Condition::AtFacility { value: true },
+                Condition::FacilityHas {
+                    item: ItemKind::Part,
+                    value: true,
+                },
+            ],
+            Action::Fetch {
+                item: ItemKind::Part,
+            },
+        ),
+        rule(
+            vec![
+                Condition::HasMaterial { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Material,
+                    value: true,
+                },
+            ],
+            Action::Supply {
+                item: ItemKind::Material,
+            },
+        ),
+        rule(
+            vec![
+                Condition::AtStock { value: true },
+                Condition::HasMaterial { value: false },
+            ],
+            Action::Gather,
+        ),
+        rule(
+            vec![
+                Condition::Carrying { value: true },
+                Condition::AtFacility { value: true },
+                Condition::FacilityNeeds {
+                    item: ItemKind::Spark,
+                    value: true,
+                },
+            ],
+            Action::Supply {
+                item: ItemKind::Spark,
+            },
+        ),
+        rule(
+            vec![
+                Condition::AtSource { value: true },
+                Condition::Carrying { value: false },
+            ],
+            Action::Pickup,
+        ),
+    ];
+    rules.extend(slider_rules());
+    Program { rules }
 }
 
 pub fn builder_program(blueprint: u16) -> Result<Program, String> {
@@ -48,87 +199,101 @@ pub fn builder_program(blueprint: u16) -> Result<Program, String> {
     })
 }
 
+fn courier(id: u16, position: Point, heading: Direction, program: Program) -> Cell {
+    Cell {
+        id,
+        position,
+        heading,
+        mobile: true,
+        memory: [0; 4],
+        program,
+    }
+}
+
+/// Dustlight: one open 24×14 region. The west edge holds the homestead — a
+/// light source, a working fabricator, and the home beacon. The east edge
+/// holds a second light field and an outpost beacon that dies in a few
+/// hundred ticks without a supply line. Material deposits sit on the north
+/// and south rims; a storehouse guards the midland ridge. Two interior
+/// ridges shape routes without sealing the map.
 pub fn homestead() -> Experiment {
-    let mut walls = Vec::new();
-    for x in 0..12 {
-        walls.push(Point { x, y: 2 });
-        if x != 2 {
-            walls.push(Point { x, y: 4 });
+    let walls = {
+        let mut walls = Vec::new();
+        for y in 3..=9 {
+            walls.push(Point { x: 8, y });
         }
-        walls.push(Point { x, y: 6 });
-    }
-    for y in [3, 5] {
-        walls.push(Point { x: 0, y });
-        walls.push(Point { x: 11, y });
-    }
-    let sparks = |start: u32| {
-        (start..start + 32)
+        for x in 12..=20 {
+            walls.push(Point { x, y: 10 });
+        }
+        walls.push(Point { x: 14, y: 4 });
+        walls.push(Point { x: 15, y: 4 });
+        walls.push(Point { x: 14, y: 5 });
+        walls
+    };
+    let sparks = |start: u32, count: u32| {
+        (start..start + count)
             .map(|id| Spark { id, bit: false })
             .collect()
     };
-    let courier = |id, y| Cell {
-        id,
-        position: Point {
-            x: if id == 1 { 1 } else { 2 },
-            y,
-        },
-        heading: if id == 1 {
-            Direction::East
-        } else {
-            Direction::West
-        },
-        mobile: true,
-        memory: [0; 4],
-        program: compact_courier(),
-    };
     Experiment {
-        version: CONSTRUCTION_VERSION,
+        version: INDUSTRY_VERSION,
         seed: 74,
-        width: 12,
-        height: 9,
+        width: 24,
+        height: 14,
         walls,
         sources: vec![
             Source {
                 id: 0,
-                position: Point { x: 1, y: 5 },
-                sparks: sparks(1),
+                position: Point { x: 0, y: 1 },
+                sparks: sparks(1, 64),
             },
             Source {
                 id: 1,
-                position: Point { x: 1, y: 3 },
-                sparks: sparks(33),
+                position: Point { x: 23, y: 3 },
+                sparks: sparks(65, 48),
             },
         ],
         depots: Vec::new(),
         beacons: vec![
             Beacon {
                 id: 0,
-                position: Point { x: 10, y: 5 },
+                position: Point { x: 0, y: 11 },
                 accepts: false,
-                initial_charge: 20,
-                drain_every: 16,
+                initial_charge: 48,
+                drain_every: 24,
                 drain_amount: 1,
-                spark_charge: 6,
+                spark_charge: 8,
                 required_deliveries: 0,
             },
             Beacon {
                 id: 1,
-                position: Point { x: 10, y: 3 },
+                position: Point { x: 23, y: 9 },
                 accepts: false,
-                initial_charge: 20,
+                initial_charge: 40,
                 drain_every: 16,
                 drain_amount: 1,
-                spark_charge: 6,
+                spark_charge: 8,
                 required_deliveries: 0,
             },
         ],
         valves: Vec::new(),
         cells: vec![
-            courier(1, 5),
+            courier(
+                1,
+                Point { x: 0, y: 1 },
+                Direction::South,
+                surveyor_program(),
+            ),
+            courier(
+                HAULER,
+                Point { x: 3, y: 1 },
+                Direction::East,
+                hauler_program(),
+            ),
             Cell {
                 id: BUILDER,
-                position: Point { x: 2, y: 4 },
-                heading: Direction::North,
+                position: Point { x: 5, y: 0 },
+                heading: Direction::East,
                 mobile: false,
                 memory: [0; 4],
                 program: builder_program(BLUEPRINT).expect("known homestead blueprint"),
@@ -140,27 +305,61 @@ pub fn homestead() -> Experiment {
         fuel: 2_000_000,
         activation_fuel: 1024,
         construction: Some(ConstructionSpec {
-            stocks: vec![MaterialStock {
-                id: STOCK,
-                position: Point { x: 2, y: 4 },
-                units: vec![1001, 1002],
-            }],
+            stocks: vec![
+                MaterialStock {
+                    id: STOCK,
+                    position: Point { x: 5, y: 0 },
+                    units: (1001..=1008).collect(),
+                },
+                MaterialStock {
+                    id: EAST_DEPOSIT,
+                    position: Point { x: 17, y: 0 },
+                    units: (1009..=1020).collect(),
+                },
+                MaterialStock {
+                    id: SOUTH_DEPOSIT,
+                    position: Point { x: 11, y: 13 },
+                    units: (1021..=1030).collect(),
+                },
+            ],
             blueprints: vec![
                 Blueprint {
                     id: BLUEPRINT,
                     body: BlueprintBody {
-                        cell: courier(CHILD, 3),
+                        cell: courier(
+                            CHILD,
+                            Point { x: 4, y: 0 },
+                            Direction::East,
+                            surveyor_program(),
+                        ),
                         links: Vec::new(),
                     },
                 },
                 Blueprint {
                     id: LOWER_BLUEPRINT,
                     body: BlueprintBody {
-                        cell: courier(LOWER_CHILD, 5),
+                        cell: courier(
+                            LOWER_CHILD,
+                            Point { x: 6, y: 0 },
+                            Direction::East,
+                            hauler_program(),
+                        ),
                         links: Vec::new(),
                     },
                 },
             ],
         }),
+        facilities: vec![
+            FacilityDecl {
+                id: FABRICATOR,
+                kind: FacilityKind::Fabricator,
+                position: Point { x: 0, y: 4 },
+            },
+            FacilityDecl {
+                id: STOREHOUSE,
+                kind: FacilityKind::Storehouse,
+                position: Point { x: 9, y: 6 },
+            },
+        ],
     }
 }

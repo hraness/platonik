@@ -432,6 +432,7 @@ pub fn arithmetic_case(a: u8, b: u8, tap: u8) -> Result<Experiment, String> {
         fuel: FUEL,
         activation_fuel: 128,
         construction: None,
+        facilities: Vec::new(),
     })
 }
 

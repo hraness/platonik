@@ -298,6 +298,7 @@ fn dense_world() -> Experiment {
         fuel: MAX_FUEL,
         activation_fuel: 128,
         construction: None,
+        facilities: vec![],
     }
 }
 
