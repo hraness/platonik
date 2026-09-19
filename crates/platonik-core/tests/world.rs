@@ -153,7 +153,7 @@ fn a_placed_site_consumes_its_bill_and_becomes_ready() {
     let named = world::apply(
         &placed,
         world::Command::Name {
-            facility: 92,
+            facility: 93,
             name: "South Depot".into(),
         },
     )
@@ -163,15 +163,15 @@ fn a_placed_site_consumes_its_bill_and_becomes_ready() {
         .state
         .facilities
         .iter()
-        .find(|facility| facility.id == 92)
+        .find(|facility| facility.id == 93)
         .expect("placed site");
     assert!(!site.ready);
     assert_eq!(
-        report.names.get(&92).map(String::as_str),
+        report.names.get(&93).map(String::as_str),
         Some("South Depot")
     );
-    assert_eq!(report.summary.facilities, 3);
-    assert_eq!(report.summary.ready_facilities, 2);
+    assert_eq!(report.summary.facilities, 4);
+    assert_eq!(report.summary.ready_facilities, 3);
 
     let grown = (0..24).fold(named, |world, _| {
         world::apply(&world, world::Command::Advance { ticks: 64 }).unwrap()
@@ -181,13 +181,13 @@ fn a_placed_site_consumes_its_bill_and_becomes_ready() {
         .state
         .facilities
         .iter()
-        .find(|facility| facility.id == 92)
+        .find(|facility| facility.id == 93)
         .expect("placed site");
     assert!(
         site.ready,
         "site should complete once its bill is supplied: {site:?}"
     );
-    assert_eq!(report.summary.ready_facilities, 3);
+    assert_eq!(report.summary.ready_facilities, 4);
 }
 
 #[test]
@@ -261,5 +261,140 @@ fn placement_and_naming_are_validated() {
             .is_err(),
             "name {name:?} should be rejected"
         );
+    }
+    // a drill belongs on a deposit
+    assert!(
+        world::apply(
+            &origin,
+            world::Command::Place {
+                structure: FacilityKind::Miner,
+                position: Point { x: 12, y: 13 },
+            },
+        )
+        .is_err()
+    );
+    // other structures still refuse deposit tiles
+    assert!(
+        world::apply(
+            &origin,
+            world::Command::Place {
+                structure: FacilityKind::Storehouse,
+                position: Point { x: 11, y: 13 },
+            },
+        )
+        .is_err()
+    );
+    // a drill site admits onto the open south deposit
+    assert!(
+        world::apply(
+            &origin,
+            world::Command::Place {
+                structure: FacilityKind::Miner,
+                position: Point { x: 11, y: 13 },
+            },
+        )
+        .is_ok()
+    );
+}
+
+/// A homestead with one far-away idle cell: extraction runs uncontested, so
+/// cadence, buffer limits, and the deposit ledger are exact.
+fn drilled_world() -> world::World {
+    let mut experiment = world_fixtures::homestead();
+    experiment.cells = vec![platonik_core::model::Cell {
+        id: 7,
+        position: Point { x: 12, y: 12 },
+        heading: platonik_core::model::Direction::North,
+        mobile: true,
+        memory: [0; 4],
+        program: fixtures::idle_program(),
+    }];
+    world::new("Drilled".into(), experiment).unwrap()
+}
+
+#[test]
+fn a_drill_extracts_its_deposit_on_a_deterministic_period() {
+    let origin = drilled_world();
+    let first = world::apply(&origin, world::Command::Advance { ticks: 13 }).unwrap();
+    let report = world::report(&first).unwrap();
+    let miner = report
+        .state
+        .facilities
+        .iter()
+        .find(|facility| facility.id == world_fixtures::MINER)
+        .expect("declared drill");
+    assert_eq!(miner.minted, 1);
+    assert_eq!(miner.materials.len(), 1);
+    assert_eq!(report.summary.material_extracted, 1);
+    let stock = report
+        .state
+        .construction
+        .as_ref()
+        .unwrap()
+        .stocks
+        .iter()
+        .find(|stock| stock.id == world_fixtures::EAST_DEPOSIT)
+        .expect("east deposit");
+    assert_eq!(stock.units.len(), 11);
+    // One unit per period while the deposit lasts; the buffer caps at eight.
+    let grown = (0..7).fold(first, |world, _| {
+        world::apply(&world, world::Command::Advance { ticks: 128 }).unwrap()
+    });
+    let report = world::report(&grown).unwrap();
+    let miner = report
+        .state
+        .facilities
+        .iter()
+        .find(|facility| facility.id == world_fixtures::MINER)
+        .expect("declared drill");
+    assert_eq!(miner.materials.len(), 8);
+    assert_eq!(miner.minted, 8);
+    let stock = report
+        .state
+        .construction
+        .as_ref()
+        .unwrap()
+        .stocks
+        .iter()
+        .find(|stock| stock.id == world_fixtures::EAST_DEPOSIT)
+        .expect("east deposit");
+    // The buffer filled before the deposit emptied: four units remain.
+    assert_eq!(stock.units.len(), 4);
+    assert_eq!(report.summary.parts_minted, 0);
+}
+
+#[test]
+fn facility_inputs_and_outputs_follow_their_kind() {
+    use platonik_core::industry;
+    use platonik_core::model::{FacilityState, ItemKind};
+    let ready = |kind, materials: Vec<u32>| FacilityState {
+        id: 1,
+        kind,
+        position: Point { x: 0, y: 0 },
+        ready: true,
+        needed_material: 0,
+        needed_part: 0,
+        materials,
+        sparks: Vec::new(),
+        parts: Vec::new(),
+        spent_materials: Vec::new(),
+        spent_sparks: Vec::new(),
+        spent_parts: Vec::new(),
+        progress: 0,
+        minted: 0,
+    };
+    let miner = ready(FacilityKind::Miner, vec![1]);
+    for item in [ItemKind::Spark, ItemKind::Material, ItemKind::Part] {
+        assert!(!industry::needs(&miner, item));
+    }
+    assert!(industry::has(&miner, ItemKind::Material));
+    assert!(!industry::has(&miner, ItemKind::Part));
+    let fabricator = ready(FacilityKind::Fabricator, Vec::new());
+    assert!(industry::needs(&fabricator, ItemKind::Spark));
+    assert!(industry::needs(&fabricator, ItemKind::Material));
+    assert!(!industry::needs(&fabricator, ItemKind::Part));
+    let storehouse = ready(FacilityKind::Storehouse, Vec::new());
+    for item in [ItemKind::Spark, ItemKind::Material, ItemKind::Part] {
+        assert!(industry::needs(&storehouse, item));
     }
 }

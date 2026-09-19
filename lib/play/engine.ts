@@ -252,6 +252,7 @@ export interface WorldSummary {
   ready_facilities: number;
   facility_sparks: number;
   parts_minted: number;
+  material_extracted: number;
   carried_parts: number;
 }
 

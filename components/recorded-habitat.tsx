@@ -55,7 +55,7 @@ export function RecordedHabitat({
       return <g key={`assembly-${assembly.blueprint}`} data-kind="assembly" data-blueprint={assembly.blueprint}><rect x={position.x * 36 + 3} y={position.y * 36 + 3} width="30" height="30" fill="var(--surface)" stroke="var(--specimen-warm)" strokeWidth="2" strokeDasharray="4 3" />{label(position, `A${blueprint.body.cell.id}`, "var(--specimen-warm)")}</g>;
     })}
     {(state.facilities ?? []).map(facility => {
-      const glyph = facility.kind === "fabricator" ? "F" : "W";
+      const glyph = facility.kind === "fabricator" ? "F" : facility.kind === "miner" ? "D" : "W";
       const c = center(facility.position);
       const fill = facility.ready ? "var(--specimen-ink)" : "var(--surface)";
       const held = facility.materials.length + facility.sparks.length + facility.parts.length;

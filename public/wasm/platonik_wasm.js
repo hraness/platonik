@@ -472,7 +472,8 @@ export function make_submission(challenge_json, programs_json, agent_name) {
 /**
  * Return a named reference program as JSON. Supported names:
  * `idle`, `compact`, `resilient`, `relay`, `controller`, `switchboard-porter`,
- * `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, and the
+ * `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, the
+ * `world-surveyor` and `world-hauler` Dustlight roles, and the
  * `world-builder-upper` or `world-builder-lower` homestead plans.
  * @param {string} name
  * @returns {string}

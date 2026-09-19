@@ -38,7 +38,7 @@ export default function HomePage() {
             <Link href="/play#world-agent-title">Set it up with your agent</Link>
           </div>
           <p className="status-note">
-            The living-world protocol is available now: one persistent homestead with a working fabricator, repeatable production, placed construction sites, recorded policy changes, and content-addressed browser views.
+            The living-world protocol is available now: one persistent homestead with a working fabricator, an automated deposit drill, repeatable production, placed construction sites, recorded policy changes, and content-addressed browser views.
           </p>
         </section>
       </div>

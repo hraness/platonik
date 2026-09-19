@@ -114,7 +114,8 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     | Condition::AtFacility { .. }
                     | Condition::FacilityReady { .. }
                     | Condition::FacilityNeeds { .. }
-                    | Condition::FacilityHas { .. } => experiment.version >= INDUSTRY_VERSION,
+                    | Condition::FacilityHas { .. }
+                    | Condition::FacilityIs { .. } => experiment.version >= INDUSTRY_VERSION,
                     Condition::AssemblyStage { blueprint, .. } => {
                         experiment.version >= CONSTRUCTION_VERSION
                             && experiment.construction.as_ref().is_some_and(|spec| {
@@ -399,18 +400,26 @@ pub fn validate_experiment(experiment: &Experiment) -> Result<(), String> {
                 && positions.insert((facility.position.x, facility.position.y)),
             "Facilities need distinct open positions away from stations and cells.",
         )?;
+        let on_stock = experiment
+            .construction
+            .iter()
+            .flat_map(|spec| spec.stocks.iter())
+            .any(|stock| stock.position == facility.position);
+        require(
+            (facility.kind == FacilityKind::Miner) == on_stock,
+            "A drill must sit on a material deposit; other facilities cannot.",
+        )?;
         require(
             experiment
                 .construction
                 .iter()
-                .flat_map(|spec| spec.stocks.iter().map(|stock| stock.position))
-                .chain(experiment.construction.iter().flat_map(|spec| {
+                .flat_map(|spec| {
                     spec.blueprints
                         .iter()
                         .map(|blueprint| blueprint.body.cell.position)
-                }))
+                })
                 .all(|point| point != facility.position),
-            "A facility cannot overlap a material stock or blueprint reservation.",
+            "A facility cannot overlap a blueprint reservation.",
         )?;
     }
     Ok(())
@@ -879,10 +888,10 @@ fn advance_ticks(
             // Facilities run once per tick after cells act: the modeled work is
             // charged before mutation so an exhausted step leaves either an
             // untouched or a fully processed set, never a partial recipe.
-            let (facility_checking, facility_work) = crate::industry::tick_work(&state);
+            let (facility_checking, facility_work) = crate::industry::tick_work(experiment, &state);
             meter.charge(Cat::Checking, facility_checking)?;
             meter.charge(Cat::Construction, facility_work)?;
-            crate::industry::tick(&mut state);
+            crate::industry::tick(experiment, &mut state);
             for (index, beacon) in experiment.beacons.iter().enumerate() {
                 meter.charge(Cat::Checking, 1)?;
                 if tick % beacon.drain_every == 0 {

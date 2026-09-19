@@ -8,7 +8,7 @@ const PROMPT = `Play Platonik with me as my world-building agent.
 
 1. Clone https://github.com/hraness/platonik, build the CLI, and read skills/platonik-play/SKILL.md.
 2. Run \`platonik world new Dustlight > dustlight-r0.world.json\`, then inspect it with \`platonik world report dustlight-r0.world.json\`.
-3. Preserve that file. Apply one bounded command to a new file: advance 1–128 ticks, change one admitted creature program, place a fabricator or storehouse site on an open tile, or name a facility — then advance so I can watch the consequence. Explain what physically changed in plain language rather than leading with hashes or metrics.
+3. Preserve that file. Apply one bounded command to a new file: advance 1–128 ticks, change one admitted creature program, place a fabricator or storehouse site on an open tile or a drill on a material deposit, or name a facility — then advance so I can watch the consequence. Explain what physically changed in plain language rather than leading with hashes or metrics.
 4. Run \`platonik world link <new-world-file>\` and send me its URL. I will watch the exact recomputed world in the browser and tell you what we should build or improve next.
 
 Never overwrite an earlier world file or hide a failed attempt. Keep external-agent effort separate from modeled world work. Ask me about consequential choices—resilient versus efficient, preserve a favorite versus replace its role, improve home versus explore farther—but handle routine CLI details yourself.`;

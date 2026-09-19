@@ -1291,7 +1291,7 @@ fn validate_action_effects(
     // mutation, so an interrupted tick leaves either the untouched or the
     // fully processed set.
     let before_tick = expected.facilities.clone();
-    crate::industry::tick(&mut expected);
+    crate::industry::tick(experiment, &mut expected);
     ensure(
         expected.facilities == frame.state.facilities
             || (!frame.complete && before_tick == frame.state.facilities),
