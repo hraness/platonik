@@ -12,7 +12,9 @@ The Rust executable owns genomes, simulation, random seeds, costs, saves, and ou
 
 Do not embed an LLM in each cell. The organism is a small executable policy; the external agent is the scientist controlling the laboratory. A submitted organism must function when the scientist is disconnected.
 
-Use one Cargo workspace with a small library and CLI at first. Keep the deterministic interpreter, simulation, checker, and persistence behind distinct module boundaries. A hosted evaluator can reuse them later; no service, account, model provider, or Oh installation should be needed for the first local episode.
+Algal is now the optional planner runtime at the CLI boundary, not a second simulation authority. Its bounded organism receives a read-only projection and emits one untrusted command proposal. Platonik replays the Algal receipt, binds it to the exact world view, parses the output through the strict command type, and runs normal admission before an event can enter history. A scripted executor proves the path offline; an `algal.host.v1` configuration can explicitly opt into a generative provider. Provider output and receipts never replace Platonik's checker, conservation rules, or replay.
+
+Keep the deterministic interpreter, simulation, checker, and persistence behind distinct module boundaries. The core and WASM renderer do not depend on Algal; only the native agent-facing CLI does. No service, account, model provider, or Algal executor is needed for the first local episode.
 
 ## The first world: keep the beacon alight
 
@@ -56,10 +58,12 @@ The implemented agent loop uses immutable JSON revisions:
 platonik world new Dustlight
 platonik world report dustlight-r0.world.json
 platonik world act dustlight-r0.world.json advance.json
+platonik world propose dustlight-r0.world.json --responses responses.json
+platonik world accept dustlight-r0.world.json proposal.json
 platonik world link dustlight-r1.world.json
 ```
 
-`act` accepts a 1–128-tick advance, a complete admitted policy replacement for an original cell, a `place` command that opens a fabricator or storehouse construction site on an open tile — or a drill on a material deposit — or a `name` command that labels a facility. None of these move time. Each world records its genesis and intervention/advance endpoints; report and browser rendering freshly replay that compact history. The initial protocol permits 4,096 ticks and 128 events while retaining the engine's 16-cell, local-sensing, material, and execution limits.
+`act` accepts a 1–128-tick advance, a complete admitted policy replacement for an original cell, a `place` command that opens a fabricator or storehouse construction site on an open tile — or a drill on a material deposit — or a `name` command that labels a facility. Program changes, placement, and naming do not move time; an advance does. `propose` runs the fixed Algal planner with either deterministic responses or an explicitly configured provider and returns a receipt-bound proposal without changing the world. `accept` independently replays that receipt and applies its one admitted command. Each world records only its genesis and accepted intervention/advance endpoints; report and browser rendering freshly replay that compact history. The initial protocol permits 4,096 ticks and 128 events while retaining the engine's 16-cell, local-sensing, material, and execution limits.
 
 Dustlight now runs a repeatable industry loop: the declared fabricator turns one material plus one spark into a unique part every six ticks, the storehouse buffers all three item kinds, a declared drill pulls one unit from the northeast deposit every twelve ticks, and haulers gather deposits, collect drill output, and run supply/fetch routes. Placed sites open unready with a construction bill — storehouse 2 material + 1 part, fabricator 3 material + 2 parts, drill 2 material + 1 part — and become ready only when creatures physically supply it. A drill is the only structure allowed on a deposit, and it must sit on one; the `facility_is` condition lets programs distinguish drills, fabricators, and storehouses. What remains bounded: three facility kinds, one recipe, finite deposits, and no free-form structures, automatic search, or complete Long Trail.
 

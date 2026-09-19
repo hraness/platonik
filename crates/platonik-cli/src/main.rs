@@ -11,6 +11,7 @@ use std::path::Path;
 use std::process::ExitCode;
 use std::time::Instant;
 
+mod algal_agent;
 mod expedition_store;
 mod habitat_store;
 mod journal;
@@ -216,7 +217,14 @@ const WORLD_HELP: &str = "Persistent Platonik automation worlds\n\n\
                                               Apply one bounded command\n\
   platonik world program <plan>               Print a stock policy: surveyor,\n\
                                               hauler, upper, or lower\n\
-  platonik world link <world.json|->         Print a content-addressed browser view\n\
+  platonik world organism                     Print the bounded Algal planner organism\n\
+  platonik world propose <world.json> --responses <responses.json|->\n\
+                                              Run it with deterministic responses\n\
+  platonik world propose <world.json> --host <host.json|->\n\
+                                              Run it with an optional model provider\n\
+  platonik world accept <world.json> <proposal.json|->\n\
+                                              Verify and apply one proposal\n\
+  platonik world link <world.json|->           Print a content-addressed browser view\n\
   platonik world open-link <url>              Recover and verify its compact world JSON\n\n\
 Commands are {\"kind\":\"advance\",\"ticks\":32},\n\
 {\"kind\":\"set_program\",\"cell\":1,\"program\":{...}},\n\
@@ -229,8 +237,11 @@ runs 1–128 ticks; the first protocol is capped at 4,096 ticks and 128 events.\
 Place a fabricator or storehouse on an open tile, or a miner on a material\n\
 deposit: cells must supply its construction bill (material and parts) before\n\
 it becomes ready. A ready drill pulls one unit from its deposit every 12\n\
-ticks into a fetchable buffer. Use a new\n\
-output filename for act; shell redirection can truncate its input before\n\
+ticks into a fetchable buffer. An Algal proposal is read-only until accept; it\n\
+binds the world hash and revision to a replayable provider receipt, then passes\n\
+the proposed command through normal world admission. --host reads an\n\
+algal.host.v1 config; provider credentials stay at Algal's environment boundary.\n\
+Use a new output filename for act; shell redirection can truncate its input before\n\
 Platonik reads it. The browser link contains the compact world history,\n\
 verifies its content hash, and renders the same recomputed state. The browser\n\
 is a viewer; use your agent and this command surface to change or advance the\n\
@@ -951,6 +962,30 @@ fn execute_world(args: &[String]) -> Result<u8, Failure> {
                 }
             };
             print_json(&program)?;
+            Ok(0)
+        }
+        [command] if command == "organism" => {
+            print_json(&algal_agent::organism().map_err(error)?)?;
+            Ok(0)
+        }
+        [command, path, mode, input]
+            if command == "propose" && path != "-" && mode == "--responses" =>
+        {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let responses = read_json(input, algal_agent::MAX_CONFIG_BYTES)?;
+            print_json(&algal_agent::propose_scripted(&value, responses).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, path, mode, input] if command == "propose" && path != "-" && mode == "--host" => {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let config = read_json(input, algal_agent::MAX_CONFIG_BYTES)?;
+            print_json(&algal_agent::propose_configured(&value, &config).map_err(error)?)?;
+            Ok(0)
+        }
+        [command, path, input] if command == "accept" && path != "-" => {
+            let value: world::World = read_json(path, world::MAX_WORLD_BYTES as u64)?;
+            let proposal = read_json(input, algal_agent::MAX_PROPOSAL_BYTES)?;
+            print_json(&algal_agent::accept(&value, &proposal).map_err(error)?)?;
             Ok(0)
         }
         [command, path] if command == "report" => {
