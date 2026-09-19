@@ -272,6 +272,19 @@ export interface WorldReport {
   recent_frames: Frame[];
   summary: WorldSummary;
   names: Record<string, string>;
+  industry: FacilityDiagnostic[];
+  industry_frames: { tick: number; facilities: FacilityDiagnostic[] }[];
+}
+
+export type IndustryItem = "material" | "spark" | "part" | "frame";
+export type ItemAmount = { item: IndustryItem; quantity: number };
+export interface FacilityDiagnostic {
+  id: number;
+  status: "construction" | "working" | "waiting_inputs" | "output_full" | "exhausted" | "ready" | "storage" | "waiting_transfer" | "mint_limit";
+  remaining_ticks: number;
+  missing_inputs: ItemAmount[];
+  recipe: { inputs: ItemAmount[]; output: ItemAmount; ticks: number } | null;
+  transfer: { source: number; destination: number; item: IndustryItem } | null;
 }
 
 export interface VerificationReport {
