@@ -191,6 +191,55 @@ fn a_placed_site_consumes_its_bill_and_becomes_ready() {
 }
 
 #[test]
+fn stock_hauler_carries_parts_past_storage_to_unfinished_construction() {
+    let mut experiment = world_fixtures::homestead();
+    experiment
+        .cells
+        .retain(|cell| cell.id == world_fixtures::HAULER);
+    experiment.cells[0].position = Point { x: 0, y: 0 };
+    experiment.cells[0].heading = platonik_core::model::Direction::South;
+    experiment.construction.as_mut().unwrap().stocks[0].position = Point { x: 0, y: 2 };
+    experiment
+        .facilities
+        .iter_mut()
+        .find(|facility| facility.id == world_fixtures::STOREHOUSE)
+        .unwrap()
+        .position = Point { x: 0, y: 6 };
+    let origin = world::new("Parts route".into(), experiment).unwrap();
+    let placed = world::apply(
+        &origin,
+        world::Command::Place {
+            structure: FacilityKind::Storehouse,
+            position: Point { x: 0, y: 8 },
+        },
+    )
+    .unwrap();
+    let grown = world::apply(&placed, world::Command::Advance { ticks: 128 }).unwrap();
+    let report = world::report(&grown).unwrap();
+    assert!(
+        report.recent_frames.iter().any(|frame| {
+            frame.state.cells.iter().any(|cell| {
+                cell.id == world_fixtures::HAULER
+                    && cell.position == (Point { x: 0, y: 6 })
+                    && cell.part.is_some()
+            })
+        }),
+        "the hauler must pass through ready storage carrying a produced part"
+    );
+    let site = report
+        .state
+        .facilities
+        .iter()
+        .find(|facility| facility.id == 93)
+        .unwrap();
+    assert_eq!(
+        site.needed_part, 0,
+        "the hauler must carry its part onward to construction"
+    );
+    assert_eq!(site.spent_parts.len(), 1);
+}
+
+#[test]
 fn placement_and_naming_are_validated() {
     let origin = world::new("Dustlight".into(), world_fixtures::homestead()).unwrap();
     // out of bounds

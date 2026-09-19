@@ -24,11 +24,11 @@ Build a living automation world with your AI agent. Describe an ambition, watch 
 
 ## Capabilities and Constraints
 
-The implemented Dustlight protocol carries one compact Rust world through content-addressed event history, 1–128-tick advances, original-cell policy interventions, finite resources, and a two-blueprint foundry. `/play` recomputes and renders world history without exposing mutation controls. The CLI and play skill are the agent-facing interface. The earlier observatory, challenge seasons, expeditions, and journeys remain evidence and reference surfaces. Repeatable production, arbitrary building placement, larger regions, moving arks, and the complete campaign are not implemented.
+Dustlight carries one 24×14 Rust world through immutable event history, 1–128-tick advances, original-cell policy changes, finite resources, and a two-blueprint foundry. Five facility kinds support extraction, storage, part and frame recipes, supplied construction sites, and automatic crane transfer. `/play` recomputes the history and lets the player inspect facilities and replay their work without changing the world. The CLI and play skill are the agent-facing interface; an optional Algal planner selects from admitted actions. The current envelope is 4,096 ticks, 128 events, 16 cells, and 12 facilities. Larger regions, reusable player-authored construction blueprints, moving arks, and the complete campaign remain proposed. Earlier laboratories and seasons remain evidence and reference surfaces.
 
 ## Brand Commitments
 
-User-confirmed name: Platonik. Domain: platonik.space. Public repository: hraness/platonik. Keep the website minimally styled. Universal Paperclips supplies inspiration for changes of scale, not copied art or text.
+User-confirmed name: Platonik. Domain: platonik.space. Public repository: hraness/platonik. Keep the surrounding interface quiet and the world visually expressive. Universal Paperclips supplies inspiration for changes of scale, not copied art or text.
 
 ## Evidence on Hand
 
@@ -60,4 +60,4 @@ Single-player laboratories can participate in a proposed multiplayer expedition 
 
 ## Open Decisions
 
-The next product gate is repeatable production and construction in the persistent world, followed by reusable blueprints and additional sites. Map scale, recipe balance, larger-world storage, campaign structure, and optional competition remain open until the small automation loop is enjoyable.
+The next product gate is a legible production loop: the player can identify a waiting facility, see its missing supply, ask the agent for a specific change, and inspect the result in the same world. The [living-world plan](docs/living-world-plan.md) separates the implemented foundation from proposed routing, progression, and scale work. Recipe balance, larger-world storage, campaign structure, and optional competition remain open until that small loop is enjoyable.

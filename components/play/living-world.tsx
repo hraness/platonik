@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { engine, loadEngine, type LivingWorld, type WasmModule, type WorldReport } from "@/lib/play/engine";
 import { latestWorld, saveWorld } from "@/lib/play/saves";
-import { unpackWorld } from "@/lib/play/world-url";
+import { packWorld, unpackWorld } from "@/lib/play/world-url";
 import { WorldStage } from "./world-stage";
 
 export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
@@ -16,6 +16,9 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
   const [error, setError] = useState("");
   const [importError, setImportError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState("");
+  const [question, setQuestion] = useState("");
+  const [handoff, setHandoff] = useState<{ hash: string; url: string | null }>();
   const packed = searchParams.get("world");
 
   useEffect(() => {
@@ -64,21 +67,45 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
     }
   }, [report]);
 
+  useEffect(() => {
+    if (!world || !report) return;
+    let cancelled = false;
+    setHandoff(undefined);
+    setQuestion("");
+    setCopied(false);
+    setCopyError("");
+    void packWorld(world).then((packed) => {
+      if (!cancelled) setHandoff({ hash: report.world_hash, url: `https://platonik.space/play/w/${report.world_hash}?world=${packed}` });
+    }).catch(() => {
+      if (!cancelled) setHandoff({ hash: report.world_hash, url: null });
+    });
+    return () => { cancelled = true; };
+  }, [world, report]);
+
   const agentPrompt = useMemo(() => {
-    if (!report) return "";
-    const context = expectedHash && typeof window !== "undefined"
-      ? `Continue this exact world view with \`platonik world open-link '${window.location.href}' > continued.world.json\`.`
-      : "Start a new living world for me with `platonik world new`, or continue the world JSON I attach.";
-    return `Play Platonik with me. ${context}\n\nClone https://github.com/hraness/platonik and read skills/platonik-play/SKILL.md. Inspect the world before changing it. Preserve the existing save, make one understandable improvement or expansion within a bounded run, explain what changed in plain language, then use \`platonik world link\` to send me the updated browser view. The browser is only the renderer; keep the authoritative JSON world in the local checkout. Current view: ${report.name}, revision ${report.revision}, tick ${report.tick}, hash ${report.world_hash}.`;
-  }, [expectedHash, report]);
+    if (!report || handoff?.hash !== report.world_hash) return "";
+    const context = handoff.url
+      ? `Continue this exact world with \`platonik world open-link '${handoff.url}' > continued.world.json\`.`
+      : "Continue the world JSON I attach. Verify its hash matches the current view below before changing it.";
+    return `Play Platonik with me. ${context}\n\nClone https://github.com/hraness/platonik and read skills/platonik-play/SKILL.md. Inspect the world before changing it. Preserve the existing save, make one understandable improvement within a bounded run, explain what changed in plain language, then use \`platonik world link\` to send me the updated browser view. Keep the authoritative JSON world locally. Current view: ${report.name}, revision ${report.revision}, tick ${report.tick}, hash ${report.world_hash}.${question ? `\n\nMy question: ${question}` : ""}`;
+  }, [handoff, question, report]);
+
+  function askAboutFacility(value: string) {
+    setQuestion(value);
+    setCopied(false);
+    const title = document.getElementById("world-agent-title");
+    title?.focus({ preventScroll: true });
+    title?.scrollIntoView({ block: "start" });
+  }
 
   async function copyPrompt() {
     try {
       await navigator.clipboard.writeText(agentPrompt);
+      setCopyError("");
       setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
     } catch {
       setCopied(false);
+      setCopyError("Copy was unavailable. Open “What the agent receives” below and copy the text.");
     }
   }
 
@@ -114,7 +141,7 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
     return (
       <main id="main" className="world-page">
         <section className="world-error" role="alert">
-          <p className="world-kicker">World unavailable</p>
+
           <h1>This view could not be verified.</h1>
           <p>{error}</p>
           <Link href="/play">Open the homestead</Link>
@@ -128,7 +155,7 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
       <main id="main" className="world-page">
         <header className="world-header">
           <div>
-            <p className="world-kicker">Living world</p>
+
             <h1>Opening the world</h1>
             <p>Recomputing its creatures, supplies, construction, and recent movement.</p>
           </div>
@@ -161,30 +188,31 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
     <main id="main" className="world-page">
       <header className="world-header">
         <div>
-          <p className="world-kicker">Living world · revision {report.revision}</p>
+
           <h1>{report.name}</h1>
           <p>{change} Follow a creature, watch supplies move, then ask your agent what to build next.</p>
         </div>
         <div className="world-identity">
-          <span>Tick {report.tick}</span>
+          <span>Revision {report.revision} · saved at tick {report.tick}</span>
           <span title={report.world_hash}>{report.world_hash.slice(0, 12)}…</span>
           <span>Recomputed locally</span>
         </div>
       </header>
 
-      <WorldStage report={report} />
+      <WorldStage report={report} onAsk={askAboutFacility} />
 
       <section className="world-agent" aria-labelledby="world-agent-title">
         <div>
-          <p className="world-kicker">Your workbench</p>
-          <h2 id="world-agent-title">Explore with your agent.</h2>
+
+          <h2 id="world-agent-title" tabIndex={-1}>Explore with your agent.</h2>
           <p>
             Tell it what you want: a steadier route, another hauler, a new facility, less congestion, or a stranger experiment.
             It changes the checked local world and sends back a new view. This page never edits or advances it.
           </p>
+          {question && <p className="world-question">Your question: {question}</p>}
         </div>
         <div className="world-agent-actions">
-          <button className="lab-button" type="button" onClick={copyPrompt}>
+          <button className="lab-button" type="button" onClick={copyPrompt} disabled={!agentPrompt}>
             {copied ? "Ask copied" : "Copy the agent ask"}
           </button>
           <button className="lab-button secondary" type="button" onClick={downloadWorld}>Download this world</button>
@@ -193,6 +221,9 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
             <input type="file" accept="application/json,.json" onChange={(event) => void openWorld(event.target.files?.[0])} />
           </label>
         </div>
+        {handoff?.url === null && <p>This history is too large for a compact link. Download this world and attach it with your ask.</p>}
+        {copyError && <p className="world-copy-error" role="alert">{copyError}</p>}
+        {copied && <p role="status">Ask copied. Paste it into your agent to continue this world.</p>}
         {importError && <p className="world-import-error" role="alert">{importError}</p>}
         <details>
           <summary>What the agent receives</summary>

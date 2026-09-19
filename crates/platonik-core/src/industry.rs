@@ -360,7 +360,7 @@ pub(crate) fn execute(
 
 /// Whether a miner can move another unit out of its deposit: buffer room and
 /// a non-empty stock under the drill.
-fn can_extract(
+pub(crate) fn can_extract(
     experiment: &Experiment,
     construction: Option<&crate::model::ConstructionState>,
     facility: &FacilityState,
@@ -412,7 +412,7 @@ fn crane_arms(state: &State, position: Point) -> Vec<usize> {
     arms
 }
 
-fn crane_move(state: &State, position: Point) -> Option<(usize, usize, ItemKind)> {
+pub(crate) fn crane_move(state: &State, position: Point) -> Option<(usize, usize, ItemKind)> {
     let arms = crane_arms(state, position);
     for &source in &arms {
         for item in [

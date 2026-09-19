@@ -87,10 +87,11 @@ pub fn surveyor_program() -> Program {
 }
 
 /// The general-purpose supply-chain program every Dustlight hauler runs:
-/// frames and parts go only to unfinished sites, material goes to any facility
-/// that needs it, sparks fuel facilities and beacons, and producer output is
-/// collected. Withdrawal beyond producers is left to agent-written programs,
-/// so the default loop never ping-pongs items back and forth on one tile.
+/// frames go to unfinished sites, parts go to sites and assemblers, material
+/// goes to any facility that needs it, and sparks fuel facilities and beacons.
+/// Producer output is collected; storing or withdrawing finished goods at a
+/// storehouse is left to agent-written programs, so the default loop never
+/// ping-pongs items back and forth on one tile.
 pub fn hauler_program() -> Program {
     let mut rules = vec![
         rule(
@@ -193,26 +194,12 @@ pub fn hauler_program() -> Program {
         ),
         rule(
             vec![
-                Condition::HasPart { value: true },
-                Condition::AtFacility { value: true },
-                Condition::FacilityIs {
-                    structure: FacilityKind::Storehouse,
-                    value: true,
-                },
-                Condition::FacilityNeeds {
-                    item: ItemKind::Part,
-                    value: true,
-                },
-                Condition::FacilityReady { value: true },
-            ],
-            Action::Supply {
-                item: ItemKind::Part,
-            },
-        ),
-        rule(
-            vec![
                 Condition::HasPart { value: false },
                 Condition::AtFacility { value: true },
+                Condition::FacilityIs {
+                    structure: FacilityKind::Fabricator,
+                    value: true,
+                },
                 Condition::FacilityHas {
                     item: ItemKind::Part,
                     value: true,

@@ -153,22 +153,31 @@ marketing bundles remain independently checked under `vendor/`.
 
 ## Living world renderer
 
-`/play` is a world-first Operate surface. The map occupies the dominant visual
-plane, followed by one compact timeline, a plain-language moment readout, and a
-selection inspector. Program editors, challenge grids, scoreboards, and track
-pickers do not appear in the primary game. They remain in the archived
+`/play` is a world-first Operate surface. A large Rust-derived map and compact
+timeline sit beside a 320px workshop on desktop. Below 800px, the workshop moves
+under the map. The restrained shared palette, Nebula Sans controls, and
+Newsreader page title preserve the existing visual identity; flat reading
+planes and fine dividers replace floating counter pills.
+
+The page opens on the latest settled revision. Replay changes the map, route
+counts, facility status, and inspector together. A placement without a time
+advance gets a display-only current view; it does not invent an engine tick or
+rewrite historical frames. Facility buttons provide full-size selection
+targets on mobile; map facilities and creatures also support keyboard selection.
+Recipe inputs, output, remaining construction bills, and observed production
+blockers come from the Rust report. Cycle countdowns do not promise successful
+future transfers.
+
+The inspector offers one focused question for the player's external agent.
+The handoff carries a content-addressed link to the exact loaded world; when
+the history exceeds the compact link limit, it asks for the downloaded JSON.
+Changing selection, inspecting, replaying, and copying an ask do not mutate the
+world. Program editors, challenge grids, and scoreboards stay in the archived
 `/play/lab` engineering surface.
 
-The renderer uses only Rust-derived experiments, states, frames, and summaries.
-Cargo, construction, active cells, walls, source stock, beacon charge, and
-selection use the shared semantic palette plus textual labels. Appearance does
-not enter the world hash or execution. Pan-by-overflow, playback, scrubbing,
-entity selection, file opening, and export do not mutate the world.
-
-The agent handoff is the only primary action. Shared `.lab-button` presentation
-must produce the same foreground, hover, focus, target, and text-decoration
-behavior on buttons, anchors, and file labels; route-specific CSS may arrange
-those controls but must not redefine their state colors.
+Shared `.lab-button` styles govern action colors, hover, and focus across
+buttons, anchors, and file labels. Route CSS arranges controls without redefining
+their shared state colors. Appearance never enters simulation or world identity.
 
 ## Shared marketing surface
 
