@@ -564,6 +564,7 @@ pub(super) fn apply(
                     inbox: [None, None, None, None],
                     material: None,
                     part: None,
+                    frame: None,
                 });
                 state
                     .links

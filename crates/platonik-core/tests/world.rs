@@ -63,7 +63,7 @@ fn the_foundry_can_redirect_remaining_material_into_more_capacity() {
         },
     )
     .unwrap();
-    let expanded = world::apply(&redirected, world::Command::Advance { ticks: 64 }).unwrap();
+    let expanded = world::apply(&redirected, world::Command::Advance { ticks: 128 }).unwrap();
     let report = world::report(&expanded).unwrap();
     assert_eq!(report.summary.constructed_cells, 2);
     assert_eq!(report.summary.cells, 5);
@@ -374,17 +374,26 @@ fn facility_inputs_and_outputs_follow_their_kind() {
         ready: true,
         needed_material: 0,
         needed_part: 0,
+        needed_frame: 0,
         materials,
         sparks: Vec::new(),
         parts: Vec::new(),
+        frames: Vec::new(),
         spent_materials: Vec::new(),
         spent_sparks: Vec::new(),
         spent_parts: Vec::new(),
+        spent_frames: Vec::new(),
         progress: 0,
         minted: 0,
     };
+    let items = [
+        ItemKind::Spark,
+        ItemKind::Material,
+        ItemKind::Part,
+        ItemKind::Frame,
+    ];
     let miner = ready(FacilityKind::Miner, vec![1]);
-    for item in [ItemKind::Spark, ItemKind::Material, ItemKind::Part] {
+    for item in items {
         assert!(!industry::needs(&miner, item));
     }
     assert!(industry::has(&miner, ItemKind::Material));
@@ -393,8 +402,18 @@ fn facility_inputs_and_outputs_follow_their_kind() {
     assert!(industry::needs(&fabricator, ItemKind::Spark));
     assert!(industry::needs(&fabricator, ItemKind::Material));
     assert!(!industry::needs(&fabricator, ItemKind::Part));
+    assert!(!industry::needs(&fabricator, ItemKind::Frame));
+    let assembler = ready(FacilityKind::Assembler, Vec::new());
+    assert!(industry::needs(&assembler, ItemKind::Spark));
+    assert!(industry::needs(&assembler, ItemKind::Material));
+    assert!(industry::needs(&assembler, ItemKind::Part));
+    assert!(!industry::needs(&assembler, ItemKind::Frame));
+    let crane = ready(FacilityKind::Crane, Vec::new());
+    for item in items {
+        assert!(!industry::needs(&crane, item));
+    }
     let storehouse = ready(FacilityKind::Storehouse, Vec::new());
-    for item in [ItemKind::Spark, ItemKind::Material, ItemKind::Part] {
+    for item in items {
         assert!(industry::needs(&storehouse, item));
     }
 }

@@ -110,6 +110,7 @@ pub(crate) fn validate_program(experiment: &Experiment, program: &Program) -> Re
                     }
                     Condition::HasMaterial { .. } => experiment.version >= CONSTRUCTION_VERSION,
                     Condition::HasPart { .. }
+                    | Condition::HasFrame { .. }
                     | Condition::AtStock { .. }
                     | Condition::AtFacility { .. }
                     | Condition::FacilityReady { .. }
@@ -560,6 +561,7 @@ fn initial_state(experiment: &Experiment) -> State {
                 inbox: std::array::from_fn(|_| None),
                 material: None,
                 part: None,
+                frame: None,
             })
             .collect(),
         sources: experiment

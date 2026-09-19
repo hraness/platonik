@@ -55,16 +55,17 @@ export function RecordedHabitat({
       return <g key={`assembly-${assembly.blueprint}`} data-kind="assembly" data-blueprint={assembly.blueprint}><rect x={position.x * 36 + 3} y={position.y * 36 + 3} width="30" height="30" fill="var(--surface)" stroke="var(--specimen-warm)" strokeWidth="2" strokeDasharray="4 3" />{label(position, `A${blueprint.body.cell.id}`, "var(--specimen-warm)")}</g>;
     })}
     {(state.facilities ?? []).map(facility => {
-      const glyph = facility.kind === "fabricator" ? "F" : facility.kind === "miner" ? "D" : "W";
+      const glyph = facility.kind === "fabricator" ? "F" : facility.kind === "miner" ? "D" : facility.kind === "assembler" ? "A" : facility.kind === "crane" ? "C" : "W";
       const c = center(facility.position);
       const fill = facility.ready ? "var(--specimen-ink)" : "var(--surface)";
-      const held = facility.materials.length + facility.sparks.length + facility.parts.length;
+      const held = facility.materials.length + facility.sparks.length + facility.parts.length + (facility.frames?.length ?? 0);
+      const neededFrame = facility.needed_frame ?? 0;
       const name = names?.[String(facility.id)];
       return <g key={`facility-${facility.id}`} data-kind={facility.ready ? "facility" : "facility-site"} data-facility={facility.id}>
         <rect x={facility.position.x * 36 + 2} y={facility.position.y * 36 + 2} width="32" height="32" fill={fill} stroke="var(--specimen-ink)" strokeWidth="2" strokeDasharray={facility.ready ? undefined : "4 3"} />
         <text x={c.x} y={c.y + 5} textAnchor="middle" fontSize="13" fontWeight="600" fill={facility.ready ? "var(--specimen-ink-on)" : "var(--specimen-ink)"}>{glyph}</text>
         {held > 0 && <text x={c.x + 13} y={c.y - 11} textAnchor="middle" fontSize="9" fill="var(--specimen-warm)">{held}</text>}
-        {!facility.ready && <text x={c.x} y={c.y + 16} textAnchor="middle" fontSize="8" fill="var(--specimen-warm)">{facility.needed_material}m {facility.needed_part}p</text>}
+        {!facility.ready && <text x={c.x} y={c.y + 16} textAnchor="middle" fontSize="8" fill="var(--specimen-warm)">{facility.needed_material}m {facility.needed_part}p{neededFrame > 0 ? ` ${neededFrame}f` : ""}</text>}
         {name && <text x={c.x} y={c.y + 24} textAnchor="middle" fontSize="8" fill="var(--specimen-ink)">{name}</text>}
       </g>;
     })}
@@ -75,8 +76,8 @@ export function RecordedHabitat({
       const stroke = selected ? "var(--focus)" : active ? (active.success ? "var(--accent)" : "var(--danger)") : "var(--surface)";
       const strokeWidth = selected || active ? 3 : 2;
       const select = () => onSelectCell?.(cell.id);
-      const carrying = cell.cargo != null || cell.material !== undefined || cell.part !== undefined;
-      return <g key={cell.id} filter={active ? "url(#glow)" : undefined} data-kind={born ? "born-cell" : active ? (active.success ? "active-cell" : "failed-cell") : "cell"} data-cell={cell.id} role={onSelectCell ? "button" : undefined} tabIndex={onSelectCell ? 0 : undefined} aria-label={onSelectCell ? `Inspect cell ${cell.id}` : undefined} aria-pressed={onSelectCell ? selected : undefined} onClick={select} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(); } }}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r={selected ? 13 : 11} fill={carrying ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke={stroke} strokeWidth={strokeWidth} />{cell.part !== undefined && <rect x={center(cell.position).x + 6} y={center(cell.position).y - 15} width="7" height="7" fill="var(--accent)" transform={`rotate(45 ${center(cell.position).x + 9.5} ${center(cell.position).y - 11.5})`} />}{label(cell.position, String(cell.id), carrying ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>;
+      const carrying = cell.cargo != null || cell.material !== undefined || cell.part !== undefined || cell.frame !== undefined;
+      return <g key={cell.id} filter={active ? "url(#glow)" : undefined} data-kind={born ? "born-cell" : active ? (active.success ? "active-cell" : "failed-cell") : "cell"} data-cell={cell.id} role={onSelectCell ? "button" : undefined} tabIndex={onSelectCell ? 0 : undefined} aria-label={onSelectCell ? `Inspect cell ${cell.id}` : undefined} aria-pressed={onSelectCell ? selected : undefined} onClick={select} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(); } }}><circle {...{ cx: center(cell.position).x, cy: center(cell.position).y }} r={selected ? 13 : 11} fill={carrying ? "var(--specimen-warm)" : "var(--specimen-ink)"} stroke={stroke} strokeWidth={strokeWidth} />{cell.part !== undefined && <rect x={center(cell.position).x + 6} y={center(cell.position).y - 15} width="7" height="7" fill="var(--accent)" transform={`rotate(45 ${center(cell.position).x + 9.5} ${center(cell.position).y - 11.5})`} />}{cell.frame !== undefined && <rect x={center(cell.position).x - 13} y={center(cell.position).y - 15} width="8" height="8" fill="none" stroke="var(--accent)" strokeWidth="2" />}{label(cell.position, String(cell.id), carrying ? "var(--specimen-warm-on)" : "var(--specimen-ink-on)")}</g>;
     })}
   </svg>;
 }

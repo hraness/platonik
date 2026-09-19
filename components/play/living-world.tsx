@@ -25,7 +25,7 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
         const runtime = await loadEngine();
         let value: LivingWorld;
         if (packed) {
-          value = unpackWorld(packed);
+          value = await unpackWorld(packed);
         } else {
           const cached = await Promise.race([
             latestWorld(),
@@ -147,9 +147,11 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
       ? "A new construction site is waiting for its bill."
       : lastEvent?.kind === "structure_named"
         ? "A facility has a new name."
-        : report.summary.parts_minted > 0
-          ? "The fabricator is minting parts from the supply chain."
-          : report.summary.constructed_cells > 1
+        : report.summary.frames_minted > 0
+          ? `The production chain has assembled ${report.summary.frames_minted} frame${report.summary.frames_minted === 1 ? "" : "s"}.`
+          : report.summary.parts_minted > 0
+            ? "The fabricator is minting parts from the supply chain."
+            : report.summary.constructed_cells > 1
             ? "The foundry added carrying capacity to both routes."
             : report.summary.constructed_cells > 0
               ? "The foundry raised a second courier route."

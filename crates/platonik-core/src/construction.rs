@@ -560,6 +560,7 @@ pub(crate) fn execute(
         inbox: std::array::from_fn(|_| None),
         material: None,
         part: None,
+        frame: None,
     });
     state
         .links

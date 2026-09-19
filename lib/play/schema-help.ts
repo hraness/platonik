@@ -20,12 +20,13 @@ Conditions (all must hold; up to 8 per rule):
   {"kind":"assembly_stage","blueprint":N,"stage":"absent|copying|wiring|ready|born"}
   {"kind":"assembly_edits","blueprint":N,"count":0-8}
   {"kind":"has_part","value":bool}           — cell holds a minted part
+  {"kind":"has_frame","value":bool}          — cell holds an assembled frame
   {"kind":"at_stock","value":bool}          — standing on a material deposit
   {"kind":"at_facility","value":bool}       — standing on a facility or site
   {"kind":"facility_ready","value":bool}    — the facility here finished its bill
-  {"kind":"facility_needs","item":"spark|material|part","value":bool}
-  {"kind":"facility_has","item":"spark|material|part","value":bool}
-  {"kind":"facility_is","structure":"fabricator|storehouse|miner","value":bool}
+  {"kind":"facility_needs","item":"spark|material|part|frame","value":bool}
+  {"kind":"facility_has","item":"spark|material|part|frame","value":bool}
+  {"kind":"facility_is","structure":"fabricator|storehouse|miner|assembler|crane","value":bool}
 
 Actions:
   {"kind":"move","direction":"forward|left|right|back"}
@@ -39,7 +40,7 @@ Actions:
   {"kind":"build","blueprint":N} / {"kind":"activate","blueprint":N}
   {"kind":"edit_direction","blueprint":N,"rule":0-31,"slot":0-7}
   {"kind":"gather"}                          — take one material from the deposit here
-  {"kind":"supply","item":"spark|material|part"}  — give the facility here one item
-  {"kind":"fetch","item":"spark|material|part"}   — take one item from the facility here
+  {"kind":"supply","item":"spark|material|part|frame"}  — give the facility here one item
+  {"kind":"fetch","item":"spark|material|part|frame"}   — take one item from the facility here
 
-Every action and unmatched rule costs modeled work; fuel is finite. Sparks, material, and parts conserve; walls block; messages arrive on inbox ports. Facilities tick once per world tick: a ready fabricator burns 1 material + 1 spark over 6 ticks to mint a unique part; a ready drill pulls 1 material from its deposit every 12 ticks (drills only place on deposits); a site becomes ready when its bill is supplied.`;
+Every action and unmatched rule costs modeled work; fuel is finite. Sparks, material, parts, and frames conserve; walls block; messages arrive on inbox ports. Facilities tick once per world tick: a fabricator burns 1 material + 1 spark over 6 ticks to mint a unique part; an assembler burns 1 material + 1 part + 1 spark over 10 ticks to mint a frame; a drill pulls 1 material from its deposit every 12 ticks; a crane moves one item every 8 ticks from a lower-ID adjacent ready facility into a higher-ID one. Drills only place on deposits; a site becomes ready when its bill is supplied.`;

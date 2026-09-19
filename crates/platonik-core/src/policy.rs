@@ -115,6 +115,7 @@ fn check_condition(
         Condition::Heading { direction } => cell.heading == *direction,
         Condition::HasMaterial { value } => cell.material.is_some() == *value,
         Condition::HasPart { value } => cell.part.is_some() == *value,
+        Condition::HasFrame { value } => cell.frame.is_some() == *value,
         Condition::AtStock { value } => {
             meter.charge(
                 Cat::Checking,

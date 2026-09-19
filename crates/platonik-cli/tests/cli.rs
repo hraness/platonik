@@ -59,6 +59,25 @@ fn json(bytes: &[u8]) -> Value {
     serde_json::from_slice(bytes).unwrap()
 }
 
+fn base64url(bytes: &[u8]) -> String {
+    const ALPHABET: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    let mut output = String::new();
+    for chunk in bytes.chunks(3) {
+        let word = u32::from(chunk[0]) << 16
+            | u32::from(*chunk.get(1).unwrap_or(&0)) << 8
+            | u32::from(*chunk.get(2).unwrap_or(&0));
+        output.push(ALPHABET[((word >> 18) & 63) as usize] as char);
+        output.push(ALPHABET[((word >> 12) & 63) as usize] as char);
+        if chunk.len() > 1 {
+            output.push(ALPHABET[((word >> 6) & 63) as usize] as char);
+        }
+        if chunk.len() > 2 {
+            output.push(ALPHABET[(word & 63) as usize] as char);
+        }
+    }
+    output
+}
+
 fn reference() -> Vec<u8> {
     let example = cli(&["example", "opening-normal"], None);
     assert!(
@@ -266,7 +285,11 @@ fn agent_world_commands_produce_replayable_browser_views() {
             > 0
     );
     let link = cli(&["world", "link", current.path()], None);
-    assert!(link.status.success());
+    assert!(
+        link.status.success(),
+        "{}",
+        String::from_utf8_lossy(&link.stderr)
+    );
     let link = json(&link.stdout);
     assert_eq!(link["schema"], "platonik-world-link-v1");
     let url = link["url"].as_str().unwrap();
@@ -274,6 +297,27 @@ fn agent_world_commands_produce_replayable_browser_views() {
     let opened = cli(&["world", "open-link", url], None);
     assert!(opened.status.success());
     assert_eq!(json(&opened.stdout), json(&advanced.stdout));
+}
+
+#[test]
+fn legacy_raw_world_links_still_open() {
+    let world = platonik_core::world::new(
+        "Legacy".into(),
+        platonik_core::fixtures::experiment("opening-normal").unwrap(),
+    )
+    .unwrap();
+    let hash = platonik_core::world::report(&world).unwrap().world_hash;
+    let bytes = serde_json::to_vec(&world).unwrap();
+    let packed = base64url(&bytes);
+    assert!(packed.len() < 16_384);
+    let url = format!("https://platonik.space/play/w/{hash}?world={packed}");
+    let opened = cli(&["world", "open-link", &url], None);
+    assert!(
+        opened.status.success(),
+        "{}",
+        String::from_utf8_lossy(&opened.stderr)
+    );
+    assert_eq!(json(&opened.stdout), serde_json::to_value(world).unwrap());
 }
 
 #[test]
@@ -470,6 +514,81 @@ fn algal_host_plugins_are_optional_and_process_executors_are_rejected() {
     );
     assert_eq!(rejected.status.code(), Some(2));
     assert!(rejected.stdout.is_empty());
+}
+
+#[test]
+fn algal_planner_builds_an_assembler_then_discovers_its_crane_gap() {
+    let created = cli(&["world", "new"], None);
+    assert!(created.status.success());
+    let world = InputFile::new(&created.stdout);
+    let responses = InputFile::new(br#"{"planner":{"candidate":"place-assembler-0-6"}}"#);
+    let proposed = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            responses.path(),
+            "--goal",
+            "Build a second-tier production chain",
+        ],
+        None,
+    );
+    assert!(
+        proposed.status.success(),
+        "{}",
+        String::from_utf8_lossy(&proposed.stderr)
+    );
+    let proposal = json(&proposed.stdout);
+    assert_eq!(proposal["command"]["structure"], "assembler");
+    assert_eq!(
+        proposal["command"]["position"],
+        serde_json::json!({"x":0,"y":6})
+    );
+    let proposal_file = InputFile::new(&proposed.stdout);
+    let accepted = cli(
+        &["world", "accept", world.path(), proposal_file.path()],
+        None,
+    );
+    assert!(accepted.status.success());
+
+    let mut bytes = accepted.stdout;
+    let mut crane = None;
+    for _ in 0..32 {
+        let current = InputFile::new(&bytes);
+        let advanced = cli(
+            &["world", "act", current.path(), "-"],
+            Some(br#"{"kind":"advance","ticks":128}"#),
+        );
+        assert!(
+            advanced.status.success(),
+            "{}",
+            String::from_utf8_lossy(&advanced.stderr)
+        );
+        bytes = advanced.stdout;
+        let current = InputFile::new(&bytes);
+        let responses = InputFile::new(br#"{"planner":{"candidate":"place-crane-0-5"}}"#);
+        let proposed = cli(
+            &[
+                "world",
+                "propose",
+                current.path(),
+                "--responses",
+                responses.path(),
+            ],
+            None,
+        );
+        if proposed.status.success() {
+            crane = Some(json(&proposed.stdout));
+            break;
+        }
+    }
+    let crane = crane.expect("the completed assembler should expose its crane midpoint");
+    assert_eq!(crane["command"]["structure"], "crane");
+    assert_eq!(
+        crane["command"]["position"],
+        serde_json::json!({"x":0,"y":5})
+    );
 }
 
 #[test]
