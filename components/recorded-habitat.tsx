@@ -6,12 +6,16 @@ export function RecordedHabitat({
   selectedCell,
   onSelectCell,
   names,
+  selectedFacility,
+  onSelectFacility,
 }: {
   receipt: Receipt;
   frame: Frame;
   selectedCell?: number;
   onSelectCell?: (cell: number) => void;
   names?: Record<string, string>;
+  selectedFacility?: number;
+  onSelectFacility?: (facility: number) => void;
 }) {
   const world = receipt.experiment, state = frame.state;
   const births = state.construction?.births ?? [];
@@ -19,7 +23,7 @@ export function RecordedHabitat({
   const constructedLinks = new Set(births.flatMap(birth => birth.body.links.map(link => link.id)));
   const center = (point: Point) => ({ x: point.x * 36 + 18, y: point.y * 36 + 18 });
   const label = (point: Point, text: string, fill = "var(--specimen-ink)") => <text x={center(point).x} y={center(point).y + 5} textAnchor="middle" fontSize="13" fontWeight="600" fill={fill}>{text}</text>;
-  return <svg className="bridge-map" viewBox={`0 0 ${world.width * 36} ${world.height * 36}`} role="img" aria-label={`Recorded habitat at tick ${frame.tick}. ${state.delivered.length} sparks delivered to beacons. S: source, D: depot, V: valve, B: beacon, numbered circles: cells. Exact memory and service values follow below.`}>
+  return <svg className="bridge-map" viewBox={`0 0 ${world.width * 36} ${world.height * 36}`} role={onSelectCell || onSelectFacility ? "group" : "img"} aria-label={`Recorded habitat at tick ${frame.tick}. ${state.delivered.length} sparks delivered to beacons. S: source, D: depot or drill, V: valve, B: beacon, F: fabricator, W: storehouse, A: assembler, C: crane, numbered circles: creatures. Exact memory and service values follow below.`}>
     <defs>
       <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
         <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
@@ -61,7 +65,14 @@ export function RecordedHabitat({
       const held = facility.materials.length + facility.sparks.length + facility.parts.length + (facility.frames?.length ?? 0);
       const neededFrame = facility.needed_frame ?? 0;
       const name = names?.[String(facility.id)];
-      return <g key={`facility-${facility.id}`} data-kind={facility.ready ? "facility" : "facility-site"} data-facility={facility.id}>
+      const selected = selectedFacility === facility.id;
+      const select = () => onSelectFacility?.(facility.id);
+      return <g key={`facility-${facility.id}`} data-kind={facility.ready ? "facility" : "facility-site"} data-facility={facility.id}
+        role={onSelectFacility ? "button" : undefined} tabIndex={onSelectFacility ? 0 : undefined}
+        aria-label={onSelectFacility ? `Inspect ${name ?? facility.kind} ${facility.id}` : undefined}
+        aria-pressed={onSelectFacility ? selected : undefined}
+        onClick={select} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(); } }}>
+        {selected && <rect x={facility.position.x * 36 - 2} y={facility.position.y * 36 - 2} width="40" height="40" fill="none" stroke="var(--focus)" strokeWidth="2" />}
         <rect x={facility.position.x * 36 + 2} y={facility.position.y * 36 + 2} width="32" height="32" fill={fill} stroke="var(--specimen-ink)" strokeWidth="2" strokeDasharray={facility.ready ? undefined : "4 3"} />
         <text x={c.x} y={c.y + 5} textAnchor="middle" fontSize="13" fontWeight="600" fill={facility.ready ? "var(--specimen-ink-on)" : "var(--specimen-ink)"}>{glyph}</text>
         {held > 0 && <text x={c.x + 13} y={c.y - 11} textAnchor="middle" fontSize="9" fill="var(--specimen-warm)">{held}</text>}

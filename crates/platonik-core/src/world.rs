@@ -1,6 +1,7 @@
 use crate::check::artifact_hash;
 use crate::continuation::{self, Advance};
 use crate::industry;
+use crate::industry_report::{self, FacilityDiagnostic, IndustryFrame};
 use crate::model::{Costs, Experiment, FacilityKind, Frame, Point, Program, RunStatus, State};
 use crate::sim;
 use serde::{Deserialize, Serialize};
@@ -103,6 +104,10 @@ pub struct Report {
     pub state: State,
     pub costs: Costs,
     pub recent_frames: Vec<Frame>,
+    /// Observations of the exact current state, including newly admitted sites.
+    pub industry: Vec<FacilityDiagnostic>,
+    /// Read-only observations aligned with `recent_frames`, outside engine receipts.
+    pub industry_frames: Vec<IndustryFrame>,
     pub summary: WorldSummary,
     /// Facility display names admitted by `structure_named` events.
     pub names: BTreeMap<u16, String>,
@@ -490,6 +495,15 @@ pub fn report(world: &World) -> Result<Report, String> {
             .filter(|cell| cell.frame.is_some())
             .count(),
     };
+    let industry = industry_report::snapshot(&snapshot.experiment, &snapshot.state);
+    let industry_frames = snapshot
+        .recent_frames
+        .iter()
+        .map(|frame| IndustryFrame {
+            tick: frame.tick,
+            facilities: industry_report::snapshot(&snapshot.experiment, &frame.state),
+        })
+        .collect();
     Ok(Report {
         schema: WORLD_REPORT_SCHEMA,
         world_hash: artifact_hash(world)?,
@@ -501,6 +515,8 @@ pub fn report(world: &World) -> Result<Report, String> {
         state: snapshot.state,
         costs: snapshot.costs,
         recent_frames: snapshot.recent_frames,
+        industry,
+        industry_frames,
         summary,
         names: snapshot.names,
     })

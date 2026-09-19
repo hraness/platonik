@@ -3,6 +3,12 @@ import path from "node:path";
 
 export const documents = [
   {
+    slug: "living-world-plan",
+    title: "Grow one living world",
+    description: "The current automation world, a legible production loop, and proposed next steps for routes, construction, and scale.",
+    question: "What can I build now, and what comes next?",
+  },
+  {
     slug: "game-design",
     title: "The game",
     description: "Make a creature, keep a beacon alive, and follow a first rescue into a world that changes scale.",

@@ -1,6 +1,6 @@
 # Platonik game design
 
-Living design proposal, revised 18 September 2026. The first living-world protocol, own-agent command loop, and browser renderer are implemented: one Dustlight homestead carries physical state, construction, program interventions, and cumulative work through bounded advances. The earlier [Rust bridge](rust-bridge.md), [field expedition](field-expedition.md), bounded journeys, and hosted [season evaluator](seasons.md) remain available as engineering evidence. Repeatable production, free-form expansion, the complete Long Trail, and in-world rankings remain proposed. Dialogue and outcomes are illustrative unless linked to a specific engine record.
+Living design proposal, revised 19 September 2026. Dustlight implements one persistent automation world with extraction, part and frame production, construction, and automatic crane transfer. An external agent operates the Rust CLI; the browser renders and inspects its history. The [living-world plan](living-world-plan.md) gives the current limits and next milestones. The complete Long Trail, free-form expansion, and in-world rankings remain proposed. Dialogue and outcomes below are illustrative unless linked to an engine record.
 
 ## The premise
 
@@ -12,7 +12,7 @@ This is the pleasure of building with AI, given a persistent world and consequen
 
 The creatures are executable algorithms. They do not contain chatting language models; your external agent is your collaborator at the workbench. No programming or philosophy vocabulary is required to begin. Code, exact costs, and research methods become available when the player asks how something works.
 
-The central loop is **wish → build → watch → surprise → improve**. Each pass should leave the player with a visible change and a consequential choice. Automatic search can help, but the player owns the ambition, the favorites, and the question to pursue next.
+The central loop is **wish → build → watch → notice → improve**. Each pass should leave the player with a visible change and a consequential choice. In the current world, that can mean feeding an idle assembler, finishing a drill, or keeping beacon service intact while expanding production. The player owns the ambition, the favorites, and the question to pursue next.
 
 The longer campaign is [The Long Trail](campaign.md): a hopeful space western in which a first companion becomes a herd, the herd helps build living arks, and their settlements grow into a civilization capable of reaching a distant beacon. The player is a frontier engineer of living systems, with a naturalist's curiosity and a trail guide's care. Its space-opera fiction gives these experiments a continuing destination.
 
@@ -36,7 +36,7 @@ The world should offer small moments the player can recognize: a courier doublin
 
 ## The first fifteen minutes: The Wound
 
-The intended first session is one complete creation-and-rescue story. The implemented Dustlight world now provides its trailhead: the agent preserves a local world, advances or changes it through the CLI, and returns a content-addressed browser view. Its two finite light routes and two supplied foundry blueprints are not yet the full rescue, lineage, or open production loop below. The earlier [field expedition](field-expedition.md) separately runs persistence, failure, ancestry, frozen selection, and confirmation cases.
+This proposed campaign opening is one complete creation-and-rescue story. Dustlight supplies the current trailhead: the agent preserves a local world, improves its production or routes, and returns a browser view. The immediate goal is to make that factory understandable and worth revisiting before introducing the full rescue and lineage progression below. The earlier [field expedition](field-expedition.md) separately tests persistence, failure, ancestry, frozen selection, and confirmation cases.
 
 1. **Make something yours.** Name a starter colony and give it a wish: “Get the light there quickly.” The agent shows one plain-language rule change and runs a short, bounded expedition. See a spark reach its destination before learning a metric.
 2. **Watch its habit.** Inspect three compact map snapshots: departure, the decisive moment, and the outcome. Track the same cells between frames. A short explanation connects their movements to the change you requested.
@@ -67,7 +67,7 @@ All dialogue and outcomes above are fictional. A real result must name its cases
 
 Chat remains the primary interface. The player describes intent; the agent operates the Rust CLI. A normal response leads with what happened, shows a compact spatial view, and offers a choice. Detailed traces, programs, and statistics sit behind follow-up requests.
 
-The first engine should emit a small text map with a stable legend for couriers, carried sparks, the spring, blocked spaces, and the beacon. Its event log can say “Moth-3 turned back at the closed passage” only when the trace supports it. Preserve cell identity across frames and show the result of every completed expedition, including failures. Richer replay images can come later from those same states, without requiring a separate game interface.
+The browser is the window into the saved world. Selecting a facility should answer three questions: what does it make or move, what is happening now, and what would let it work? Show its recipe, supplies, remaining construction bill, and observed waiting state beside the map. Carry that selected place and replay tick into a focused agent handoff. Rust supplies the observations; a renderer or narrator cannot infer a delivery, a transfer, or a rescue that the trace does not establish.
 
 Translate wishes into inspectable changes. “Make it brave” might become “try an unexplored adjacent space after repeated failed moves.” The agent explains that interpretation before a consequential experiment; the word itself grants no ability. Respect the player's existing experiment budget and external-agent spending limits. No hidden overnight searches are needed to keep the creature alive.
 

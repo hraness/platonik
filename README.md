@@ -6,7 +6,9 @@ This repository implements the first **living-world protocol**, agent-facing CLI
 
 ## Open the world
 
-Open [platonik.space/play](https://platonik.space/play) to watch Dustlight. The browser recomputes and renders the world, but does not edit or advance it. Give your agent [the play skill](skills/platonik-play/SKILL.md); it preserves the local JSON save, applies bounded commands, and returns a content-addressed `/play/w/<world-hash>?world=…` view. No account or install is required to inspect a view. Changing the world uses the local Rust CLI through your own agent.
+Open [platonik.space/play](https://platonik.space/play) to watch Dustlight. The browser recomputes and renders the world, but does not edit or advance it. Give your agent [the play skill](skills/platonik-play/SKILL.md); it preserves the local JSON save, applies bounded commands, and returns a content-addressed `/play/w/<world-hash>?world=…` view. No account or install is required to inspect a view. Select a facility to see its recipe, supplies, and current work or waiting state, then copy a focused request for your agent. Changing the world uses the local Rust CLI through your own agent.
+
+To run the commands below, use a checkout of this repository and Rust 1.97.1, pinned in `rust-toolchain.toml`.
 
 ```sh
 cargo build --release --locked -p platonik-cli
@@ -17,7 +19,7 @@ printf '%s' '{"kind":"advance","ticks":32}' \
 ./target/release/platonik world link dustlight-r1.world.json
 ```
 
-Use a new output file for every action; shell redirection can truncate an input before the CLI reads it.
+Open the URL returned by `world link` to inspect tick 32 and replay the advance. Use a new output file for every action; shell redirection can truncate an input before the CLI reads it.
 
 The CLI also embeds [Algal](https://github.com/hraness/algal) as an optional planner boundary. Platonik compiles the current world into a compact read-only view and at most 32 already-valid candidate actions; the model selects one candidate instead of generating engine commands. `world accept` replays the receipt, checks that the full view and player goal still match, and sends the compiled command through ordinary admission. Scripted responses keep this path deterministic and offline:
 
@@ -33,7 +35,7 @@ Use `--host <algal.host.v1.json>` instead of `--responses` to opt into a configu
 
 ## Explore the design
 
-Start in [the observatory](https://platonik.space/lab), or read its [guide](docs/observatory.md). Export a specimen's JSON, ask an external agent to change it, and paste it back to compare the result. The [complexity and scale thesis](docs/complexity-and-scale.md) explains the separate work, memory, and structural costs, the proposed research comparisons, and the limits of larger worlds.
+The [living-world plan](docs/living-world-plan.md) distinguishes the factory you can play now from proposed routing, progression, and scale work. The [engine guide](docs/engine.md#the-living-world-command-surface) documents current commands, recipes, facility rules, and limits. Earlier [observatory experiments](docs/observatory.md) and the [complexity and scale thesis](docs/complexity-and-scale.md) provide technical background.
 
 Begin with the [game design](docs/game-design.md): grow a colony that carries sparks to a beacon, help it recover when a route collapses, and take a favorite descendant into an unfamiliar habitat. The proposed world then expands from cells into tissues, ecologies, and algorithm discovery. Sorting remains a later research habitat.
 
@@ -96,7 +98,7 @@ bun install --frozen-lockfile
 bun run dev
 ```
 
-Open `http://localhost:3000` and follow **Enter the observatory**, or visit `/docs` for the field guide. The documentation renders the Markdown files in `docs/` at build time; editing one updates both the source document and its website projection. The separately authored homepage presents the same product facts in a shorter form.
+Open `http://localhost:3000/play` to inspect Dustlight, or visit `/docs` for the field guide. The documentation renders the Markdown files in `docs/` at build time; editing one updates both the source document and its website projection. The separately authored homepage presents the same product facts in a shorter form.
 
 The browser observatory has no analytics or model calls. Its controls run locally, saved specimens use bounded browser local storage, and no program text is sent to a service. Production separately exposes the opt-in, Hraness-account-gated `POST /voice` renderer; it accepts checked wire digests, keeps gateway credentials server-side, and returns labeled fiction. A local site without the server environment remains disabled at that route. Following source links leaves the site.
 
