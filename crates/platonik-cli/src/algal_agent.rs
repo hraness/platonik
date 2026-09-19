@@ -127,6 +127,53 @@ fn program_name(program: &Program) -> &'static str {
     }
 }
 
+fn cell_program(report: &world::Report, cell: u16) -> Option<&Program> {
+    report
+        .experiment
+        .cells
+        .iter()
+        .find(|entry| entry.id == cell)
+        .map(|entry| &entry.program)
+        .or_else(|| {
+            report
+                .state
+                .construction
+                .as_ref()?
+                .births
+                .iter()
+                .find(|birth| birth.body.cell.id == cell)
+                .map(|birth| &birth.body.cell.program)
+        })
+}
+
+fn live_role_count(report: &world::Report, program: &Program) -> usize {
+    report
+        .state
+        .cells
+        .iter()
+        .filter(|cell| cell_program(report, cell.id).is_some_and(|value| value == program))
+        .count()
+}
+
+fn preserves_essential_roles(
+    report: &world::Report,
+    cell: u16,
+    program: &Program,
+    surveyor: &Program,
+    hauler: &Program,
+) -> bool {
+    let Some(current) = cell_program(report, cell) else {
+        return false;
+    };
+    let surveyors = live_role_count(report, surveyor)
+        .saturating_sub(usize::from(current == surveyor))
+        + usize::from(program == surveyor);
+    let haulers = live_role_count(report, hauler).saturating_sub(usize::from(current == hauler))
+        + usize::from(program == hauler);
+    (report.experiment.beacons.is_empty() || surveyors > 0)
+        && (report.state.facilities.is_empty() || haulers > 0)
+}
+
 fn planning_input(
     world: &World,
     goal: &str,
@@ -220,12 +267,19 @@ fn planning_input(
     for cell in &report.experiment.cells {
         if cell.mobile {
             for (label, program) in [("surveyor", &surveyor), ("hauler", &hauler)] {
-                if cell.program != *program && valid_program(&report.experiment, cell.id, program) {
+                if cell.program != *program
+                    && valid_program(&report.experiment, cell.id, program)
+                    && preserves_essential_roles(&report, cell.id, program, &surveyor, &hauler)
+                {
                     add_candidate(
                         &mut commands,
                         &mut choices,
                         format!("cell-{}-{label}", cell.id),
-                        format!("Assign original cell {} the {label} policy.", cell.id),
+                        format!(
+                            "Change original cell {} from {} to {label}; all essential roles remain staffed.",
+                            cell.id,
+                            program_name(&cell.program)
+                        ),
                         Command::SetProgram {
                             cell: cell.id,
                             program: program.clone(),
@@ -243,7 +297,11 @@ fn planning_input(
                         &mut commands,
                         &mut choices,
                         format!("cell-{}-{label}", cell.id),
-                        format!("Assign original cell {} the {label} policy.", cell.id),
+                        format!(
+                            "Change original cell {} from {} to {label}.",
+                            cell.id,
+                            program_name(&cell.program)
+                        ),
                         Command::SetProgram {
                             cell: cell.id,
                             program: program.clone(),
@@ -262,12 +320,7 @@ fn planning_input(
         .cells
         .iter()
         .map(|cell| {
-            let policy = report
-                .experiment
-                .cells
-                .iter()
-                .find(|decl| decl.id == cell.id)
-                .map_or("constructed", |decl| program_name(&decl.program));
+            let policy = cell_program(&report, cell.id).map_or("unknown", program_name);
             json!({
                 "id": cell.id,
                 "position": cell.position,
@@ -383,6 +436,8 @@ fn planning_input(
             })
         })
         .collect();
+    let live_surveyors = live_role_count(&report, &surveyor);
+    let live_haulers = live_role_count(&report, &hauler);
     let world_hash = report.world_hash.clone();
     let value = json!({
         "schema": "platonik-world-agent-view-v2",
@@ -393,6 +448,7 @@ fn planning_input(
         "tick": report.tick,
         "maximumTick": report.maximum_tick,
         "summary": report.summary,
+        "liveRoles": {"surveyors": live_surveyors, "haulers": live_haulers},
         "map": {"width": report.experiment.width, "height": report.experiment.height, "walls": report.experiment.walls},
         "cells": cells,
         "sources": sources,

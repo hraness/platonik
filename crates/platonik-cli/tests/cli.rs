@@ -547,6 +547,87 @@ fn algal_planner_finishes_existing_construction_before_expanding() {
     assert!(rejected.stdout.is_empty());
 }
 
+#[test]
+fn algal_planner_preserves_last_roles_until_children_take_them_over() {
+    let created = cli(&["world", "new"], None);
+    assert!(created.status.success());
+    let world = InputFile::new(&created.stdout);
+    for candidate in ["cell-1-hauler", "cell-2-surveyor"] {
+        let responses = InputFile::new(
+            serde_json::to_string(&serde_json::json!({"planner":{"candidate":candidate}}))
+                .unwrap()
+                .as_bytes(),
+        );
+        let rejected = cli(
+            &[
+                "world",
+                "propose",
+                world.path(),
+                "--responses",
+                responses.path(),
+            ],
+            None,
+        );
+        assert_eq!(rejected.status.code(), Some(2));
+        assert!(rejected.stdout.is_empty());
+        assert!(
+            json(&rejected.stderr)["error"]["message"]
+                .as_str()
+                .unwrap()
+                .contains("unknown candidate")
+        );
+    }
+
+    let advanced = cli(
+        &["world", "act", world.path(), "-"],
+        Some(br#"{"kind":"advance","ticks":128}"#),
+    );
+    assert!(advanced.status.success());
+    let world = InputFile::new(&advanced.stdout);
+    let responses = InputFile::new(br#"{"planner":{"candidate":"cell-1-hauler"}}"#);
+    let proposed = cli(
+        &[
+            "world",
+            "propose",
+            world.path(),
+            "--responses",
+            responses.path(),
+            "--goal",
+            "Increase logistics without abandoning beacon service",
+        ],
+        None,
+    );
+    assert!(
+        proposed.status.success(),
+        "{}",
+        String::from_utf8_lossy(&proposed.stderr)
+    );
+    let proposal = json(&proposed.stdout);
+    let view = &proposal["receipt"]["args"]["state"]["world"];
+    assert_eq!(view["liveRoles"]["surveyors"], 2);
+    assert_eq!(view["liveRoles"]["haulers"], 1);
+    assert!(
+        view["cells"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|cell| cell["id"] == 3 && cell["policy"] == "surveyor")
+    );
+    assert!(
+        view["candidates"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|candidate| candidate["id"] == "cell-1-hauler"
+                && candidate["description"]
+                    .as_str()
+                    .unwrap()
+                    .contains("all essential roles remain staffed"))
+    );
+    assert_eq!(proposal["command"]["kind"], "set_program");
+    assert_eq!(proposal["command"]["cell"], 1);
+}
+
 #[cfg(unix)]
 #[test]
 fn non_utf8_arguments_are_structured_errors_instead_of_panics() {
