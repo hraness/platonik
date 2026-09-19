@@ -7,7 +7,7 @@ For every documentation surface, follow the [Hraness documentation guidelines](h
 ## Product boundaries
 
 - Keep the Rust engine authoritative for state and results; external agents explain and operate it.
-- Keep Algal at the native CLI proposal boundary: no core/WASM dependency, no automatic provider requirement, and no accepted command without receipt replay plus ordinary world admission.
+- Keep Algal at the native CLI proposal boundary: no core/WASM dependency, no automatic provider requirement, and no accepted command without exact-view/goal receipt replay, deterministic candidate recompilation, and ordinary world admission.
 - Preserve deterministic replay, explicit resource limits, independent outcome checks, and complete failure accounting.
 - Distinguish illustrative output, measured performance, scientific hypotheses, and mathematical proofs.
 - Keep public material self-contained. Exclude private paths, transcripts, credentials, and unlicensed copied source material.
