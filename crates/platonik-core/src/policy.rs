@@ -72,6 +72,7 @@ fn check_condition(
     meter.charge(Cat::Sensors, 1)?;
     Ok(match condition {
         Condition::Carrying { value } => cell.cargo.is_some() == *value,
+        Condition::AtPosition { position } => cell.position == *position,
         Condition::AtSource { value } => {
             experiment
                 .sources

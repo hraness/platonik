@@ -25,6 +25,7 @@ export const verify_receipt: (a: number, b: number) => [number, number, number, 
 export const world_apply: (a: number, b: number, c: number, d: number) => [number, number, number, number];
 export const world_new: (a: number, b: number) => [number, number, number, number];
 export const world_report: (a: number, b: number) => [number, number, number, number];
+export const world_route_program: (a: number, b: number, c: number, d: number, e: number) => [number, number, number, number];
 export const __wbindgen_externrefs: WebAssembly.Table;
 export const __externref_table_dealloc: (a: number) => void;
 export const __wbindgen_free: (a: number, b: number, c: number) => void;

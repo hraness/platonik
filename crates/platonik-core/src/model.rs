@@ -10,6 +10,8 @@ pub const VARIATION_VERSION: u32 = 4;
 pub const VARIATION_PROTOCOL: &str = "platonik-habitat-v4";
 pub const INDUSTRY_VERSION: u32 = 5;
 pub const INDUSTRY_PROTOCOL: &str = "platonik-habitat-v5";
+pub const INDUSTRY_ACCOUNTING_VERSION: u32 = 6;
+pub const INDUSTRY_ACCOUNTING_PROTOCOL: &str = "platonik-habitat-v6";
 pub const MAX_PROGRAM_EDITS: usize = 8;
 pub const MAX_VARIATION_ACTIVATION_FUEL: u32 = 16_384;
 pub const COPY_BYTES: usize = 32;
@@ -27,6 +29,7 @@ pub fn protocol_for_version(version: u32) -> Option<&'static str> {
         CONSTRUCTION_VERSION => Some(CONSTRUCTION_PROTOCOL),
         VARIATION_VERSION => Some(VARIATION_PROTOCOL),
         INDUSTRY_VERSION => Some(INDUSTRY_PROTOCOL),
+        INDUSTRY_ACCOUNTING_VERSION => Some(INDUSTRY_ACCOUNTING_PROTOCOL),
         _ => None,
     }
 }
@@ -89,6 +92,10 @@ pub enum Relative {
 pub enum Condition {
     Carrying {
         value: bool,
+    },
+    /// A coordinate sensor admitted only in habitat-v6 and later.
+    AtPosition {
+        position: Point,
     },
     AtSource {
         value: bool,

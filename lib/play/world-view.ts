@@ -1,8 +1,8 @@
 import type { Frame } from "../bridge/types";
 import type { FacilityDiagnostic, ItemAmount, WorldReport } from "./engine";
 
-export const CELL_NAMES: Record<number, string> = { 1: "Moth", 2: "Ant", 3: "Moss", 4: "Lark", 5: "Foundry" };
-const FACILITY_NAMES: Record<number, string> = { 90: "West Fabricator", 91: "Storehouse", 92: "East Drill" };
+export const CELL_NAMES: Record<number, string> = { 1: "Moth", 2: "Ant", 3: "Moss", 4: "Lark", 5: "Foundry", 6: "Flint" };
+const FACILITY_NAMES: Record<number, string> = { 90: "Fabricator", 91: "Storehouse", 92: "Drill", 93: "Assembler" };
 export const FACILITY_LABELS: Record<string, string> = {
   fabricator: "Fabricator", storehouse: "Storehouse", miner: "Drill", assembler: "Assembler", crane: "Crane",
 };

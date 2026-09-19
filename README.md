@@ -1,22 +1,24 @@
 # Platonik
 
-Platonik is an automation game you play with your AI agent. You describe an ambition; the agent changes a checked local Rust world; the browser lets you follow its creatures, supplies, construction, and consequences. The core loop is **wish → build → watch → notice → improve**.
+Platonik is a persistent automation game you play in your browser and with your AI agent. Mine finite deposits, carry supplies between machines, assemble parts and frames, and build the next useful piece of the same saved world. The Rust engine accounts for every action and preserves the history, so an improvement has a visible result and a traceable cost.
 
-This repository implements the first **living-world protocol**, agent-facing CLI, browser renderer, immutable event history, and portable play skill. A world carries programs, cargo, memory, construction, source stock, beacon charge, facility buffers, and cumulative work across bounded advances. The Dustlight homestead has two light routes, three material deposits, a fabricator that mints unique parts from material and sparks, a drill that passively extracts a deposit into a fetchable buffer, a storehouse, two foundry blueprints, and admitted construction sites that creatures physically supply before they come online. Players can extend that base into a second-tier chain: assemblers consume material, parts, and sparks to mint frames; frame-gated cranes move items automatically from lower-ID adjacent ready facilities into higher-ID ones. Deeper recipe trees, larger maps, and the complete Long Trail remain future engine work. The older observatory, generated challenges, hosted seasons, expeditions, and bounded journeys remain available as engineering evidence rather than parallel foreground games.
+Copperwake is a 32×22 frontier with a working freight circuit, distant deposits, two beacons, and a foundry that can build another courier. Place drills, fabricators, assemblers, storehouses, and cranes; draw hauling routes; run the factory and pause to inspect a bottleneck. The browser and native CLI use the same Rust engine. Deeper recipes, reusable construction plans, larger regions, and the complete Long Trail remain future work. Earlier laboratories, generated challenges, hosted seasons, and bounded journeys remain available as engineering evidence.
 
 ## Open the world
 
-Open [platonik.space/play](https://platonik.space/play) to watch Dustlight. The browser recomputes and renders the world, but does not edit or advance it. Give your agent [the play skill](skills/platonik-play/SKILL.md); it preserves the local JSON save, applies bounded commands, and returns a content-addressed `/play/w/<world-hash>?world=…` view. No account or install is required to inspect a view. Select a facility to see its recipe, supplies, and current work or waiting state, then copy a focused request for your agent. Changing the world uses the local Rust CLI through your own agent.
+Open [platonik.space/play](https://platonik.space/play) to play Copperwake. Run the factory, then pause and select the fabricator or assembler to inspect its recipe and supplies. The starting circuit produces parts and frames; place a crane at tile **8,8**, between those two machines, and let the couriers finish its bill. Once ready, it moves eligible stock from the fabricator into the assembler. Camera controls let you explore the rest of this finite region.
+
+The browser keeps the working world locally. Export a JSON save before clearing browser data or moving devices; importing rechecks its history. No game account, model provider, or local install is required. Give your agent [the play skill](skills/platonik-play/SKILL.md) and the current world file or copied handoff to make a more detailed policy change. Both interfaces preserve the same portable event history; neither silently updates an earlier save's rules.
 
 To run the commands below, use a checkout of this repository and Rust 1.97.1, pinned in `rust-toolchain.toml`.
 
 ```sh
 cargo build --release --locked -p platonik-cli
-./target/release/platonik world new Dustlight > dustlight-r0.world.json
-./target/release/platonik world report dustlight-r0.world.json
+./target/release/platonik world new Copperwake > copperwake-r0.world.json
+./target/release/platonik world report copperwake-r0.world.json
 printf '%s' '{"kind":"advance","ticks":32}' \
-  | ./target/release/platonik world act dustlight-r0.world.json - > dustlight-r1.world.json
-./target/release/platonik world link dustlight-r1.world.json
+  | ./target/release/platonik world act copperwake-r0.world.json - > copperwake-r1.world.json
+./target/release/platonik world link copperwake-r1.world.json
 ```
 
 Open the URL returned by `world link` to inspect tick 32 and replay the advance. Use a new output file for every action; shell redirection can truncate an input before the CLI reads it.
@@ -25,10 +27,10 @@ The CLI also embeds [Algal](https://github.com/hraness/algal) as an optional pla
 
 ```sh
 printf '%s' '{"planner":{"candidate":"advance-16"}}' > planner.responses.json
-./target/release/platonik world propose dustlight-r0.world.json \
+./target/release/platonik world propose copperwake-r0.world.json \
   --responses planner.responses.json --goal 'Keep both beacons lit' > proposal.json
-./target/release/platonik world accept dustlight-r0.world.json proposal.json \
-  > dustlight-r1.world.json
+./target/release/platonik world accept copperwake-r0.world.json proposal.json \
+  > copperwake-r1.world.json
 ```
 
 Use `--host <algal.host.v1.json>` instead of `--responses` to opt into a configured generative provider. A model cannot invent placements or policy shapes; the compiler withholds new construction while a site remains unfinished and rejects policy choices that would remove the last live surveyor or hauler. No model, provider account, or credential is required for the base game; provider keys remain at Algal's executor boundary and never enter world history. The browser still makes no model calls.
@@ -98,7 +100,7 @@ bun install --frozen-lockfile
 bun run dev
 ```
 
-Open `http://localhost:3000/play` to inspect Dustlight, or visit `/docs` for the field guide. The documentation renders the Markdown files in `docs/` at build time; editing one updates both the source document and its website projection. The separately authored homepage presents the same product facts in a shorter form.
+Open `http://localhost:3000/play` to play Copperwake, or visit `/docs` for the field guide. The documentation renders the Markdown files in `docs/` at build time; editing one updates both the source document and its website projection. The separately authored homepage presents the same product facts in a shorter form.
 
 The browser observatory has no analytics or model calls. Its controls run locally, saved specimens use bounded browser local storage, and no program text is sent to a service. Production separately exposes the opt-in, Hraness-account-gated `POST /voice` renderer; it accepts checked wire digests, keeps gateway credentials server-side, and returns labeled fiction. A local site without the server environment remains disabled at that route. Following source links leaves the site.
 
@@ -110,6 +112,6 @@ bun run check
 
 The aggregate gate requires Rust 1.97.1 as well as Node/Bun. It runs Rust formatting, strict Clippy, workspace tests, and an exact regeneration check of the published Rust artifacts. Its web portion checks document registration, relative links, proposal labels, and public identity; tests the bounded browser models; generates Next.js route types; runs TypeScript; and builds all routes. Browser review covers program editing and errors, parent comparisons, collection persistence, export, replay, truth controls, budget measurement/cancellation, signal assays and construction limits, mobile layout, navigation, keyboard access, and missing pages. Review the new Rust replay selector, tick controls, artifact downloads, expected failures, and loading recovery when changing that surface. Passing these checks does not validate a full campaign or player enjoyment.
 
-Vercel detects the Next.js application at the repository root. `vercel.json` supplies the locked install and `check:web` build gate. Vercel hosts static Rust evidence and the Next.js site; it does not build or execute the Rust engine. GitHub runs the full Rust-plus-web aggregate gate before merge. Use the Hraness `platonik` project and `platonik.space` domain; `.vercel/` and local environment files are ignored. Pull requests and main both run that aggregate gate. Intentional changes to Rust evidence use `bun run bridge:record`; review their source and behavioral changes before committing regenerated JSON.
+Vercel detects the Next.js application at the repository root. `vercel.json` supplies the locked install and `check:web` build gate. Vercel hosts static Rust evidence, the prebuilt WASM engine, and the Next.js site. The shared Rust engine runs in the player's browser; Vercel does not build or execute the native Rust engine. GitHub runs the full Rust-plus-web aggregate gate before merge. Use the Hraness `platonik` project and `platonik.space` domain; `.vercel/` and local environment files are ignored. Pull requests and main both run that aggregate gate. Intentional changes to Rust evidence use `bun run bridge:record`; review their source and behavioral changes before committing regenerated JSON.
 
 Contribution and delivery rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Original repository material is [MIT licensed](LICENSE); linked research and other games retain their own rights. Newsreader is distributed by Fontsource under the SIL Open Font License.

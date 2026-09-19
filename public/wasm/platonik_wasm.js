@@ -473,7 +473,7 @@ export function make_submission(challenge_json, programs_json, agent_name) {
  * Return a named reference program as JSON. Supported names:
  * `idle`, `compact`, `resilient`, `relay`, `controller`, `switchboard-porter`,
  * `switchboard-relay`, `switchboard-keeper`, `foundry-builder`, the
- * `world-surveyor` and `world-hauler` Dustlight roles, and the
+ * `world-surveyor` and `world-hauler` Dustlight roles, `frontier-hauler`, and the
  * `world-builder-upper` or `world-builder-lower` homestead plans.
  * @param {string} name
  * @returns {string}
@@ -682,6 +682,36 @@ export function world_report(world_json) {
         return getStringFromWasm0(ptr2, len2);
     } finally {
         wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+    }
+}
+
+/**
+ * Compile a bounded drawn route; applying its Program is a separate world command.
+ * @param {string} world_json
+ * @param {number} cell
+ * @param {string} waypoints_json
+ * @returns {string}
+ */
+export function world_route_program(world_json, cell, waypoints_json) {
+    let deferred4_0;
+    let deferred4_1;
+    try {
+        const ptr0 = passStringToWasm0(world_json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ptr1 = passStringToWasm0(waypoints_json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        const ret = wasm.world_route_program(ptr0, len0, cell, ptr1, len1);
+        var ptr3 = ret[0];
+        var len3 = ret[1];
+        if (ret[3]) {
+            ptr3 = 0; len3 = 0;
+            throw takeFromExternrefTable0(ret[2]);
+        }
+        deferred4_0 = ptr3;
+        deferred4_1 = len3;
+        return getStringFromWasm0(ptr3, len3);
+    } finally {
+        wasm.__wbindgen_free(deferred4_0, deferred4_1, 1);
     }
 }
 

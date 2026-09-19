@@ -1290,11 +1290,16 @@ fn validate_action_effects(
     // The world facility step is atomic: its modeled charges precede any
     // mutation, so an interrupted tick leaves either the untouched or the
     // fully processed set.
-    let before_tick = expected.facilities.clone();
+    let before_tick = expected.clone();
     crate::industry::tick(experiment, &mut expected);
+    if !frame.complete
+        && before_tick.facilities == frame.state.facilities
+        && before_tick.construction == frame.state.construction
+    {
+        expected = before_tick;
+    }
     ensure(
-        expected.facilities == frame.state.facilities
-            || (!frame.complete && before_tick == frame.state.facilities),
+        expected.facilities == frame.state.facilities,
         "Recorded actions do not explain the facility transition.",
     )?;
     ensure(

@@ -44,6 +44,7 @@ export type Frame = {
 export type Receipt = {
   schema: string; protocol: string; experiment_hash: string; result_hash: string;
   experiment: {
+    version?: number; seed?: number; facilities?: { id: number; kind: FacilityKind; position: Point }[];
     width: number; height: number; walls: Point[]; cells: Cell[];
     sources: ({ id: number } & { position: Point })[];
     depots: ({ id: number } & { position: Point })[];

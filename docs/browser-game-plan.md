@@ -1,6 +1,6 @@
 # Browser-playable Platonik plan
 
-Superseded 18 September 2026. The four-track browser game remains archived at `/play/lab`; the primary product is now one event-sourced automation world operated through the local agent CLI and recomputed in the read-only `/play` renderer. The [living-world plan](living-world-plan.md) owns the current milestones. This file preserves the earlier implementation rationale.
+Superseded 18 September 2026. The four-track browser game remains archived at `/play/lab`; the primary product is now one event-sourced automation world played through the local agent CLI or the shared Rust WASM engine in `/play`. The [living-world plan](living-world-plan.md) owns the current milestones. This file preserves the earlier implementation rationale.
 
 Colf.dev shows a compelling shape: one page, one prompt/code box, instant scoring, and a leaderboard. Platonik today is high-friction by comparison: the Rust engine and generated challenges exist, but participation is either local CLI setup or a GitHub pull request into a hosted season. This plan turns the existing deterministic Rust engine into a browser-playable game, keeping the engine authoritative and adding useful visualizations.
 

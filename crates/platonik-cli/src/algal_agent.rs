@@ -116,6 +116,8 @@ fn valid_program(experiment: &Experiment, cell: u16, program: &Program) -> bool 
 fn program_name(program: &Program) -> &'static str {
     if *program == world_fixtures::surveyor_program() {
         "surveyor"
+    } else if *program == world_fixtures::frontier_hauler_program() {
+        "frontier-hauler"
     } else if *program == world_fixtures::hauler_program() {
         "hauler"
     } else if world_fixtures::builder_program(50).is_ok_and(|value| value == *program) {
@@ -155,6 +157,22 @@ fn live_role_count(report: &world::Report, program: &Program) -> usize {
         .count()
 }
 
+fn is_logistics_program(program: &Program, hauler: &Program) -> bool {
+    program == hauler || *program == world_fixtures::frontier_hauler_program()
+}
+
+fn live_logistics_count(report: &world::Report, hauler: &Program) -> usize {
+    report
+        .state
+        .cells
+        .iter()
+        .filter(|cell| {
+            cell_program(report, cell.id)
+                .is_some_and(|program| is_logistics_program(program, hauler))
+        })
+        .count()
+}
+
 fn preserves_essential_roles(
     report: &world::Report,
     cell: u16,
@@ -168,8 +186,9 @@ fn preserves_essential_roles(
     let surveyors = live_role_count(report, surveyor)
         .saturating_sub(usize::from(current == surveyor))
         + usize::from(program == surveyor);
-    let haulers = live_role_count(report, hauler).saturating_sub(usize::from(current == hauler))
-        + usize::from(program == hauler);
+    let haulers = live_logistics_count(report, hauler)
+        .saturating_sub(usize::from(is_logistics_program(current, hauler)))
+        + usize::from(is_logistics_program(program, hauler));
     (report.experiment.beacons.is_empty() || surveyors > 0)
         && (report.state.facilities.is_empty() || haulers > 0)
 }
@@ -495,7 +514,7 @@ fn planning_input(
         })
         .collect();
     let live_surveyors = live_role_count(&report, &surveyor);
-    let live_haulers = live_role_count(&report, &hauler);
+    let live_haulers = live_logistics_count(&report, &hauler);
     let world_hash = report.world_hash.clone();
     let value = json!({
         "schema": "platonik-world-agent-view-v2",

@@ -226,7 +226,10 @@ pub(crate) fn validate_spec(experiment: &Experiment) -> Result<(), String> {
     if experiment.version < CONSTRUCTION_VERSION {
         return Err("Construction requires habitat-v3 or later.".into());
     }
-    if spec.stocks.len() > 4
+    let frontier = experiment.version >= INDUSTRY_ACCOUNTING_VERSION;
+    let stock_limit = if frontier { 8 } else { 4 };
+    let material_limit = if frontier { 256 } else { 32 };
+    if spec.stocks.len() > stock_limit
         || spec.blueprints.is_empty()
         || spec.blueprints.len() > 4
         || experiment.cells.len() + spec.blueprints.len() > 16
@@ -261,8 +264,10 @@ pub(crate) fn validate_spec(experiment: &Experiment) -> Result<(), String> {
             }
         }
     }
-    if units.len() > 32 {
-        return Err("At most 32 material tokens are allowed.".into());
+    if units.len() > material_limit {
+        return Err(format!(
+            "At most {material_limit} material tokens are allowed."
+        ));
     }
     let mut blueprints = BTreeSet::new();
     let mut cells: BTreeSet<_> = experiment.cells.iter().map(|cell| cell.id).collect();

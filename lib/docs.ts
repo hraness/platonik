@@ -5,7 +5,7 @@ export const documents = [
   {
     slug: "living-world-plan",
     title: "Grow one living world",
-    description: "The current automation world, a legible production loop, and proposed next steps for routes, construction, and scale.",
+    description: "Play the Copperwake frontier, build its first production chain, and explore the next steps for logistics and scale.",
     question: "What can I build now, and what comes next?",
   },
   {

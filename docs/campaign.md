@@ -1,10 +1,10 @@
 # The Long Trail
 
-Campaign proposal, revised 19 September 2026. A hopeful space western about a herd becoming an alien civilization. Dustlight now implements one persistent automation trailhead operated by an external agent and viewed in the browser. The larger characters, settlements, moving arks, discoveries, and scenes remain fiction for an unbuilt full campaign. Earlier bounded Rust journeys implement additional pieces of the trail; none demonstrates the complete progression below.
+Campaign proposal, revised 19 September 2026. A hopeful space western about a herd becoming an alien civilization. Copperwake now implements one persistent automation trailhead played in the browser and through an external agent. The larger characters, settlements, moving arks, discoveries, and scenes remain fiction for an unbuilt full campaign. Earlier bounded Rust journeys implement additional pieces of the trail; none demonstrates the complete progression below.
 
 ## The playable trailhead
 
-The primary playable trailhead is Dustlight. `platonik world` preserves one 24×14 homestead across bounded advances, original-cell policy changes, and placed facility sites. It starts with two supplied courier blueprints and thirty material units across three deposits. Drills, fabricators, assemblers, storehouses, and cranes support repeatable production and supplied construction within finite stock. `/play` recomputes the history and renders it without mutating the agent's local JSON world. The [living-world plan](living-world-plan.md) describes current production and the proposed path toward larger regions.
+The primary playable trailhead is Copperwake. `platonik world` and browser WASM preserve one 32×22 frontier across bounded advances, original-cell policy changes, and placed facility sites. It starts with two supplied courier blueprints and 256 material units across four stocks. Drills, fabricators, assemblers, storehouses, and cranes support repeatable production and supplied construction within finite stock. `/play` adds direct run/pause, placement, bounded haul-route controls, and portable save import/export. Browser and CLI copies share a format and engine, but do not synchronize automatically. The [living-world plan](living-world-plan.md) describes current production and the proposed path toward larger regions.
 
 Several earlier short journeys remain available through the same deterministic Rust interpreter, checker, cost ledger, and replay discipline:
 
@@ -13,7 +13,7 @@ Several earlier short journeys remain available through the same deterministic R
 - [Ark control](ark-control.md) makes physical input drive four-bit arithmetic and a remembered service choice; [port commitments](port-commitments.md) checks two finite handoffs through missing and delayed replies.
 - [The Bloom](bloom.md) grows and tests two bounded variants. The [one-lane exchange](composition-v5-gate.md) then connects a generated winner to a request, physical delivery, custody acknowledgment, and service inside one continuous world.
 
-Those earlier slices are not folded into the Dustlight save. Completing one does not unlock another; there is no star map, moving ark, independent settlement network, or six-chapter ending. Dustlight supplies continuity for its routes, foundry, and production chain, while the field expedition resets declared trials and the later habitat journeys preserve their own fixed physical worlds. Connecting these capabilities into one campaign remains future work.
+Those earlier slices are not folded into the Copperwake save. Completing one does not unlock another; there is no star map, moving ark, independent settlement network, or six-chapter ending. Copperwake supplies continuity for its routes, foundry, and production chain, while the field expedition resets declared trials and the later habitat journeys preserve their own fixed physical worlds. Connecting these capabilities into one campaign remains future work.
 
 The [observatory](observatory.md) displays bounded browser experiments and recorded Rust evidence. The sections below describe the larger journey these working pieces are intended to earn.
 

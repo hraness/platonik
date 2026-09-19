@@ -64,7 +64,9 @@ export interface ChallengeScore {
 function openDb(): Promise<IDBDatabase | null> {
   if (typeof indexedDB === "undefined") return Promise.resolve(null);
   return new Promise((resolve) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    let request: IDBOpenDBRequest;
+    try { request = indexedDB.open(DB_NAME, DB_VERSION); }
+    catch { resolve(null); return; }
     let blocked = false;
     request.onupgradeneeded = () => {
       const db = request.result;
@@ -95,11 +97,35 @@ async function idb<T>(store: string, mode: IDBTransactionMode, run: (s: IDBObjec
   const db = await openDb();
   if (!db) return null;
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(store, mode);
-    const request = run(tx.objectStore(store));
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-    tx.oncomplete = () => db.close();
+    let transaction: IDBTransaction | undefined;
+    let result: T;
+    let settled = false;
+    function fail(error: unknown) {
+      if (settled) return;
+      settled = true;
+      db!.close();
+      reject(error ?? new Error("Browser storage could not complete the transaction."));
+    }
+    try {
+      const tx = db.transaction(store, mode);
+      transaction = tx;
+      tx.oncomplete = () => {
+        if (settled) return;
+        settled = true;
+        db.close();
+        resolve(result);
+      };
+      tx.onabort = () => fail(tx.error);
+      tx.onerror = () => fail(tx.error);
+      const request = run(tx.objectStore(store));
+      // A successful request can still be rolled back by its transaction.
+      // Only oncomplete means the complete write has committed.
+      request.onsuccess = () => { result = request.result; };
+      request.onerror = () => fail(request.error);
+    } catch (error) {
+      try { transaction?.abort(); } catch { /* Already inactive. */ }
+      fail(error);
+    }
   });
 }
 
@@ -142,18 +168,29 @@ export async function loadHabitat(id: string): Promise<HabitatSave | null> {
   return row ?? (MEMORY.get(memKey("habitats", id)) as HabitatSave | undefined) ?? null;
 }
 
-export async function saveWorld(world: LivingWorld, id: string): Promise<void> {
+/** True only after a browser-storage commit; false means this tab's memory. */
+export async function saveWorld(world: LivingWorld, id: string): Promise<boolean> {
   const value: WorldSave = { id, kind: "world", updated: Date.now(), world };
   const done = await idb("worlds", "readwrite", (store) => store.put(value));
-  if (done === null) MEMORY.set(memKey("worlds", id), value);
+  if (done === null) {
+    MEMORY.set(memKey("worlds", id), value);
+    return false;
+  }
+  return true;
 }
 
-export async function latestWorld(): Promise<WorldSave | null> {
+export async function listWorlds(): Promise<WorldSave[]> {
   const rows = await idb<WorldSave[]>("worlds", "readonly", (store) => store.getAll() as IDBRequest<WorldSave[]>);
   const memory = [...MEMORY.entries()]
     .filter(([key]) => key.startsWith("worlds:"))
     .map(([, value]) => value as WorldSave);
-  return [...(rows ?? []), ...memory].sort((a, b) => b.updated - a.updated)[0] ?? null;
+  const revisions = new Map<string, WorldSave>();
+  for (const row of [...(rows ?? []), ...memory]) revisions.set(row.id, row);
+  return [...revisions.values()].sort((a, b) => b.updated - a.updated);
+}
+
+export async function latestWorld(): Promise<WorldSave | null> {
+  return (await listWorlds())[0] ?? null;
 }
 
 export async function saveScore(score: ChallengeScore): Promise<void> {

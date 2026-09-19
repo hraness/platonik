@@ -7,6 +7,7 @@ Rule: {"when": [condition, ...], "action": action, "remember": {"slot": 0-3, "va
 
 Conditions (all must hold; up to 8 per rule):
   {"kind":"carrying","value":bool}          — cell holds a spark
+  {"kind":"at_position","position":{"x":N,"y":N}} — standing on this usable tile (v6+)
   {"kind":"at_source","value":bool}         — standing on a source
   {"kind":"at_depot","value":bool}          — standing on a depot
   {"kind":"at_beacon","value":bool}         — standing on a beacon

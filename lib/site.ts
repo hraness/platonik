@@ -3,5 +3,5 @@ export const site = {
   url: "https://platonik.space",
   repository: "https://github.com/hraness/platonik",
   description:
-    "Build a persistent automation world with your AI agent, then watch its creatures, resources, construction, and consequences in a deterministic browser renderer.",
+    "Build a persistent automation world in your browser and with your AI agent. Mine, manufacture, route supplies, and grow the same saved frontier.",
 } as const;
