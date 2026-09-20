@@ -10,11 +10,11 @@ import { CELL_NAMES, FACILITY_LABELS, facilityName, facilityStatus, itemList, wo
 type Selection = { kind: "cell" | "facility"; id: number };
 
 const BUILDINGS: { kind: FacilityKind; description: string; cost: string }[] = [
-  { kind: "miner", description: "Extract ore from a deposit.", cost: "2 material + 1 part" },
-  { kind: "fabricator", description: "Turn material and sparks into parts.", cost: "3 material + 2 parts" },
-  { kind: "assembler", description: "Make frames from material, parts and sparks.", cost: "4 material + 2 parts" },
-  { kind: "crane", description: "Move items between adjacent machines.", cost: "1 material + 1 part + 1 frame" },
-  { kind: "storehouse", description: "Store items for your freight routes.", cost: "2 material + 1 part" },
+  { kind: "miner", description: "Extract ore from a deposit.", cost: "2 material · 1 part" },
+  { kind: "fabricator", description: "Turn material and sparks into parts.", cost: "3 material · 2 parts" },
+  { kind: "assembler", description: "Make frames from material, parts and sparks.", cost: "4 material · 2 parts" },
+  { kind: "crane", description: "Move items between adjacent machines.", cost: "1 material · 1 part · 1 frame" },
+  { kind: "storehouse", description: "Store items for your freight routes.", cost: "2 material · 1 part" },
 ];
 export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom, onCommand, onRoute }: {
   report: WorldReport; onAsk: (question: string) => void; running: boolean; onPause: () => void; busy: boolean; animatedFrom?: number;
@@ -24,6 +24,7 @@ export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom
   const frames = useMemo(() => views.map((view) => view.frame), [views]);
   const { at, setAt, playing, play, stop, speed, setSpeed } = useReplay(frames.length);
   const preserveReplayOnPause = useRef(false);
+  const stage = useRef<HTMLDivElement>(null);
   const [building, setBuilding] = useState<FacilityKind | null>(null);
   const [target, setTarget] = useState<Point>({ x: 8, y: 8 });
   const [routing, setRouting] = useState(false);
@@ -63,7 +64,12 @@ export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom
   const parts = facilities.filter((facility) => facility.kind === "fabricator").reduce((sum, facility) => sum + facility.minted, 0);
   const madeFrames = facilities.filter((facility) => facility.kind === "assembler").reduce((sum, facility) => sum + facility.minted, 0);
 
-  function select(value: Selection) { stop(); setSelection(value); setRouting(false); }
+  function select(value: Selection) { if (!running) stop(); setSelection(value); setRouting(false); }
+  function cancelPlan() { setBuilding(null); setRouting(false); setRoutePoints([]); stage.current?.querySelector<SVGSVGElement>(".frontier-canvas")?.focus({ preventScroll: true }); }
+  function locate(value: Selection) {
+    const entity = value.kind === "facility" ? facilities.find((facility) => facility.id === value.id) : state.cells.find((cell) => cell.id === value.id);
+    if (entity) setFocusPoint({ ...entity.position });
+  }
   function chooseBuilding(kind: FacilityKind) { onPause(); stop(); setAt(frames.length - 1); setRouting(false); setBuilding(building === kind ? null : kind); }
   function chooseTarget(point: Point) { setTarget(point); if (routing && routePoints.length < 8) setRoutePoints((points) => [...points, point]); }
   const frontier = report.experiment.seed === 751 && report.experiment.width === 32 && report.experiment.height === 22;
@@ -79,12 +85,17 @@ export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom
   ];
   const nextGoal = goals.find((goal) => !goal.done);
   const crossing = report.state.cells.find((cell) => cell.position.x === target.x && cell.position.y === target.y);
+  const crossingCanMove = crossing && (report.experiment.cells.find((cell) => cell.id === crossing.id) ?? report.state.construction?.births.find((birth) => birth.body.cell.id === crossing.id)?.body.cell)?.mobile;
   const build = BUILDINGS.find((item) => item.kind === building);
-  const mobileCells = state.cells.filter((cell) => report.experiment.cells.find((original) => original.id === cell.id)?.mobile);
+  const planActive = Boolean(build || routing);
+  const siteIssue = building ? constructionSiteIssue(report, building, target) : null;
+  const selectedEntity = selectedFacility ?? selectedCell;
+  const timelineMoment = view.current ? "latest" : running ? "running" : "history";
   async function place() { if (building && await onCommand({ kind: "place", structure: building, position: target })) setBuilding(null); }
   async function assignRoute() { if (selection.kind === "cell" && await onRoute(selection.id, routePoints)) { setRouting(false); setRoutePoints([]); } }
 
   function pauseForReplay() { preserveReplayOnPause.current = running; onPause(); }
+  function showLatest() { preserveReplayOnPause.current = false; stop(); setAt(frames.length - 1); }
   function togglePlayback() {
     if (playing) { stop(); return; }
     if (at >= frames.length - 1) setAt(0);
@@ -92,19 +103,60 @@ export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom
   }
 
   return (
-    <div className="world-stage world-workspace">
+    <div ref={stage} className="world-stage world-workspace" onKeyDown={(event) => { if (event.key === "Escape" && (building || routing)) { event.preventDefault(); cancelPlan(); } }}>
       <div className="world-scene">
         {frontier && <section className="frontier-objective" aria-label="Settlement goal"><div><strong>{nextGoal?.title ?? "Your first factory is working."}</strong><p>{nextGoal?.detail ?? "Explore the ore seams, build another workshop, and draw a freight route to connect it."}</p></div><span>{goals.filter((goal) => goal.done).length} / {goals.length}</span>{(nextGoal === goals[2] || nextGoal === goals[4]) && <button className="lab-button secondary" disabled={busy} onClick={() => { const site = nextGoal === goals[2] ? { x: 8, y: 8 } : { x: 7, y: 6 }; chooseBuilding(nextGoal === goals[2] ? "crane" : "storehouse"); setTarget(site); setFocusPoint(site); }}>{nextGoal === goals[2] ? "Plan this crane" : "Plan this storehouse"}</button>}</section>}
-        <FrontierMap report={report} frame={frame} selection={selection} onSelect={select} building={building} target={target} onTarget={chooseTarget} focusPoint={focusPoint} routing={routing} routePoints={routePoints} />
-        <div className="frontier-buildbar" aria-label="Build machines">{BUILDINGS.map((item) => <button type="button" key={item.kind} aria-pressed={building === item.kind} disabled={busy} onClick={() => chooseBuilding(item.kind)} title={`${item.description} Build: ${item.cost}`}><SpriteIcon kind={item.kind} /><span>{FACILITY_LABELS[item.kind]}</span></button>)}</div>
+        <FrontierMap report={report} frame={frame} selection={selection} onSelect={select} building={building} target={target} onTarget={chooseTarget} focusPoint={focusPoint} routing={routing} routePoints={routePoints} onCancel={cancelPlan} />
+        <div className="frontier-buildbar" aria-label="Build machines">{BUILDINGS.map((item) => <button type="button" key={item.kind} aria-pressed={building === item.kind} disabled={busy} onClick={() => chooseBuilding(item.kind)} title={`${item.description} Build: ${item.cost}`}><SpriteIcon kind={item.kind} /><span className="frontier-build-copy"><span>{FACILITY_LABELS[item.kind]}</span><small className="frontier-build-cost">{item.cost}</small></span></button>)}</div>
+      </div>
+
+      <aside className="world-workshop" aria-label="Workshop and inspector">
         {(build || routing) && <section className="frontier-placement" aria-label={routing ? "Freight route editor" : "Construction plan"}>
-          <div><strong>{routing ? `Draw ${selectedCell ? CELL_NAMES[selectedCell.id] ?? `Courier ${selectedCell.id}` : "a courier"}'s route` : `Build a ${FACILITY_LABELS[building!]}`}</strong><p>{routing ? "Choose 4–8 corners of a closed loop, with straight horizontal or vertical sides. Include this courier’s current tile. Click the map to add corners." : `${build!.description} Construction costs ${build!.cost}. Place the site on a hauler’s route so supplies can reach it.`}</p></div>
-          <div className="frontier-coordinates"><label>X<input type="number" aria-label="Site X" min="0" max={report.experiment.width - 1} value={target.x} onChange={(event) => setTarget({ ...target, x: Number(event.target.value) })} /></label><label>Y<input type="number" aria-label="Site Y" min="0" max={report.experiment.height - 1} value={target.y} onChange={(event) => setTarget({ ...target, y: Number(event.target.value) })} /></label>
-            {routing ? <button className="lab-button secondary" disabled={routePoints.length >= 8} onClick={() => setRoutePoints((points) => [...points, target])}>Add corner</button> : <button className="lab-button" onClick={() => void place()} disabled={busy || Boolean(crossing)}>Place site</button>}
-            <button className="lab-button secondary" onClick={() => { setBuilding(null); setRouting(false); }}>Cancel</button></div>
-          {build && crossing && <div className="frontier-site-blocked"><p>{CELL_NAMES[crossing.id] ?? `Courier ${crossing.id}`} is on this tile. Let the crew move before placing the site.</p><button className="lab-button secondary" disabled={busy || report.tick + 8 > report.maximum_tick} onClick={() => void onCommand({ kind: "advance", ticks: 8 })}>Let crew move</button></div>}
+          <div><strong>{routing ? `Draw ${selectedCell ? CELL_NAMES[selectedCell.id] ?? `Courier ${selectedCell.id}` : "a courier"}'s route` : `Build: ${FACILITY_LABELS[building!]}`}</strong><p>{routing ? "Choose 4–8 corners of a closed loop, with straight horizontal or vertical sides. Include this courier’s current tile. Click the map to add corners." : `${build!.description} Construction costs ${build!.cost}. Place the site on a hauler’s route so supplies can reach it.`}</p></div>
+          <div className="frontier-coordinates"><label>X<input type="number" aria-label={routing ? "Corner X" : "Site X"} min="0" max={report.experiment.width - 1} value={target.x} onChange={(event) => setTarget({ ...target, x: Number(event.target.value) })} /></label><label>Y<input type="number" aria-label={routing ? "Corner Y" : "Site Y"} min="0" max={report.experiment.height - 1} value={target.y} onChange={(event) => setTarget({ ...target, y: Number(event.target.value) })} /></label>
+            {routing ? <button className="lab-button secondary" disabled={routePoints.length >= 8} onClick={() => setRoutePoints((points) => [...points, target])}>Add corner</button> : <button className="lab-button" onClick={() => void place()} disabled={busy || Boolean(crossing) || Boolean(siteIssue)}>Place site</button>}
+            <button className="lab-button secondary" onClick={cancelPlan}>Cancel</button></div>
+          {build && siteIssue && <p className="frontier-site-blocked" role="status">{siteIssue}</p>}
+          {build && !siteIssue && crossing && <div className="frontier-site-blocked"><p>{CELL_NAMES[crossing.id] ?? `Courier ${crossing.id}`} is on this tile. {crossingCanMove ? "Let the crew move before placing the site." : "Choose another tile for this site."}</p>{crossingCanMove && <button className="lab-button secondary" disabled={busy || report.tick + 8 > report.maximum_tick} onClick={() => void onCommand({ kind: "advance", ticks: 8 })}>Let crew move</button>}</div>}
           {routing && <><ol className="frontier-route-points">{routePoints.map((point, index) => <li key={index}>{point.x}, {point.y}</li>)}</ol><div className="frontier-route-actions"><button className="lab-button" disabled={busy || routePoints.length < 4} onClick={() => void assignRoute()}>Assign freight route</button><button className="lab-button secondary" disabled={!routePoints.length} onClick={() => setRoutePoints((points) => points.slice(0, -1))}>Undo corner</button><button className="lab-button secondary" disabled={!routePoints.length} onClick={() => setRoutePoints([])}>Clear route</button>{frontier && <button className="lab-button secondary" onClick={() => { setRoutePoints([{ x: 7, y: 3 }, { x: 9, y: 3 }, { x: 9, y: 8 }, { x: 13, y: 8 }, { x: 13, y: 10 }, { x: 26, y: 10 }, { x: 26, y: 18 }, { x: 7, y: 18 }]); setFocusPoint({ x: 17, y: 11 }); }}>Sketch outpost loop</button>}</div></>}
         </section>}
+        {!planActive && <>
+          <div className="world-workshop-heading"><h2>Inspector</h2><span>Tick {frame.tick}</span></div>
+          <label className="world-entity-picker" htmlFor="world-entity-picker">Inspect a machine or courier
+            <select id="world-entity-picker" aria-controls="world-inspector" value={selectedEntity ? `${selection.kind}:${selection.id}` : ""} onChange={(event) => {
+              const [kind, id] = event.target.value.split(":");
+              if (kind !== "facility" && kind !== "cell") return;
+              const value: Selection = { kind, id: Number(id) };
+              select(value); locate(value);
+            }}>
+              {!selectedEntity && <option value="">Choose a machine or courier</option>}
+              <optgroup label="Machines">{facilities.map((facility) => <option key={facility.id} value={`facility:${facility.id}`}>{displayFacilityName(facility, report.names)} · {facility.position.x}, {facility.position.y}</option>)}</optgroup>
+              <optgroup label="Crew">{state.cells.map((cell) => <option key={cell.id} value={`cell:${cell.id}`}>{CELL_NAMES[cell.id] ?? `Cell ${cell.id}`} · {cell.position.x}, {cell.position.y}</option>)}</optgroup>
+            </select>
+          </label>
+          <section className="world-inspector" id="world-inspector" aria-labelledby="world-inspector-title">
+            {selectedFacility && diagnostic ? <>
+              <h3 id="world-inspector-title">{displayFacilityName(selectedFacility, report.names)}</h3>
+              <p className="world-inspector-location">{FACILITY_LABELS[selectedFacility.kind]} · {selectedFacility.position.x}, {selectedFacility.position.y}</p>
+              <button className="lab-button secondary world-locate" type="button" onClick={() => locate(selection)}>Locate on map</button>
+              <FacilityDetails facility={selectedFacility} diagnostic={diagnostic} names={report.names} />
+              <button className="lab-button secondary world-ask-facility" type="button" onClick={() => onAsk(
+                `Help me improve ${displayFacilityName(selectedFacility, report.names)} (facility ${selectedFacility.id}). At displayed tick ${frame.tick}, its checked status was: ${facilityStatus(diagnostic)}. Inspect the latest state first, then propose one useful supply-chain improvement while keeping the light routes served.`
+              )}>Ask your agent about this</button>
+            </> : selectedCell ? <>
+              <h3 id="world-inspector-title">{CELL_NAMES[selectedCell.id] ?? `Cell ${selectedCell.id}`}</h3>
+              <p>{cellState(selectedCell, activation)}</p>
+              <dl><div><dt>Position</dt><dd>{selectedCell.position.x}, {selectedCell.position.y}</dd></div>
+                <div><dt>Carrying</dt><dd>{carryingList(selectedCell)}</dd></div></dl>
+              <button className="lab-button secondary world-locate" type="button" onClick={() => locate(selection)}>Locate on map</button>
+              {(report.experiment.version ?? 5) >= 6 && report.experiment.cells.find((cell) => cell.id === selectedCell.id)?.mobile && <button className="lab-button secondary" disabled={busy} onClick={() => { onPause(); stop(); setAt(frames.length - 1); setBuilding(null); setRouting(true); setRoutePoints([]); setTarget(report.state.cells.find((cell) => cell.id === selectedCell.id)?.position ?? selectedCell.position); }}>Draw freight route</button>}
+              <details><summary>Working memory</summary><p>{selectedCell.memory.join(" · ")}</p></details>
+            </> : <><h3 id="world-inspector-title">Select part of your world</h3>
+              <p>Choose a machine or courier from the list or map. A selected facility may not exist yet in an earlier replay frame.</p></>}
+          </section>
+        </>}
+      </aside>
+      <div className="world-history" aria-label="Factory history">
         <div className="world-vitals" aria-label="World state at this moment">
           <span><strong>{state.delivered.length}</strong> light delivered</span>
           <span><strong>{state.cells.length}</strong> creatures</span>
@@ -119,8 +171,9 @@ export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom
             onPointerDown={() => { pauseForReplay(); stop(); }}
             onKeyDown={(event) => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) { pauseForReplay(); stop(); } }}
             onChange={(event) => { pauseForReplay(); stop(); setAt(Number(event.target.value)); }}
-            aria-label="World timeline" aria-valuetext={`Tick ${frame.tick}${view.current ? ", current revision" : ", replay"}`} />
-          <span>Tick {frame.tick}{view.current ? " · now" : " · replay"}</span>
+            aria-label="World timeline" aria-valuetext={`Tick ${frame.tick}, ${timelineMoment}`} />
+          <span>Tick {frame.tick} · {timelineMoment}</span>
+          {!view.current && <button className="lab-button secondary world-timeline-latest" type="button" onClick={showLatest}>Latest</button>}
           <select aria-label="Replay speed" value={speed} onChange={(event) => setSpeed(Number(event.target.value))}>
             <option value={4}>1×</option><option value={8}>2×</option><option value={16}>4×</option><option value={32}>8×</option>
           </select>
@@ -137,42 +190,29 @@ export function WorldStage({ report, onAsk, running, onPause, busy, animatedFrom
             : <p>No creature action at this recorded tick. Facility status is shown in the workshop.</p>}
         </div></details>
       </div>
-
-      <aside className="world-workshop" aria-label="Workshop and inspector">
-        <div className="world-workshop-heading"><h2>Workshop</h2><span>Tick {frame.tick}</span></div>
-        <p className="world-workshop-hint">Select a machine or courier. Follow what it makes and what it needs.</p>
-        <div className="world-facilities" aria-label="Facilities">
-          {facilities.map((facility) => {
-            const status = view.industry.find((item) => item.id === facility.id);
-            return <button key={facility.id} type="button" className="world-facility"
-              aria-pressed={selection.kind === "facility" && selection.id === facility.id}
-              aria-controls="world-inspector" onClick={() => select({ kind: "facility", id: facility.id })}>
-              <SpriteIcon kind={facility.kind} /><span><strong>{facilityName(facility.id, report.names)}</strong><span>{status ? facilityStatus(status) : "Inspect facility"}</span></span>
-            </button>;
-          })}
-        </div>
-        <div className="frontier-crew" aria-label="Crew">{mobileCells.map((cell) => <button type="button" key={cell.id} aria-pressed={selection.kind === "cell" && selection.id === cell.id} onClick={() => { select({ kind: "cell", id: cell.id }); setFocusPoint({ ...cell.position }); }}><SpriteIcon kind="rover" /><span>{CELL_NAMES[cell.id] ?? `Courier ${cell.id}`}</span></button>)}</div>
-        <section className="world-inspector" id="world-inspector" aria-labelledby="world-inspector-title">
-          {selectedFacility && diagnostic ? <>
-            <h3 id="world-inspector-title">{facilityName(selectedFacility.id, report.names)}</h3>
-            <p className="world-inspector-location">{FACILITY_LABELS[selectedFacility.kind]} · {selectedFacility.position.x}, {selectedFacility.position.y}</p>
-            <FacilityDetails facility={selectedFacility} diagnostic={diagnostic} names={report.names} />
-            <button className="lab-button secondary world-ask-facility" type="button" onClick={() => onAsk(
-              `Help me improve ${facilityName(selectedFacility.id, report.names)} (facility ${selectedFacility.id}). At displayed tick ${frame.tick}, its checked status was: ${facilityStatus(diagnostic)}. Inspect the latest state first, then propose one useful supply-chain improvement while keeping the light routes served.`
-            )}>Ask your agent about this</button>
-          </> : selectedCell ? <>
-            <h3 id="world-inspector-title">{CELL_NAMES[selectedCell.id] ?? `Cell ${selectedCell.id}`}</h3>
-            <p>{cellState(selectedCell, activation)}</p>
-            <dl><div><dt>Position</dt><dd>{selectedCell.position.x}, {selectedCell.position.y}</dd></div>
-              <div><dt>Carrying</dt><dd>{carryingList(selectedCell)}</dd></div></dl>
-            {(report.experiment.version ?? 5) >= 6 && report.experiment.cells.find((cell) => cell.id === selectedCell.id)?.mobile && <button className="lab-button secondary" disabled={busy} onClick={() => { onPause(); stop(); setAt(frames.length - 1); setBuilding(null); setRouting(true); setRoutePoints([]); setTarget(report.state.cells.find((cell) => cell.id === selectedCell.id)?.position ?? selectedCell.position); }}>Draw freight route</button>}
-            <details><summary>Working memory</summary><p>{selectedCell.memory.join(" · ")}</p></details>
-          </> : <><h3 id="world-inspector-title">Select part of your world</h3>
-            <p>Choose a facility above or a courier on the map. A selected facility may not exist yet in an earlier replay frame.</p></>}
-        </section>
-      </aside>
     </div>
   );
+}
+
+function displayFacilityName(facility: FacilityState, names: Record<string, string>): string {
+  const name = facilityName(facility.id, names);
+  return names[String(facility.id)] === undefined && name === `Facility ${facility.id}` ? `${FACILITY_LABELS[facility.kind]} ${facility.id}` : name;
+}
+
+// Immediate feedback for visible site constraints; Rust still admits every placement.
+function constructionSiteIssue(report: WorldReport, kind: FacilityKind, point: Point): string | null {
+  const { experiment, state } = report;
+  const here = (position: Point) => position.x === point.x && position.y === point.y;
+  if (!Number.isInteger(point.x) || !Number.isInteger(point.y) || point.x < 0 || point.y < 0 || point.x >= experiment.width || point.y >= experiment.height) return "Choose a whole-number tile inside the map.";
+  if (experiment.walls.some(here)) return "This tile is blocked terrain. Choose an open tile.";
+  const deposit = experiment.construction?.stocks.some((stock) => here(stock.position));
+  if (kind === "miner" && !deposit) return "A drill must be placed on a material deposit.";
+  if (state.facilities?.some((facility) => here(facility.position))) return "A machine or construction site already occupies this tile.";
+  const reserved = experiment.construction?.blueprints.some((blueprint) => here(blueprint.body.cell.position));
+  const station = [...experiment.sources, ...experiment.depots, ...experiment.beacons, ...experiment.valves, ...(experiment.construction?.stocks ?? [])].some((entry) => here(entry.position));
+  if ((station || reserved) && !(kind === "miner" && deposit)) return deposit ? "Only a drill can be placed on a material deposit." : "This tile belongs to a station or reserved construction. Choose an open tile.";
+  if (reserved && state.construction?.assemblies.some((assembly) => experiment.construction?.blueprints.some((blueprint) => blueprint.id === assembly.blueprint && here(blueprint.body.cell.position)))) return "This tile is reserved for a creature under construction.";
+  return null;
 }
 
 function FacilityDetails({ facility, diagnostic, names }: { facility: FacilityState; diagnostic: FacilityDiagnostic; names: Record<string, string> }) {

@@ -170,16 +170,17 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
   const shareReady = handoff?.hash === report.world_hash;
   const limit = report.tick >= report.maximum_tick || world.events.length >= 128;
   return <main id="main" className="world-page">
-    <header className="world-header"><div><h1>{report.name}</h1><p>Build a factory. Give your crew a route. See how far you can take it.</p></div>
-      <div className="world-header-actions"><button className="lab-button secondary" onClick={download}>Save to file</button><button className="lab-button secondary" onClick={newWorld} disabled={busy}>New frontier</button></div>
+    <header className="world-header"><div><h1>{report.name}</h1><p>Build. Connect. Explore.</p></div>
+      <span className="world-save-indicator">{busy ? "Saving…" : durable ? "Saved in this browser" : "Session only"}</span>
     </header>
     {(report.experiment.version ?? 5) < 6 && <p className="world-legacy-notice">This is an earlier world with its original rules. Keep playing it, or start a new frontier for the larger landscape and new accounting.</p>}
     {detached && <p className="world-legacy-notice">You are continuing a saved copy. The original shared link still opens its original revision. <button type="button" onClick={() => handoff?.url ? void copy(handoff.url, "Link copied for this new revision.") : download()} disabled={!shareReady}>Share this revision</button></p>}
     <div className="world-session" aria-label="Factory controls"><div className="world-run-controls">
-      <button className="lab-button" disabled={limit || (busy && !running)} onClick={() => setRunning((value) => !value)}>{running ? "Pause factory" : "Run factory"}</button>
+      <button className="lab-button world-run-button" disabled={limit || (busy && !running)} onClick={() => setRunning((value) => !value)}><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">{running ? <path d="M4 3v10M12 3v10" stroke="currentColor" strokeWidth="3" /> : <path d="m4 2 10 6-10 6Z" fill="currentColor" />}</svg>{running ? "Pause factory" : "Run factory"}</button>
       <button className="lab-button secondary" disabled={running || busy || limit} onClick={() => void apply({ kind: "advance", ticks: Math.min(64, report.maximum_tick - report.tick) })}>Advance 64 ticks</button>
-      <span>{busy ? "Saving…" : running ? "Factory running" : "Factory paused"} · tick {report.tick}</span>
-    </div><details className="world-session-details"><summary>Worlds & files</summary><div>
+      <span className={`world-run-state${running ? " is-running" : ""}`}>{running ? "Running" : "Paused"} · tick {report.tick}</span>
+    </div><details className="world-session-details" onKeyDown={(event) => { if (event.key === "Escape") { event.currentTarget.open = false; event.currentTarget.querySelector("summary")?.focus(); } }}><summary>Worlds & files</summary><div>
+      <div className="world-file-actions"><button className="lab-button secondary" onClick={download}>Save to file</button><button className="lab-button secondary" onClick={newWorld} disabled={busy}>New frontier</button></div>
       <label>Saved worlds<select aria-label="Saved worlds" value={`${world.genesis_hash}:${world.name}`} disabled={busy} onChange={(event) => { const selected = saves.find((save) => `${save.world.genesis_hash}:${save.world.name}` === event.target.value); if (selected) void openValue(selected.world, "Saved world opened."); }}>{saves.map((save) => <option key={`${save.world.genesis_hash}:${save.world.name}`} value={`${save.world.genesis_hash}:${save.world.name}`}>{save.world.name} · revision {save.world.revision}</option>)}</select></label>
       <label>Earlier revisions<select aria-label="Earlier revisions" disabled={busy} value={report.world_hash} onChange={(event) => { const selected = revisions.find((save) => save.id === event.target.value); if (selected) void openValue(selected.world, "Earlier revision restored as the active copy."); }}>{revisions.filter((save) => save.world.genesis_hash === world.genesis_hash && save.world.name === world.name).map((save) => <option key={save.id} value={save.id}>Revision {save.world.revision} · {save.id.slice(7, 15)}</option>)}</select></label>
       <label className="world-file lab-button secondary">Import world<input type="file" accept="application/json,.json" disabled={busy} onChange={(event) => { void openFile(event.target.files?.[0]); event.target.value = ""; }} /></label>

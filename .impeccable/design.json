@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-19T17:11:51.465629Z",
+  "generatedAt": "2026-09-20T01:32:18.577671Z",
   "title": "Design System: Platonik",
   "extensions": {
     "colorMeta": {
@@ -384,7 +384,7 @@
       },
       "world-title": {
         "displayName": "World Title",
-        "purpose": "Compact frontier title."
+        "purpose": "Compact frontier title; 30px at widths up to 800px."
       },
       "prose-heading": {
         "displayName": "Prose Heading",
@@ -421,6 +421,10 @@
       "factory-process": {
         "displayName": "Factory process",
         "purpose": "Homepage production labels in ordinary four-column HTML, independent of illustration scaling."
+      },
+      "inspector-choice": {
+        "displayName": "Inspector choice",
+        "purpose": "Native selector for every current machine and cell, including stationary crew."
       }
     },
     "shadows": [
@@ -470,7 +474,7 @@
         "value": "760px"
       },
       {
-        "name": "compact-replay",
+        "name": "phone-controls-and-replay",
         "value": "520px"
       },
       {
@@ -497,6 +501,13 @@
       "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--accent);border-radius:.5rem;background:var(--accent);color:var(--hraness-palette-primary-foreground);padding:10px 15px;font:14px/1.65 var(--body);cursor:pointer;background-image:linear-gradient(to bottom,var(--hraness-material-edge),transparent 2px)}.ds-button:hover:not(:disabled){background:color-mix(in oklch,var(--accent) 92%,var(--ink));color:var(--hraness-palette-primary-foreground)}.ds-button:focus-visible{outline:2px solid var(--focus);outline-offset:3px}.ds-button:disabled{opacity:.5;cursor:default;background-image:none}.ds-secondary{background:transparent;color:var(--accent)}.ds-secondary:hover:not(:disabled){background:var(--wash);color:var(--accent)}"
     },
     {
+      "name": "Factory controls",
+      "kind": "custom",
+      "description": "Run and bounded advance precede the map; at phone widths, actions form the top row and running state and Worlds & files the second.",
+      "html": "<div class=\"ds-session\"><div class=\"ds-run-controls\"><button class=\"ds-button\">Run factory</button><button class=\"ds-button ds-secondary\">Advance 64 ticks</button><span class=\"ds-run-state\">Paused · tick 0</span></div><details class=\"ds-session-details\"><summary>Worlds &amp; files</summary><div><button class=\"ds-button ds-secondary\">Save to file</button></div></details></div>",
+      "css": ".ds-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--accent);border-radius:.5rem;background:var(--accent);color:var(--hraness-palette-primary-foreground);padding:10px 15px;font:14px/1.65 var(--body);cursor:pointer;background-image:linear-gradient(to bottom,var(--hraness-material-edge),transparent 2px)}.ds-button:hover:not(:disabled){background:color-mix(in oklch,var(--accent) 92%,var(--ink));color:var(--hraness-palette-primary-foreground)}.ds-button:focus-visible{outline:2px solid var(--focus);outline-offset:3px}.ds-button:disabled{opacity:.5;cursor:default;background-image:none}.ds-secondary{background:transparent;color:var(--accent)}.ds-secondary:hover:not(:disabled){background:var(--wash);color:var(--accent)}.ds-session{position:relative;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;color:var(--ink);font:13px/1.65 var(--body)}.ds-run-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px}.ds-run-state{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}.ds-run-state::before{content:\"\";width:6px;height:6px;border-radius:50%;background:var(--muted)}.ds-session-details{position:relative}.ds-session-details summary{min-height:44px;padding:12px 8px;cursor:pointer}.ds-session-details summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}.ds-session-details>div{position:absolute;z-index:5;right:0;top:100%;display:grid;gap:12px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:12px}@media(max-width:520px){.ds-session{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px}.ds-run-controls{display:contents}.ds-run-state{grid-column:1;grid-row:2}.ds-session-details{grid-column:2;grid-row:2;margin-left:auto;position:static}.ds-session-details summary{padding:8px 4px;font-size:12px}}"
+    },
+    {
       "name": "Coordinate field",
       "kind": "input",
       "refersTo": "coordinate-field",
@@ -512,20 +523,20 @@
       "css": ".ds-nav{display:flex;flex-wrap:wrap;gap:29px;font:14px/1.65 var(--body)}.ds-nav a{padding:12px 0;color:var(--ink);text-decoration:none}.ds-nav a:hover{color:var(--accent);text-decoration:underline;text-underline-offset:.22em}.ds-nav a:focus-visible{outline:2px solid var(--focus);outline-offset:5px}"
     },
     {
-      "name": "Selected facility row",
-      "kind": "button",
-      "refersTo": "selected-facility",
-      "description": "The text and state portion of a machine row; the live game also displays its atlas sprite.",
-      "html": "<button class=\"ds-facility\" aria-pressed=\"true\"><strong>Workshop</strong><span>Waiting for material</span></button>",
-      "css": ".ds-facility{display:grid;gap:3px;text-align:left;min-height:58px;width:100%;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--hraness-material-warm-plane);color:var(--ink);font:13px/1.4 var(--body);cursor:pointer}.ds-facility strong{font-weight:600}.ds-facility span{color:var(--muted);font-size:11px}.ds-facility:hover{background:var(--wash)}.ds-facility:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
+      "name": "Entity selector",
+      "kind": "input",
+      "refersTo": "entity-picker",
+      "description": "Compact machine and crew chooser before the inspector; live selection locates every current facility or cell on the map.",
+      "html": "<label class=\"ds-entity-picker\">Inspect a machine or courier<select aria-label=\"Inspect a machine or courier\"><optgroup label=\"Machines\"><option>Fabricator · 7, 8</option><option>Assembler · 9, 8</option></optgroup><optgroup label=\"Crew\"><option>Moth · 7, 3</option><option>Foundry · 12, 4</option></optgroup></select></label>",
+      "css": ".ds-entity-picker{display:grid;gap:8px;margin-top:16px;font:12px/1.65 var(--body);color:var(--muted)}.ds-entity-picker select{width:100%;min-width:0;min-height:44px;padding:10px;background:var(--paper);color:var(--ink);border:1px solid var(--control-border);border-radius:6px;font:13px var(--body)}.ds-entity-picker select:focus-visible{outline:2px solid var(--focus);outline-offset:3px}@media(max-width:800px){.ds-entity-picker{margin-top:10px}}"
     },
     {
       "name": "Camera action",
       "kind": "button",
       "refersTo": "camera-button",
-      "description": "Fixed daylight control colors remain legible over the landscape.",
+      "description": "Fixed daylight controls with 44px minimum targets; keyboard camera focus stays on the root SVG.",
       "html": "<button class=\"ds-camera\">Home</button>",
-      "css": ".ds-camera{background:#f3eedc;color:#283c33;border:1px solid #5b6350;border-radius:5px;font:600 12px var(--body);padding:10px 12px;min-width:40px;min-height:40px;cursor:pointer}.ds-camera:hover{background:#fff9e7}.ds-camera:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
+      "css": ".ds-camera{background:#f3eedc;color:#283c33;border:1px solid #5b6350;border-radius:5px;font:600 12px var(--body);padding:10px 12px;min-width:44px;min-height:44px;cursor:pointer}.ds-camera:hover{background:#fff9e7}.ds-camera:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
     },
     {
       "name": "Code block",
@@ -565,6 +576,11 @@
         "section": "typography"
       },
       {
+        "name": "The Camera Containment Rule",
+        "body": "Clip drawing at the map and stage boundaries without creating hidden scroll containers. Keep keyboard camera focus on the root SVG and focus it without scrolling during pointer interaction. Expose all machines and cells through the adjacent native selector so offscreen SVG entities do not enter the tab order.",
+        "section": "layout"
+      },
+      {
         "name": "The Evidence Rule",
         "body": "Only Rust-derived state may change a machine's work marker, cargo label, construction state, or production count. Decorative terrain does not imply a resource or route.",
         "section": "components"
@@ -573,7 +589,7 @@
     "dos": [
       "Do preserve the shared palette bindings, installed typefaces, appearance control, and keyboard focus.",
       "Do use the original atlas and its measured crop rectangles for the frontier's machines, couriers, resources, and scrub.",
-      "Do keep the scene dominant and the workshop available without shrinking the whole world to phone width.",
+      "Do keep the scene dominant and its inspector or active plan adjacent, with history below both, without shrinking the whole world to phone width.",
       "Do pair machine colors and animation with written status, cargo labels, or selection outlines.",
       "Do preserve the screen-size floors for world annotations and keep informative homepage labels outside the scaling artwork.",
       "Do preserve the reading and laboratory layouts outside the scoped frontier surface.",
@@ -584,7 +600,8 @@
       "Don't invent simulation outcomes through animation, labels, terrain decoration, or agent narration.",
       "Don't let the game's fixed earth colors override semantic text and control colors in the shared shell.",
       "Don't spread the marketing wall treatment or header blur into reading planes and machine inspectors.",
-      "Don't remove accessible list selection or keyboard camera controls when refining map interactions."
+      "Don't remove the native selector for all machines and cells or keyboard camera controls when refining map interactions.",
+      "Don't let offscreen SVG focus or hidden map scrolling move the surrounding controls."
     ]
   }
 }
