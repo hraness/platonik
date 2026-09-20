@@ -26,14 +26,14 @@ export default function DocsPage() {
       <article className="doc-content">
         <header className="doc-header">
           <h1>The field guide.</h1>
-          <p>Platonik is now one persistent automation world operated by your agent and observed in the browser. Start with the world; open technical detail only when it helps.</p>
+          <p>Platonik is a persistent automation world you can build in your browser and improve with your agent. Start with the factory; open technical detail when it helps.</p>
         </header>
         <p className="proposal-note">
-          The Dustlight world, agent CLI, bounded interventions, five facility kinds, two-tier production, automatic crane transfer, replay, and content-addressed views are implemented. Deeper recipe trees, larger regions, and the complete Long Trail remain in design.
+          The Copperwake frontier, browser construction and freight routes, agent CLI, five facility kinds, part and frame production, automatic crane transfer, local saves, and replay are implemented. Deeper recipe trees, larger regions, and the complete Long Trail remain in design.
         </p>
         <section className="doc-next-step">
           <h2>Start here</h2>
-          <p>Open Dustlight to follow its working routes. Copy the agent ask when you want to build or improve something. The browser is a verified renderer; your agent keeps the authoritative JSON world.</p>
+          <p>Run Copperwake, inspect a machine, place a construction site, and connect supplies with a courier route. Copy the agent ask for a deeper change; your portable world works in both the browser and the CLI.</p>
           <Link href="/play">Open the living world</Link><span aria-hidden="true"> · </span><Link href="/docs/engine#the-living-world-command-surface">Use the world CLI</Link>
         </section>
         <section className="doc-next-step">

@@ -49,7 +49,7 @@ typography:
     letterSpacing: "-.035em"
   world-title:
     fontFamily: "\"Newsreader\", Georgia, \"Times New Roman\", serif"
-    fontSize: "clamp(32px, 3.5vw, 46px)"
+    fontSize: "clamp(28px, 3vw, 36px)"
     fontWeight: 400
     lineHeight: 1.05
     letterSpacing: "-.03em"
@@ -80,6 +80,10 @@ typography:
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "-.01em"
+  inspector-choice:
+    fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
   frontier-annotation:
     fontFamily: "\"Nebula Sans\", ui-sans-serif, system-ui, sans-serif"
     fontSize: "max(.2px, calc(var(--frontier-pixel) * 12))"
@@ -150,11 +154,13 @@ components:
     textColor: "{colors.camera-ink}"
     rounded: "{rounded.camera}"
     padding: "10px 12px"
-  selected-facility:
-    backgroundColor: "{colors.warm-plane}"
+  entity-picker:
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
+    typography: "{typography.inspector-choice}"
     rounded: "{rounded.field}"
-    padding: "8px"
+    padding: "10px"
+    width: "100%"
   world-stage:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
@@ -177,7 +183,7 @@ Platonik gives the game a physical identity: sun-warmed ground, worn copper and 
 
 The shared site system remains intact. The homepage uses the Hraness editorial marketing treatment, documentation uses restrained reading columns, and archived laboratories retain their data-derived diagrams. Original raster art replaces abstract physical-world markers on the current frontier; it does not replace the laboratories' scientific encodings. The surface-specific composition is recorded in `.impeccable/surfaces/app-play.md`.
 
-This record is extracted from the current shared palette package, `app/globals.css`, `app/marketing.css`, `app/lab/lab.css`, `app/play/world.css`, the vendor marketing and Lantern material contracts, and `components/play/frontier-map.tsx`. Frontmatter records effective token bindings rather than superseded declarations earlier in the CSS cascade. It replaces the older light-only laboratory snapshot.
+This record is extracted from the current shared palette package, `app/globals.css`, `app/marketing.css`, `app/lab/lab.css`, `app/play/world.css`, the vendor marketing and Lantern material contracts, and the frontier map, world stage, and live-world controls in `components/play/`. Frontmatter records effective token bindings rather than superseded declarations earlier in the CSS cascade. It replaces the older light-only laboratory snapshot.
 
 **Key Characteristics:**
 
@@ -211,7 +217,7 @@ Nebula Sans is self-hosted through the shared design kit and supplies body copy,
 
 Homepage display and section sizes use the marketing clamps in frontmatter; supporting copy is 17px with 1.6 leading, becoming 16px on narrow screens. Document title and prose roles preserve the reading site's sizes. At widths up to 480px, body text becomes 16px, prose 15px, document title 38px, and prose section headings 27px.
 
-The world title uses the recorded desktop clamp and a 38px override at widths up to 800px. Workshop headings are semibold sans; labels and observed values stay compact, with tabular numerals for counts and ticks. Shared action buttons render at 14px because the shared button rule intentionally wins route-local size declarations. Headings wrap with balance, paragraphs with pretty wrapping, and long names can break without widening the page.
+The world title uses the recorded compact desktop clamp and a 30px override at widths up to 800px. Inspector headings are semibold sans; labels and observed values stay compact, with tabular numerals for counts and ticks. The native entity selector uses the inspector-choice role. At phone widths up to 520px, build-tool names remain 12px; their costs are read in the construction plan instead of compressed beneath each icon. Shared action buttons render at 14px because the shared button rule intentionally wins route-local size declarations. Headings wrap with balance, paragraphs with pretty wrapping, and long names can break without widening the page.
 
 **The Screen Legibility Rule.** World annotations retain a screen-size floor as the camera zooms: 12px for quantities, cargo, construction state, and route indices; 14px for region names. Homepage production labels remain ordinary HTML text outside the scaling illustration.
 
@@ -223,9 +229,15 @@ The shared header has a 72px minimum height, is sticky on wide screens, and beco
 
 Homepage story sections use the vendor's 70rem content measure plus shared gutters and 5rem section rhythm. The hero has its own 4rem/3rem vertical spacing, becoming 2.75rem/2rem at 760px. The factory illustration is a raster composition inside the existing opaque figure plane. Its four production labels form a separate four-column HTML row with 12px text and a 4px gap, so shrinking the art does not shrink its informative labels. Conversation rows and chapter lists retain their existing responsive reading structure.
 
-The frontier shell grows to 1560px with 20px side clearance. Its scene and 292px workshop share one bordered stage; the workshop becomes 260px at 1000px and stacks below the scene at 800px. The map height is `clamp(420px, 56vh, 660px)` on desktop and 460px on smaller screens. Phone width changes the camera scale rather than fitting the entire region into unreadably small tiles. The world page uses 12px side clearance below 800px.
+The frontier shell grows to 1560px with 20px side clearance. Its flexible scene and 300px inspector share one bordered stage; the inspector becomes 270px at widths up to 1000px and stacks below the scene at 800px. The map height is `clamp(300px, min(54svh, calc(100svh - 400px)), 660px)` on desktop and `clamp(300px, 42svh, 420px)` at widths up to 800px. Phone width changes the camera scale rather than fitting the entire region into unreadably small tiles. The world page uses 12px side clearance at 800px and 8px at 520px.
 
-Run controls precede the scene. A short current objective sits above it, the machine bar below it, and the inspector beside or after it. The camera supports pointer dragging, arrow-key panning, plus/minus zoom, and explicit Home and Map controls. The minimap locates the current camera within the finite world. Coordinate fields provide a precise alternative for construction and route points. Historical playback controls stay separate from live simulation controls.
+The compact header pairs the world title and short subtitle with save status. Run/pause, bounded advance, running state, and Worlds & files sit in the control row before the stage. At widths up to 520px, that row uses two equal columns: the two actions above, running state and the file menu below. The file menu retains saved worlds, earlier revisions, import, export, sharing, and new-frontier actions.
+
+A short current objective sits above the map and the five-tool machine bar below it. The inspector occupies the adjacent column. Construction and freight-route plans replace its selection and inspection content while active; on a stacked layout the plan or inspector follows immediately after the machine bar. Telemetry, timeline, beacon status, and crew history form a full-width region below both scene and inspector. On phones the timeline slider gets its own row.
+
+The camera supports pointer dragging, arrow-key panning, plus/minus zoom, Home, and explicit Home and Map controls. The minimap locates the current camera within the finite world. Coordinate fields provide a precise alternative for construction and route points. Historical playback controls stay separate from live simulation controls; Latest returns to the current recorded state without advancing the engine.
+
+**The Camera Containment Rule.** Clip drawing at the map and stage boundaries without creating hidden scroll containers. Keep keyboard camera focus on the root SVG and focus it without scrolling during pointer interaction. Expose all machines and cells through the adjacent native selector so offscreen SVG entities do not enter the tab order.
 
 ## Elevation & Depth
 
@@ -237,7 +249,7 @@ The production marker alternates only while Rust reports work, using a 1.1-secon
 
 ## Shapes
 
-The system uses open reading sections and distinct functional radii: subtle code/prose corners, compact marketing actions, 6px selection and coordinate-field corners, 8px shared action controls, and 12px stage and panel corners. One-pixel seams divide working regions. Selected construction tools receive an inset two-pixel outline; keyboard focus remains visible with an offset outline.
+The system uses open reading sections and distinct functional radii: subtle code/prose corners, compact marketing actions, 6px selector and coordinate-field corners, 8px shared action controls, and 12px stage and panel corners. One-pixel seams divide working regions. Selected construction tools receive an inset two-pixel outline; keyboard focus remains visible with an offset outline.
 
 Frontier objects use their authored raster silhouettes with native transparency. They are not masked into geometric icons. Tile outlines, route lines, corner numbers, selection marks, and the minimap are precise geometry laid over that world. The avatar-free illustrative conversation and the old scientific diagrams retain their own existing form language.
 
@@ -247,7 +259,7 @@ Frontier objects use their authored raster silhouettes with native transparency.
 
 Primary game actions use the shared filled action style with paired primary text and a minimum 44px height. Secondary actions retain the accent border and transparent background, becoming a raised surface on hover. Their edge paint comes from Lantern. Disabled controls remain labeled and do not invite a click; active async commands are disabled until the engine returns.
 
-Coordinate fields use a 70px width, 10px padding, 42px minimum height, six-pixel corners, and the shared control border. Laboratory text fields keep the shared inset surface and caret color. Focus outlines use the semantic focus color; forced-color rules preserve visible selected and boundary states.
+Coordinate fields use a 70px width, 10px padding, 42px minimum height, six-pixel corners, and the shared control border. The labeled native entity selector fills the inspector width with 10px padding, a 44px minimum height, and the same field surface and border. Laboratory text fields keep the shared inset surface and caret color. Focus outlines use the semantic focus color; forced-color rules preserve visible selected and boundary states.
 
 ### Navigation and reading
 
@@ -257,7 +269,11 @@ The shared header contains the wordmark, Living world, Field guide, repository l
 
 One original atlas supplies drills, fabricators, assemblers, storehouses, cranes, outposts, beacons, foundries, courier rovers, ore, sparks, and scrub. `public/art/frontier/atlas.json` owns measured crop rectangles; nominal equal grid cells would clip some sprites. `provenance.md` and the PNG's embedded prompt preserve generation intent. Pixel data and native alpha remain unchanged by metadata embedding.
 
-The build bar pairs each machine image with its name. Selection is exposed with `aria-pressed`; a construction ghost follows the selected tile and admission remains authoritative. A route preview shows its numbered corners. Facilities are selectable both on the map and through full-width workshop buttons with names and status. Couriers also have text-labeled crew controls. The inspector shows recipe, stored items, missing bill, and work or waiting state in ordinary text.
+The build bar pairs each machine image with its name and compact resource cost. At widths up to 520px it keeps the five names readable and hides the small cost lines; the active construction plan always states the complete bill. Selection is exposed with `aria-pressed`; a construction ghost follows the selected tile, immediate site feedback explains visible constraints, and Rust admission remains authoritative. A route preview shows its numbered corners. Escape cancels either plan and returns focus to the map.
+
+The inspector begins with one labeled native selector, grouped into machines and crew. It includes every current facility and cell, including the stationary Foundry. Choosing an entry selects and locates it; map selection updates the same control. The selected name and position precede Locate on map. Recipe, stored items, missing bill, and work or waiting state remain ordinary text. Selecting an entity during a live run preserves the running animation; construction and route planning pause it.
+
+History labels distinguish latest state, running animation, and history. Latest stops recorded playback and shows the latest frame without submitting an engine command. The live run/pause state remains in the control row above the map.
 
 **The Evidence Rule.** Only Rust-derived state may change a machine's work marker, cargo label, construction state, or production count. Decorative terrain does not imply a resource or route.
 
@@ -269,7 +285,7 @@ Save/import controls, current-world handoff, legacy-world notice, errors, and lo
 
 - Do preserve the shared palette bindings, installed typefaces, appearance control, and keyboard focus.
 - Do use the original atlas and its measured crop rectangles for the frontier's machines, couriers, resources, and scrub.
-- Do keep the scene dominant and the workshop available without shrinking the whole world to phone width.
+- Do keep the scene dominant and its inspector or active plan adjacent, with history below both, without shrinking the whole world to phone width.
 - Do pair machine colors and animation with written status, cargo labels, or selection outlines.
 - Do preserve the screen-size floors for world annotations and keep informative homepage labels outside the scaling artwork.
 - Do preserve the reading and laboratory layouts outside the scoped frontier surface.
@@ -281,4 +297,5 @@ Save/import controls, current-world handoff, legacy-world notice, errors, and lo
 - Don't invent simulation outcomes through animation, labels, terrain decoration, or agent narration.
 - Don't let the game's fixed earth colors override semantic text and control colors in the shared shell.
 - Don't spread the marketing wall treatment or header blur into reading planes and machine inspectors.
-- Don't remove accessible list selection or keyboard camera controls when refining map interactions.
+- Don't remove the native selector for all machines and cells or keyboard camera controls when refining map interactions.
+- Don't let offscreen SVG focus or hidden map scrolling move the surrounding controls.
