@@ -4,6 +4,8 @@ Platonik is a persistent automation game you play in your browser and with your 
 
 Copperwake is a 32×22 frontier with a working freight circuit, distant deposits, two beacons, and a foundry that can build another courier. Place drills, fabricators, assemblers, storehouses, and cranes; draw hauling routes; run the factory and pause to inspect a bottleneck. The browser and native CLI use the same Rust engine. Deeper recipes, reusable construction plans, larger regions, and the complete Long Trail remain future work. Earlier laboratories, generated challenges, hosted seasons, and bounded journeys remain available as engineering evidence.
 
+Platonik is paused. The project is not under active development, but the world and laboratories stay online and this repository stays public. Work may resume later.
+
 ## Open the world
 
 Open [platonik.space/play](https://platonik.space/play) to play Copperwake. Run the factory, then pause and select the fabricator or assembler to inspect its recipe and supplies. The starting circuit produces parts and frames; place a crane at tile **8,8**, between those two machines, and let the couriers finish its bill. Once ready, it moves eligible stock from the fabricator into the assembler. Camera controls let you explore the rest of this finite region.
