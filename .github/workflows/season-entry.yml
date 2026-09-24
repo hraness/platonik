@@ -11,9 +11,7 @@ on:
     paths: ["season/entries/**"]
 
 permissions:
-  contents: write
-  pull-requests: write
-  issues: write
+  contents: read
 
 # Entries are serialized globally so the committed results directory is a
 # race-free ledger: each entry's ordinal and quota check see every prior commit.
@@ -23,6 +21,10 @@ concurrency:
 
 env:
   SEASON: season-0003
+  CARGO_INCREMENTAL: 0
+  CARGO_TERM_COLOR: always
+  CARGO_NET_RETRY: 10
+  RUST_BACKTRACE: short
   # Repository context for every `gh pr` call — no checkout exists yet.
   GH_REPO: ${{ github.repository }}
   ENTRY_LIMIT: "65536"
@@ -31,7 +33,12 @@ jobs:
   evaluate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Maintainer approval gates every entry before the salt-bearing steps run.
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    # The season salt is an environment secret; admission is automated and no
+    # human approves entries.
     environment: season-eval
     steps:
       # 1. ADMIT — cheap checks before any build work. admit.env values are
@@ -148,8 +155,14 @@ jobs:
           bun-version: '1.3.14'
       - name: Install toolchain
         if: ${{ steps.admit.outputs.kind == 'entry' }}
+        run: rustup toolchain install 1.97.1 --profile minimal
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
+        with:
+          save-if: false
+      - name: Build evaluator
+        if: ${{ steps.admit.outputs.kind == 'entry' }}
         run: |
-          rustup toolchain install 1.97.1 --profile minimal
           cargo build --locked -p platonik-cli
           bun install --frozen-lockfile
 

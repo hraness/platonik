@@ -24,14 +24,18 @@ if (manifest.schema !== "platonik-challenge-season-v1" || manifest.id !== season
   throw new Error(`Season manifest is malformed: ${manifestPath}`);
 }
 
-const build = spawnSync("cargo", ["build", "--locked", "-p", "platonik-cli"], { stdio: "inherit" });
-if (build.error) throw build.error;
-if (build.status !== 0) throw new Error("platonik-cli build failed.");
+// PLATONIK_CLI points at an already built CLI (CI builds it once and shares it);
+// otherwise cargo builds the workspace binary as before.
+if (!process.env.PLATONIK_CLI) {
+  const build = spawnSync("cargo", ["build", "--locked", "-p", "platonik-cli"], { stdio: "inherit" });
+  if (build.error) throw build.error;
+  if (build.status !== 0) throw new Error("platonik-cli build failed.");
+}
 
 const resultsDir = join("season", "results", season);
 if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true });
 const run = spawnSync(
-  join("target", "debug", "platonik"),
+  process.env.PLATONIK_CLI ?? join("target", "debug", "platonik"),
   ["season", "board", manifestPath, resultsDir],
   { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 },
 );
