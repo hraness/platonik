@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@fontsource/newsreader": "5.3.0",
-    "@hraness/design-kit": "github:hraness/design-kit#v0.16.2",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.16.3",
     "@hraness/site-footer": "github:hraness/site-footer#v0.13.0",
     "@hraness/suite-accounts": "github:hraness/suite-accounts#v0.9.10",
     "@hraness/ui": "github:hraness/ui#v0.5.18",
