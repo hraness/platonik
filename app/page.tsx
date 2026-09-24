@@ -33,7 +33,7 @@ const progression = [
 
 export default function HomePage() {
   return (
-    <main id="main" className="home" data-hraness-marketing-preset="editorial" data-hraness-pattern="contour">
+    <main id="main" tabIndex={-1} className="home" data-hraness-marketing-preset="editorial" data-hraness-pattern="contour">
       <JsonLd data={videoGameJsonLd} />
       <div className="hraness-material-wall">
         <section className="hero" aria-labelledby="hero-title">

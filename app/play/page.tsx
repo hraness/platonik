@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function PlayPage() {
   return (
-    <Suspense fallback={<main id="main" className="world-page"><p className="world-loading" role="status">Opening the world…</p></main>}>
+    <Suspense fallback={<main id="main" tabIndex={-1} className="world-page"><p className="world-loading" role="status">Opening the world…</p></main>}>
       <LivingWorld />
     </Suspense>
   );

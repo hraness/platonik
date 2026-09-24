@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function AnswerPage() {
   const index = JSON.parse(await readFile(path.join(process.cwd(), "public/answer/index.json"), "utf8")) as ContinuityIndex;
-  return <main id="main" className="lab bridge continuity">
+  return <main id="main" tabIndex={-1} className="lab bridge continuity">
     <header className="lab-header">
       <Link href="/lab">← Back to the observatory</Link>
       <h1>The First Answer.</h1>

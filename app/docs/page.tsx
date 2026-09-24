@@ -21,7 +21,7 @@ function DocumentList({ entries }: Readonly<{ entries: ReadonlyArray<(typeof doc
 
 export default function DocsPage() {
   return (
-    <main id="main" className="docs-layout">
+    <main id="main" tabIndex={-1} className="docs-layout">
       <aside className="docs-sidebar"><DocNav /></aside>
       <article className="doc-content">
         <header className="doc-header">

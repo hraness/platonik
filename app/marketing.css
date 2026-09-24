@@ -87,6 +87,7 @@ body[data-hraness-material="lantern"] {
 }
 
 .home .hero-detail { max-width: 60ch; }
+.home :is(.hero-detail, .status-note, .figure-note, .message p, .chapter-list p) { font-size: 1rem; }
 .home .status-note { max-width: 72ch; line-height: 1.6; }
 .home .first-world { border-top: 0; padding-top: 2rem; }
 .home .habitat-figure { background-color: var(--hraness-material-plane); padding: 2rem; border-radius: .625rem; max-width: 44rem; }
@@ -99,7 +100,7 @@ body[data-hraness-material="lantern"] {
 
 @media (max-width: 760px) {
   /* Wrapped navigation must not cover anchored content at enlarged text sizes. */
-  .site-header { position: static; padding: .75rem 1.25rem; gap: .75rem; }
+  .site-header { position: relative; padding: .75rem 1.25rem; gap: .75rem; }
   .site-header nav { gap: 1rem; font-size: .9375rem; }
   .site-header .wordmark { margin-right: auto; }
   .site-header nav { order: 3; width: 100%; margin-left: 0; }
@@ -122,3 +123,14 @@ body[data-hraness-material="lantern"] {
 .doc-content { line-height: var(--hraness-reading-leading, 1.7); }
 .doc-content pre { max-width: 100%; overflow-x: auto; tab-size: 2; }
 @media (forced-colors: active) { .site-header { border-bottom-color: CanvasText; box-shadow: none; } }
+
+/* Keep the article reachable before the complete field-guide index on small screens. */
+.doc-navigation { display: none; }
+@media (max-width: 800px) {
+  .doc-nav--desktop { display: none; }
+  .doc-navigation { display: block; }
+  .doc-navigation summary { cursor: pointer; font-size: 1rem; min-height: 2.75rem; padding-block: .5rem; }
+  .doc-navigation summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+  .doc-navigation .doc-nav { margin-block-start: .5rem; }
+  .doc-navigation .doc-nav a { font-size: .9375rem; }
+}

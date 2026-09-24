@@ -63,7 +63,7 @@ export default async function ChallengesPage() {
   for (const name of seasonFiles) {
     seasonBoards.push(JSON.parse(await readFile(path.join(seasonDir, name), "utf8")) as SeasonBoard);
   }
-  return <main id="main" className="lab">
+  return <main id="main" tabIndex={-1} className="lab">
     <header className="lab-header">
       <Link href="/lab">← Back to the observatory</Link>
       <h1>One program. Worlds it has never seen.</h1>

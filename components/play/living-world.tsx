@@ -165,11 +165,11 @@ export function LivingWorld({ expectedHash }: { expectedHash?: string }) {
   }
   function ask(value: string) { setRunning(false); setQuestion(value); setCopied(false); document.getElementById("world-agent-title")?.scrollIntoView({ block: "start" }); }
 
-  if (error) return <main id="main" className="world-page"><section className="world-error" role="alert"><h1>This world could not be opened.</h1><p>{error}</p><Link href="/play">Return to your saved frontier</Link></section></main>;
-  if (!report || !world) return <main id="main" className="world-page"><header className="world-header"><h1>Opening the frontier</h1></header><div className="world-stage world-loading" role="status">Preparing the landscape and checking your save…</div></main>;
+  if (error) return <main id="main" tabIndex={-1} className="world-page"><section className="world-error" role="alert"><h1>This world could not be opened.</h1><p>{error}</p><Link href="/play">Return to your saved frontier</Link></section></main>;
+  if (!report || !world) return <main id="main" tabIndex={-1} className="world-page"><header className="world-header"><h1>Opening the frontier</h1></header><div className="world-stage world-loading" role="status">Preparing the landscape and checking your save…</div></main>;
   const shareReady = handoff?.hash === report.world_hash;
   const limit = report.tick >= report.maximum_tick || world.events.length >= 128;
-  return <main id="main" className="world-page">
+  return <main id="main" tabIndex={-1} className="world-page">
     <header className="world-header"><div><h1>{report.name}</h1><p>Build a factory. Give your crew a route. See how far you can take it.</p></div>
       <div className="world-header-actions"><button className="lab-button secondary" onClick={download}>Save to file</button><button className="lab-button secondary" onClick={newWorld} disabled={busy}>New frontier</button></div>
     </header>

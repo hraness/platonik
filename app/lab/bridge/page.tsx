@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function BridgePage() {
-  return <main id="main" className="lab bridge"><header className="lab-header">
+  return <main id="main" tabIndex={-1} className="lab bridge"><header className="lab-header">
     <Link href="/lab">← Back to the observatory</Link>
     <h1>The first living circuit.</h1>
     <p>A courier brings something home. A message travels. The connection goes dark. Can a small system remember what to do?</p>

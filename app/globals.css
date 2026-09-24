@@ -103,7 +103,7 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 15px; }
 .doc-next-step h2 { font-size: 28px; margin-bottom: 16px; }
 .doc-next-step a { display: inline-block; margin-top: 18px; color: var(--accent); }
 .prose { font-size: 16px; line-height: 1.85; overflow-wrap: break-word; }
-.prose > p:first-child { font-size: 13px; line-height: 1.65; color: var(--muted); padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.prose > p:first-child { font-size: 1rem; line-height: 1.65; color: var(--muted); padding-bottom: 24px; border-bottom: 1px solid var(--line); }
 .prose h2 { font-size: 29px; letter-spacing: -.02em; line-height: 1.25; margin-block: 50px 18px; scroll-margin-top: 30px; }
 .prose h3 { font-size: 19px; margin-block: 30px 14px; }
 .prose p, .prose ul, .prose ol { margin-block: 18px; }
@@ -112,7 +112,7 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 15px; }
 .prose a { color: var(--accent); }
 .prose strong { font-weight: 600; }
 .prose blockquote { margin: 25px 0; padding: 1px 24px; background: var(--wash); border-radius: 3px; }
-.prose blockquote p { font-size: 15px; }
+.prose blockquote p { font-size: 1rem; }
 .prose code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85em; background: var(--wash); padding: 2px 5px; border-radius: 2px; }
 .prose pre { background: var(--wash); padding: 22px; border-radius: 3px; overflow-x: auto; font-size: 13px; line-height: 1.75; }
 .prose pre code { padding: 0; background: transparent; font-size: inherit; white-space: pre; }
@@ -159,7 +159,7 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 15px; }
   .doc-header { margin-bottom: 27px; }
   .doc-header h1 { font-size: 38px; }
   .doc-header p { font-size: 17px; margin-top: 17px; }
-  .prose { font-size: 15px; }
+  .prose { font-size: 1rem; }
   .prose h2 { font-size: 27px; margin-top: 38px; }
   .prose blockquote { padding-inline: 17px; }
   .prose pre { padding: 16px; }
