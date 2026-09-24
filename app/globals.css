@@ -30,7 +30,8 @@ a:hover { color: var(--accent); }
 a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 2px; }
 h1, h2, h3, p, figure { margin: 0; }
 h1, h2, h3 { text-wrap: balance; }
-h1, h2 { font-family: var(--display); font-weight: 400; }
+h1, h2 { font-family: var(--body); font-weight: 600; }
+.home :is(h1, h2) { font-family: var(--display); font-weight: 400; }
 p { text-wrap: pretty; }
 .skip-link { position: fixed; top: 8px; left: 8px; z-index: 10; background: var(--paper); padding: 10px 16px; transform: translateY(-150%); }
 .skip-link:focus { transform: translateY(0); }
@@ -49,7 +50,7 @@ p { text-wrap: pretty; }
 .primary-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--hraness-palette-primary-foreground); background-color: var(--accent); padding: 12px 18px; border-radius: 3px; text-decoration: none; font-size: 14px; }
 .primary-link:hover { background-color: color-mix(in oklch, var(--accent) 92%, var(--ink)); color: var(--hraness-palette-primary-foreground); }
 .primary-link span, .text-link span { font-family: var(--body); }
-.status-note { font-size: 12px; color: var(--muted); margin-top: 24px; }
+.status-note { font-size: 15px; color: var(--muted); margin-top: 24px; }
 .home-section { border-top: 1px solid var(--line); padding-block: 52px 56px; }
 .home-section h2, .closing h2 { font-size: 35px; line-height: 1.22; letter-spacing: -.025em; }
 .section-intro { max-width: 650px; }
@@ -63,7 +64,7 @@ p { text-wrap: pretty; }
 .factory-process { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; width: 100%; max-width: 840px; color: var(--ink); font-size: 12px; line-height: 1.5; text-align: center; }
 .habitat-label { fill: var(--muted); font-size: 17px; }
 figcaption { margin-top: 22px; font-size: 14px; line-height: 1.6; }
-figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
+figcaption > span, .figure-note { color: var(--muted); font-size: 15px; }
 .conversation { margin-top: 28px; max-width: 730px; }
 .message { display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line); }
 .message:last-child { border-bottom: 1px solid var(--line); }

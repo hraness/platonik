@@ -1,8 +1,8 @@
 import { paletteColors } from "@hraness/design-kit";
 
-// Use the shared Paper colors before hydration, including when JavaScript is
+// Use the shared Catppuccin colors before hydration, including when JavaScript is
 // unavailable. The shared controller takes over once it sets data-theme.
-const declarations = (mode: "light" | "dark") => Object.entries(paletteColors.paper[mode])
+const declarations = (mode: "light" | "dark") => Object.entries(paletteColors.catppuccin[mode])
   .map(([key, value]) => `--hraness-palette-${key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)}:${value}`)
   .join(";");
 

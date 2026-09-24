@@ -4,7 +4,7 @@ import { DesignPaletteProvider, ThemeMenuButton } from "@hraness/design-kit/reac
 import type { ReactNode } from "react";
 
 export function AppearanceProvider({ children }: { children: ReactNode }) {
-  return <DesignPaletteProvider defaultPreference={{ palette: "paper", mode: "system" }}>{children}</DesignPaletteProvider>;
+  return <DesignPaletteProvider defaultPreference={{ palette: "catppuccin", mode: "system" }}>{children}</DesignPaletteProvider>;
 }
 
 export function AppearanceControl() {
