@@ -8,7 +8,7 @@ import { parseTime } from './capacity-io.mjs';
 
 const directory=process.argv[2];assert(directory,'capacity.mjs NEW_DIRECTORY');
 assert.equal(process.platform,'darwin','The frozen measurement uses macOS time -lp');
-const lease=JSON.parse(process.env.HRA_LOCAL_EFFICIENCY_LEASE??'null');
+const lease=JSON.parse(process.env.LOCAL_EFFICIENCY_LEASE??'null');
 assert.equal(lease?.mode,'exclusive');assert.equal(lease?.lane,'mac-native');
 fs.mkdirSync(directory,{recursive:false});const root=fs.realpathSync(directory);
 const command=[process.execPath,'scripts/exchange/capacity-record.mjs',path.join(root,'recording')];
