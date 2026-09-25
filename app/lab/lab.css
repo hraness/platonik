@@ -2,7 +2,6 @@
 .lab-header { max-width: 780px; padding-bottom: 24px; }
 .lab-header h1 { font-size: clamp(36px, 4vw, 50px); line-height: 1.12; letter-spacing: -.025em; max-width: 23ch; }
 .lab-header > p { font-size: 19px; margin-top: 18px; max-width: 66ch; }
-.lab-header > .lab-note { font-size: 13px; margin-top: 16px; }
 .lab button, .lab input, .lab select, .lab textarea { font: inherit; }
 .lab button { cursor: pointer; }
 .lab button:disabled { cursor: default; opacity: .5; }
@@ -25,7 +24,7 @@
 .lab-view-switch button[aria-pressed=true] { color: var(--ink); background-color: var(--hraness-material-warm-plane); }
 .specimen-portrait { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; }
 .specimen-window figure { margin: 0; }
-.specimen-window figcaption { margin-top: 0; font-size: 13px; color: var(--muted); }
+.specimen-window figcaption { margin-top: 0; font-size: 14px; color: var(--muted); }
 .journey-map { display: block; width: 100%; aspect-ratio: 1; padding-block: 30px; }
 .specimen-controls > p { font-size: 15px; }
 .lab-controls { min-width: 0; }
@@ -62,8 +61,10 @@
 .lab-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px 24px; padding: 20px 0; margin: 18px 0 0; border-top: 1px solid var(--line); }
 .lab-metrics dt { font-size: 12px; color: var(--muted); }
 .lab-metrics dd { font-size: 20px; margin: 4px 0 0; font-variant-numeric: tabular-nums; line-height: 1.3; overflow-wrap: anywhere; }
-.lab .lab-note { font-size: 13px; color: var(--muted); line-height: 1.65; margin-block: 14px; }
-.lab-details { border-top: 1px solid var(--line); padding-top: 15px; margin-top: 24px; font-size: 13px; }
+.lab .lab-note { font-size: 14px; color: var(--muted); line-height: 1.65; margin-block: 14px; }
+/* Page introductions read as supporting prose (16px); instrument notes keep the 14px control role. */
+.lab-header > .lab-note { font-size: 1rem; line-height: 1.6; margin-top: 16px; }
+.lab-details { border-top: 1px solid var(--line); padding-top: 15px; margin-top: 24px; font-size: 14px; }
 .lab-details summary { cursor: pointer; color: var(--accent); padding: 3px 0; }
 .lab-details p { margin: 14px 0; }
 .lab-details textarea { display: block; width: 100%; resize: vertical; min-height: 160px; max-height: 720px; background: var(--wash); border: 1px solid var(--control-border); padding: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.6; tab-size: 2; color: var(--ink); }
@@ -73,8 +74,8 @@
 .lab-result { padding-block: 20px; border-block: 1px solid var(--line); margin-block: 20px; font-size: 14px; }
 .lab-result > .lab-metrics { margin-top: 8px; border: 0; }
 .lab-result strong + p { margin-top: 8px; }
-.lab-status { min-height: 25px; margin-block: 16px; font-size: 13px; color: var(--accent); }
-.lab-error { color: var(--danger); font-size: 13px; margin-block: 12px; }
+.lab-status { min-height: 25px; margin-block: 16px; font-size: 14px; color: var(--accent); }
+.lab-error { color: var(--danger); font-size: 14px; margin-block: 12px; }
 .replay-controls { margin-top: 20px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; font-size: 13px; }
 .replay-controls label { text-align: right; font-variant-numeric: tabular-nums; }
 .replay-controls input, .replay-controls p { grid-column: 1 / -1; }
@@ -105,7 +106,7 @@
 .lab-reading a { display: inline-block; color: var(--accent); margin-top: 10px; }
 .autoverse-circuit { display: block; width: 100%; min-height: 180px; max-height: 520px; margin-block: 24px; }
 .autoverse-bench .lab-controls > p { font-size: 15px; }
-.autoverse-bench .lab-controls > .lab-note { font-size: 13px; }
+.autoverse-bench .lab-controls > .lab-note { font-size: 14px; }
 .signal-output { padding-block: 16px; border-block: 1px solid var(--line); font-size: 14px; overflow-wrap: anywhere; }
 .signal-output strong, .signal-output span { display: block; }
 .signal-output span { margin-top: 8px; font-variant-numeric: tabular-nums; }
@@ -217,7 +218,7 @@
 .replay-stage { margin-top: 4px; }
 .replay-map { margin: 0; }
 .replay-map .bridge-map { width: 100%; height: auto; max-width: 640px; }
-.replay-stage figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.replay-stage figcaption { font-size: 14px; color: var(--muted); margin-top: 6px; }
 .replay-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; }
 .replay-controls .lab-button { min-height: 36px; padding: 6px 14px; font-size: 13px !important; }
 .replay-speed { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
@@ -295,11 +296,11 @@
 .journey-rail { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
 .journey-rail button { border: 1px solid var(--control-border); background: var(--surface); font-size: 13px; padding: 8px 14px; border-radius: 999px; cursor: pointer; }
 .journey-rail button.active { border-color: var(--accent); font-weight: 600; }
-.journey-detail { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+.journey-detail { font-size: 14px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
 .advance-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-block: 12px; font-size: 13px; }
 .advance-controls input[type="number"] { width: 90px; font-size: 13px; padding: 8px 10px; background: var(--surface); color: var(--ink); border: 1px solid var(--control-border); border-radius: 6px; }
 .milestone-rail { margin-top: 18px; }
-.pending-warning { border: 1px solid var(--specimen-warm); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-block: 10px; }
+.pending-warning { border: 1px solid var(--specimen-warm); border-radius: 8px; padding: 10px 14px; font-size: 14px; margin-block: 10px; }
 
 /* Class-name aliases the components actually emit. */
 .mission-card .mission-card-title { font-weight: 600; font-size: 14px; display: block; }
@@ -308,10 +309,11 @@
 .verdict-banner.play-pass { border-left-color: var(--success, #1a7f37); }
 .verdict-banner.play-fail { border-left-color: var(--danger); }
 .challenge-cell .challenge-check { color: var(--success, #1a7f37); margin-left: 2px; }
-.play-notice { font-size: 13px; margin-block: -14px 18px; }
+.play-notice { font-size: 14px; margin-block: -14px 18px; }
 .play-next { margin-block: 14px; }
 .opening-complete { border: 1px solid var(--success, #1a7f37); background: var(--wash); padding: 14px 18px; border-radius: 8px; font-size: 14px; line-height: 1.6; margin-block: 16px; }
-.agent-setup { margin-top: 16px; font-size: 13px; }
+.agent-setup { margin-top: 16px; font-size: 14px; }
+.agent-setup > .lab-note { font-size: 1rem; line-height: 1.6; }
 .agent-setup pre { white-space: pre-wrap; font-size: 11.5px; line-height: 1.55; background: var(--wash); border: 1px solid var(--control-border); border-radius: .5rem; padding: 12px; max-height: 280px; overflow: auto; margin-block: 10px; }
 .resume-card { display: flex; align-items: center; gap: 12px; margin-block: 14px 0; flex-wrap: wrap; }
 .resume-note { font-size: 13px; color: var(--muted); }

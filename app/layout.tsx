@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="hraness-palette" data-palette="catppuccin" suppressHydrationWarning>
       <head><style dangerouslySetInnerHTML={{ __html: appearanceFallback }} /></head>
       <body data-hraness-material="lantern">
         <JsonLd data={websiteJsonLd} />

@@ -30,7 +30,8 @@ a:hover { color: var(--accent); }
 a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 2px; }
 h1, h2, h3, p, figure { margin: 0; }
 h1, h2, h3 { text-wrap: balance; }
-h1, h2 { font-family: var(--display); font-weight: 400; }
+h1, h2 { font-family: var(--body); font-weight: 600; }
+.home :is(h1, h2) { font-family: var(--display); font-weight: 400; }
 p { text-wrap: pretty; }
 .skip-link { position: fixed; top: 8px; left: 8px; z-index: 10; background: var(--paper); padding: 10px 16px; transform: translateY(-150%); }
 .skip-link:focus { transform: translateY(0); }
@@ -49,7 +50,7 @@ p { text-wrap: pretty; }
 .primary-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--hraness-palette-primary-foreground); background-color: var(--accent); padding: 12px 18px; border-radius: 3px; text-decoration: none; font-size: 14px; }
 .primary-link:hover { background-color: color-mix(in oklch, var(--accent) 92%, var(--ink)); color: var(--hraness-palette-primary-foreground); }
 .primary-link span, .text-link span { font-family: var(--body); }
-.status-note { font-size: 12px; color: var(--muted); margin-top: 24px; }
+.status-note { font-size: 15px; color: var(--muted); margin-top: 24px; }
 .home-section { border-top: 1px solid var(--line); padding-block: 52px 56px; }
 .home-section h2, .closing h2 { font-size: 35px; line-height: 1.22; letter-spacing: -.025em; }
 .section-intro { max-width: 650px; }
@@ -63,7 +64,7 @@ p { text-wrap: pretty; }
 .factory-process { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; width: 100%; max-width: 840px; color: var(--ink); font-size: 12px; line-height: 1.5; text-align: center; }
 .habitat-label { fill: var(--muted); font-size: 17px; }
 figcaption { margin-top: 22px; font-size: 14px; line-height: 1.6; }
-figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
+figcaption > span, .figure-note { color: var(--muted); font-size: 15px; }
 .conversation { margin-top: 28px; max-width: 730px; }
 .message { display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding-block: 18px; border-top: 1px solid var(--line); }
 .message:last-child { border-bottom: 1px solid var(--line); }
@@ -102,7 +103,7 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
 .doc-next-step h2 { font-size: 28px; margin-bottom: 16px; }
 .doc-next-step a { display: inline-block; margin-top: 18px; color: var(--accent); }
 .prose { font-size: 16px; line-height: 1.85; overflow-wrap: break-word; }
-.prose > p:first-child { font-size: 13px; line-height: 1.65; color: var(--muted); padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.prose > p:first-child { font-size: 1rem; line-height: 1.65; color: var(--muted); padding-bottom: 24px; border-bottom: 1px solid var(--line); }
 .prose h2 { font-size: 29px; letter-spacing: -.02em; line-height: 1.25; margin-block: 50px 18px; scroll-margin-top: 30px; }
 .prose h3 { font-size: 19px; margin-block: 30px 14px; }
 .prose p, .prose ul, .prose ol { margin-block: 18px; }
@@ -111,7 +112,7 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
 .prose a { color: var(--accent); }
 .prose strong { font-weight: 600; }
 .prose blockquote { margin: 25px 0; padding: 1px 24px; background: var(--wash); border-radius: 3px; }
-.prose blockquote p { font-size: 15px; }
+.prose blockquote p { font-size: 1rem; }
 .prose code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85em; background: var(--wash); padding: 2px 5px; border-radius: 2px; }
 .prose pre { background: var(--wash); padding: 22px; border-radius: 3px; overflow-x: auto; font-size: 13px; line-height: 1.75; }
 .prose pre code { padding: 0; background: transparent; font-size: inherit; white-space: pre; }
@@ -158,7 +159,7 @@ figcaption > span, .figure-note { color: var(--muted); font-size: 12px; }
   .doc-header { margin-bottom: 27px; }
   .doc-header h1 { font-size: 38px; }
   .doc-header p { font-size: 17px; margin-top: 17px; }
-  .prose { font-size: 15px; }
+  .prose { font-size: 1rem; }
   .prose h2 { font-size: 27px; margin-top: 38px; }
   .prose blockquote { padding-inline: 17px; }
   .prose pre { padding: 16px; }

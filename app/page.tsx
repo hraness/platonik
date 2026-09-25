@@ -1,3 +1,4 @@
+import { HeroBackdrop } from "@hraness/design-kit/react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
@@ -32,10 +33,11 @@ const progression = [
 
 export default function HomePage() {
   return (
-    <main id="main" className="home" data-hraness-marketing-preset="editorial">
+    <main id="main" tabIndex={-1} className="home" data-hraness-marketing-preset="editorial" data-hraness-pattern="contour">
       <JsonLd data={videoGameJsonLd} />
       <div className="hraness-material-wall">
         <section className="hero" aria-labelledby="hero-title">
+          <HeroBackdrop seed="platonik-copperwake" />
           <h1 id="hero-title">Build a factory on a living frontier.</h1>
           <p className="hero-description">
             Put down a drill. Connect a hauling route. Turn ore and sparks into parts, frames, and the machines that carry them. Copperwake is a persistent world you can play in your browser and improve with your agent.

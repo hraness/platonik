@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ProgramPage({ params }: PageProps) {
   const { programHash } = await params;
   return (
-    <main id="main" className="lab">
+    <main id="main" tabIndex={-1} className="lab">
       <header className="lab-header">
         <p className="lab-note">Archived program laboratory</p>
         <h1>Recompute this program</h1>

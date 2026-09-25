@@ -21,7 +21,7 @@ export default async function WorldPage({ params }: PageProps) {
   const { worldHash } = await params;
   const decoded = decodeURIComponent(worldHash);
   return (
-    <Suspense fallback={<main id="main" className="world-page"><p className="world-loading" role="status">Opening the world…</p></main>}>
+    <Suspense fallback={<main id="main" tabIndex={-1} className="world-page"><p className="world-loading" role="status">Opening the world…</p></main>}>
       <LivingWorld expectedHash={decoded} />
     </Suspense>
   );

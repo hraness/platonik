@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const recordings = labPages.map(({ path, name, description }) => ({ href: path, name, description }));
 
 export default function LabPage() {
-  return <main id="main" className="lab">
+  return <main id="main" tabIndex={-1} className="lab">
     <header className="lab-header">
       <h1>A small window into possible life.</h1>
       <p>You are a frontier engineer. Grow a program, examine what it does, and find out what a larger world would cost.</p>

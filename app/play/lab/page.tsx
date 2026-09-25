@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function PlayLabPage() {
   return (
-    <main id="main" className="lab">
+    <main id="main" tabIndex={-1} className="lab">
       <header className="lab-header">
         <p className="lab-note">Earlier laboratory</p>
         <h1>Playable tracks</h1>
