@@ -40,10 +40,10 @@ The performance thresholds decide whether a completed measurement qualifies; the
 
 ## Repeat the measurement locally
 
-Use a repository checkout on macOS with the pinned Rust 1.97.1 toolchain, Node 24, and the installed Oompa host scheduler available as `oompa-host-run`. Run from the repository root. Resolve the installed scheduler's absolute executable path, build the release CLI, then record into a directory name that does not yet exist:
+Use a repository checkout on macOS with the pinned Rust 1.97.1 toolchain, Node 24, and the installed host scheduler available as `host-run`. Run from the repository root. Resolve the installed scheduler's absolute executable path, build the release CLI, then record into a directory name that does not yet exist:
 
 ```sh
-exchange_scheduler="$(command -v oompa-host-run)"
+exchange_scheduler="$(command -v host-run)"
 "$exchange_scheduler" --mode=heavy --lane=compute --label=exchange-build -- cargo build --release --locked -p platonik-cli
 MallocNanoZone=0 "$exchange_scheduler" --mode=exclusive --lane=mac-native --label=exchange-capacity -- node scripts/exchange/capacity.mjs exchange-capacity-001
 ```

@@ -13,7 +13,7 @@ const qualificationFile='fixtures/evidence/exchange-qualification.json';
 const qualification=read(qualificationFile);
 const root=path.resolve(process.argv[2]);
 assert.equal(process.platform,'darwin');
-const scheduler=JSON.parse(process.env.OOMPA_LOCAL_EFFICIENCY_LEASE??'null');
+const scheduler=JSON.parse(process.env.LOCAL_EFFICIENCY_LEASE??'null');
 assert.equal(scheduler?.mode,'exclusive');assert.equal(scheduler?.lane,'mac-native');
 assert.equal(process.env.LC_ALL,'C');
 fs.mkdirSync(root,{recursive:false});
