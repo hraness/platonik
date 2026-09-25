@@ -112,7 +112,7 @@ jobs:
         with:
           save-if: ${{ github.ref == 'refs/heads/main' }}
       - run: bun scripts/check-rust.ts --stage lint build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: platonik-cli
           path: target/debug/platonik
