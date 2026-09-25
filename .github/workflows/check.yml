@@ -1,54 +1,213 @@
 name: Check
+# The aggregate gate. One Linux build of the debug CLI is shared with the
+# evidence jobs as an artifact; the test suite, the web build and the evidence
+# replays run in parallel. `bun run check` runs the identical command list
+# serially on a workstation.
 on:
   push:
     branches: [main]
   pull_request:
+
 permissions:
   contents: read
+
 concurrency:
-  group: check-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: check-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_TERM_COLOR: always
+  CARGO_NET_RETRY: 10
+  RUST_BACKTRACE: short
+  RUSTFLAGS: -D warnings
+  # The dev profile stays the profile every script and test uses (target/debug,
+  # overflow checks and debug assertions on); opt-level 1 only makes the
+  # thousands of simulation replays in the evidence checks run several times
+  # faster on the 4-core runner.
+  CARGO_PROFILE_DEV_OPT_LEVEL: 1
+  BUN_VERSION: '1.3.14'
+  NODE_VERSION: '24'
+
 jobs:
-  rust:
+  changes:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      # Pushes to main always run the whole gate; pull requests skip the Rust
+      # jobs when nothing that feeds the Rust gate changed.
+      rust: ${{ github.event_name != 'pull_request' || steps.filter.outputs.rust == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        if: github.event_name == 'pull_request'
         with:
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: '1.3.14'
-      - run: bun install --frozen-lockfile
-      - run: rustup toolchain install 1.97.1 --profile minimal --component rustfmt --component clippy
-      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
-      - run: bun run check:rust
+          filters: |
+            rust:
+              - 'crates/**'
+              - 'Cargo.toml'
+              - 'Cargo.lock'
+              - 'rust-toolchain.toml'
+              - 'scripts/**'
+              - 'fixtures/**'
+              - 'public/answer/**'
+              - 'public/ark/**'
+              - 'public/bloom/**'
+              - 'public/bridge/**'
+              - 'public/challenges/**'
+              - 'public/construction/**'
+              - 'public/habitat/**'
+              - 'public/navigation/**'
+              - 'public/ports/**'
+              - 'public/season/**'
+              - 'seasons/**'
+              - 'season/**'
+              - 'lib/bridge/**'
+              - 'package.json'
+              - 'bun.lock'
+              - '.github/workflows/check.yml'
+
   web:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: '24'
+          node-version: ${{ env.NODE_VERSION }}
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: '1.3.14'
+          bun-version: ${{ env.BUN_VERSION }}
+      - uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
       - run: bun run check:web
-  site:
+
+  rust-build:
+    # fmt + clippy (no codegen) and the one debug CLI build every evidence job
+    # replays against.
+    needs: [changes]
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - uses: dtolnay/rust-toolchain@1.97.1
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - run: bun scripts/check-rust.ts --stage lint build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platonik-cli
+          path: target/debug/platonik
+          if-no-files-found: error
+          retention-days: 1
+
+  rust-test:
+    needs: [changes]
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLATONIK_TEST_RUNNER: nextest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - uses: dtolnay/rust-toolchain@1.97.1
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - uses: taiki-e/install-action@nextest
+      - run: bun scripts/check-rust.ts --stage test
+
+  evidence:
+    # Each group replays committed evidence through the shared CLI build; no
+    # Rust toolchain is needed here.
+    needs: [changes, rust-build]
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        stage: [evidence-habitat, evidence-answer, evidence-ark, challenges]
+    name: evidence (${{ matrix.stage }})
+    env:
+      PLATONIK_CLI: target/debug/platonik
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: platonik-cli
+          path: target/debug
+      - run: chmod +x target/debug/platonik
+      - run: bun scripts/check-rust.ts --stage ${{ matrix.stage }}
+
+  required:
+    name: Required
     if: always()
-    needs: [rust, web]
+    needs: [changes, web, rust-build, rust-test, evidence]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Require every check
+      - name: Require every blocking job
         env:
-          RUST: ${{ needs.rust.result }}
+          RUST_CHANGED: ${{ needs.changes.outputs.rust }}
+          CHANGES: ${{ needs.changes.result }}
           WEB: ${{ needs.web.result }}
-        run: test "$RUST" = success && test "$WEB" = success
+          RUST_BUILD: ${{ needs.rust-build.result }}
+          RUST_TEST: ${{ needs.rust-test.result }}
+          EVIDENCE: ${{ needs.evidence.result }}
+        run: |
+          set -euo pipefail
+          [[ "$CHANGES" == success ]]
+          [[ "$WEB" == success ]]
+          # Rust jobs may only be skipped by the paths filter, never by a failure upstream.
+          for result in "$RUST_BUILD" "$RUST_TEST" "$EVIDENCE"; do
+            [[ "$result" == success ]] || { [[ "$result" == skipped && "$RUST_CHANGED" == false ]]; }
+          done
+
+  site:
+    # The ruleset on main still requires the `site` context; it mirrors
+    # Required until the policy switches to Required, then it can go.
+    if: always()
+    needs: [required]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Mirror Required
+        env:
+          REQUIRED: ${{ needs.required.result }}
+        run: |
+          set -euo pipefail
+          [[ "$REQUIRED" == success ]]
