@@ -26,10 +26,14 @@ const FAMILY_POLICIES: Record<string, readonly string[]> = {
 const directory = "public/challenges";
 const artifact = "index.json";
 
-const build = spawnSync("cargo", ["build", "--locked", "-p", "platonik-cli"], { stdio: "inherit" });
-if (build.error) throw build.error;
-if (build.status !== 0) throw new Error("platonik-cli build failed.");
-const binary = join("target", "debug", "platonik");
+// PLATONIK_CLI points at an already built CLI (CI builds it once and shares it);
+// otherwise cargo builds the workspace binary as before.
+if (!process.env.PLATONIK_CLI) {
+  const build = spawnSync("cargo", ["build", "--locked", "-p", "platonik-cli"], { stdio: "inherit" });
+  if (build.error) throw build.error;
+  if (build.status !== 0) throw new Error("platonik-cli build failed.");
+}
+const binary = process.env.PLATONIK_CLI ?? join("target", "debug", "platonik");
 
 function cli(args: string[], allowScoredMiss = false): string {
   const run = spawnSync(binary, args, {

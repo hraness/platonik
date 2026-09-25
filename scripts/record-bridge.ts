@@ -5,7 +5,11 @@ import type { BridgeIndex, Receipt } from "../lib/bridge/types";
 
 const mode = process.argv[2];
 if (!["--write", "--check"].includes(mode)) throw new Error("Use --write or --check.");
-const execution = spawnSync("cargo", ["run", "--locked", "-q", "-p", "platonik-cli", "--", "suite", "bridge-v1"], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+// PLATONIK_CLI points at an already built CLI (CI builds it once and shares it);
+// otherwise cargo builds and runs the workspace binary as before.
+const execution = process.env.PLATONIK_CLI
+  ? spawnSync(process.env.PLATONIK_CLI, ["suite", "bridge-v1"], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
+  : spawnSync("cargo", ["run", "--locked", "-q", "-p", "platonik-cli", "--", "suite", "bridge-v1"], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 if (execution.error) throw execution.error;
 if (execution.status !== 0) throw new Error(`Rust bridge suite failed: ${execution.stderr}`);
 const suite = JSON.parse(execution.stdout) as {

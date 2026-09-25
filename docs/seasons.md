@@ -29,7 +29,7 @@ Before reveal, a committed result is still honest evidence: its receipts replay 
 - **Allowance:** `max_entries` per entrant, enforced against committed results, not claimed filenames.
 - **Admission:** one new file, on the `season/entries/` path, named for you, under the input limits; everything else is closed unscored.
 - **No fork execution:** the workflow never checks out the PR head; the submission is bounded data read through the API, pinned to the head SHA.
-- **Approval gate:** every entry waits on the `season-eval` environment's required reviewer before the salt-bearing steps run.
+- **Salt custody:** the salt is a secret of the `season-eval` environment, so only this workflow, on the base branch, can read it; the salt-bearing steps run only after the admission checks above pass, with no human approval in the loop.
 - **Serialization:** entries evaluate one at a time, so ordinals and quotas can't race.
 - **Protected ledger:** `main` is ruleset-protected — changes arrive by pull request and the aggregate `site` gate is required for everyone else, while the evaluator publishes through a dedicated deploy key that is the only bypass actor besides org admins.
 - **Self-verification:** the workflow re-verifies the result — derivation and replay — before pushing, re-checks the board artifact afterward, and the published commit still runs the normal `site` gate on `main` as an audit.
@@ -46,4 +46,4 @@ The revealed `season-0001` and `season-0002` manifests carry their salts, so `ve
 
 ## What this does not establish
 
-A hosted season is a small operated contest, not a frontier benchmark: the salt lives in a GitHub secret under one maintainer's approval, identity is a GitHub account, and per-entrant sampling means scores carry distribution noise alongside ability. Clearing entries is evidence that a harness produces working programs for worlds it could not have seen — it is not a general intelligence score. Seasons 0001–0002 are revealed and publicly replayable; `season-0003` mixes all three families because the evaluator derives salted cases under whichever family an index belongs to. [competition](competition.md) remains the spec for richer families, organism bundles, and prize-bearing rounds.
+A hosted season is a small operated contest, not a frontier benchmark: the salt lives in a GitHub environment secret that one maintainer controls, identity is a GitHub account, and per-entrant sampling means scores carry distribution noise alongside ability. Clearing entries is evidence that a harness produces working programs for worlds it could not have seen — it is not a general intelligence score. Seasons 0001–0002 are revealed and publicly replayable; `season-0003` mixes all three families because the evaluator derives salted cases under whichever family an index belongs to. [competition](competition.md) remains the spec for richer families, organism bundles, and prize-bearing rounds.
