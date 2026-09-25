@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { readFile } from "node:fs/promises";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { HRANESS_ACCOUNT_URL, HRANESS_HOME_URL, hranessAttribution, renderHranessSiteFooter } from "@hraness/site-footer";
+import { HRANESS_ACCOUNT_URL, HRANESS_HOME_URL, renderHranessSiteFooter } from "@hraness/site-footer";
 import { HranessSiteFooter } from "@hraness/site-footer/react";
 import { siteFooterProps } from "./site-footer";
 
@@ -11,14 +11,16 @@ const textOf = (html: string) => decodeEntities(html.replace(/<[^>]+>/g, " ")).r
 const renderReactFooter = () => renderToStaticMarkup(createElement(HranessSiteFooter, siteFooterProps));
 
 describe("shared site footer", () => {
-  test("the React adapter renders the shared Built by Hraness attribution", () => {
+  test("the React adapter renders the shared Hraness mark attribution", () => {
     const html = renderReactFooter();
     expect(html).toContain('id="hraness-site-footer"');
-    expect(html).toContain('data-slot="hraness-attribution"');
-    expect(hranessAttribution.title).toBe("Built by Hraness");
-    const text = textOf(html);
-    expect(text).toContain(hranessAttribution.title);
-    expect(text).toContain(hranessAttribution.subtitle);
+    expect(html).toContain('data-slot="hraness-mark"');
+    const attribution = html.match(
+      /<a aria-label="Hraness home"[^>]*>[\s\S]*?<\/a>/u,
+    )?.[0];
+    expect(attribution).toBeDefined();
+    expect(attribution).toContain("<svg");
+    expect(attribution).toContain(">by Hraness<");
     expect(html).toContain(`href="${HRANESS_HOME_URL}"`);
   });
 
@@ -35,7 +37,7 @@ describe("shared site footer", () => {
     for (const html of [renderReactFooter(), renderHranessSiteFooter(siteFooterProps)]) {
       const text = textOf(html);
       expect(text).not.toMatch(/Ben(jamin)? Guo|A project by|Made by|Maker/i);
-      expect(text.match(/Built by Hraness/g)).toHaveLength(1);
+      expect(text.match(/by Hraness/g)).toHaveLength(1);
     }
   });
 
