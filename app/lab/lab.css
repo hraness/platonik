@@ -312,7 +312,8 @@
 .play-notice { font-size: 14px; margin-block: -14px 18px; }
 .play-next { margin-block: 14px; }
 .opening-complete { border: 1px solid var(--success, #1a7f37); background: var(--wash); padding: 14px 18px; border-radius: 8px; font-size: 14px; line-height: 1.6; margin-block: 16px; }
-.agent-setup { margin-top: 16px; font-size: 13px; }
+.agent-setup { margin-top: 16px; font-size: 14px; }
+.agent-setup > .lab-note { font-size: 1rem; line-height: 1.6; }
 .agent-setup pre { white-space: pre-wrap; font-size: 11.5px; line-height: 1.55; background: var(--wash); border: 1px solid var(--control-border); border-radius: .5rem; padding: 12px; max-height: 280px; overflow: auto; margin-block: 10px; }
 .resume-card { display: flex; align-items: center; gap: 12px; margin-block: 14px 0; flex-wrap: wrap; }
 .resume-note { font-size: 13px; color: var(--muted); }
