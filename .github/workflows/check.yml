@@ -41,7 +41,7 @@ jobs:
       # jobs when nothing that feeds the Rust gate changed.
       rust: ${{ github.event_name != 'pull_request' || steps.filter.outputs.rust == 'true' }}
     steps:
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v4
         id: filter
         if: github.event_name == 'pull_request'
         with:
